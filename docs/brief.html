@@ -38,38 +38,23 @@
       font-size: 1rem;
     }
 
-    /* Steps bar */
-    .steps-bar {
-      background: var(--clr-surface);
-      border-bottom: 1px solid var(--clr-border);
-      padding: 14px 20px;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
+    /* Steps bar - removed */
+
+    /* Horizontal radio/checkbox layout */
+    .radio-group--horizontal {
+      flex-direction: row;
       flex-wrap: wrap;
     }
-    .step-pill {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 0.80rem;
-      font-weight: 600;
-      padding: 5px 14px;
-      border-radius: 99px;
-      background: rgba(255,255,255,.04);
-      color: var(--clr-muted);
-      border: 1px solid var(--clr-border);
-    }
-    .step-pill .num {
-      display: inline-flex;
-      align-items: center;
+    .radio-group--horizontal label {
+      flex: 1 1 auto;
+      min-width: 120px;
       justify-content: center;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: var(--clr-primary);
-      color: #fff;
-      font-size: 0.70rem;
-      font-weight: 700;
+      text-align: center;
+    }
+    .check-group--grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 8px;
     }
 
     /* Page layout */
@@ -215,29 +200,9 @@
       margin-top: 2px;
     }
 
-    /* Conditional block */
-    .conditional-block {
-      border: 1px dashed rgba(255,255,255,.10);
-      border-radius: 8px;
-      padding: 20px;
-      margin-top: 16px;
-      background: rgba(255,255,255,.02);
-      display: none;
-    }
-    .conditional-block.shown { display: block; }
-    .conditional-block > .field-group:last-child { margin-bottom: 0; }
-
     /* Two-col */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
     @media (max-width: 520px) { .two-col { grid-template-columns: 1fr; } }
-
-    /* Comments textarea */
-    #comments {
-      min-height: 200px;
-      font-family: var(--ff-mono);
-      font-size: 0.82rem;
-      line-height: 1.55;
-    }
 
     /* Submit */
     .submit-wrap { text-align: center; margin-top: 36px; }
@@ -329,18 +294,10 @@
 
 <!-- ── Header ── -->
 <header class="brief-header">
-  <span class="badge">Client Brief</span>
-  <h1>Tell Us About Your <span class="text-gradient">Campaign &amp; Goals</span></h1>
-  <p>Fill in the form below and we'll begin your analysis. The more context you give us, the sharper your report will be.</p>
+  <span class="badge">Your Report Brief</span>
+  <h1>Tell Us What to <span class="text-gradient">Analyse</span></h1>
+  <p>Paste your post URL, tell us what you want to learn, and we'll handle the rest. Report delivered within 24 hours.</p>
 </header>
-
-<!-- ── Steps bar ── -->
-<nav class="steps-bar" aria-label="Form sections">
-  <div class="step-pill"><span class="num">A</span> The Campaign</div>
-  <div class="step-pill"><span class="num">B</span> Reply Preferences</div>
-  <div class="step-pill"><span class="num">C</span> Your Voice</div>
-  <div class="step-pill"><span class="num">D</span> Post, Context &amp; Comments</div>
-</nav>
 
 <!-- ── Main ── -->
 <main class="brief-wrap">
@@ -350,346 +307,160 @@
        Your endpoint looks like: https://formspree.io/f/abcdefgh       -->
   <form id="brief-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
 
-    <!-- Hidden field so you know it came from the brief page -->
     <input type="hidden" name="_subject" value="New Audience Intelligence Brief Submitted" />
-    <input type="hidden" name="_next" value="" />
 
 
-    <!-- ════ SECTION A ════ -->
+    <!-- ════ SECTION: YOU ════ -->
     <div class="form-section">
       <div class="section-head">
-        <span class="section-num">A</span>
+        <span class="section-num">1</span>
         <div>
-          <h2>Who Is This Report For?</h2>
-          <p>Tell us about you and your relationship to the post being analysed.</p>
+          <h2>About You</h2>
+          <p>So we know where to send your report.</p>
         </div>
       </div>
       <div class="section-body">
 
-        <div class="field-group" id="fg-client-name">
-          <label for="client_name">Your Name / Organisation <span class="req">*</span>
-            <span class="hint">Who commissioned this report? Not necessarily the post author.</span>
-          </label>
-          <input type="text" id="client_name" name="client_name"
-            placeholder="e.g. Truth Protects The Innocent — family support campaign" />
-          <div class="field-error">Please enter your name or organisation.</div>
+        <div class="two-col">
+          <div class="field-group" id="fg-client-name">
+            <label for="client_name">Your Name <span class="req">*</span></label>
+            <input type="text" id="client_name" name="client_name" placeholder="Jane Smith" />
+            <div class="field-error">Please enter your name.</div>
+          </div>
+
+          <div class="field-group" id="fg-email">
+            <label for="client_email">Email Address <span class="req">*</span>
+              <span class="hint">We'll send your completed report here.</span>
+            </label>
+            <input type="email" id="client_email" name="client_email" placeholder="you@example.com" />
+            <div class="field-error">Please enter a valid email address.</div>
+          </div>
         </div>
 
-        <div class="field-group" id="fg-email">
-          <label for="client_email">Your Email Address <span class="req">*</span>
-            <span class="hint">We'll send your completed report here.</span>
+      </div>
+    </div>
+
+
+    <!-- ════ SECTION: THE POST ════ -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-num">2</span>
+        <div>
+          <h2>The Post</h2>
+          <p>Which post do you want analysed?</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="field-group" id="fg-post-url">
+          <label for="post_url">Post URL <span class="req">*</span>
+            <span class="hint">Paste the full link to the post, reel, or video.</span>
           </label>
-          <input type="email" id="client_email" name="client_email"
-            placeholder="you@example.com" />
-          <div class="field-error">Please enter a valid email address.</div>
+          <input type="url" id="post_url" name="post_url" placeholder="https://www.tiktok.com/@creator/video/..." />
+          <div class="field-error">Please enter the post URL.</div>
         </div>
 
         <div class="field-group">
-          <label for="client_goal">Your Goal for This Report <span class="req">*</span>
-            <span class="hint">What do you want to achieve with this analysis?</span>
-          </label>
-          <textarea id="client_goal" name="client_goal" rows="3"
-            placeholder="e.g. Gather public sentiment evidence for our campaign website, identify potential allies, find content ideas for our social channels, build evidence of support for legal use"></textarea>
-          <div class="field-error">Please describe your goal.</div>
+          <label>Platform <span class="req">*</span></label>
+          <div class="radio-group radio-group--horizontal" id="platform-group">
+            <label><input type="radio" name="platform" value="TikTok" /><div>TikTok</div></label>
+            <label><input type="radio" name="platform" value="Instagram" /><div>Instagram</div></label>
+            <label><input type="radio" name="platform" value="Facebook" /><div>Facebook</div></label>
+            <label><input type="radio" name="platform" value="YouTube" /><div>YouTube</div></label>
+            <label><input type="radio" name="platform" value="Reddit" /><div>Reddit</div></label>
+            <label><input type="radio" name="platform" value="Other" /><div>Other</div></label>
+          </div>
+          <div class="field-error" id="err-platform">Please select a platform.</div>
         </div>
 
         <div class="field-group">
-          <label for="post_author">Post Author / Content Creator
-            <span class="hint">Who made the post being analysed? Are they affiliated with you or independent?</span>
-          </label>
-          <input type="text" id="post_author" name="post_author"
-            placeholder="e.g. MP Emanuele Pozzolo — Italian politician. NOT affiliated with our campaign." />
+          <label for="post_context">What is the post about? <span class="hint">Optional — a quick sentence helps us understand the context. We'll watch/read it ourselves too.</span></label>
+          <textarea id="post_context" name="post_context" rows="2" placeholder="e.g. A news clip about Melbourne being ranked the world's best city"></textarea>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ════ SECTION: WHAT YOU WANT ════ -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-num">3</span>
+        <div>
+          <h2>What Do You Want to Learn?</h2>
+          <p>Pick everything that matters to you. Every report includes all of these — this just tells us what to emphasise.</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="field-group">
+          <div class="check-group check-group--grid">
+            <label><input type="checkbox" name="focus" value="Audience sentiment" /><div>Audience sentiment<span class="option-desc">What's the overall mood?</span></div></label>
+            <label><input type="checkbox" name="focus" value="Content ideas" /><div>Content ideas<span class="option-desc">What should I post next?</span></div></label>
+            <label><input type="checkbox" name="focus" value="Audience questions" /><div>Audience questions<span class="option-desc">What are people asking?</span></div></label>
+            <label><input type="checkbox" name="focus" value="Lead opportunities" /><div>Lead opportunities<span class="option-desc">Who's ready to buy / engage?</span></div></label>
+            <label><input type="checkbox" name="focus" value="Reply strategy" /><div>Reply strategy<span class="option-desc">Which comments should I reply to?</span></div></label>
+            <label><input type="checkbox" name="focus" value="Viral triggers" /><div>Viral triggers<span class="option-desc">Why did this blow up?</span></div></label>
+            <label><input type="checkbox" name="focus" value="Product opportunities" /><div>Product opportunities<span class="option-desc">What could I sell this audience?</span></div></label>
+            <label><input type="checkbox" name="focus" value="Competitor mentions" /><div>Competitor mentions<span class="option-desc">Who else are people talking about?</span></div></label>
+          </div>
         </div>
 
         <div class="field-group">
-          <label>Your Relationship to This Post <span class="req">*</span>
-            <span class="hint">This changes how every section of the report is framed.</span>
+          <label for="extra_notes">Anything specific you want us to focus on?
+            <span class="hint">Optional — tell us if there's a particular angle, question, or concern you care about most.</span>
           </label>
+          <textarea id="extra_notes" name="extra_notes" rows="2" placeholder="e.g. I'm mainly interested in finding out why people are angry about the price"></textarea>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ════ SECTION: YOUR ROLE ════ -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-num">4</span>
+        <div>
+          <h2>Your Relationship to the Post</h2>
+          <p>This changes how we frame the recommendations.</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="field-group">
           <div class="radio-group" id="relationship-group">
-            <label>
-              <input type="radio" name="relationship" value="WE MADE THIS POST" />
-              <div>WE MADE THIS POST
-                <span class="option-desc">Reply advice is written directly for you as the creator.</span>
-              </div>
+            <label><input type="radio" name="relationship" value="I created this post" />
+              <div>I created this post<span class="option-desc">Recommendations tailored for you as the creator.</span></div>
             </label>
-            <label>
-              <input type="radio" name="relationship" value="WE ARE SUPPORTERS" />
-              <div>WE ARE SUPPORTERS — we did not make this post
-                <span class="option-desc">We support the cause it discusses. Advice focuses on amplification and ally recruitment.</span>
-              </div>
+            <label><input type="radio" name="relationship" value="It's someone else's post" />
+              <div>It's someone else's post<span class="option-desc">We'll focus on learnings and insights you can apply to your own content.</span></div>
             </label>
-            <label>
-              <input type="radio" name="relationship" value="WE ARE RESEARCHERS" />
-              <div>WE ARE RESEARCHERS — purely analytical
-                <span class="option-desc">No advocacy angle. Report is objective and data-focused.</span>
-              </div>
-            </label>
-            <label>
-              <input type="radio" name="relationship" value="WE ARE OPPONENTS" />
-              <div>WE ARE OPPONENTS
-                <span class="option-desc">We are analysing opposition content. Report focuses on counter-strategy and narrative weaknesses.</span>
-              </div>
+            <label><input type="radio" name="relationship" value="I'm researching / analysing" />
+              <div>I'm researching / analysing<span class="option-desc">Objective, data-focused analysis with no engagement advice.</span></div>
             </label>
           </div>
-          <div class="field-error" id="err-relationship">Please select your relationship to the post.</div>
-        </div>
-
-        <div class="field-group">
-          <label for="platforms">Your Own Platforms
-            <span class="hint">Where will this intelligence be applied? List all relevant channels.</span>
-          </label>
-          <input type="text" id="platforms" name="platforms"
-            placeholder="e.g. Campaign website, Facebook page, press releases, Instagram, petition campaign" />
         </div>
 
       </div>
-    </div><!-- /Section A -->
-
-
-    <!-- ════ SECTION B ════ -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-num">B</span>
-        <div>
-          <h2>Reply Preferences</h2>
-          <p>Replying is not always the right move. Tell us what role engagement plays for you.</p>
-        </div>
-      </div>
-      <div class="section-body">
-
-        <div class="field-group">
-          <label>Do You Want Reply Recommendations?
-            <span class="hint">If yes, the report includes a full Reply Strategy Matrix — what to reply to, what to avoid, and what to handle privately.</span>
-          </label>
-          <div class="radio-group" id="reply-want-group">
-            <label>
-              <input type="radio" name="want_reply" value="YES" id="want-reply-yes" />
-              <div>YES — include reply strategy and specific comments to engage with
-                <span class="option-desc">Best for creators and campaign pages actively managing comments.</span>
-              </div>
-            </label>
-            <label>
-              <input type="radio" name="want_reply" value="NO" id="want-reply-no" />
-              <div>NO — analysis only, skip all reply advice
-                <span class="option-desc">Best for researchers, legal use, or when you just want audience insights.</span>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <!-- Conditional reply details -->
-        <div class="conditional-block" id="reply-details">
-
-          <div class="field-group">
-            <label>Primary Goals From Replying
-              <span class="hint">Tick everything that applies. The report will prioritise these.</span>
-            </label>
-            <div class="check-group">
-              <label><input type="checkbox" name="reply_goals" value="Drive traffic to our website / petition" /> Drive traffic to our website / petition</label>
-              <label><input type="checkbox" name="reply_goals" value="Recruit allies and supporters" /> Recruit allies and supporters</label>
-              <label><input type="checkbox" name="reply_goals" value="Correct misinformation" /> Correct misinformation</label>
-              <label><input type="checkbox" name="reply_goals" value="Thank and retain existing supporters" /> Thank and retain existing supporters</label>
-              <label><input type="checkbox" name="reply_goals" value="Neutralise attacks without escalating" /> Neutralise attacks without escalating</label>
-              <label><input type="checkbox" name="reply_goals" value="Boost algorithmic reach of this post" /> Boost algorithmic reach of this post</label>
-              <label><input type="checkbox" name="reply_goals" value="Gather intelligence (find people with useful knowledge)" /> Gather intelligence — find people with useful knowledge or connections</label>
-            </div>
-          </div>
-
-          <div class="field-group">
-            <label>Reply Capacity
-              <span class="hint">How much time do you realistically have to engage in comments?</span>
-            </label>
-            <div class="radio-group">
-              <label><input type="radio" name="capacity" value="LOW" />
-                <div>LOW — give me the top 3 most important replies only</div>
-              </label>
-              <label><input type="radio" name="capacity" value="MEDIUM" />
-                <div>MEDIUM — give me up to 10 prioritised replies</div>
-              </label>
-              <label><input type="radio" name="capacity" value="HIGH" />
-                <div>HIGH — give me every comment worth engaging with</div>
-              </label>
-            </div>
-          </div>
-
-          <div class="field-group">
-            <label for="avoid_topics">Topics to Avoid Engaging With
-              <span class="hint">Topics, people, or debates you want to stay away from. These will be flagged as DO NOT REPLY.</span>
-            </label>
-            <textarea id="avoid_topics" name="avoid_topics" rows="2"
-              placeholder="e.g. Do not engage with political party debates&#10;Do not engage with questions about the hospital incident&#10;Do not engage with personal attacks on the post author"></textarea>
-          </div>
-
-          <div class="field-group">
-            <label>Include a "DO NOT REPLY" List?
-              <span class="hint">Flags high-risk comments that would be counterproductive to engage with.</span>
-            </label>
-            <div class="radio-group">
-              <label><input type="radio" name="do_not_reply_list" value="YES" />
-                <div>YES — flag comments that could harm our position if we engage</div>
-              </label>
-              <label><input type="radio" name="do_not_reply_list" value="NO" />
-                <div>NO — not needed</div>
-              </label>
-            </div>
-          </div>
-
-          <div class="field-group">
-            <label>Include Specific Comments to Act On?
-              <span class="hint">Should the report list individual comments (with the commenter's name and text) that you should reply to or direct-message?</span>
-            </label>
-            <div class="radio-group">
-              <label><input type="radio" name="specific_comments" value="PUBLIC_REPLIES" />
-                <div>YES — list specific comments I should reply to publicly</div>
-              </label>
-              <label><input type="radio" name="specific_comments" value="DM_TARGETS" />
-                <div>YES — list specific people I should direct-message privately</div>
-              </label>
-              <label><input type="radio" name="specific_comments" value="BOTH" />
-                <div>YES — include both public replies and private DM targets</div>
-              </label>
-              <label><input type="radio" name="specific_comments" value="NO" />
-                <div>NO — general strategy only, no specific comment list needed</div>
-              </label>
-            </div>
-          </div>
-
-        </div><!-- /conditional -->
-      </div>
-    </div><!-- /Section B -->
-
-
-    <!-- ════ SECTION C ════ -->
-    <div class="form-section" id="section-c">
-      <div class="section-head">
-        <span class="section-num">C</span>
-        <div>
-          <h2>Your Voice</h2>
-          <p>Only needed if you selected YES for reply recommendations above.</p>
-        </div>
-      </div>
-      <div class="section-body">
-
-        <div class="two-col">
-          <div class="field-group">
-            <label for="page_name">Page Name / Handle
-              <span class="hint">The name or handle you will reply from.</span>
-            </label>
-            <input type="text" id="page_name" name="page_name"
-              placeholder="e.g. Truth Protects The Innocent / @veritaprotegge" />
-          </div>
-          <div class="field-group">
-            <label for="reply_tone">Reply Tone / Voice
-              <span class="hint">How should your replies sound?</span>
-            </label>
-            <input type="text" id="reply_tone" name="reply_tone"
-              placeholder="e.g. Warm, factual, never aggressive, redirects to the children" />
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label for="reply_goals_specific">What Should People Do After Reading Your Reply?
-            <span class="hint">Name the specific action you want them to take.</span>
-          </label>
-          <textarea id="reply_goals_specific" name="reply_goals_specific" rows="2"
-            placeholder="e.g. Visit the campaign website, sign the petition, share the post, feel heard and supported, understand the facts of the case"></textarea>
-        </div>
-
-      </div>
-    </div><!-- /Section C -->
-
-
-    <!-- ════ SECTION D ════ -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-num">D</span>
-        <div>
-          <h2>Post Information &amp; Comments</h2>
-          <p>Paste the post URL and the comments you want analysed.</p>
-        </div>
-      </div>
-      <div class="section-body">
-
-        <div class="two-col">
-          <div class="field-group" id="fg-post-url">
-            <label for="post_url">Post URL <span class="req">*</span>
-              <span class="hint">The URL of the post being analysed.</span>
-            </label>
-            <input type="url" id="post_url" name="post_url"
-              placeholder="https://www.facebook.com/reel/..." />
-            <div class="field-error">Please enter the post URL.</div>
-          </div>
-          <div class="field-group">
-            <label for="platform">Platform</label>
-            <select id="platform" name="platform">
-              <option value="">— select —</option>
-              <option value="Facebook">Facebook</option>
-              <option value="Instagram">Instagram</option>
-              <option value="TikTok">TikTok</option>
-              <option value="YouTube">YouTube</option>
-              <option value="Twitter / X">Twitter / X</option>
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="Reddit">Reddit</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field-group" id="fg-post-content">
-          <label for="post_content">What Is This Post / Video About? <span class="req">*</span>
-            <span class="hint">In your own words, describe what the content says or shows. Copy and paste the caption, script, or transcript if you have it. The more context you give, the more accurate the analysis will be.</span>
-          </label>
-          <textarea id="post_content" name="post_content" rows="5"
-            placeholder="e.g. This is a Facebook reel posted by Italian politician MP Emanuele Pozzolo. The video shows him holding a press conference calling for the return of two Australian children currently held in Italy against the wishes of their Australian father. He states that the Italian courts have failed to uphold international custody agreements and calls on the government to act.
-
-If you have the caption or transcript, paste it here."></textarea>
-          <div class="field-error" id="err-post-content">Please describe what the post is about.</div>
-        </div>
-
-        <div class="field-group">
-          <label for="comment_count">Approximate Comment Count
-            <span class="hint">How many comments are you pasting below?</span>
-          </label>
-          <input type="number" id="comment_count" name="comment_count"
-            min="1" placeholder="e.g. 472" style="max-width:180px;" />
-        </div>
-
-        <div class="field-group" id="fg-comments">
-          <label for="comments">Comments to Analyse <span class="req">*</span>
-            <span class="hint">Paste all raw comment text below. One comment per line is ideal. Exported CSV text works fine.</span>
-          </label>
-          <textarea id="comments" name="comments"
-            placeholder="Paste your comments here..."></textarea>
-          <div class="field-error">Please paste the comments to analyse.</div>
-        </div>
-
-        <div class="field-group">
-          <label for="extra_notes">Anything Else We Should Know?
-            <span class="hint">Any context about the post, the campaign, or specific things you want the report to focus on.</span>
-          </label>
-          <textarea id="extra_notes" name="extra_notes" rows="3"
-            placeholder="e.g. This post is about a custody case involving Australian children in Italy. Focus on Italian-language comments especially. We are particularly interested in finding potential legal allies."></textarea>
-        </div>
-
-      </div>
-    </div><!-- /Section D -->
+    </div>
 
 
     <!-- ════ SUBMIT ════ -->
     <div class="submit-wrap">
       <button type="submit" class="btn-submit" id="submit-btn">
-        Send My Brief → We'll Get Started
+        Submit Brief →
       </button>
-      <p class="submit-note">We'll confirm receipt by email within a few hours and deliver your report within the turnaround time on your plan.</p>
+      <p class="submit-note">We'll confirm receipt by email and deliver your report within 24 hours.</p>
     </div>
 
-  </form><!-- /brief-form -->
+  </form>
 
   <!-- ════ SUCCESS MESSAGE ════ -->
   <div id="success-msg">
     <div class="success-icon">✅</div>
     <h3>Brief Received — We're On It</h3>
-    <p>Thank you. We've received your brief and will confirm by email shortly. Your report will be delivered within your plan's turnaround time. If anything is unclear, we'll reach out before we start.</p>
+    <p>Thank you! We'll confirm by email shortly and deliver your report within 24 hours. If anything's unclear, we'll reach out before we start.</p>
   </div>
 
 </main>
@@ -699,7 +470,7 @@ If you have the caption or transcript, paste it here."></textarea>
 </footer>
 
 <script>
-  // ── Radio / checkbox live styling ──────────────────────────────────────
+  // ── Radio / checkbox live styling
   document.querySelectorAll('.radio-group input[type="radio"]').forEach(function(r) {
     r.addEventListener('change', function() {
       var group = this.closest('.radio-group');
@@ -713,14 +484,7 @@ If you have the caption or transcript, paste it here."></textarea>
     });
   });
 
-  // ── Show/hide reply details block ──────────────────────────────────────
-  document.querySelectorAll('input[name="want_reply"]').forEach(function(r) {
-    r.addEventListener('change', function() {
-      document.getElementById('reply-details').classList.toggle('shown', this.value === 'YES');
-    });
-  });
-
-  // ── Validation helpers ─────────────────────────────────────────────────
+  // ── Validation
   function setError(groupId, show) {
     var el = document.getElementById(groupId);
     if (el) el.classList.toggle('has-error', show);
@@ -738,46 +502,29 @@ If you have the caption or transcript, paste it here."></textarea>
     setError('fg-email', !emailOk);
     if (!emailOk) ok = false;
 
-    var goal = document.getElementById('client_goal').value.trim();
-    // mark goal error manually since it's a textarea in fg without id
-    var goalGroup = document.getElementById('client_goal').closest('.field-group');
-    goalGroup.classList.toggle('has-error', !goal);
-    if (!goal) ok = false;
-
-    var rel = document.querySelector('input[name="relationship"]:checked');
-    document.getElementById('err-relationship').style.display = rel ? 'none' : 'block';
-    if (!rel) ok = false;
-
     var postUrl = document.getElementById('post_url').value.trim();
     setError('fg-post-url', !postUrl);
     if (!postUrl) ok = false;
 
-    var postContent = document.getElementById('post_content').value.trim();
-    var pcGroup = document.getElementById('post_content').closest('.field-group');
-    pcGroup.classList.toggle('has-error', !postContent);
-    document.getElementById('err-post-content').style.display = postContent ? 'none' : 'block';
-    if (!postContent) ok = false;
-
-    var comments = document.getElementById('comments').value.trim();
-    setError('fg-comments', !comments);
-    if (!comments) ok = false;
+    var platform = document.querySelector('input[name="platform"]:checked');
+    document.getElementById('err-platform').style.display = platform ? 'none' : 'block';
+    if (!platform) ok = false;
 
     return ok;
   }
 
-  // ── Form submit (Formspree AJAX) ───────────────────────────────────────
+  // ── Form submit (Formspree AJAX)
   document.getElementById('brief-form').addEventListener('submit', function(e) {
     e.preventDefault();
     if (!validate()) {
-      // scroll to first error
-      var first = document.querySelector('.has-error, #err-relationship[style*="block"]');
+      var first = document.querySelector('.has-error, #err-platform[style*="block"]');
       if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
     var btn = document.getElementById('submit-btn');
     btn.disabled = true;
-    btn.textContent = 'Sending…';
+    btn.textContent = 'Sending\u2026';
 
     var data = new FormData(this);
 
@@ -794,14 +541,14 @@ If you have the caption or transcript, paste it here."></textarea>
         s.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
         btn.disabled = false;
-        btn.textContent = 'Send My Brief → We\'ll Get Started';
-        alert('Something went wrong. Please try again or email us directly at hello@quantummerlin.com');
+        btn.textContent = 'Submit Brief \u2192';
+        alert('Something went wrong. Please try again or email us directly at ai@quantummerlin.com');
       }
     })
     .catch(function() {
       btn.disabled = false;
-      btn.textContent = 'Send My Brief → We\'ll Get Started';
-      alert('Could not send — please check your connection or email us at hello@quantummerlin.com');
+      btn.textContent = 'Submit Brief \u2192';
+      alert('Could not send \u2014 please check your connection or email us at ai@quantummerlin.com');
     });
   });
 </script>
