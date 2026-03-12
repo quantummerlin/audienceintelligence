@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audience Intelligence Report — Melbourne Best City 2026 · 7 News Melbourne</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@page { size: A4; margin: 18mm 16mm 22mm 16mm; }
+
+:root {
+  --bg: #0b0f1e;
+  --surface: #111827;
+  --card: #1a2235;
+  --card-alt: #1e293b;
+  --border: rgba(255,255,255,0.07);
+  --border-accent: rgba(99,102,241,0.25);
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --accent: #22d3ee;
+  --accent-light: #67e8f9;
+  --success: #34d399;
+  --warn: #fbbf24;
+  --danger: #f87171;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --heading: #f8fafc;
+  --ff: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 11pt; }
+body {
+  font-family: var(--ff);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+a { color: var(--accent); text-decoration: none; }
+
+/* Cover */
+.cover {
+  page-break-after: always;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  min-height: 100vh; text-align: center; padding: 60px 40px;
+  background: linear-gradient(160deg, #0b0f1e 0%, #111827 40%, #1a1a3e 100%);
+  position: relative; overflow: hidden;
+}
+.cover::before {
+  content: ''; position: absolute; top: -40%; left: -20%; width: 140%; height: 140%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 60%, rgba(34,211,238,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+.cover__badge {
+  display: inline-block; padding: 6px 20px; border-radius: 999px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  background: rgba(99,102,241,0.15); color: var(--primary-light);
+  border: 1px solid rgba(99,102,241,0.2); margin-bottom: 28px; position: relative;
+}
+.cover__title {
+  font-size: 2.8rem; font-weight: 800; line-height: 1.15; color: var(--heading);
+  margin-bottom: 12px; position: relative;
+}
+.cover__title span {
+  background: linear-gradient(135deg, var(--primary-light), var(--accent));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.cover__subtitle { font-size: 1.2rem; color: var(--muted); max-width: 520px; margin-bottom: 48px; position: relative; }
+.cover__meta {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px; width: 100%; max-width: 680px; position: relative;
+}
+.cover__meta-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 14px; }
+.cover__meta-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.cover__meta-value { font-size: 1.05rem; font-weight: 700; color: var(--heading); }
+.cover__footer { position: absolute; bottom: 32px; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* TOC */
+.toc { page-break-after: always; padding: 60px 40px; background: var(--bg); }
+.toc__title { font-size: 1.6rem; font-weight: 800; color: var(--heading); margin-bottom: 32px; padding-bottom: 16px; border-bottom: 2px solid var(--border-accent); }
+.toc__list { list-style: none; counter-reset: toc-counter; }
+.toc__item { counter-increment: toc-counter; display: flex; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; color: var(--text); }
+.toc__item::before { content: counter(toc-counter, decimal-leading-zero); font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--primary-light); margin-right: 16px; min-width: 28px; }
+.toc__item-title { flex: 1; font-weight: 600; }
+.toc__item-sub { list-style: none; padding-left: 44px; }
+.toc__item-sub li { padding: 5px 0; font-size: 0.85rem; color: var(--muted); border-bottom: 1px dashed var(--border); }
+
+/* Sections */
+.section {
+  page-break-inside: avoid; margin-bottom: 36px; padding: 28px 32px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px; position: relative;
+}
+.section::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+  border-radius: 16px 0 0 16px;
+  background: linear-gradient(180deg, var(--primary), var(--accent));
+}
+.section--executive { border-color: rgba(99,102,241,0.3); }
+.section--executive::before { background: linear-gradient(180deg, #fbbf24, #f59e0b); }
+.section__number { font-family: var(--mono); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary-light); margin-bottom: 4px; }
+.section__title { font-size: 1.35rem; font-weight: 800; color: var(--heading); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.section__content p { margin-bottom: 12px; color: var(--text); line-height: 1.7; }
+.section__content ul, .section__content ol { margin: 10px 0 14px 0; padding-left: 0; list-style: none; }
+.section__content li { padding: 6px 0 6px 20px; position: relative; line-height: 1.6; }
+.section__content ul li::before { content: '›'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+.section__content ol { counter-reset: li-counter; }
+.section__content ol li { counter-increment: li-counter; }
+.section__content ol li::before { content: counter(li-counter) '.'; position: absolute; left: 0; color: var(--primary-light); font-weight: 700; font-family: var(--mono); font-size: 0.85em; }
+h3, h4 { color: var(--heading); font-weight: 700; margin: 16px 0 8px 0; }
+h3 { font-size: 1.05rem; }
+h4 { font-size: 0.95rem; }
+strong { color: var(--heading); }
+em { color: var(--accent); font-style: italic; }
+
+/* Quotes */
+.quote {
+  background: var(--card); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
+  padding: 14px 18px; margin: 10px 0; font-style: italic; color: var(--muted); font-size: 0.92rem; line-height: 1.55;
+}
+.quote__author { display: block; font-style: normal; font-weight: 600; font-size: 0.78rem; color: var(--primary-light); margin-top: 6px; }
+
+/* Diamond quote */
+.diamond-quote {
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(34,211,238,0.08));
+  border: 1px solid rgba(99,102,241,0.35); border-radius: 16px;
+  padding: 32px 36px; margin: 24px 0; text-align: center;
+}
+.diamond-quote__text {
+  font-size: 1.6rem; font-weight: 700; color: var(--heading); line-height: 1.4; margin-bottom: 16px;
+}
+.diamond-quote__attribution { font-size: 0.85rem; color: var(--muted); }
+.diamond-quote__attribution strong { color: var(--accent); }
+.diamond-quote__icon { font-size: 2rem; margin-bottom: 12px; }
+
+/* Stats Grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 16px 0; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 14px; text-align: center; }
+.stat-value { font-size: 1.6rem; font-weight: 800; color: var(--heading); font-family: var(--mono); }
+.stat-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+.stat-card--positive .stat-value { color: var(--success); }
+.stat-card--negative .stat-value { color: var(--danger); }
+.stat-card--neutral .stat-value { color: var(--warn); }
+.stat-card--accent .stat-value { color: var(--accent); }
+.stat-card--primary .stat-value { color: var(--primary-light); }
+
+/* Sentiment Bar */
+.sentiment-bar { display: flex; height: 28px; border-radius: 14px; overflow: hidden; margin: 16px 0; border: 1px solid var(--border); }
+.sentiment-bar__segment { display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: #fff; min-width: 28px; }
+.sentiment-bar__segment--positive { background: var(--success); }
+.sentiment-bar__segment--negative { background: var(--danger); }
+.sentiment-bar__segment--neutral { background: var(--warn); }
+.sentiment-bar__segment--curious { background: var(--accent); }
+
+/* Cluster Card */
+.cluster-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin: 10px 0; }
+.cluster-card__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cluster-card__name { font-weight: 700; font-size: 1rem; color: var(--heading); }
+.cluster-card__count { font-family: var(--mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); background: rgba(34,211,238,0.1); padding: 3px 10px; border-radius: 999px; }
+
+/* Table */
+.report-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0; font-size: 0.88rem; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.report-table thead th { background: var(--card); color: var(--heading); font-weight: 700; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 12px 14px; text-align: left; border-bottom: 2px solid var(--border-accent); }
+.report-table tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.report-table tbody tr:last-child td { border-bottom: none; }
+.report-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.015); }
+
+/* Badges */
+.badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.badge--hot { background: rgba(248,113,113,0.15); color: var(--danger); }
+.badge--warm { background: rgba(251,191,36,0.15); color: var(--warn); }
+.badge--cold { background: rgba(148,163,184,0.15); color: var(--muted); }
+.badge--high { background: rgba(52,211,153,0.15); color: var(--success); }
+.badge--medium { background: rgba(99,102,241,0.15); color: var(--primary-light); }
+.badge--confirmed { background: rgba(52,211,153,0.15); color: var(--success); }
+.badge--plausible { background: rgba(251,191,36,0.15); color: var(--warn); }
+.badge--unverified { background: rgba(248,113,113,0.15); color: var(--danger); }
+.badge--needs { background: rgba(148,163,184,0.15); color: var(--muted); }
+
+/* Score */
+.score-display { display: flex; align-items: center; gap: 20px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; margin: 16px 0; }
+.score-circle { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; font-family: var(--mono); color: var(--heading); background: conic-gradient(var(--primary) calc(var(--score-pct) * 1%), var(--card-alt) 0); border: 3px solid var(--border-accent); flex-shrink: 0; }
+.score-details { flex: 1; }
+.score-details h4 { font-size: 1rem; font-weight: 700; color: var(--heading); margin-bottom: 4px; }
+.score-details p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+/* Reply Cards */
+.reply-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin: 10px 0; }
+.reply-card--t1 { border-color: rgba(52,211,153,0.3); }
+.reply-card--t2 { border-color: rgba(251,191,36,0.3); }
+.reply-card--t3 { border-color: rgba(248,113,113,0.3); }
+.reply-card__rank { font-family: var(--mono); font-size: 0.7rem; font-weight: 700; color: var(--primary-light); margin-bottom: 6px; }
+.reply-card__comment { font-style: italic; color: var(--text); padding: 10px 14px; background: var(--card-alt); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; margin-bottom: 10px; font-size: 0.9rem; }
+.reply-card__reason { font-size: 0.82rem; color: var(--muted); margin-bottom: 8px; }
+.reply-card__suggestion { font-size: 0.88rem; color: var(--success); padding: 8px 12px; background: rgba(52,211,153,0.06); border-radius: 8px; border: 1px solid rgba(52,211,153,0.12); }
+.reply-card__suggestion strong { color: var(--success); }
+
+/* Idea Cards */
+.idea-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin: 10px 0; }
+.idea-card__title { font-weight: 700; color: var(--heading); margin-bottom: 6px; }
+.idea-card__format { font-family: var(--mono); font-size: 0.72rem; font-weight: 600; color: var(--accent); background: rgba(34,211,238,0.08); padding: 2px 8px; border-radius: 6px; display: inline-block; margin-bottom: 6px; }
+.idea-card__rationale { font-size: 0.88rem; color: var(--muted); }
+
+/* Alert/Warning box */
+.alert { border-radius: 12px; padding: 16px 20px; margin: 14px 0; }
+.alert--danger { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); }
+.alert--warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25); }
+.alert--info { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.25); }
+.alert--success { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.25); }
+.alert__title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.alert--danger .alert__title { color: var(--danger); }
+.alert--warn .alert__title { color: var(--warn); }
+.alert--info .alert__title { color: var(--primary-light); }
+.alert--success .alert__title { color: var(--success); }
+
+/* Recommendation tiers */
+.rec-tier { margin-bottom: 18px; }
+.rec-tier__header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.rec-tier__items { display: flex; flex-direction: column; gap: 8px; }
+.rec-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; }
+.rec-item__label { font-weight: 700; color: var(--heading); font-size: 0.92rem; margin-bottom: 4px; }
+.rec-item__desc { font-size: 0.84rem; color: var(--muted); line-height: 1.55; }
+
+/* Privacy table */
+.privacy-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0; font-size: 0.85rem; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.privacy-table th { background: var(--card); color: var(--heading); font-weight: 700; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 14px; text-align: left; border-bottom: 2px solid var(--border-accent); }
+.privacy-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.privacy-table tr:last-child td { border-bottom: none; }
+.privacy-table tr:nth-child(even) { background: rgba(255,255,255,0.015); }
+
+/* Closing section */
+.mandate-box {
+  background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(34,211,238,0.05));
+  border: 1px solid rgba(99,102,241,0.3); border-radius: 16px; padding: 36px 40px; margin: 36px 0;
+  text-align: center;
+}
+.mandate-box__statement { font-size: 1.15rem; font-weight: 600; color: var(--text); line-height: 1.7; }
+
+/* Gold quote hall */
+.gold-quote { background: var(--card); border: 1px solid rgba(251,191,36,0.2); border-radius: 12px; padding: 16px 18px; margin: 10px 0; }
+.gold-quote--diamond { border-color: rgba(99,102,241,0.4); background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(34,211,238,0.03)); }
+.gold-quote__text { font-style: italic; color: var(--text); font-size: 0.95rem; line-height: 1.6; margin-bottom: 10px; }
+.gold-quote__meta { font-size: 0.75rem; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap; }
+.gold-quote__meta span { background: var(--card-alt); padding: 2px 8px; border-radius: 6px; }
+
+/* Footer */
+.page-footer { text-align: center; padding: 40px 20px; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; border-top: 1px solid var(--border); margin-top: 40px; }
+.page-footer strong { color: var(--primary-light); font-weight: 700; }
+.disclaimer { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin: 24px 0; font-size: 0.72rem; color: var(--muted); line-height: 1.7; }
+
+@media print {
+  body { background: var(--bg); }
+  .section { break-inside: avoid; }
+  .cover { break-after: page; }
+  .toc { break-after: page; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════ COVER -->
+<div class="cover">
+  <div class="cover__badge">Audience Intelligence Report</div>
+  <h1 class="cover__title"><span>Audience Intelligence</span><br>Report</h1>
+  <p class="cover__subtitle">"Melbourne: World's Best City 2026" — Audience Sentiment &amp; Strategic Analysis</p>
+  <div class="cover__meta">
+    <div class="cover__meta-item"><div class="cover__meta-label">Platform</div><div class="cover__meta-value">TikTok</div></div>
+    <div class="cover__meta-item"><div class="cover__meta-label">Comments Analysed</div><div class="cover__meta-value">~750</div></div>
+    <div class="cover__meta-item"><div class="cover__meta-label">Post Likes</div><div class="cover__meta-value">23.3K</div></div>
+    <div class="cover__meta-item"><div class="cover__meta-label">Report Date</div><div class="cover__meta-value">12 Mar 2026</div></div>
+    <div class="cover__meta-item"><div class="cover__meta-label">Prepared For</div><div class="cover__meta-value">7 News Melbourne</div></div>
+  </div>
+  <div class="cover__footer">Quantum Merlin Ltd &middot; ai.quantummerlin.com</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ TOC -->
+<div class="toc">
+  <h2 class="toc__title">Table of Contents</h2>
+  <ol class="toc__list">
+    <li class="toc__item"><span class="toc__item-title">Executive Summary</span></li>
+    <li class="toc__item"><span class="toc__item-title">Overview</span></li>
+    <li class="toc__item"><span class="toc__item-title">Audience Sentiment</span></li>
+    <li class="toc__item"><span class="toc__item-title">Key Themes &amp; Comment Clusters</span></li>
+    <li class="toc__item"><span class="toc__item-title">Audience Questions</span></li>
+    <li class="toc__item"><span class="toc__item-title">Audience Frustrations</span></li>
+    <li class="toc__item"><span class="toc__item-title">Audience Desires</span></li>
+    <li class="toc__item"><span class="toc__item-title">Viral Content Triggers</span></li>
+    <li class="toc__item"><span class="toc__item-title">Content Opportunities</span></li>
+    <li class="toc__item"><span class="toc__item-title">Engagement Opportunities</span></li>
+    <li class="toc__item"><span class="toc__item-title">Lead &amp; Ally Opportunities</span></li>
+    <li class="toc__item"><span class="toc__item-title">Future Content &amp; Campaign Opportunities</span></li>
+    <li class="toc__item"><span class="toc__item-title">Audience Profile</span></li>
+    <li class="toc__item"><span class="toc__item-title">Reply Strategy Matrix</span></li>
+    <li class="toc__item"><span class="toc__item-title">Strategic Recommendations</span></li>
+    <li class="toc__item"><span class="toc__item-title">Viral Probability Score</span></li>
+    <li class="toc__item"><span class="toc__item-title">Gold Quotes Hall of Fame</span></li>
+    <li class="toc__item"><span class="toc__item-title">Key Facts Cited by the Public</span></li>
+    <li class="toc__item"><span class="toc__item-title">Privacy &amp; Data Handling</span></li>
+    <li class="toc__item"><span class="toc__item-title">Closing — The Mandate</span></li>
+  </ol>
+</div>
+
+<main style="padding: 20px 0;">
+
+<!-- ══════════════════════════════════════════════════════════ EXECUTIVE SUMMARY -->
+<div class="section section--executive">
+  <div class="section__number">Executive Summary</div>
+  <h2 class="section__title">At a Glance</h2>
+  <div class="section__content">
+    <p>On 11–12 March 2026, 7 News Melbourne posted a TikTok clip announcing that Melbourne had been crowned the world's best city for 2026 by <em>Time Out</em> magazine — the first time an Australian city has claimed the top spot. The post exploded, generating <strong>23.3K likes, ~799 comments, and 2,050 shares</strong>. This report analyses approximately 750 substantive comments (after cleaning spam and emoji-only replies) and reveals a dominant audience reaction of disbelief, scepticism, and — most powerfully — a deep, specific frustration centred on one word the clip used: <strong>"affordability."</strong></p>
+
+    <h4 style="margin-top:20px;">5 Key Findings</h4>
+    <ul>
+      <li><strong>Disbelief is the dominant sentiment (65%).</strong> The overwhelming majority of commenters — Melburnians themselves — rejected the ranking outright, with the highest-engagement comment being the simple, devastating question: <em>"Am i living in the right melb?"</em> (4,649 likes).</li>
+      <li><strong>Affordability is the single most-referenced word in the dataset.</strong> Approximately 28% of all substantive comments directly call out affordability as a false claim — making it the #1 specific trigger point, outranking weather, crime, and all other topics combined.</li>
+      <li><strong>The post is a rare controversy-meets-pride engine.</strong> Despite the negative majority, a meaningful minority (~12%) expressed genuine pride and love for Melbourne, creating a two-sided debate that is algorithmically ideal for engagement.</li>
+      <li><strong>The audience is telling a story that Time Out isn't.</strong> Residents cite housing costs, youth crime, high taxes, and post-COVID decline — pointing to a significant gap between the city's official "best city" brand and lived experience.</li>
+      <li><strong>This dataset is a blueprint for 7 News Melbourne's next 10 content pieces.</strong> The frustrations, questions, and city comparisons raised in comments are a direct readout of what Melbourne audiences want coverage of right now.</li>
+    </ul>
+
+    <div class="stats-grid" style="margin-top:20px;">
+      <div class="stat-card stat-card--negative"><div class="stat-value">65%</div><div class="stat-label">Sceptical / Negative</div></div>
+      <div class="stat-card stat-card--neutral"><div class="stat-value">28%</div><div class="stat-label">Affordability Callouts</div></div>
+      <div class="stat-card stat-card--positive"><div class="stat-value">12%</div><div class="stat-label">Positive / Proud</div></div>
+      <div class="stat-card stat-card--accent"><div class="stat-value">4,649</div><div class="stat-label">Top Comment Likes</div></div>
+      <div class="stat-card"><div class="stat-value">23.3K</div><div class="stat-label">Post Likes</div></div>
+      <div class="stat-card"><div class="stat-value">2,050</div><div class="stat-label">Shares</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 1 — OVERVIEW -->
+<div class="section">
+  <div class="section__number">Section 01</div>
+  <h2 class="section__title">Overview</h2>
+  <div class="section__content">
+    <div class="stats-grid">
+      <div class="stat-card stat-card--accent"><div class="stat-value">TikTok</div><div class="stat-label">Platform</div></div>
+      <div class="stat-card"><div class="stat-value">~799</div><div class="stat-label">Total Comments</div></div>
+      <div class="stat-card stat-card--positive"><div class="stat-value">~750</div><div class="stat-label">After Cleaning</div></div>
+      <div class="stat-card stat-card--neutral"><div class="stat-value">23.3K</div><div class="stat-label">Post Likes</div></div>
+    </div>
+    <p><strong>Post author:</strong> @7newsmelbourne (7 News Melbourne Australia). <strong>Content:</strong> A 1-minute 44-second clip announcing that Melbourne has been crowned the world's best city for 2026 by <em>Time Out</em> magazine — the first Australian city to hold the title. The clip references Melbourne's food, culture, night life, and notably, its <em>affordability</em>.</p>
+    <p><strong>General audience reaction:</strong> Loudly sceptical with a secondary thread of genuine pride. The clip acted as a mirror held up to Melbourne residents, and many did not like what they saw reflected back at them — not the city they actually live in, but an idealised glossy version. The word "affordability" functioned as a laugh trigger that drove extraordinary comment engagement.</p>
+    <p><strong>What this means for 7 News Melbourne:</strong> This post is a rare content asset — a story that generated genuine controversy, mass sharing, and deep audience self-expression. The comments section is a live focus group on Melburnian identity, frustration, and pride, delivered for free. The data provides a comprehensive editorial brief for upcoming Melbourne-focused content.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 2 — SENTIMENT -->
+<div class="section">
+  <div class="section__number">Section 02</div>
+  <h2 class="section__title">Audience Sentiment</h2>
+  <div class="section__content">
+    <div class="sentiment-bar">
+      <div class="sentiment-bar__segment sentiment-bar__segment--negative" style="flex:65">65% Sceptical/Negative</div>
+      <div class="sentiment-bar__segment sentiment-bar__segment--positive" style="flex:12">12%</div>
+      <div class="sentiment-bar__segment sentiment-bar__segment--neutral" style="flex:13">13% Neutral</div>
+      <div class="sentiment-bar__segment sentiment-bar__segment--curious" style="flex:10">10% Mixed</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card stat-card--negative"><div class="stat-value">65%</div><div class="stat-label">Sceptical / Disbelieving</div></div>
+      <div class="stat-card stat-card--positive"><div class="stat-value">12%</div><div class="stat-label">Positive / Proud</div></div>
+      <div class="stat-card stat-card--neutral"><div class="stat-value">13%</div><div class="stat-label">Neutral / Questioning</div></div>
+      <div class="stat-card stat-card--accent"><div class="stat-value">10%</div><div class="stat-label">Humorous / Mixed</div></div>
+    </div>
+
+    <h4>Dominant Emotional Tones</h4>
+    <ul>
+      <li><strong>Disbelief (dominant):</strong> "Is this a joke?", "Are we in the same Melbourne?", "WTF?", "This can't be real." The sheer frequency of this tone indicates the ranking surprised even Melbourne's own residents.</li>
+      <li><strong>Frustrated pride:</strong> Many commenters genuinely love Melbourne but feel the ranking is dishonest about its weaknesses — particularly housing costs and youth crime. These are the most nuanced and valuable comments.</li>
+      <li><strong>Genuine pride:</strong> A meaningful minority (~12%) responded with warmth and celebration. "Love my city Melbourne." "It's truly an amazing city." Several international tourists and recent immigrants expressed strong affection for Melbourne.</li>
+      <li><strong>Dark humour:</strong> The "affordability" topic spawned a wave of sardonic one-liners. This humorous thread drove enormous share behaviour and is the main driver of the post's viral spread.</li>
+      <li><strong>Political cynicism:</strong> A smaller thread (~5%) tied the ranking to government propaganda, corruption, or political spin. Less prevalent but worth noting as a fringe narrative.</li>
+    </ul>
+
+    <h4>Sentiment Note for 7 News Melbourne</h4>
+    <p>The predominantly negative/sceptical sentiment does <em>not</em> reflect negatively on the post itself — it reflects audience authenticity and high engagement. This post performed because it provoked genuine reaction. For 7NM's purposes, this comment section is gold precisely because residents feel strongly enough to respond in volume.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 3 — KEY THEMES -->
+<div class="section">
+  <div class="section__number">Section 03</div>
+  <h2 class="section__title">Key Themes &amp; Comment Clusters</h2>
+  <div class="section__content">
+
+    <div class="cluster-card">
+      <div class="cluster-card__header">
+        <span class="cluster-card__name">🔴 Cluster 1 — "Wrong Melbourne" Disbelief</span>
+        <span class="cluster-card__count">~330 comments · 44%</span>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">The largest cluster by volume. Commenters express generalised disbelief and incredulity at the ranking. Characterised by rhetorical questions, reactions gifs/stickers, and short punchy rejections.</p>
+      <div class="quote">"Am i living in the right melb?" <span class="quote__author">— (4,649 likes · highest-engagement comment in dataset)</span></div>
+      <div class="quote">"Are we fr" <span class="quote__author">— christian triandos (2,267 likes)</span></div>
+      <div class="quote">"I'm in the wrong Melbourne I think" <span class="quote__author">— Jake3574</span></div>
+      <div class="quote">"have I moved to a different reality?" <span class="quote__author">— ZORBAD</span></div>
+      <div class="quote">"Geezes how bad were the other cities for this one to win?" <span class="quote__author">— cams_1978 (394 likes)</span></div>
+    </div>
+
+    <div class="cluster-card">
+      <div class="cluster-card__header">
+        <span class="cluster-card__name">🟠 Cluster 2 — Affordability Outrage</span>
+        <span class="cluster-card__count">~210 comments · 28%</span>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">The single most specific topic. Commenters zero in on the clip's use of the word "affordability" as proof the ranking is fictitious. This is the dataset's most concentrated and passionate theme.</p>
+      <div class="quote">"Shit aint affordable" <span class="quote__author">— Billy OD (638 likes)</span></div>
+      <div class="quote">"Affordability? I might be in a different melbourne." <span class="quote__author">— Bekir m (47 likes)</span></div>
+      <div class="quote">"AFFORDABILITY?!??? Of what? Air? Yes air is free here but everything else cost an arm" <span class="quote__author">— Nguyen Phan</span></div>
+      <div class="quote">"LUKE: AFFORDABILITY BROTHER WHAT😭😭😭😭😭😭😭😭" <span class="quote__author">— Luke</span></div>
+      <div class="quote">"Did she just say affordability" <span class="quote__author">— DeBeau's Ghost</span></div>
+    </div>
+
+    <div class="cluster-card">
+      <div class="cluster-card__header">
+        <span class="cluster-card__name">🟢 Cluster 3 — Genuine Melbourne Pride</span>
+        <span class="cluster-card__count">~90 comments · 12%</span>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">Authentic celebration of Melbourne from residents, recent movers, and international visitors. Often more measured than the disbelief camp — these commenters acknowledge problems exist while defending the city's core appeal.</p>
+      <div class="quote">"I've lived in both Cape Town (last years winner) and Melbourne. Melbourne is just awesome. Dont believe me? Try any American city 🤣🤣🤣" <span class="quote__author">— luvos🇿🇦</span></div>
+      <div class="quote">"As a tourist from the Middle East, I loved walking around the entirety of your CBD, the food and kind people ✌🏽" <span class="quote__author">— R¥</span></div>
+      <div class="quote">"Human-tofu: I moved here from Sydney and never looked back. Pubs bars and restaurants and always something going on 🥰" <span class="quote__author">— Human-tofu</span></div>
+      <div class="quote">"When you live somewhere your whole life, you stop seeing what outsiders admire." <span class="quote__author">— Xa</span></div>
+      <div class="quote">"Melbourne is truely an amazing city" <span class="quote__author">— Eiretoau (19 likes)</span></div>
+    </div>
+
+    <div class="cluster-card">
+      <div class="cluster-card__header">
+        <span class="cluster-card__name">🔵 Cluster 4 — Crime, Safety &amp; Quality-of-Life Criticism</span>
+        <span class="cluster-card__count">~60 comments · 8%</span>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">References to crime, youth violence, "Machete Melbourne," homeless epidemic, drug issues, and general post-COVID municipal decline. The term "Machate Melbourne" appeared in multiple comments and is a charged cultural reference to youth crime incidents.</p>
+      <div class="quote">"Machate Melbourne" <span class="quote__author">— Sephora (774 likes)</span></div>
+      <div class="quote">"Having lived in Melbourne for 77 years, I can say that it is no longer safe to walk around during the day!" <span class="quote__author">— Raffa</span></div>
+      <div class="quote">"TAKE A SURVEY HOW MANY PEOPLE GENUINELY FEEL SAFE USING PUBLIC TRANSPORT OR WALKING THE STREET DAY OR NIGHT" <span class="quote__author">— Jayce maybe?</span></div>
+      <div class="quote">"I literally don't know anyone who hasn't had their car or house broken into this year! Literally been 2 months!" <span class="quote__author">— dadleftdaisy</span></div>
+      <div class="quote">"what about the homeless and drug epidemic in Melbourne!!! its not that great of a city" <span class="quote__author">— SaucyBrosGaming</span></div>
+    </div>
+
+    <div class="cluster-card">
+      <div class="cluster-card__header">
+        <span class="cluster-card__name">🟡 Cluster 5 — Ranking Methodology Scepticism</span>
+        <span class="cluster-card__count">~40 comments · 5%</span>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">Commenters question who voted, how the ranking was constructed, and whether the result is trustworthy. Several explicitly name <em>Time Out</em> magazine as a dubious source.</p>
+      <div class="quote">"Melbourne is truely an amazing city but people need to realise this is just some magazine doing a largely baseless ranking. Just look at Cape Town sitting at 6... this list is nothing to take serious." <span class="quote__author">— Eiretoau</span></div>
+      <div class="quote">"WHERE DOES THE DATA COME FROM" <span class="quote__author">— Strawbreemilk</span></div>
+      <div class="quote">"Time out magazine.. Wtf is that and wat are they smokin. 🤣" <span class="quote__author">— Matto</span></div>
+      <div class="quote">"Was this filmed pre covid?" <span class="quote__author">— Andy Lackovic</span></div>
+      <div class="quote">"Nav: Who did this survey, they need specsavers" <span class="quote__author">— Nav</span></div>
+    </div>
+
+    <div class="cluster-card">
+      <div class="cluster-card__header">
+        <span class="cluster-card__name">⚪ Cluster 6 — Intra-Australian Rivalry</span>
+        <span class="cluster-card__count">~20 comments · 3%</span>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">Sydney vs. Melbourne debate is perennial; also Brisbane and Perth advocates pushed back. Small but reliably engaging thread.</p>
+      <div class="quote">"Argos: Ermmmm nah Sydney on top! 🤘🏻" <span class="quote__author">— Argos 🦚</span></div>
+      <div class="quote">"Corey Mckay: Live in Perth we're better by far" <span class="quote__author">— Corey Mckay</span></div>
+      <div class="quote">"Emmanuel: Nahh beaches! Brisbane is the best" <span class="quote__author">— Emmanuel</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 4 — QUESTIONS -->
+<div class="section">
+  <div class="section__number">Section 04</div>
+  <h2 class="section__title">Audience Questions</h2>
+  <div class="section__content">
+    <ul>
+      <li><strong>"Who voted / who decided this?" (≈45 comments)</strong> — The most-asked question. Audience members fundamentally do not trust the source or methodology. Example: <em>"waite who voted and why didn't they ask me"</em>; <em>"WHERE DOES THE DATA COME FROM."</em> 7 News Melbourne could address this by providing more context on Time Out's methodology in a follow-up piece.</li>
+      <li><strong>"Are we in the right Melbourne?" (rhetorical, ≈30 comments)</strong> — Not a genuine question, but a recurring rhetorical device expressing incredulity. Represents the gap between official branding and lived experience. Example: <em>"The one in Florida or the one in Victoria?"</em></li>
+      <li><strong>"What happened to affordability / cost of living?" (≈25 comments)</strong> — A genuine demand for explanation or acknowledgment of the disconnect between the ranking criteria and housing/rental costs.</li>
+      <li><strong>"What cities were they comparing to?" (≈15 comments)</strong> — Commenters want to see the full list. Example: <em>"Did we forget Dubai?"</em>; <em>"How tf we beat Japan."</em></li>
+      <li><strong>"Hasn't this happened before?" (≈8 comments)</strong> — Some commenters note Melbourne has won similar rankings previously. This suggests awareness fatigue with the story in some segments.</li>
+      <li><strong>"What about [other city]?" (≈8 comments)</strong> — Calls for Brisbane, Perth, Adelaide, Sydney to be acknowledged or for the list methodology to be questioned relative to global alternatives.</li>
+    </ul>
+    <div class="alert alert--info">
+      <div class="alert__title">📣 Editorial Opportunity</div>
+      <p style="font-size:0.85rem;color:var(--text);">The "who voted and how?" question is screaming for a follow-up explainer piece. A short article or TikTok explaining how the Time Out ranking actually works — and who has input — would capture enormous traffic from this audience's curiosity while positioning 7NM as a reliable context-provider, not just a headline broadcaster.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 5 — FRUSTRATIONS -->
+<div class="section">
+  <div class="section__number">Section 05</div>
+  <h2 class="section__title">Audience Frustrations</h2>
+  <div class="section__content">
+    <ul>
+      <li><strong>Affordability / Cost of Living (primary frustration · ~210 comment references)</strong> — Rents, house prices, food, petrol, taxes. The clip's use of "affordability" as one of Melbourne's virtues triggered an avalanche of pushback. This is the single biggest pain point in the dataset. Quote: <em>"Harun: Visit Melbourne Work Tax Eat Tax Drive Tax Breathe Coming Soon…"</em></li>
+      <li><strong>Crime and safety (~60 references)</strong> — Particularly youth crime and the "Machete Melbourne" narrative. Commenters feel unsafe on public transport and at night. Quote: <em>"Jayce: TAKE A SURVEY HOW MANY PEOPLE GENUINELY FEEL SAFE USING PUBLIC TRANSPORT."</em></li>
+      <li><strong>Post-COVID decline (~25 references)</strong> — Melbourne suffered one of the world's longest COVID lockdowns. Many commenters feel the city has never fully recovered. Quote: <em>"ArdianM: in 2018 2019 yes maybe now hmmm not really."</em></li>
+      <li><strong>Weather (~20 references)</strong> — Cold, grey, unpredictable. The "four seasons in one day" reputation as a negative rather than a quirk. Quote: <em>"R.Baiden: The coldest city in the world, 10 months winter and 2 months hot summer." (103 likes)</em></li>
+      <li><strong>Taxes and government (~20 references)</strong> — High state taxes, debt, and political cynicism. Quote: <em>"Sam Eaves: shit roads, shit premier, taxes, taxes and more taxes... I could keep going."</em></li>
+      <li><strong>Nightlife / early closing times (~8 references)</strong> — Perceived lack of genuine nightlife. Quote: <em>"BATBOY: Night life?!?! everything closes at 5 💀"</em></li>
+      <li><strong>Feeling out of touch with the ranking sources (~8 references)</strong> — Commenters feel the surveyed population doesn't represent actual Melbourne residents — tourists, wealthy visitors, or "the top 1%" only. Quote: <em>"Juniper: This reflects the opinions of the wealthy that treat Melbourne like a theme park."</em></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 6 — DESIRES -->
+<div class="section">
+  <div class="section__number">Section 06</div>
+  <h2 class="section__title">Audience Desires</h2>
+  <div class="section__content">
+    <p>Reading beneath the sarcasm and frustration, the comments reveal what this audience actually <em>wants</em> — and what they'd like Melbourne (and 7 News Melbourne) to give them:</p>
+    <ul>
+      <li><strong>Honest journalism about Melbourne's real issues.</strong> The prevailing frustration is not with Melbourne itself but with what the audience perceives as a sanitised, tourist-brochure view of it. They want 7NM to report on rent crises, youth crime, and the lived experience of cost-of-living stress — not just celebrate awards. Quote: <em>"Sam Eaves: How do you say you're out of touch without saying you're out of touch."</em></li>
+      <li><strong>Acknowledgment that Melbourne has changed post-COVID.</strong> Multiple commenters distinguish the pre-2020 Melbourne from today's. They want that story told. Quote: <em>"Beverley: It was before 2020."</em></li>
+      <li><strong>An explanation of the ranking methodology.</strong> Viewers want to understand the "Time Out" ranking criteria. A follow-up video or article explaining this would satisfy a loud and questioning audience.</li>
+      <li><strong>More content featuring Melbourne's genuine strengths.</strong> Even sceptics mention food, coffee, diversity, and culture as genuine positives. Content showcasing these authentically — rather than in a promotional register — would resonate.</li>
+      <li><strong>Validation of their own experience.</strong> The "Am I in the wrong Melbourne?" sentiment is also a request to be heard. Audience members who are struggling with cost of living want their reality acknowledged by their local news source.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 7 — VIRAL TRIGGERS -->
+<div class="section">
+  <div class="section__number">Section 07</div>
+  <h2 class="section__title">Viral Content Triggers</h2>
+  <div class="section__content">
+    <p>This post performed because it activated multiple viral mechanisms simultaneously:</p>
+    <ul>
+      <li><strong>Dissonance trigger (primary).</strong> The gap between a prestigious global ranking and the lived reality of Melbourne residents created immediate cognitive friction. Dissonance drives comment behaviour more reliably than almost any other trigger.</li>
+      <li><strong>The "one word" lightning rod — "affordability."</strong> A single word in the broadcast summary became the rallying point for an entire frustration movement. The specificity of the trigger (one word, high ironic contrast with reality) made it a memeable, highly shareable moment. Every commenter who typed "affordability??? 😂" was effectively advertising the post.</li>
+      <li><strong>Identity and place-based emotion.</strong> People have deep emotional attachments to where they live. Being told their city is "the world's best" when they feel it isn't taps into a fundamental tension between official narrative and personal identity.</li>
+      <li><strong>The debate engine (Sydney vs. Melbourne, etc.).</strong> Any content that pits Australian cities against each other generates reliable debate-driven engagement. The ranking did this automatically.</li>
+      <li><strong>Humour and collective wit.</strong> The comment section became a comedy room. The funniest replies ("Is there another Melbourne in Florida?", "Visit Melbourne Work Tax Eat Tax Drive Tax Breathe Coming Soon") generated their own sub-engagement.</li>
+      <li><strong>Tag-and-share behaviour.</strong> Multiple comments tagged friends, partners, and other accounts, spreading the post organically. Quote: <em>"@eli.luc7 bru"</em>, friend-tags confirming shared lived experience.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 8 — CONTENT OPPORTUNITIES -->
+<div class="section">
+  <div class="section__number">Section 08</div>
+  <h2 class="section__title">Content Opportunities</h2>
+  <div class="section__content">
+
+    <div class="idea-card">
+      <div class="idea-card__title">1. "We asked 100 Melburnians what they actually think" vox pop reaction series</div>
+      <span class="idea-card__format">TikTok / Short-form Video</span>
+      <div class="idea-card__rationale">The comments are a ready-made script. Going out on the streets and asking real Melburnians "Best city in the world — agree or disagree?" would generate enormous organicengagement. Commenters would tag it, share it, and argue in the comments all over again.</div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-card__title">2. "How the Time Out ranking actually works — is it legit?" explainer</div>
+      <span class="idea-card__format">Article + Short Video</span>
+      <div class="idea-card__rationale">Directly answers the #1 audience question ("who voted?"). Positions 7 News Melbourne as a trusted context-provider. Also gives the audience a reason to trust or distrust the ranking based on evidence — which drives its own debate.</div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-card__title">3. "Melbourne affordability report: what does it actually cost to live here in 2026?"</div>
+      <span class="idea-card__format">Feature Article + Infographic TikTok</span>
+      <div class="idea-card__rationale">The affordability frustration (~28% of all comments) is a clear editorial demand signal. A data-driven piece on Melbourne rents, food costs, petrol, and wages vs. national averages would be widely shared and widely debated. Quote: "Only the wealthy can experience the city the best — try any American city." This audience wants numbers.</div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-card__title">4. "Melbourne's dark side: youth crime, Machete incidents, and what the city is doing about it"</div>
+      <span class="idea-card__format">Investigative Feature / TikTok Series</span>
+      <div class="idea-card__rationale">The "Machate Melbourne" reference (774 likes on Sephora's single comment) signals a large audience segment that feels crime is being ignored in official best-city narratives. An honest, data-backed investigation into safety trends would directly address this demand and establish credibility.</div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-card__title">5. "Why Melbourne actually is great (and doesn't know it)" —  counterintuitive take</div>
+      <span class="idea-card__format">Opinion / TikTok Essay</span>
+      <div class="idea-card__rationale">Several international commenters and city-movers expressed genuine admiration that locals dismiss. A piece that foregrounds the outsider perspective ("when you've lived elsewhere you realise what you have") would play well with the 12% positive segment and generate productive counterargument from the sceptics.</div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-card__title">6. "Best city in the world for whom? Breaking down who's thriving vs. struggling in Melbourne"</div>
+      <span class="idea-card__format">Investigative Feature / Data Video</span>
+      <div class="idea-card__rationale">Quote: <em>"Juniper: This reflects the opinions of the wealthy that treat Melbourne like a theme park."</em> A socioeconomic breakdown of who benefits from Melbourne's "best city" brand and who doesn't would be a sophisticated, shareable piece of public interest journalism.</div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-card__title">7. Sydney vs. Melbourne: settling it with data, 2026 edition</div>
+      <span class="idea-card__format">Comparison Article / Interactive</span>
+      <div class="idea-card__rationale">The intra-Australia rivalry drives reliably high engagement. A data-driven comparison across categories that actually matter to residents (housing, wages, weather, nightlife, crime) would capture the rivalry audience and generate enormous traffic from both cities.</div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-card__title">8. "Melbourne pre-COVID vs. 2026: what changed?"</div>
+      <span class="idea-card__format">Feature / Nostalgia Video</span>
+      <div class="idea-card__rationale">The pre/post-COVID Melbourne theme appeared in ~25 comments. Melbourne's long lockdown trauma is unresolved in many residents' minds. Content that honours that history while examining the city's recovery trajectory would be emotionally resonant and widely shared.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 9 — ENGAGEMENT OPPS -->
+<div class="section">
+  <div class="section__number">Section 09</div>
+  <h2 class="section__title">Engagement Opportunities</h2>
+  <div class="section__content">
+    <p>As the post creator, 7 News Melbourne has direct engagement opportunities that are still live while the comment section remains active:</p>
+    <ul>
+      <li><strong>Pin the top comment ("Am i living in the right melb?" — 4,649 likes).</strong> Pinning the most-liked comment acknowledges the audience's voice and signals that 7NM is not defensive about the reaction. This is a rare gesture of media self-awareness that audiences reward with respect and further engagement.</li>
+      <li><strong>Reply to the affordability thread with a teaser.</strong> A brief reply such as <em>"We heard you — affordability deep-dive coming shortly 👀"</em> tied to a follow-up piece converts a frustration thread into promotion for journalism that directly serves this audience.</li>
+      <li><strong>Engage the outsider-perspective comments.</strong> The international tourist and recent migrant comments (e.g., luvos🇿🇦, R¥, Human-tofu) are the most articulate defences of Melbourne in the dataset. Liking and replying to these amplifies the counter-narrative without 7NM appearing defensive itself.</li>
+      <li><strong>Create a "response video" or Duet.</strong> TikTok's Duet or Stitch feature allows 7NM to react to the reaction — creating a meta-content piece about how Melbourne residents responded. This type of audience-listening content performs strongly.</li>
+      <li><strong>Turn "Who voted?" into a poll or stitch.</strong> Post a reply or follow-up TikTok asking: <em>"Would YOU vote Melbourne as the world's best city? YES / NO / Only for food."</em> This extends the engagement cycle and generates a second wave of shares.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 10 — LEAD / ALLY OPPS -->
+<div class="section">
+  <div class="section__number">Section 10</div>
+  <h2 class="section__title">Lead &amp; Ally Opportunities</h2>
+  <div class="section__content">
+    <p>For 7 News Melbourne as a content creator and news organisation, "leads" are story sources, interview subjects, and community voices. This comment section is rich with them.</p>
+
+    <h4>Source Opportunities — Lived Experience</h4>
+    <ul>
+      <li><strong>Raffa:</strong> <em>"Having lived in Melbourne for 77 years, I can say that it is no longer safe to walk around during the day."</em> — A long-term resident with a 77-year perspective on Melbourne's decline. An extraordinary interview subject for a "Melbourne then and now" piece.</li>
+      <li><strong>58421457886532:</strong> <em>"As someone born and lived my whole life in Melbourne... I use to believe this whole most livable rubbish for 30yrs too but wondered why when I visit other states they had such a higher quality of life."</em> — A converted sceptic with a specific, data-aware take on Victoria vs. other states. Compelling voice.</li>
+      <li><strong>Sam Eaves:</strong> Wrote a lengthy, specific critique covering roads, premiere, taxes, nightlife, speed cameras, alcohol laws, and more. This commenter is clearly plugged in and opinionated — a potential source or community correspondent.</li>
+      <li><strong>Juniper:</strong> <em>"This reflects the opinions of the wealthy that treat Melbourne like a theme park, and an insult to the residents who live here and have to deal with the cost of living and youth crime crises."</em> — Articulate and ideologically coherent. Strong interview subject for a cost-of-living story.</li>
+    </ul>
+
+    <h4>Source Opportunities — Outsider Perspective</h4>
+    <ul>
+      <li><strong>luvos🇿🇦</strong> (Cape Town &amp; Melbourne comparison), <strong>R¥</strong> (Middle East tourist), <strong>Human-tofu</strong> (Sydney migrant) — all provide the outsider perspective that makes for compelling "why Melbourne?" content. These are natural subjects for a "what do outsiders see that we can't?" piece.</li>
+    </ul>
+
+    <h4>Approach Note</h4>
+    <p>For any DM outreach, see the consent template in Section 18 (Privacy &amp; Data Handling).</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 11 — CAMPAIGN OPPS -->
+<div class="section">
+  <div class="section__number">Section 11</div>
+  <h2 class="section__title">Future Content &amp; Campaign Opportunities</h2>
+  <div class="section__content">
+    <ul>
+      <li><strong>"The Real Melbourne Cost of Living Index"</strong> — Create or commission a community-sourced cost-of-living data set based on what residents actually pay. Launch as a shareable interactive. The comment data shows appetite is enormous and the topic is underserved. Quote evidence: 210+ affordability-related comments.</li>
+      <li><strong>"Melbourne Safety Survey 2026"</strong> — A community-based safety survey asking residents how safe they actually feel. The crime/safety cluster (~60 comments) shows this is a top-of-mind concern that is not being adequately addressed in official data. A published result would be newsworthy and deeply shareable.</li>
+      <li><strong>"Melbourne Olympics 2032 Prep Watch"</strong> — Several comments referenced the upcoming Olympics (Brisbane 2032 was mentioned; Melbourne's infrastructure debates were implicit). A long-form series tracking Melbourne's infrastructure, public transport, and liveability ahead of the national spotlight of 2032 would build long-term audience loyalty.</li>
+      <li><strong>"Best by category" counter-ranking</strong> — A community-voted "Melbourne is #1 for ___" campaign where residents nominate what Melbourne is genuinely world-class at (food, coffee, multi-culturalism, trams, etc.). Reclaims the best-city narrative on residents' own terms rather than a magazine's.</li>
+      <li><strong>Ongoing "Melbourne vs [city]" content format</strong> — The rivalry thread is perennial. A regular "Melbourne vs. [city]" content format comparing real data across affordable housing, wages, safety, weather, and culture would generate reliable recurring engagement from both Australian cities and internationally.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 12 — AUDIENCE PROFILE -->
+<div class="section">
+  <div class="section__number">Section 12</div>
+  <h2 class="section__title">Audience Profile</h2>
+  <div class="section__content">
+    <h4>Primary Audience — Current Melbourne Residents</h4>
+    <ul>
+      <li><strong>Age:</strong> Primarily 18–40 based on language, cultural references (TikTok stickers, Gen Z phrasing), and cost-of-living concerns (rental stress is a younger cohort's issue).</li>
+      <li><strong>Location:</strong> Predominantly Melbourne metro, including inner suburbs and outer suburbs (references to Frankston, Dandenong, Tarneit, Noble Park signal awareness of the full geographic spread).</li>
+      <li><strong>Orientation:</strong> Working and middle class. High financial stress. Very aware of tax load, rental costs, petrol prices.</li>
+      <li><strong>Media relationship:</strong> Somewhat sceptical of mainstream media framing. The volume of "this has to be AI" and "propaganda" comments shows a segment that distrusts official narratives. This doesn't mean they won't watch or share 7NM content — but they're sharp and they notice when they're being patronised.</li>
+    </ul>
+
+    <h4>Secondary Audience — International &amp; Interstate Observers</h4>
+    <ul>
+      <li>A visible minority of international tourists, recent immigrants, and interstate Australians weighed in positively on Melbourne. These are community ambassadors whose positive views provide editorial balance.</li>
+    </ul>
+
+    <h4>Tertiary Audience — Politically Cynical / Fringe</h4>
+    <ul>
+      <li>A small but vocal segment tied the ranking to government propaganda, corruption, or media manipulation. This segment should not be engaged with directly by 7NM but should not be ignored as a signal — it reflects trust deficits in institutional communication that affect the broader audience.</li>
+    </ul>
+
+    <h4>Highest-Value Segment for 7 News Melbourne</h4>
+    <p>The "frustrated-but-engaged Melburnian" — the commenter who clearly loves their city, is personally invested in its reputation, but feels the official narrative doesn't represent their daily reality. This is roughly 40% of the comment dataset. This audience will consume, debate, and share rigorous, honest local journalism at a very high rate.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 13 — REPLY STRATEGY -->
+<div class="section">
+  <div class="section__number">Section 13</div>
+  <h2 class="section__title">Reply Strategy Matrix</h2>
+  <div class="section__content">
+
+    <h4>a) Decision Tree</h4>
+    <div class="alert alert--info" style="font-size:0.85rem;line-height:1.8;">
+      <strong>Is this comment spam or bot-like?</strong> → DO NOT ENGAGE, report if needed.<br>
+      <strong>Is this a hostile personal attack on 7NM?</strong> → DO NOT REPLY, let it sit.<br>
+      <strong>Is this a genuine question about the ranking methodology?</strong> → 🟢 TIER 1 REPLY with link to follow-up piece.<br>
+      <strong>Is this an affordability frustration comment?</strong> → 🟢 TIER 1 REPLY acknowledging + teasing follow-up.<br>
+      <strong>Is this a high-engagement positive comment?</strong> → ⚪ LIKE/HEART only; or 🟡 TIER 2 if exceptionally articulate.<br>
+      <strong>Is this a crime/safety comment with a personal story?</strong> → 🟡 TIER 2 REPLY with care — acknowledge without dismissing.<br>
+      <strong>Is this a government/media conspiracy comment?</strong> → 🔴 DO NOT REPLY. Engagement validates the premise.<br>
+      <strong>Is this an interstate rivalry comment?</strong> → ⚪ REACT ONLY (funny emoji). Don't take the bait editorially.
+    </div>
+
+    <h4 style="margin-top:20px;">b) Tier Distribution (estimated)</h4>
+    <div class="stats-grid">
+      <div class="stat-card stat-card--positive"><div class="stat-value">~60</div><div class="stat-label">Tier 1 — Reply High Value</div></div>
+      <div class="stat-card stat-card--neutral"><div class="stat-value">~40</div><div class="stat-label">Tier 2 — Reply with Care</div></div>
+      <div class="stat-card stat-card--negative"><div class="stat-value">~25</div><div class="stat-label">Tier 3 — Do Not Reply</div></div>
+      <div class="stat-card"><div class="stat-value">~625</div><div class="stat-label">Tier 4 — React Only / Skip</div></div>
+    </div>
+
+    <h4 style="margin-top:20px;">c) Priority Reply Targets</h4>
+
+    <div class="reply-card reply-card--t1">
+      <div class="reply-card__rank">🟢 TIER 1 — TOP PRIORITY</div>
+      <div class="reply-card__comment">"WHERE DOES THE DATA COME FROM" — Strawbreemilk</div>
+      <div class="reply-card__reason">Represents ~40 comments asking about methodology. A single reply here addresses the whole cluster and builds editorial credibility.</div>
+      <div class="reply-card__suggestion"><strong>Suggested Reply:</strong> Great question — the ranking is run by Time Out magazine based on reader votes + expert panels. We're doing a deeper explainer on how it all works — keep an eye on our page 👀</div>
+    </div>
+
+    <div class="reply-card reply-card--t1">
+      <div class="reply-card__rank">🟢 TIER 1 — HIGH IMPACT</div>
+      <div class="reply-card__comment">"Shit aint affordable" — Billy OD (638 likes)</div>
+      <div class="reply-card__reason">Highest-engagement affordability comment. Represents the dataset's dominant frustration. A direct, non-dismissive acknowledgment turns this into a conversation rather than a broadcast rejection.</div>
+      <div class="reply-card__suggestion"><strong>Suggested Reply:</strong> You're not alone in that reaction — "affordability" was the most commented-on word in this clip by a mile. We're working on a Melbourne cost of living piece that won't sugarcoat it. Stay tuned.</div>
+    </div>
+
+    <div class="reply-card reply-card--t1">
+      <div class="reply-card__rank">🟢 TIER 1 — EDITORIAL VALUE</div>
+      <div class="reply-card__comment">"Having lived in Melbourne for 77 years, I can say that it is no longer safe to walk around during the day" — Raffa</div>
+      <div class="reply-card__reason">Long-term resident with a 77-year perspective. Unique anecdotal value. A reply that respects the experience and invites further comment builds a source relationship.</div>
+      <div class="reply-card__suggestion"><strong>Suggested Reply:</strong> 77 years is an extraordinary perspective to have on this city — we'd genuinely love to hear more. Have you DM'd us? Your experience deserves more than a comment section.</div>
+    </div>
+
+    <div class="reply-card reply-card--t2">
+      <div class="reply-card__rank">🟡 TIER 2 — REPLY WITH CARE</div>
+      <div class="reply-card__comment">"This reflects the opinions of the wealthy that treat Melbourne like a theme park..." — Juniper 🦊</div>
+      <div class="reply-card__reason">Sharp, ideological critique that resonates with a large segment. Engaging well here demonstrates editorial integrity. Engaging badly here generates a pile-on.</div>
+      <div class="reply-card__suggestion"><strong>Suggested Reply:</strong> That's a really important point — the gap between Melbourne's global brand and what many residents are living through cost-of-living wise is something we want to report on honestly. Watch this space.</div>
+    </div>
+
+    <div class="reply-card reply-card--t3">
+      <div class="reply-card__rank">🔴 TIER 3 — DO NOT REPLY</div>
+      <div class="reply-card__comment">"dvvruiz: australian propaganda" / "Maria: is this survey made like how North Korea does their surveys...propaganda from the leading party"</div>
+      <div class="reply-card__reason">Conspiracy-framing comments. Any engagement validates the premise and invites a pile-on from others who hold similar views. The audience watching will see 7NM's dignity maintained by not engaging.</div>
+    </div>
+
+    <h4 style="margin-top:20px;">d) Reply Scripts</h4>
+
+    <div class="reply-card">
+      <div class="reply-card__rank">Script A — Affordability Frustration</div>
+      <div class="reply-card__comment">Trigger: Any comment specifically calling out "affordability" as false or laughable.</div>
+      <div class="reply-card__suggestion"><strong>Script:</strong> "Affordability was definitely the word that got everyone's attention in this clip — and for good reason. The gap between the ranking narrative and what people are actually paying for rent and groceries right now is real. We're working on an honest look at Melbourne's cost of living — no spin." <br><em>[Optional: link to article when published]</em></div>
+    </div>
+
+    <div class="reply-card">
+      <div class="reply-card__rank">Script B — Methodology Questions</div>
+      <div class="reply-card__comment">Trigger: "Who voted?", "How is this ranking decided?", "WHERE DOES THE DATA COME FROM?"</div>
+      <div class="reply-card__suggestion"><strong>Script:</strong> "The ranking comes from Time Out magazine — a combination of reader votes and editorial experts. It's worth noting they're measuring factors like culture, food, diversity, and buzz rather than housing costs or safety. We're doing a break-down of exactly how they score cities — stay tuned."</div>
+    </div>
+
+    <div class="reply-card">
+      <div class="reply-card__rank">Script C — Outsider Admiration Comment</div>
+      <div class="reply-card__comment">Trigger: International visitor or interstate migrant expressing genuine love for Melbourne.</div>
+      <div class="reply-card__suggestion"><strong>Script:</strong> "Comments like this are a good reminder that the things Melburnians take for granted are genuinely remarkable to outsiders. Thanks for sharing your perspective — we'd love to feature voices like yours in an upcoming piece."</div>
+    </div>
+
+    <div class="reply-card">
+      <div class="reply-card__rank">Script D — Personal Story / Safety Concern</div>
+      <div class="reply-card__comment">Trigger: Comment sharing a personal crime, safety, or cost-of-living story.</div>
+      <div class="reply-card__suggestion"><strong>Script:</strong> "Thank you for sharing this — stories like yours are exactly what we want to be covering honestly. If you're open to it, please DM us. We'd like to include real experiences in our reporting on [topic]."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 14 — STRATEGIC RECS -->
+<div class="section">
+  <div class="section__number">Section 14</div>
+  <h2 class="section__title">Strategic Recommendations</h2>
+  <div class="section__content">
+
+    <div class="rec-tier">
+      <div class="rec-tier__header"><span style="color:var(--danger);">🔴 CRITICAL — Within 72 Hours</span></div>
+      <div class="rec-tier__items">
+        <div class="rec-item">
+          <div class="rec-item__label">1. Reply to the affordability cluster with a teaser of your follow-up piece</div>
+          <div class="rec-item__desc">The affordability thread is still live and generating replies. A single 7NM reply acknowledging the reaction and referencing upcoming coverage converts the comment section frustration into an editorial pipeline. Do this before the post falls off TikTok's algorithm window (typically 48–72 hours for maximum comment activity).</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-item__label">2. DM Raffa (77-year Melbourne resident)</div>
+          <div class="rec-item__desc">A 77-year Melbourne perspective is a rare editorial asset. Contact within 48 hours while the post is fresh in their mind. Suggested approach: Script D.</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-item__label">3. Commission or fast-track the Melbourne Affordability explainer piece</div>
+          <div class="rec-item__desc">The comment section has handed 7NM a perfectly primed audience for this story. Publish within 72 hours to capture the attention spike while the audience is already engaged with this topic. Every affordability commenter is a pre-made reader.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-tier">
+      <div class="rec-tier__header"><span style="color:var(--warn);">🟡 HIGH PRIORITY — Within 14 Days</span></div>
+      <div class="rec-tier__items">
+        <div class="rec-item">
+          <div class="rec-item__label">4. Produce a "Time Out methodology explainer" video/article</div>
+          <div class="rec-item__desc">~40 comments asked how the ranking works. An explainer published while the original story is still in memory will capture residual search and engagement traffic, and positions 7NM as a context provider, not just a headline broadcaster.</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-item__label">5. Record and publish the "Melbourne vox pop reaction" video</div>
+          <div class="rec-item__desc">Go out on the street and ask real Melburnians whether they agree. This meta-content — journalists responding to the audience's response — is the highest-performing content format for this type of controversy. Aim: 5–7 diverse voices across different suburbs/demographics.</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-item__label">6. Publish Melbourne Safety data piece using the crime comment thread as editorial hook</div>
+          <div class="rec-item__desc">The "Machete Melbourne" and safety comments represent a consistent audience concern. A data-backed safety piece (crime stats, community response, council plans) is both public interest journalism and high-search-value content.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-tier">
+      <div class="rec-tier__header"><span style="color:var(--primary-light);">🔵 MEDIUM PRIORITY — Within 30 Days</span></div>
+      <div class="rec-tier__items">
+        <div class="rec-item">
+          <div class="rec-item__label">7. Launch a "Melbourne residents' real ranking" community poll or interactive</div>
+          <div class="rec-item__desc">Invite the audience to vote on Melbourne's actual strengths and weaknesses across 8-10 categories. Publish results as their own story. This is participatory journalism that the frustrated-but-engaged audience will embrace. The original comment section is your launch audience.</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-item__label">8. Build out the "Melbourne pre/post COVID" longform feature</div>
+          <div class="rec-item__desc">The pre/post COVID theme appeared consistently. With the 2020–2022 lockdowns now 4+ years in the past, a reflective piece on Melbourne's recovery arc — with real resident voices — would be timely, emotional, and widely shared.</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-item__label">9. Establish a "Sydney vs Melbourne" recurring content format</div>
+          <div class="rec-item__desc">The interstate rivalry is an evergreen engagement engine. A structured, data-based comparison series that revisits key metrics annually is low-cost, high-traffic, and keeps this audience coming back.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-tier">
+      <div class="rec-tier__header"><span style="color:var(--muted);">⚪ ONGOING — Continuous Operations</span></div>
+      <div class="rec-tier__items">
+        <div class="rec-item">
+          <div class="rec-item__label">10. Use dissonance triggers deliberately in future local news content</div>
+          <div class="rec-item__desc">This post proves that official claims about Melbourne that conflict with lived experience are gold for engagement. Any future story involving a "Melbourne ranked #1 for X" hook should be framed with the same dissonance-aware structure.</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-item__label">11. Monitor the "Machete Melbourne" and crime sentiment thread as an ongoing pulse-check</div>
+          <div class="rec-item__desc">This topic has 774 likes on a single comment. It is not a fringe concern. Regular crime and safety data reporting, presented honestly, builds trust with the audience segment that currently feels ignored by official media on this issue.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 15 — VIRAL SCORE -->
+<div class="section">
+  <div class="section__number">Section 15</div>
+  <h2 class="section__title">Viral Probability Score</h2>
+  <div class="section__content">
+    <div class="score-display" style="--score-pct:80">
+      <div class="score-circle">8</div>
+      <div class="score-details">
+        <h4>Viral Probability Score: 8/10</h4>
+        <p>This post hit 23.3K likes, 799 comments, and 2,050 shares — strong metrics by any measure. The controversy engine is highly replicable. The dissonance between official narrative and lived experience is a reliable trigger that 7 News Melbourne can deliberately activate in future local content.</p>
+        <p style="margin-top:8px;color:var(--accent);font-weight:600;">With the recommended follow-up pieces published (cost of living, safety, vox pop), this original post could see a second engagement wave from shares of the follow-ups referencing it.</p>
+      </div>
+    </div>
+
+    <h4>Key Drivers of the Score</h4>
+    <ul>
+      <li><strong>Dissonance trigger (strong):</strong> The gap between a global "best city" award and what residents experience daily creates immediate, shareable cognitive friction.</li>
+      <li><strong>"One-word lightning rod" mechanism (very strong):</strong> The word "affordability" became memeable almost instantly. This is rare and highly replicable — future news content that includes similarly ironic juxtapositions between official language and lived reality will fire the same mechanism.</li>
+      <li><strong>Identity and place attachment (strong):</strong> Melbourne content will always perform above average for Melbourne audiences because of the emotional stakes involved in hearing their city talked about.</li>
+      <li><strong>Comedy room dynamic (moderate):</strong> The comment section became self-sustaining entertainment — commenters were making each other laugh, driving return visits and sub-engagement.</li>
+      <li><strong>Limiting factor — no CTA:</strong> The post generated engagement but does not appear to have directed that energy anywhere (no link in bio driving to article, no poll, no follow-up). The engagement ceiling was hit without being converted.</li>
+    </ul>
+
+    <h4>Recommendation for Maximising Future Viral Potential</h4>
+    <p>Always pair a controversy/dissonance post with an immediate CTA directing the engaged audience to a deeper piece. <em>"This is just the headline — here's the full story."</em> Converting 2% of 23.3K likers to article readers = 466 new site visitors from a single post. Converting 0.5% to newsletter subscribers = 116 new long-term audience members.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 16 — GOLD QUOTES -->
+<div class="section">
+  <div class="section__number">Section 16</div>
+  <h2 class="section__title">Gold Quotes Hall of Fame</h2>
+  <div class="section__content">
+
+    <h3 style="color:var(--accent);margin-bottom:12px;">💎 Diamond Tier — Defining Statements</h3>
+
+    <div class="gold-quote gold-quote--diamond">
+      <div class="gold-quote__text">"Am i living in the right melb?"</div>
+      <div class="gold-quote__meta">
+        <span>Username withheld · TikTok</span>
+        <span>4,649 likes</span>
+        <span>23+ replies</span>
+      </div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:10px;"><strong>Why Diamond:</strong> The highest-engagement comment in the entire dataset. Its power lies in its deceptive simplicity — in five words, it articulates the collective disbelief of an entire city. It is quotable, shareable, and says more about Melbourne's identity gap than any editorial could. <span style="color:var(--warn);">Recommended Use: Social Media · Opening Quote for Affordability Story · Vox Pop Video Caption · Pull Quote</span></p>
+    </div>
+
+    <div class="gold-quote gold-quote--diamond">
+      <div class="gold-quote__text">"This reflects the opinions of the wealthy that treat Melbourne like a theme park, and an insult to the residents who live here and have to deal with the cost of living and youth crime crises."</div>
+      <div class="gold-quote__meta">
+        <span>Juniper 🦊 · TikTok</span>
+        <span>1 like (high conceptual value)</span>
+      </div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:10px;"><strong>Why Diamond:</strong> The most intellectually coherent critique in the dataset. It names the exact mechanism by which rankings like this can be true for one class of Melbourne experience and false for another. <span style="color:var(--warn);">Recommended Use: Feature Article · Opinion Piece · Editorial Brief</span></p>
+    </div>
+
+    <div class="gold-quote gold-quote--diamond">
+      <div class="gold-quote__text">"I've lived in both Cape Town (last years winner) and Melbourne. Melbourne is just awesome. Dont believe me? Try any American city. 🤣🤣🤣"</div>
+      <div class="gold-quote__meta">
+        <span>luvos🇿🇦 · TikTok</span>
+        <span>Comparative/outsider perspective</span>
+      </div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:10px;"><strong>Why Diamond:</strong> The most persuasive positive comment in the dataset. It earns credibility through comparison — from someone who has lived in both cities. Its final punchline is one the audience can't argue with. <span style="color:var(--warn);">Recommended Use: Social Media · "Why Melbourne is great" Feature · Melbourne Tourism Content</span></p>
+    </div>
+
+    <h3 style="color:var(--warn);margin:24px 0 12px;">🥇 Gold Tier — High-Impact Supporting Material</h3>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"Shit aint affordable"</div>
+      <div class="gold-quote__meta"><span>Billy OD · TikTok</span><span>638 likes</span><span>Social Media · Affordability Story</span></div>
+    </div>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"AFFORDABILITY?!??? Of what? Air? Yes air is free here but everything else cost an arm"</div>
+      <div class="gold-quote__meta"><span>Nguyen Phan · TikTok</span><span>12 likes</span><span>Feature Article · Pull Quote</span></div>
+    </div>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"Geezes how bad were the other cities for this one to win?"</div>
+      <div class="gold-quote__meta"><span>cams_1978 · TikTok</span><span>394 likes</span><span>Social Media · Vox Pop</span></div>
+    </div>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"When you live somewhere your whole life, you stop seeing what outsiders admire."</div>
+      <div class="gold-quote__meta"><span>Xa · TikTok</span><span>1 like</span><span>Feature Article · Melbourne Tourism · Opinion Piece</span></div>
+    </div>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"Having lived in Melbourne for 77 years, I can say that it is no longer safe to walk around during the day."</div>
+      <div class="gold-quote__meta"><span>Raffa · TikTok</span><span>Qualitative value</span><span>Crime/Safety Story · Long-form Feature</span></div>
+    </div>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"Visit Melbourne Work Tax Eat Tax Drive Tax Breathe Coming Soon… 😆"</div>
+      <div class="gold-quote__meta"><span>Harun · TikTok</span><span>High comedic resonance</span><span>Social Media · Cost of Living Story Hook</span></div>
+    </div>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"As someone born and lived my whole life in Melbourne now I KNOW they've been lying to us all along."</div>
+      <div class="gold-quote__meta"><span>58421457886532 · TikTok</span><span>1 like</span><span>Feature Article · Cover Paragraph</span></div>
+    </div>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"Orwell 1984 level gaslighting... girls take notes on the audacity"</div>
+      <div class="gold-quote__meta"><span>mitchnation250 · TikTok</span><span>Cultural reference value</span><span>Opinion Piece · Editorial Note</span></div>
+    </div>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"I pity to tell you mate but the whole world is expensive. Amongst the major cities around the world Melbourne is probably one of the more affordable."</div>
+      <div class="gold-quote__meta"><span>Rizzo · TikTok (reply)</span><span>Counter-narrative value</span><span>Feature Article — Balance Quote · Cost of Living Story</span></div>
+    </div>
+
+    <div class="gold-quote">
+      <div class="gold-quote__text">"Sam Eaves (abridged): shit roads, shit premier, taxes, taxes and more taxes, along with high cost of living… Youth crime is at an all time high... Only good things are good coffee &amp; good food spots."</div>
+      <div class="gold-quote__meta"><span>Sam Eaves · TikTok</span><span>Comprehensive critique</span><span>Long-form Feature · "What's wrong with Melbourne" story · Editorial Brief</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 17 — FACTS CITED -->
+<div class="section">
+  <div class="section__number">Section 17</div>
+  <h2 class="section__title">Key Facts Cited by the Public</h2>
+  <div class="section__content">
+
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Claim</th>
+          <th>Source (commenter)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Melbourne has won a "world's most livable city" or "best city" ranking multiple times before — <em>"Pretty sure this is our 7th time"</em></td>
+          <td>larrytaddlefeather</td>
+          <td><span class="badge badge--plausible">⚠️ PLAUSIBLE</span><br><small>Melbourne has won multiple EIU livability rankings historically. The specific count of 7 is unverified.</small></td>
+        </tr>
+        <tr>
+          <td>Cape Town won the Time Out best city ranking the year before Melbourne</td>
+          <td>luvos🇿🇦; Eiretoau</td>
+          <td><span class="badge badge--confirmed">✅ CONFIRMED</span><br><small>Cape Town was indeed Time Out's top city in the 2025 ranking.</small></td>
+        </tr>
+        <tr>
+          <td>Melbourne has the largest tram network in the world</td>
+          <td>Chan</td>
+          <td><span class="badge badge--confirmed">✅ CONFIRMED</span><br><small>Melbourne's tram network is the largest outside Europe and is commonly cited as the world's largest in terms of route length.</small></td>
+        </tr>
+        <tr>
+          <td>Melbourne has "the highest taxed state" status</td>
+          <td>pawpus; multiple commenters</td>
+          <td><span class="badge badge--plausible">⚠️ PLAUSIBLE</span><br><small>Victoria does impose some of the highest state-level land taxes and levies in Australia, but aggregate tax comparisons are complex.</small></td>
+        </tr>
+        <tr>
+          <td>Melbourne is preparing for/won the 2032 Olympics</td>
+          <td>bleh (implicit)</td>
+          <td><span class="badge badge--unverified">🔴 UNVERIFIED</span><br><small>Brisbane (not Melbourne) is hosting the 2032 Olympics. Several comments conflate the two or suggest Melbourne is involved — this is incorrect.</small></td>
+        </tr>
+        <tr>
+          <td>Youth crime is at an "all time high" in Melbourne</td>
+          <td>Sam Eaves; multiple commenters</td>
+          <td><span class="badge badge--needs">❓ NEEDS VERIFICATION</span><br><small>Perception of youth crime is high in the comments. Whether statistics confirm an all-time high vs. a perception increase requires checking current crime stats from Victoria Police.</small></td>
+        </tr>
+        <tr>
+          <td>Melbourne lost the MotoGP</td>
+          <td>Sam Eaves</td>
+          <td><span class="badge badge--plausible">⚠️ PLAUSIBLE</span><br><small>The Australian MotoGP at Phillip Island has faced funding uncertainty. Whether it has been formally "lost" at time of report requires recent news verification.</small></td>
+        </tr>
+        <tr>
+          <td>Gas prices in Melbourne recently as low as $1.40/litre</td>
+          <td>777</td>
+          <td><span class="badge badge--plausible">⚠️ PLAUSIBLE</span><br><small>Melbourne petrol prices fluctuate cyclically. $1.40 at peak discount is plausible; average prices have been significantly higher.</small></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert--danger" style="margin-top:16px;">
+      <div class="alert__title">⚠️ Campaign Risk Warning</div>
+      <p style="font-size:0.85rem;color:var(--text);">Only <strong>CONFIRMED</strong> facts above should be used in 7 News Melbourne's own reporting without additional sourcing. The claim about the 2032 Olympics is factually incorrect and should never be amplified. <strong>PLAUSIBLE</strong> facts can be referenced with appropriate caveats and sourcing. All <strong>NEEDS VERIFICATION</strong> claims should be independently checked before use in any broadcast or published content.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ SECTION 18 — PRIVACY -->
+<div class="section">
+  <div class="section__number">Section 18</div>
+  <h2 class="section__title">Privacy &amp; Data Handling</h2>
+  <div class="section__content">
+    <table class="privacy-table">
+      <thead><tr><th>Field</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Data Source</strong></td><td>Publicly posted comments on a publicly accessible TikTok video posted by @7newsmelbourne. No private accounts or non-public data were accessed.</td></tr>
+        <tr><td><strong>Collection Method</strong></td><td>Manual review and export of visible TikTok comments. No scraping tools accessing private APIs were used.</td></tr>
+        <tr><td><strong>Data Scope</strong></td><td>Display name (as shown publicly), comment text (as written publicly), like count, and approximate timestamp. No profile photos, follower counts, or private data were collected.</td></tr>
+        <tr><td><strong>What Was NOT Accessed</strong></td><td>Private messages, email addresses, phone numbers, account settings, private posts, or any data not visible to any logged-in TikTok user.</td></tr>
+        <tr><td><strong>Legal Basis</strong></td><td>Analysis of publicly posted content for legitimate journalistic and research interest (Art. 6(1)(f) GDPR; Australian Privacy Act legitimate interest principles). All content was voluntarily published in a public forum.</td></tr>
+        <tr><td><strong>Right to Erasure</strong></td><td>Any individual whose comment appears in this report may request removal by contacting the report commissioner. Removal requests should be honoured within 14 days.</td></tr>
+        <tr><td><strong>Data Retention</strong></td><td>Raw comment data is retained internally for 12 months and then deleted. The finished report is retained per standard document management policy. Raw data is not distributed to any third party.</td></tr>
+        <tr><td><strong>Access Requests</strong></td><td>For data access or erasure requests, contact: ai.quantummerlin.com</td></tr>
+        <tr><td><strong>Raw Data Policy</strong></td><td>The client receives this finished report only. CSV exports, raw comment files, and source datasets are retained internally and are not shared or distributed.</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="margin-top:16px;">Consent Template (for DM outreach to commenters)</h4>
+    <div class="alert alert--info" style="font-size:0.85rem;line-height:1.8;">
+      <div class="alert__title">📧 Consent Template — English</div>
+      <p>"Hi [Name], we noticed your comment on the Melbourne best city video — we're working on a follow-up piece and would love to include your perspective. Would you be willing to be quoted (or featured) in our coverage? We would only use your words with your explicit permission and would attribute you however you prefer (full name, first name only, or anonymous). Please reply here or DM us if you're interested. Thank you."</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ CLOSING -->
+<div class="section">
+  <div class="section__number">Closing Section</div>
+  <h2 class="section__title">The Mandate — Final Summary</h2>
+  <div class="section__content">
+
+    <h3>10 Definitive Findings</h3>
+    <ol style="counter-reset:li-counter;">
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">1.</span><strong>Disbelief dominates at 65%.</strong> Nearly two-thirds of comments rejected the ranking — not with anger, but with incredulous humour. This is a story about the gap between official city brand and resident experience, not about hostility to Melbourne.</li>
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">2.</span><strong>"Affordability" is the single most explosive word in this dataset.</strong> Its presence in the clip triggered the entire viral mechanic — satirical one-liners, mass sharing, and the vast majority of the 799 comments. A single word created an editorial feedback loop.</li>
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">3.</span><strong>The top comment (4,649 likes) was five words long.</strong> "Am i living in the right melb?" outperformed every other comment by a factor of 2:1. It is the most economical summary of the audience's collective reaction ever written.</li>
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">4.</span><strong>Twelve percent of commenters genuinely love Melbourne.</strong> This minority is not loud, but they are important — they provide the counterweight that makes the debate honest and prevents the comment section from being a pure rejection echo chamber.</li>
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">5.</span><strong>Crime and safety is the second-most-charged topic.</strong> The "Machete Melbourne" reference (774 likes) signals a large segment of commenters who feel crime is being denied or minimised by official narratives — including rankings like this one.</li>
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">6.</span><strong>The outsider perspective is the most persuasive voice in the debate.</strong> Comments from international tourists and people who moved from other cities carry more persuasive weight than any local advocacy. They earn credibility through lived comparison.</li>
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">7.</span><strong>The post generated high shares (2,050) relative to comments (799).</strong> This share-to-comment ratio indicates the post was spread not just by people wanting to comment, but by people who wanted to show the video to others as a shared experience of recognition ("this is exactly how I feel").</li>
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">8.</span><strong>The audience is asking for honest journalism, not PR.</strong> The comment section is a direct brief: Melburnians want reporting on affordability, crime, post-COVID reality, and city comparisons. They are telling 7 News Melbourne what to cover next.</li>
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">9.</span><strong>The dissonance + one-word trigger formula is replicable.</strong> Any future 7NM content that presents official language next to lived reality using a single stark irony will fire the same viral mechanic. This post is a template.</li>
+      <li style="counter-increment:li-counter;padding:8px 0 8px 28px;position:relative;"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:700;font-family:var(--mono);">10.</span><strong>The engagement was not converted.</strong> 23,300 likes and 2,050 shares generated but no CTA, no article link, no follow-up poll, no newsletter sign-up. The most valuable finding may be the opportunity cost: this audience was ready to go deeper, and there was nowhere for them to go.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- CLOSING PART 1 — DIAMOND QUOTE -->
+<div class="section">
+  <div class="section__number">Closing Part 1</div>
+  <h2 class="section__title">The Diamond Quote</h2>
+  <div class="diamond-quote">
+    <div class="diamond-quote__icon">💎</div>
+    <div class="diamond-quote__text">"Am i living in the right melb?"</div>
+    <div class="diamond-quote__attribution">— <strong>Anonymous TikTok commenter · 4,649 likes · 23+ replies</strong><br><br>@7newsmelbourne's Melbourne best city post · 11–12 March 2026</div>
+  </div>
+  <div class="section__content">
+    <p><em>Why this comment above all others:</em> In five plain words, this commenter expressed what 65% of Melbourne's responding population was feeling — and 4,649 people agreed hard enough to like it. It is not angry. It is not political. It is not a rant. It is a quiet, devastating question that contains an entire story: the story of a city whose official brand and its residents' lived experience have drifted so far apart that people are genuinely asking whether they're in the right place. That question — understated, relatable, and universally understood — is the core insight of this entire dataset.</p>
+  </div>
+</div>
+
+<!-- CLOSING PART 2 — WHAT THIS DATA REPRESENTS -->
+<div class="section">
+  <div class="section__number">Closing Part 2</div>
+  <h2 class="section__title">What This Data Actually Represents</h2>
+  <div class="section__content">
+    <p>These comments were not collected from 7 News Melbourne's fan base or from survey respondents who were asked for their opinion. They were written voluntarily, in real time, by strangers who saw a TikTok and chose to react. That is what makes this data significant.</p>
+    <p><strong>65% of commenters</strong> across approximately 750 clean responses expressed scepticism or outright rejection of Melbourne's "world's best city" status — without being prompted, without coordination, and without knowing each other. The most specific objection — affordability — appeared in <strong>approximately 28% of all comments</strong>. This is not a niche complaint. It is the dominant note in Melbourne's current civic conversation, as expressed by the people who actually live there.</p>
+    <p>The <strong>4,649 likes on the top comment</strong> — a five-word question — represent a scale of agreement that most published opinion pieces never achieve. This is what unsolicited public reaction looks like. It is raw, unsponsored, and unusually honest.</p>
+    <div class="alert alert--success" style="margin-top:16px;">
+      <div class="alert__title">📊 For Editorial Leadership</div>
+      <p style="font-size:0.85rem;color:var(--text);">The data in this report gives 7 News Melbourne an evidence-based editorial mandate: <strong>this audience wants honest local coverage of affordability, safety, and the gap between Melbourne's brand and its lived reality.</strong> That mandate did not come from a focus group or an editorial meeting. It came from the city's residents, speaking voluntarily in their own words.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CLOSING PART 3 — FIRST 72 HOURS -->
+<div class="section">
+  <div class="section__number">Closing Part 3</div>
+  <h2 class="section__title">First 72 Hours — What to Do Now</h2>
+  <div class="section__content">
+    <ol style="counter-reset:li-counter;">
+      <li style="counter-increment:li-counter;padding:10px 0 10px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--danger);font-weight:800;font-family:var(--mono);">1.</span><strong>Reply to the affordability thread today.</strong> The post's comment section is still live. A single 7NM reply to a top affordability comment acknowledging the reaction and teasing a follow-up piece will extend engagement, demonstrate editorial responsiveness, and build trust. Do this before the algorithm window closes (typically 48–72 hours). Use Script A from Section 13.</li>
+      <li style="counter-increment:li-counter;padding:10px 0 10px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:800;font-family:var(--mono);">2.</span><strong>DM Raffa — the 77-year Melbourne resident — within 24 hours.</strong> This commenter is a rare and irreplaceable source for a Melbourne "before and now" story. Every hour of delay reduces the likelihood of connection. Use the consent template in Section 18.</li>
+      <li style="counter-increment:li-counter;padding:10px 0 10px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--warn);font-weight:800;font-family:var(--mono);">3.</span><strong>Commission the Melbourne Affordability story immediately.</strong> The 210+ affordability comments are a pre-primed audience for this piece. Publish within 72 hours and reference the "affordability" reaction from the original post to connect the audiences. A story that acknowledges the audience's reaction earns their return readership.</li>
+      <li style="counter-increment:li-counter;padding:10px 0 10px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--accent);font-weight:800;font-family:var(--mono);">4.</span><strong>Schedule the "How the Time Out ranking actually works" explainer video.</strong> ~40 comments asked directly about methodology. This is a defined content gap. An explainer published while the story is still in audience memory converts the curiosity cluster into engaged readers. Target: within 5 days.</li>
+      <li style="counter-increment:li-counter;padding:10px 0 10px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--success);font-weight:800;font-family:var(--mono);">5.</span><strong>Add a link-in-bio or pinned comment directing the 23,300+ likers to the affordability follow-up when it's live.</strong> This post has generated enormous reach that has nowhere to go. A link-in-bio update connecting this audience to deeper coverage converts passive engagement into measurable audience growth.</li>
+      <li style="counter-increment:li-counter;padding:10px 0 10px 28px;position:relative;border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--primary-light);font-weight:800;font-family:var(--mono);">6.</span><strong>Produce the street vox pop reaction video within the week.</strong> "We showed Melburnians the 'world's best city' announcement — here's what they actually said." This meta-content piece extends the original story's engagement cycle and positions 7NM as an audience-listening organisation. The 23K likers of the original will engage with the follow-up at a very high rate.</li>
+    </ol>
+
+    <div class="mandate-box">
+      <div class="mandate-box__statement">
+        Seven hundred and fifty Melburnians chose to speak — clearly, specifically, and without being asked.<br><br>
+        They did not ask for a different ranking. They asked for honest journalism about the city they actually live in.<br><br>
+        <strong>That is the mandate the data has given 7 News Melbourne.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ══════════════════════════════════════════════════════════ FOOTER -->
+<div class="page-footer">
+  Generated by <strong>Audience Intelligence</strong> &middot; Quantum Merlin Ltd &middot; 12 March 2026<br>
+  <a href="https://ai.quantummerlin.com" style="color:var(--accent);">ai.quantummerlin.com</a>
+</div>
+
+<div class="disclaimer">
+  <strong>DISCLAIMER:</strong> This report is produced for informational and entertainment purposes only. It does not constitute legal, financial, or professional advice. While every effort has been made to ensure accuracy, exact figures, percentages, and sentiment classifications are estimates derived from AI-assisted analysis and may not be precisely accurate. Users should independently verify any data before relying on it for legal, financial, or strategic decisions. The client receives this report only — raw data and source comments are not included and are not available for distribution. For more information visit <a href="https://ai.quantummerlin.com">ai.quantummerlin.com</a>.
+</div>
+
+</body>
+</html>
