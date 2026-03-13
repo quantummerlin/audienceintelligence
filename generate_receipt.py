@@ -3,17 +3,20 @@ import os
 
 EMAIL_URL = "mailto:ai@quantummerlin.com"
 BRIEF_URL = "https://ai.quantummerlin.com/brief.html"
+SAMPLE_URL = "https://ai.quantummerlin.com/examples.html"
 
 # ── Dark-theme palette (matches website) ──
-BG       = (10, 14, 26)
-SURFACE  = (17, 24, 39)
-BORDER   = (31, 41, 55)
-INDIGO   = (129, 140, 248)
-CYAN     = (34, 211, 238)
-HEADING  = (243, 244, 246)
-TEXT     = (209, 213, 219)
-MUTED    = (107, 114, 128)
-ACCENT_BAR = (99, 102, 241)
+BG         = (10, 14, 26)
+SURFACE    = (17, 24, 39)
+BORDER     = (31, 41, 55)
+INDIGO     = (129, 140, 248)
+INDIGO_DIM = (99, 102, 241)
+CYAN       = (34, 211, 238)
+HEADING    = (243, 244, 246)
+TEXT       = (209, 213, 219)
+MUTED      = (107, 114, 128)
+WHITE      = (255, 255, 255)
+GREEN      = (52, 211, 153)
 
 
 class ReceiptPDF(FPDF):
@@ -22,10 +25,77 @@ class ReceiptPDF(FPDF):
         self.rect(0, 0, 210, 297, "F")
 
     def footer(self):
-        self.set_y(-15)
-        self.set_font("Helvetica", "I", 8)
+        self.set_y(-12)
+        self.set_font("Helvetica", "", 7)
         self.set_text_color(*MUTED)
-        self.cell(0, 10, "ai.quantummerlin.com  |  Delivered within 24-48 hours", align="C")
+        self.cell(0, 8, "ai.quantummerlin.com", align="C")
+
+
+def draw_logo(pdf, cx, cy, size=12):
+    """Draw the geometric triangle-node brand mark."""
+    import math
+    # Triangle vertices
+    top = (cx, cy - size)
+    left = (cx - size, cy + size * 0.7)
+    right = (cx + size, cy + size * 0.7)
+    mid = (cx, cy + size * 0.1)
+
+    # Outer lines
+    pdf.set_draw_color(*INDIGO)
+    pdf.set_line_width(0.8)
+    pdf.line(top[0], top[1], left[0], left[1])
+    pdf.set_draw_color(*CYAN)
+    pdf.line(top[0], top[1], right[0], right[1])
+    pdf.set_draw_color(*INDIGO)
+    pdf.set_line_width(0.6)
+    pdf.line(left[0], left[1], right[0], right[1])
+
+    # Inner lines to center
+    pdf.set_line_width(0.5)
+    pdf.set_draw_color(*CYAN)
+    pdf.line(top[0], top[1], mid[0], mid[1])
+    pdf.set_draw_color(*INDIGO)
+    pdf.line(left[0], left[1], mid[0], mid[1])
+    pdf.set_draw_color(*CYAN)
+    pdf.line(right[0], right[1], mid[0], mid[1])
+
+    # Nodes
+    r = 2.2
+    pdf.set_fill_color(*INDIGO)
+    pdf.ellipse(top[0] - r, top[1] - r, r * 2, r * 2, "F")
+    pdf.set_fill_color(*CYAN)
+    pdf.ellipse(left[0] - r, left[1] - r, r * 2, r * 2, "F")
+    pdf.set_fill_color(*INDIGO)
+    pdf.ellipse(right[0] - r, right[1] - r, r * 2, r * 2, "F")
+    # Center node (white, smaller)
+    cr = 1.6
+    pdf.set_fill_color(*WHITE)
+    pdf.ellipse(mid[0] - cr, mid[1] - cr, cr * 2, cr * 2, "F")
+
+
+def draw_rounded_btn(pdf, x, y, w, h, r, fill_color):
+    """Draw a filled rounded rectangle using PDF drawing primitives."""
+    pdf.set_fill_color(*fill_color)
+    # Center rectangle
+    pdf.rect(x + r, y, w - 2 * r, h, "F")
+    # Left and right strips
+    pdf.rect(x, y + r, r, h - 2 * r, "F")
+    pdf.rect(x + w - r, y + r, r, h - 2 * r, "F")
+    # Four corner circles
+    for cx, cy in [(x + r, y + r), (x + w - r, y + r),
+                   (x + r, y + h - r), (x + w - r, y + h - r)]:
+        pdf.ellipse(cx - r, cy - r, 2 * r, 2 * r, "F")
+
+
+def draw_step_number(pdf, x, y, num, color):
+    """Draw a small circled number."""
+    r = 4
+    pdf.set_fill_color(*color)
+    pdf.ellipse(x - r, y - r, r * 2, r * 2, "F")
+    pdf.set_font("Helvetica", "B", 9)
+    pdf.set_text_color(*WHITE)
+    pdf.set_xy(x - r, y - 3.5)
+    pdf.cell(r * 2, 7, str(num), align="C")
 
 
 def generate_receipt(variant="gumroad"):
@@ -34,195 +104,161 @@ def generate_receipt(variant="gumroad"):
     pdf.add_page()
     pdf.set_margins(25, 25, 25)
 
-    # Top accent gradient bar
-    pdf.set_fill_color(*ACCENT_BAR)
-    pdf.rect(0, 0, 210, 4, "F")
+    # ── Top accent bar ──
+    pdf.set_fill_color(*INDIGO_DIM)
+    pdf.rect(0, 0, 210, 3, "F")
     pdf.set_fill_color(*CYAN)
-    pdf.rect(0, 4, 210, 2, "F")
+    pdf.rect(0, 3, 210, 1.5, "F")
 
-    pdf.ln(16)
+    # ── Logo + Brand ──
+    draw_logo(pdf, 105, 28, size=10)
 
-    # Brand name
-    pdf.set_font("Helvetica", "B", 24)
+    pdf.set_y(42)
+    pdf.set_font("Helvetica", "B", 20)
     pdf.set_text_color(*INDIGO)
-    pdf.cell(0, 12, "Audience Intelligence", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(0, 10, "Audience Intelligence", align="C", new_x="LMARGIN", new_y="NEXT")
 
-    pdf.set_font("Helvetica", "", 11)
-    pdf.set_text_color(*MUTED)
-    pdf.cell(0, 8, "What your comments really say", align="C", new_x="LMARGIN", new_y="NEXT")
-
-    pdf.ln(8)
-
-    # Divider
+    # ── Thin divider ──
+    pdf.ln(6)
     pdf.set_draw_color(*BORDER)
-    pdf.set_line_width(0.4)
-    pdf.line(30, pdf.get_y(), 180, pdf.get_y())
+    pdf.set_line_width(0.3)
+    pdf.line(60, pdf.get_y(), 150, pdf.get_y())
     pdf.ln(10)
 
-    # Thank-you heading
-    pdf.set_font("Helvetica", "B", 20)
-    pdf.set_text_color(*HEADING)
-    pdf.cell(0, 10, "Thank you for your order!", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(4)
+    # ── Main heading ──
+    pdf.set_font("Helvetica", "B", 22)
+    pdf.set_text_color(*WHITE)
+    pdf.cell(0, 10, "We're building your report.", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(3)
 
-    # Sub-message + CTA (varies by variant)
+    pdf.set_font("Helvetica", "", 12)
+    pdf.set_text_color(*TEXT)
     if variant == "gumroad":
-        pdf.set_font("Helvetica", "", 12)
-        pdf.set_text_color(*TEXT)
-        pdf.multi_cell(
-            0, 7,
-            "Your Audience Intelligence Report is being prepared.\n"
-            "Fill out your brief so we know which post to analyse.",
-            align="C",
-        )
-        pdf.ln(8)
+        pdf.cell(0, 7, "One quick step and we'll get started.", align="C", new_x="LMARGIN", new_y="NEXT")
+    else:
+        pdf.cell(0, 7, "Send us a quick message and we'll get started.", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(12)
 
-        # CTA button — brief form link
-        btn_w, btn_h = 140, 28
-        btn_x = (210 - btn_w) / 2
-        btn_y = pdf.get_y()
-        pdf.set_fill_color(*ACCENT_BAR)
-        pdf.rect(btn_x, btn_y, btn_w, btn_h, "F")
+    # ── BIG CTA BUTTON (rounded) ──
+    btn_w, btn_h = 150, 32
+    btn_x = (210 - btn_w) / 2
+    btn_y = pdf.get_y()
+
+    draw_rounded_btn(pdf, btn_x, btn_y, btn_w, btn_h, 5, INDIGO_DIM)
+
+    if variant == "gumroad":
         pdf.set_xy(btn_x, btn_y + 4)
-        pdf.set_font("Helvetica", "B", 13)
-        pdf.set_text_color(255, 255, 255)
-        pdf.cell(btn_w, 7, "Fill Out Your Brief", align="C", new_x="LMARGIN", new_y="NEXT")
-        pdf.set_xy(btn_x, btn_y + 14)
-        pdf.set_font("Helvetica", "", 10)
+        pdf.set_font("Helvetica", "B", 14)
+        pdf.set_text_color(*WHITE)
+        pdf.cell(btn_w, 8, "Fill Out Your Brief", align="C", new_x="LMARGIN", new_y="NEXT")
+        pdf.set_xy(btn_x, btn_y + 16)
+        pdf.set_font("Helvetica", "", 9)
         pdf.set_text_color(199, 210, 254)
         pdf.cell(btn_w, 7, "ai.quantummerlin.com/brief.html", align="C", new_x="LMARGIN", new_y="NEXT")
         pdf.link(btn_x, btn_y, btn_w, btn_h, BRIEF_URL)
-        pdf.set_y(btn_y + btn_h + 12)
+    else:
+        pdf.set_xy(btn_x, btn_y + 9)
+        pdf.set_font("Helvetica", "B", 14)
+        pdf.set_text_color(*WHITE)
+        pdf.cell(btn_w, 8, "Message Us on Etsy Now", align="C", new_x="LMARGIN", new_y="NEXT")
 
-    else:  # etsy
-        pdf.set_font("Helvetica", "", 12)
-        pdf.set_text_color(*TEXT)
-        pdf.multi_cell(
-            0, 7,
-            "Your Audience Intelligence Report is being prepared.\n"
-            "Send us a message on Etsy with the details below.",
-            align="C",
-        )
-        pdf.ln(8)
+    pdf.set_y(btn_y + btn_h + 6)
 
-        # CTA button — message on Etsy
-        btn_w, btn_h = 140, 22
-        btn_x = (210 - btn_w) / 2
-        btn_y = pdf.get_y()
-        pdf.set_fill_color(*ACCENT_BAR)
-        pdf.rect(btn_x, btn_y, btn_w, btn_h, "F")
-        pdf.set_xy(btn_x, btn_y + 5)
-        pdf.set_font("Helvetica", "B", 13)
-        pdf.set_text_color(255, 255, 255)
-        pdf.cell(btn_w, 7, "Message Us on Etsy Now", align="C", new_x="LMARGIN", new_y="NEXT")
-        pdf.set_y(btn_y + btn_h + 10)
+    # Small helper text under button
+    pdf.set_font("Helvetica", "I", 9)
+    pdf.set_text_color(*MUTED)
+    if variant == "gumroad":
+        pdf.cell(0, 6, "Takes less than 2 minutes. We start as soon as we receive it.", align="C", new_x="LMARGIN", new_y="NEXT")
+    else:
+        pdf.cell(0, 6, "Just send your post URL. We start as soon as we see your message.", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(14)
 
-        # What to send box
-        pdf.set_fill_color(*SURFACE)
-        pdf.set_draw_color(*BORDER)
-        pdf.set_line_width(0.4)
-        bx, by = 30, pdf.get_y()
-        pdf.rect(bx, by, 150, 48, "FD")
-        pdf.set_xy(bx + 10, by + 6)
-        pdf.set_font("Helvetica", "B", 11)
-        pdf.set_text_color(*INDIGO)
-        pdf.cell(130, 7, "In your Etsy message, include:", new_x="LMARGIN", new_y="NEXT")
-        pdf.set_font("Helvetica", "", 10)
-        pdf.set_text_color(*TEXT)
-        msg_items = [
-            "1.  The post URL you want analysed",
-            "2.  The platform (TikTok, Instagram, YouTube, etc.)",
-            "3.  Anything specific you want to learn (optional)",
-        ]
-        for item in msg_items:
-            pdf.set_xy(bx + 10, pdf.get_y() + 1)
-            pdf.cell(130, 8, item, new_x="LMARGIN", new_y="NEXT")
-        pdf.set_y(by + 48 + 12)
-
-    # What happens next (dark card)
+    # ── Steps card ──
+    card_x, card_y = 28, pdf.get_y()
+    card_w, card_h = 154, 68
     pdf.set_fill_color(*SURFACE)
     pdf.set_draw_color(*BORDER)
-    pdf.set_line_width(0.4)
+    pdf.set_line_width(0.3)
+    draw_rounded_btn(pdf, card_x, card_y, card_w, card_h, 4, SURFACE)
+    pdf.set_draw_color(*BORDER)
+    pdf.rect(card_x, card_y, card_w, card_h, "D")
 
-    x, y = 25, pdf.get_y()
-    pdf.rect(x, y, 160, 56, "FD")
-
-    pdf.set_xy(x + 10, y + 8)
-    pdf.set_font("Helvetica", "B", 12)
+    pdf.set_xy(card_x + 14, card_y + 8)
+    pdf.set_font("Helvetica", "B", 11)
     pdf.set_text_color(*INDIGO)
-    pdf.cell(140, 7, "What happens next?", new_x="LMARGIN", new_y="NEXT")
-
-    pdf.set_xy(x + 10, y + 18)
-    pdf.set_font("Helvetica", "", 10)
-    pdf.set_text_color(*TEXT)
+    pdf.cell(card_w - 28, 7, "How it works", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(4)
 
     if variant == "gumroad":
         steps = [
-            "1.  Fill out your brief (link above).",
-            "2.  We scrape and analyse every comment on your post.",
-            "3.  We compile a plain-English PDF report just for you.",
-            "4.  Your report lands in your inbox within 24-48 hours.",
+            "Fill out your brief with the post URL",
+            "We analyse every comment using AI + human review",
+            "Your PDF report arrives within 24-48 hours",
         ]
     else:
         steps = [
-            "1.  Send us your post URL via Etsy message.",
-            "2.  We scrape and analyse every comment on your post.",
-            "3.  We compile a plain-English PDF report just for you.",
-            "4.  Your report is delivered via Etsy within 24-48 hours.",
+            "Message us on Etsy with your post URL",
+            "We analyse every comment using AI + human review",
+            "Your PDF report is delivered via Etsy within 24-48 hours",
         ]
-    for step in steps:
-        pdf.set_xy(x + 10, pdf.get_y())
-        pdf.cell(140, 8, step, new_x="LMARGIN", new_y="NEXT")
 
-    pdf.set_y(y + 56 + 14)
+    for i, step in enumerate(steps):
+        sy = card_y + 23 + (i * 16)
+        draw_step_number(pdf, card_x + 18, sy, i + 1, INDIGO_DIM if i % 2 == 0 else CYAN)
+        pdf.set_xy(card_x + 28, sy - 3.5)
+        pdf.set_font("Helvetica", "", 10)
+        pdf.set_text_color(*TEXT)
+        pdf.cell(card_w - 40, 7, step)
 
-    # Deliverables
-    pdf.set_font("Helvetica", "B", 13)
-    pdf.set_text_color(*HEADING)
-    pdf.cell(0, 8, "Your report includes:", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(3)
+    pdf.set_y(card_y + card_h + 16)
 
+    # ── Warm closing ──
     pdf.set_font("Helvetica", "", 11)
     pdf.set_text_color(*TEXT)
-    deliverables = [
-        ">>  Top themes & topics driving the conversation",
-        ">>  Sentiment breakdown (positive / negative / neutral)",
-        ">>  Most-engaged comments and power users",
-        ">>  Key questions & objections from your audience",
-        ">>  Content ideas & viral triggers",
-        ">>  Lead & product opportunities",
-        ">>  Plain-English summary with actionable insights",
-    ]
-    for d in deliverables:
-        pdf.cell(0, 8, d, new_x="LMARGIN", new_y="NEXT")
+    pdf.multi_cell(0, 7,
+        "Your audience has been telling you exactly what they want.\n"
+        "Most people never hear it. You're about to.",
+        align="C",
+    )
+    pdf.ln(6)
 
-    pdf.ln(12)
+    # ── Sample report teaser ──
+    pdf.set_font("Helvetica", "", 9)
+    pdf.set_text_color(*CYAN)
+    teaser_text = "See what a real report looks like: ai.quantummerlin.com/examples.html"
+    tw = pdf.get_string_width(teaser_text)
+    tx = (210 - tw) / 2
+    ty = pdf.get_y()
+    pdf.set_x(tx)
+    pdf.cell(tw, 6, teaser_text, new_x="LMARGIN", new_y="NEXT")
+    pdf.link(tx, ty, tw, 6, SAMPLE_URL)
 
-    # Contact
-    pdf.set_font("Helvetica", "I", 10)
+    pdf.ln(10)
+
+    # ── Contact ──
+    pdf.set_font("Helvetica", "", 9)
     pdf.set_text_color(*MUTED)
-    pdf.cell(0, 7, "Questions? Email us at", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(0, 6, "Questions? We're here to help.", align="C", new_x="LMARGIN", new_y="NEXT")
 
-    pdf.set_font("Helvetica", "I", 10)
     pdf.set_text_color(*CYAN)
     email_text = "ai@quantummerlin.com"
-    email_w = pdf.get_string_width(email_text)
-    email_x = (210 - email_w) / 2
-    email_y = pdf.get_y()
-    pdf.set_x(email_x)
-    pdf.cell(email_w, 7, email_text, new_x="LMARGIN", new_y="NEXT")
-    pdf.link(email_x, email_y, email_w, 7, EMAIL_URL)
+    ew = pdf.get_string_width(email_text)
+    ex = (210 - ew) / 2
+    ey = pdf.get_y()
+    pdf.set_x(ex)
+    pdf.cell(ew, 6, email_text, new_x="LMARGIN", new_y="NEXT")
+    pdf.link(ex, ey, ew, 6, EMAIL_URL)
 
-    # Bottom accent bar
+    # ── Bottom accent bar ──
     pdf.set_fill_color(*CYAN)
-    pdf.rect(0, 293, 210, 2, "F")
-    pdf.set_fill_color(*ACCENT_BAR)
+    pdf.rect(0, 293.5, 210, 1.5, "F")
+    pdf.set_fill_color(*INDIGO_DIM)
     pdf.rect(0, 295, 210, 2, "F")
 
     return pdf
 
 
-# Generate both variants
+# ── Generate both variants ──
 os.makedirs("outputs", exist_ok=True)
 
 gumroad_pdf = generate_receipt("gumroad")
