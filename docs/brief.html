@@ -337,6 +337,14 @@
           </div>
         </div>
 
+        <div class="field-group" id="fg-order-id">
+          <label for="order_id">Gumroad Order Number <span class="req">*</span>
+            <span class="hint">From your Gumroad receipt email — looks like a short code or ID.</span>
+          </label>
+          <input type="text" id="order_id" name="order_id" placeholder="e.g. ABC123-XYZ" />
+          <div class="field-error">Please enter your Gumroad order number so we can verify your purchase.</div>
+        </div>
+
       </div>
     </div>
 
@@ -505,6 +513,10 @@
     var postUrl = document.getElementById('post_url').value.trim();
     setError('fg-post-url', !postUrl);
     if (!postUrl) ok = false;
+
+    var orderId = document.getElementById('order_id').value.trim();
+    setError('fg-order-id', !orderId);
+    if (!orderId) ok = false;
 
     var platform = document.querySelector('input[name="platform"]:checked');
     document.getElementById('err-platform').style.display = platform ? 'none' : 'block';
