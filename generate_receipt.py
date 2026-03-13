@@ -111,71 +111,71 @@ def generate_receipt(variant="gumroad"):
     pdf.rect(0, 3, 210, 1.5, "F")
 
     # ── Logo + Brand ──
-    draw_logo(pdf, 105, 28, size=10)
+    draw_logo(pdf, 105, 24, size=8)
 
-    pdf.set_y(42)
-    pdf.set_font("Helvetica", "B", 20)
+    pdf.set_y(36)
+    pdf.set_font("Helvetica", "B", 18)
     pdf.set_text_color(*INDIGO)
     pdf.cell(0, 10, "Audience Intelligence", align="C", new_x="LMARGIN", new_y="NEXT")
 
     # ── Thin divider ──
-    pdf.ln(6)
+    pdf.ln(4)
     pdf.set_draw_color(*BORDER)
     pdf.set_line_width(0.3)
     pdf.line(60, pdf.get_y(), 150, pdf.get_y())
-    pdf.ln(10)
+    pdf.ln(7)
 
     # ── Main heading ──
-    pdf.set_font("Helvetica", "B", 22)
+    pdf.set_font("Helvetica", "B", 20)
     pdf.set_text_color(*WHITE)
-    pdf.cell(0, 10, "We're building your report.", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(3)
+    pdf.cell(0, 9, "We're building your report.", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(2)
 
-    pdf.set_font("Helvetica", "", 12)
+    pdf.set_font("Helvetica", "", 11)
     pdf.set_text_color(*TEXT)
     if variant == "gumroad":
         pdf.cell(0, 7, "One quick step and we'll get started.", align="C", new_x="LMARGIN", new_y="NEXT")
     else:
         pdf.cell(0, 7, "Send us a quick message and we'll get started.", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(12)
+    pdf.ln(8)
 
-    # ── BIG CTA BUTTON (rounded) ──
-    btn_w, btn_h = 150, 32
+    # ── CTA BUTTON (rounded) ──
+    btn_w, btn_h = 140, 26
     btn_x = (210 - btn_w) / 2
     btn_y = pdf.get_y()
 
     draw_rounded_btn(pdf, btn_x, btn_y, btn_w, btn_h, 5, INDIGO_DIM)
 
     if variant == "gumroad":
-        pdf.set_xy(btn_x, btn_y + 4)
-        pdf.set_font("Helvetica", "B", 14)
+        pdf.set_xy(btn_x, btn_y + 2)
+        pdf.set_font("Helvetica", "B", 12)
         pdf.set_text_color(*WHITE)
-        pdf.cell(btn_w, 8, "Fill Out Your Brief", align="C", new_x="LMARGIN", new_y="NEXT")
-        pdf.set_xy(btn_x, btn_y + 16)
-        pdf.set_font("Helvetica", "", 9)
+        pdf.cell(btn_w, 7, "Fill Out Your Brief", align="C", new_x="LMARGIN", new_y="NEXT")
+        pdf.set_xy(btn_x, btn_y + 13)
+        pdf.set_font("Helvetica", "", 8)
         pdf.set_text_color(199, 210, 254)
-        pdf.cell(btn_w, 7, "ai.quantummerlin.com/brief.html", align="C", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(btn_w, 6, "ai.quantummerlin.com/brief.html", align="C", new_x="LMARGIN", new_y="NEXT")
         pdf.link(btn_x, btn_y, btn_w, btn_h, BRIEF_URL)
     else:
-        pdf.set_xy(btn_x, btn_y + 9)
-        pdf.set_font("Helvetica", "B", 14)
+        pdf.set_xy(btn_x, btn_y + 6)
+        pdf.set_font("Helvetica", "B", 12)
         pdf.set_text_color(*WHITE)
-        pdf.cell(btn_w, 8, "Message Us on Etsy Now", align="C", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(btn_w, 7, "Message Us on Etsy Now", align="C", new_x="LMARGIN", new_y="NEXT")
 
-    pdf.set_y(btn_y + btn_h + 6)
+    pdf.set_y(btn_y + btn_h + 4)
 
     # Small helper text under button
-    pdf.set_font("Helvetica", "I", 9)
+    pdf.set_font("Helvetica", "I", 8)
     pdf.set_text_color(*MUTED)
     if variant == "gumroad":
-        pdf.cell(0, 6, "Takes less than 2 minutes. We start as soon as we receive it.", align="C", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 5, "Takes less than 2 minutes. We start as soon as we receive it.", align="C", new_x="LMARGIN", new_y="NEXT")
     else:
-        pdf.cell(0, 6, "Just send your post URL. We start as soon as we see your message.", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(14)
+        pdf.cell(0, 5, "Just send your post URL. We start as soon as we see your message.", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(8)
 
     # ── Steps card ──
-    card_x, card_y = 28, pdf.get_y()
-    card_w, card_h = 154, 68
+    card_x, card_y = 30, pdf.get_y()
+    card_w, card_h = 150, 56
     pdf.set_fill_color(*SURFACE)
     pdf.set_draw_color(*BORDER)
     pdf.set_line_width(0.3)
@@ -183,11 +183,10 @@ def generate_receipt(variant="gumroad"):
     pdf.set_draw_color(*BORDER)
     pdf.rect(card_x, card_y, card_w, card_h, "D")
 
-    pdf.set_xy(card_x + 14, card_y + 8)
-    pdf.set_font("Helvetica", "B", 11)
+    pdf.set_xy(card_x + 12, card_y + 6)
+    pdf.set_font("Helvetica", "B", 10)
     pdf.set_text_color(*INDIGO)
-    pdf.cell(card_w - 28, 7, "How it works", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(4)
+    pdf.cell(card_w - 24, 6, "How it works", new_x="LMARGIN", new_y="NEXT")
 
     if variant == "gumroad":
         steps = [
@@ -203,24 +202,24 @@ def generate_receipt(variant="gumroad"):
         ]
 
     for i, step in enumerate(steps):
-        sy = card_y + 23 + (i * 16)
-        draw_step_number(pdf, card_x + 18, sy, i + 1, INDIGO_DIM if i % 2 == 0 else CYAN)
-        pdf.set_xy(card_x + 28, sy - 3.5)
-        pdf.set_font("Helvetica", "", 10)
+        sy = card_y + 18 + (i * 13)
+        draw_step_number(pdf, card_x + 16, sy, i + 1, INDIGO_DIM if i % 2 == 0 else CYAN)
+        pdf.set_xy(card_x + 26, sy - 3)
+        pdf.set_font("Helvetica", "", 9)
         pdf.set_text_color(*TEXT)
-        pdf.cell(card_w - 40, 7, step)
+        pdf.cell(card_w - 38, 6, step)
 
-    pdf.set_y(card_y + card_h + 16)
+    pdf.set_y(card_y + card_h + 10)
 
     # ── Warm closing ──
-    pdf.set_font("Helvetica", "", 11)
+    pdf.set_font("Helvetica", "", 10)
     pdf.set_text_color(*TEXT)
-    pdf.multi_cell(0, 7,
+    pdf.multi_cell(0, 6,
         "Your audience has been telling you exactly what they want.\n"
         "Most people never hear it. You're about to.",
         align="C",
     )
-    pdf.ln(6)
+    pdf.ln(4)
 
     # ── Sample report teaser ──
     pdf.set_font("Helvetica", "", 9)
@@ -233,10 +232,10 @@ def generate_receipt(variant="gumroad"):
     pdf.cell(tw, 6, teaser_text, new_x="LMARGIN", new_y="NEXT")
     pdf.link(tx, ty, tw, 6, SAMPLE_URL)
 
-    pdf.ln(10)
+    pdf.ln(6)
 
     # ── Contact ──
-    pdf.set_font("Helvetica", "", 9)
+    pdf.set_font("Helvetica", "", 8)
     pdf.set_text_color(*MUTED)
     pdf.cell(0, 6, "Questions? We're here to help.", align="C", new_x="LMARGIN", new_y="NEXT")
 
