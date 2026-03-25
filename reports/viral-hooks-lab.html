@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viral Hooks Lab | Aether Intelligence</title>
+<style>
+  :root {
+    --accent: #f59e0b;
+    --accent2: #b45309;
+    --accentB: #fcd34d;
+    --bg: #09090a;
+    --card: #111112;
+    --card2: #18181a;
+    --text: #f0f0e8;
+    --muted: #888878;
+    --border: #252520;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Georgia', serif; line-height: 1.7; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  nav { padding: 1.2rem 2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .nav-brand { font-family: 'Arial', sans-serif; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .nav-brand span { color: var(--accent); }
+  .nav-back { font-family: 'Arial', sans-serif; font-size: 0.8rem; letter-spacing: 0.1em; color: var(--muted); }
+
+  .hero {
+    background: linear-gradient(135deg, #130e02 0%, #09090a 50%, #110d03 100%);
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(245,158,11,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .report-tag { display: inline-block; background: rgba(245,158,11,0.12); border: 1px solid var(--accent); color: var(--accent); font-family: 'Arial', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.3rem 1rem; border-radius: 2rem; margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.2; max-width: 800px; margin: 0 auto 1.5rem; }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero-sub { font-size: 1.15rem; color: var(--muted); max-width: 600px; margin: 0 auto 2.5rem; font-family: 'Arial', sans-serif; }
+  .hero-stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+  .hero-stat { text-align: center; }
+  .hero-stat-num { font-size: 2rem; font-weight: 700; color: var(--accent); font-family: 'Arial', sans-serif; }
+  .hero-stat-label { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); font-family: 'Arial', sans-serif; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 2rem; }
+  .section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+  .section-label { font-family: 'Arial', sans-serif; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  .section h2 { font-size: 1.9rem; margin-bottom: 1.5rem; line-height: 1.3; }
+  .section p { color: #c8c8a8; margin-bottom: 1.2rem; font-size: 1.05rem; }
+
+  /* Filter Bar */
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2rem; align-items: center; }
+  .filter-label { font-family: 'Arial', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-right: 0.5rem; }
+  .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); font-family: 'Arial', sans-serif; font-size: 0.78rem; padding: 0.4rem 1rem; border-radius: 2rem; cursor: pointer; transition: all 0.2s; }
+  .filter-btn:hover, .filter-btn.active { background: rgba(245,158,11,0.15); border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { font-weight: 600; }
+
+  /* Search */
+  .search-bar { display: flex; gap: 1rem; margin-bottom: 2rem; }
+  .search-input { flex: 1; background: var(--card); border: 1px solid var(--border); color: var(--text); font-family: 'Arial', sans-serif; font-size: 0.9rem; padding: 0.75rem 1.2rem; border-radius: 8px; outline: none; }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--muted); }
+
+  /* Hook Cards Grid */
+  .hooks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 1.2rem; }
+  .hook-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.8rem;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .hook-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .hook-card.hidden { display: none; }
+  .hook-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); opacity: 0.4; transition: opacity 0.2s; }
+  .hook-card:hover::before { opacity: 1; }
+
+  .hc-meta { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+  .hc-num { font-family: 'Arial', sans-serif; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .hc-tag { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: var(--accent); font-family: 'Arial', sans-serif; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 3px; }
+  .hc-score { margin-left: auto; font-family: 'Arial', sans-serif; font-size: 0.75rem; color: var(--accentB); }
+
+  .hook-text { font-size: 1.05rem; font-style: italic; color: #e8e8d0; margin-bottom: 1rem; line-height: 1.6; border-left: 2px solid rgba(245,158,11,0.3); padding-left: 1rem; }
+
+  .why-works { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .why-works strong { color: #c8c890; }
+
+  .copy-btn {
+    margin-top: 1rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Arial', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .copy-btn.copied { border-color: #22c55e; color: #22c55e; }
+
+  /* Pattern breakdown */
+  .pattern-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0; }
+  .pattern-card { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; text-align: center; }
+  .pattern-card .pc-emoji { font-size: 2rem; margin-bottom: 0.8rem; }
+  .pattern-card h3 { font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .pattern-card p { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
+  .pattern-card .pc-count { font-family: 'Arial', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--accent); margin-top: 0.5rem; }
+
+  .results-count { font-family: 'Arial', sans-serif; font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .results-count span { color: var(--accent); }
+
+  .verdict-box { background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(180,83,9,0.05)); border: 1px solid rgba(245,158,11,0.25); border-radius: 12px; padding: 2.5rem; margin: 2rem 0; text-align: center; }
+  .verdict-box h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+  .verdict-box p { color: #c8c8a0; max-width: 600px; margin: 0 auto; line-height: 1.8; }
+
+  .cta-section { padding: 5rem 2rem; text-align: center; background: linear-gradient(180deg, transparent, rgba(245,158,11,0.04)); }
+  .cta-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+  .cta-section p { color: var(--muted); max-width: 500px; margin: 0 auto 2.5rem; font-family: 'Arial', sans-serif; }
+  .cta-btn { display: inline-block; background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #09090a; padding: 1rem 2.5rem; border-radius: 8px; font-family: 'Arial', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; transition: transform 0.2s, box-shadow 0.2s; }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(245,158,11,0.35); text-decoration: none; }
+  .cta-price { margin-top: 1rem; font-family: 'Arial', sans-serif; font-size: 0.8rem; color: var(--muted); }
+
+  footer { padding: 2rem; text-align: center; border-top: 1px solid var(--border); font-family: 'Arial', sans-serif; font-size: 0.8rem; color: var(--muted); }
+
+  @media (max-width: 700px) {
+    .hooks-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+  }
+
+  .cta-proof-row { display: flex; align-items: center; gap: 0.75rem; justify-content: center; margin-bottom: 1.2rem; }
+  .cta-proof-badge { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.65; }
+  .cta-proof-sep { opacity: 0.3; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><span>Aether</span> Intelligence</div>
+  <a href="../index.html" class="nav-back">← All Reports</a>
+</nav>
+
+<div class="hero">
+  <div class="report-tag">Resource #020 · Viral Hooks Lab · Interactive</div>
+  <h1>The <em>Viral Hooks</em> Lab</h1>
+  <p class="hero-sub">27 real hooks extracted from 17,091 community comments — with explanations of why each one works psychologically. Filter, search, and steal freely.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">27</div>
+      <div class="hero-stat-label">Hooks Catalogued</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">5</div>
+      <div class="hero-stat-label">Hook Patterns</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">31,804</div>
+      <div class="hero-stat-label">Peak hook engagement</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-label">Hook Pattern Analysis</div>
+    <h2>The Five Patterns Behind Every Viral Hook</h2>
+    <p>Every hook in this library follows one of five core psychological patterns. Understanding the pattern lets you adapt the hook to any niche, product, or audience:</p>
+    <div class="pattern-grid">
+      <div class="pattern-card">
+        <div class="pc-emoji">💔</div>
+        <h3>Emotional Dilemma</h3>
+        <p>Forces the reader to feel the impossible choice before they read further. Creates immediate empathy and tension.</p>
+        <div class="pc-count">8 hooks</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pc-emoji">💰</div>
+        <h3>Income Milestone</h3>
+        <p>Specific, achievable numbers that prove the outcome is real. "$1K/month" beats "make money" every time.</p>
+        <div class="pc-count">7 hooks</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pc-emoji">🔄</div>
+        <h3>Counter-Intuitive Reveal</h3>
+        <p>Contradicts the expected outcome. "Stopped posting, earnings doubled." Forces a re-examination of assumptions.</p>
+        <div class="pc-count">5 hooks</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pc-emoji">⚠️</div>
+        <h3>Warning / Cautionary</h3>
+        <p>Loss-aversion trigger. Humans respond more strongly to potential loss than equivalent gain. "How I lost $1.5M" outperforms "How I made $1.5M".</p>
+        <div class="pc-count">4 hooks</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pc-emoji">🔑</div>
+        <h3>Insider Confession</h3>
+        <p>"What nobody told us before we started." Peer-level, experience-based knowledge that institutions and authorities don't provide.</p>
+        <div class="pc-count">3 hooks</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="lab">
+    <div class="section-label">Interactive Hook Library</div>
+    <h2>27 Hooks. Filter by Pattern. Search by Topic. Copy & Adapt.</h2>
+    <p>Each hook is annotated with the psychological mechanism that makes it work. Use the filters to find hooks relevant to your content category, or search for keywords.</p>
+
+    <div class="search-bar">
+      <input type="text" class="search-input" id="hookSearch" placeholder="Search hooks by keyword (e.g. income, burnout, side hustle…)" oninput="filterHooks()">
+    </div>
+
+    <div class="filter-bar">
+      <span class="filter-label">Pattern:</span>
+      <button class="filter-btn active" onclick="setFilter('all', this)">All 27</button>
+      <button class="filter-btn" onclick="setFilter('emotional', this)">💔 Emotional Dilemma</button>
+      <button class="filter-btn" onclick="setFilter('income', this)">💰 Income Milestone</button>
+      <button class="filter-btn" onclick="setFilter('counterintuitive', this)">🔄 Counter-Intuitive</button>
+      <button class="filter-btn" onclick="setFilter('warning', this)">⚠️ Warning</button>
+      <button class="filter-btn" onclick="setFilter('insider', this)">🔑 Insider Confession</button>
+    </div>
+
+    <div class="results-count" id="resultsCount">Showing <span>27</span> hooks</div>
+
+    <div class="hooks-grid" id="hooksGrid">
+
+      <!-- Hook 1 -->
+      <div class="hook-card" data-pattern="emotional" data-score="31804">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #01</span>
+          <span class="hc-tag">💔 Emotional Dilemma</span>
+          <span class="hc-score">31,804 engagement</span>
+        </div>
+        <div class="hook-text">"I may have to put my 19 year old cat down before a trip today… but she still seems normal"</div>
+        <div class="why-works"><strong>Why it works:</strong> Captures the heart-wrenching dilemma of euthanizing a pet that appears healthy. The "still seems normal" clause creates unbearable tension — it makes the decision feel premature, triggering guilt and urgency simultaneously in every pet owner who reads it.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'I may have to put my 19 year old cat down before a trip today… but she still seems normal')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 2 -->
+      <div class="hook-card" data-pattern="emotional" data-score="13340">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #02</span>
+          <span class="hc-tag">💔 Emotional Dilemma</span>
+          <span class="hc-score">13,340 engagement</span>
+        </div>
+        <div class="hook-text">"AITJ for refusing to pretend I don't speak Spanish at my own family dinner?"</div>
+        <div class="why-works"><strong>Why it works:</strong> Highlights the satisfaction of confronting covert criticism in one's own language. Delivers a cathartic victory over silent judgment. The "at my own family dinner" clause makes the violation of safety feel extra acute.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'AITJ for refusing to pretend I don\'t speak Spanish at my own family dinner?')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 3 -->
+      <div class="hook-card" data-pattern="emotional" data-score="7453">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #03</span>
+          <span class="hc-tag">💔 Emotional Dilemma</span>
+          <span class="hc-score">7,453 engagement</span>
+        </div>
+        <div class="hook-text">"WIBTAH for changing my baby's name after my mom secretly told my sister I was pregnant?"</div>
+        <div class="why-works"><strong>Why it works:</strong> Explores betrayal of trust and the urge to reclaim agency after family deception. The "changing my baby's name" act is extreme — a deeply personal response to violation — which signals how serious the original breach was.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'WIBTAH for changing my baby\'s name after my mom secretly told my sister I was pregnant?')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 4 -->
+      <div class="hook-card" data-pattern="emotional" data-score="5669">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #04</span>
+          <span class="hc-tag">💔 Emotional Dilemma</span>
+          <span class="hc-score">5,669 engagement</span>
+        </div>
+        <div class="hook-text">"AITA for not buying my boyfriend another birthday gift after he rejected the original present?"</div>
+        <div class="why-works"><strong>Why it works:</strong> Taps into the sting of ungrateful receivers and questions whether effort deserves reciprocation. The word "rejected" does heavy lifting — it frames the boyfriend's reaction as active dismissal, not passive indifference.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'AITA for not buying my boyfriend another birthday gift after he rejected the original present?')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 5 -->
+      <div class="hook-card" data-pattern="insider" data-score="519">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #05</span>
+          <span class="hc-tag">🔑 Insider Confession</span>
+          <span class="hc-score">519 engagement</span>
+        </div>
+        <div class="hook-text">"We're making money in the wedding industry and here's what nobody told us before we started"</div>
+        <div class="why-works"><strong>Why it works:</strong> Promises counter-intuitive insider wisdom about a traditionally emotion-driven market. "Nobody told us" triggers the reader's fear of being the person who also wasn't told — and creates urgency to get the knowledge now.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'We\'re making money in the wedding industry and here\'s what nobody told us before we started')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 6 -->
+      <div class="hook-card" data-pattern="warning" data-score="386">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #06</span>
+          <span class="hc-tag">⚠️ Warning</span>
+          <span class="hc-score">386 engagement</span>
+        </div>
+        <div class="hook-text">"How I lost $1.5M in less than 2 years"</div>
+        <div class="why-works"><strong>Why it works:</strong> A shocking loss story that activates loss-aversion psychology. "Less than 2 years" adds specificity that makes the claim credible. The reader instinctively wants to know what mistakes to avoid — positioning the post as essential protective reading.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'How I lost $1.5M in less than 2 years')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 7 -->
+      <div class="hook-card" data-pattern="income" data-score="351">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #07</span>
+          <span class="hc-tag">💰 Income Milestone</span>
+          <span class="hc-score">351 engagement</span>
+        </div>
+        <div class="hook-text">"Hit $1K/month building mobile apps on the side!"</div>
+        <div class="why-works"><strong>Why it works:</strong> $1K/month is a specific, achievable milestone that feels realistic to beginners. "On the side" signals this was done without quitting a job — making the outcome accessible to the reader's current situation without requiring major life changes.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Hit $1K/month building mobile apps on the side!')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 8 -->
+      <div class="hook-card" data-pattern="insider" data-score="128">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #08</span>
+          <span class="hc-tag">🔑 Insider Confession</span>
+          <span class="hc-score">128 engagement</span>
+        </div>
+        <div class="hook-text">"Hired my first full-time marketer after doing everything myself for 14 months. What I wish I knew before signing the offer letter."</div>
+        <div class="why-works"><strong>Why it works:</strong> "14 months" of solo work creates credibility and relatability. "What I wish I knew" activates the reader's fear of making the same expensive mistake. This is the mentor-confession format — peer level, hard-earned, and uniquely applicable to anyone facing the same decision.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Hired my first full-time marketer after doing everything myself for 14 months. What I wish I knew before signing the offer letter.')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 9 -->
+      <div class="hook-card" data-pattern="counterintuitive" data-score="82">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #09</span>
+          <span class="hc-tag">🔄 Counter-Intuitive</span>
+          <span class="hc-score">82 engagement</span>
+        </div>
+        <div class="hook-text">"I tracked every hour for 7 days and found out why I kept burning out"</div>
+        <div class="why-works"><strong>Why it works:</strong> Turns abstract burnout into a detective story with concrete, surprising data. "7 days" of tracking is a specific, finite commitment — the reader can imagine doing the same. The promise is revelation: you'll find out what you don't currently know about yourself.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'I tracked every hour for 7 days and found out why I kept burning out')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 10 -->
+      <div class="hook-card" data-pattern="warning" data-score="129">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #10</span>
+          <span class="hc-tag">⚠️ Warning</span>
+          <span class="hc-score">129 engagement</span>
+        </div>
+        <div class="hook-text">"Worst Training & Zero Support – My Concentrix Experience"</div>
+        <div class="why-works"><strong>Why it works:</strong> "Worst" is a superlative that demands attention. Naming the specific company (Concentrix) makes it factual, not abstract. Anyone who has experienced bad onboarding immediately recognises their own story — and anyone considering the company now has essential information.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Worst Training & Zero Support – My Concentrix Experience')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 11 -->
+      <div class="hook-card" data-pattern="income" data-score="69">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #11</span>
+          <span class="hc-tag">💰 Income Milestone</span>
+          <span class="hc-score">69 engagement</span>
+        </div>
+        <div class="hook-text">"If I had no followers, no email list, and no idea what to sell. Here's the exact 4-week process I would use to make my first $1K online."</div>
+        <div class="why-works"><strong>Why it works:</strong> Removes all standard objections upfront ("no followers, no list, no idea") before delivering the promise. "Exact 4-week process" is concrete and bounded. The specific dollar amount ($1K) and timeframe (4 weeks) make the claim falsifiable — and therefore credible.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'If I had no followers, no email list, and no idea what to sell. Here\'s the exact 4-week process I would use to make my first $1K online.')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 12 -->
+      <div class="hook-card" data-pattern="income" data-score="66">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #12</span>
+          <span class="hc-tag">💰 Income Milestone</span>
+          <span class="hc-score">66 engagement</span>
+        </div>
+        <div class="hook-text">"Helped someone restore their grandma's photo for free, somehow turned it into $800/month"</div>
+        <div class="why-works"><strong>Why it works:</strong> The accidental origin story ("somehow turned it") makes the income feel like a surprise discovery rather than a calculated strategy — more authentic and accessible. The charitable act (helping for free) makes the narrator trustworthy before the income is mentioned.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Helped someone restore their grandma\'s photo for free, somehow turned it into $800/month')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 13 -->
+      <div class="hook-card" data-pattern="emotional" data-score="67">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #13</span>
+          <span class="hc-tag">💔 Emotional Dilemma</span>
+          <span class="hc-score">67 engagement</span>
+        </div>
+        <div class="hook-text">"Is This A Good Idea For A Ugly Guy?"</div>
+        <div class="why-works"><strong>Why it works:</strong> The blunt self-description ("A Ugly Guy") creates immediate vulnerability and self-aware humour that disarms the reader. It challenges conventional advice with a real, uncomfortable question — will appearance-based dating advice actually work for someone who doesn't start with conventional advantages?</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Is This A Good Idea For A Ugly Guy?')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 14 -->
+      <div class="hook-card" data-pattern="warning" data-score="61">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #14</span>
+          <span class="hc-tag">⚠️ Warning</span>
+          <span class="hc-score">61 engagement</span>
+        </div>
+        <div class="hook-text">"Got offered remote work but they want to pay in crypto for test period, should I take it?"</div>
+        <div class="why-works"><strong>Why it works:</strong> Captures the modern gig-economy tension between opportunity and risk. "Should I take it?" is an open invitation for engagement. The crypto payment element flags a specific red flag pattern that thousands of scam-wary remote workers recognise immediately.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Got offered remote work but they want to pay in crypto for test period, should I take it?')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 15 -->
+      <div class="hook-card" data-pattern="counterintuitive" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #15</span>
+          <span class="hc-tag">🔄 Counter-Intuitive</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"I Stopped Using Social Media and My Earnings on Fanvue Doubled"</div>
+        <div class="why-works"><strong>Why it works:</strong> Directly contradicts the conventional wisdom that more posting = more income. "Doubled" is a specific multiplier, not vague growth. This hook forces the reader to re-examine a core assumption about creator economics — the best hook type for authority-building content.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'I Stopped Using Social Media and My Earnings on Fanvue Doubled')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 16 -->
+      <div class="hook-card" data-pattern="income" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #16</span>
+          <span class="hc-tag">💰 Income Milestone</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"First Paying Customer Unlocked"</div>
+        <div class="why-works"><strong>Why it works:</strong> The gaming language ("Unlocked") makes a business milestone feel like an achievement. Short, declarative, and unambiguous — it celebrates a universal first milestone that every person starting anything online is waiting for. Maximally relatable.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'First Paying Customer Unlocked')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 17 -->
+      <div class="hook-card" data-pattern="emotional" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #17</span>
+          <span class="hc-tag">💔 Emotional Dilemma</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"The sleepless nights have started"</div>
+        <div class="why-works"><strong>Why it works:</strong> Signals the onset of entrepreneurial stress with intimate vulnerability. The "have started" framing implies this is the beginning of something — an ongoing story the reader is invited into. Short, specific, and universal among anyone who has launched something new.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'The sleepless nights have started')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 18 -->
+      <div class="hook-card" data-pattern="counterintuitive" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #18</span>
+          <span class="hc-tag">🔄 Counter-Intuitive</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"Your product doesn't matter! Here is the proof!"</div>
+        <div class="why-works"><strong>Why it works:</strong> Provocatively claims that execution beats idea — directly attacking the belief that most builders hold most dear. The exclamation marks add urgency. "Here is the proof" makes a falsifiable claim rather than an opinion, demanding engagement from both believers and sceptics.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Your product doesn\'t matter! Here is the proof!')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 19 -->
+      <div class="hook-card" data-pattern="counterintuitive" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #19</span>
+          <span class="hc-tag">🔄 Counter-Intuitive</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"Posted the same content on YouTube and TikTok for 60 days, the difference surprised me"</div>
+        <div class="why-works"><strong>Why it works:</strong> Promises platform-specific algorithmic truths from a controlled experiment ("same content" removes the variable of quality). "60 days" is credible commitment. "Surprised me" is the hook within the hook — if the result surprised the person who ran the experiment, it will almost certainly surprise the reader.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Posted the same content on YouTube and TikTok for 60 days, the difference surprised me')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 20 -->
+      <div class="hook-card" data-pattern="emotional" data-score="10">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #20</span>
+          <span class="hc-tag">💔 Emotional Dilemma</span>
+          <span class="hc-score">10 engagement</span>
+        </div>
+        <div class="hook-text">"Tutor Rejection (again)"</div>
+        <div class="why-works"><strong>Why it works:</strong> The word "again" does extraordinary work in two characters. It signals a pattern of failure, not a one-time setback — making the frustration cumulative and recognisable. Anyone who has faced repeated rejection from a system immediately feels seen.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Tutor Rejection (again)')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 21 -->
+      <div class="hook-card" data-pattern="income" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #21</span>
+          <span class="hc-tag">💰 Income Milestone</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"Just made $3000 this week — DON'T GIVE UP"</div>
+        <div class="why-works"><strong>Why it works:</strong> Combines an income proof point with direct motivational instruction. The caps lock "DON'T GIVE UP" signals that the writer has been through the doubt — the milestone is framed as a reward for persistence, not luck. Activates both aspiration and perseverance psychology.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Just made $3000 this week — DON\'T GIVE UP')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 22 -->
+      <div class="hook-card" data-pattern="warning" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #22</span>
+          <span class="hc-tag">⚠️ Warning</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"A promising side hustle is not the same as a trustworthy one"</div>
+        <div class="why-works"><strong>Why it works:</strong> Distinguishes between two concepts the reader likely conflates. This creates cognitive dissonance — "wait, aren't they the same?" — and demands clarification. It positions the creator as someone who has learned a hard lesson that the reader can benefit from without experiencing it.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'A promising side hustle is not the same as a trustworthy one')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 23 -->
+      <div class="hook-card" data-pattern="counterintuitive" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #23</span>
+          <span class="hc-tag">🔄 Counter-Intuitive</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"When did your 'passive income' actually become low-maintenance?"</div>
+        <div class="why-works"><strong>Why it works:</strong> Questions the myth of truly passive income without stating it explicitly. The quote marks around "passive income" signal healthy scepticism. It invites honest discussion in a topic category dominated by hype — and honest discussion generates the most engagement.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'When did your \'passive income\' actually become low-maintenance?')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 24 -->
+      <div class="hook-card" data-pattern="insider" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #24</span>
+          <span class="hc-tag">🔑 Insider Confession</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"What's a small decision you made that completely changed the trajectory of your life?"</div>
+        <div class="why-works"><strong>Why it works:</strong> Invites personal storytelling about pivotal micro-choices. "Small decision" is counterintuitive — the expectation is that trajectory-changing moments are big. The juxtaposition creates curiosity and makes every person recall their own small-but-consequential moment.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'What\'s a small decision you made that completely changed the trajectory of your life?')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 25 -->
+      <div class="hook-card" data-pattern="income" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #25</span>
+          <span class="hc-tag">💰 Income Milestone</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"I have been in the social media industry for over 18 years and earning on social media for over 14 years. I'll answer as many questions as possible."</div>
+        <div class="why-works"><strong>Why it works:</strong> Establishes rare depth of expertise ("18 years" predates most platforms), then makes a generous open offer. The explicit willingness to answer creates a sense of access to wisdom that normally costs money or years of experience. The asymmetry is the hook.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'I have been in the social media industry for over 18 years and earning on social media for over 14 years. I\'ll answer as many questions as possible.')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 26 -->
+      <div class="hook-card" data-pattern="emotional" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #26</span>
+          <span class="hc-tag">💔 Emotional Dilemma</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"Built a side project to solve a problem I had… now I'm wondering if it could actually launch it"</div>
+        <div class="why-works"><strong>Why it works:</strong> Captures the universal "scratch your own itch" moment of uncertainty. The ellipsis creates dramatic pause. "Wondering if I could actually" signals genuine vulnerability — not a confident launch post, but the moment before the decision. Authenticity at its most potent.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'Built a side project to solve a problem I had… now I\'m wondering if I could actually launch it')">Copy Hook</button>
+      </div>
+
+      <!-- Hook 27 -->
+      <div class="hook-card" data-pattern="income" data-score="0">
+        <div class="hc-meta">
+          <span class="hc-num">Hook #27</span>
+          <span class="hc-tag">💰 Income Milestone</span>
+          <span class="hc-score">Viral potential</span>
+        </div>
+        <div class="hook-text">"I found a garden ornament I liked but could only buy them 10 at a time. 4 months later I was on eBay and Amazon. 8 months later it paid my mortgage."</div>
+        <div class="why-works"><strong>Why it works:</strong> The origin is accidental (couldn't find what they wanted), not strategic. The timeline is specific (4 months, 8 months). The outcome is relatable (mortgage, not millions). This three-sentence arc is a complete hero's journey in miniature — impossible to not finish reading.</div>
+        <button class="copy-btn" onclick="copyHook(this, 'I found a garden ornament I liked but could only buy them 10 at a time. 4 months later I was on eBay and Amazon. 8 months later it paid my mortgage.')">Copy Hook</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="verdict-box">
+    <h2>How to Adapt Any Hook</h2>
+    <p>Every hook in this library follows the same recipe: <strong>a specific situation + an emotional stake + a counterintuitive or unexpected element.</strong> To adapt any hook to your niche, keep the structure and swap the specifics. The formula works across categories because it's built on psychology, not topic.</p>
+  </div>
+
+</div>
+
+<div class="cta-section">
+  <div class="cta-proof-row">
+    <span class="cta-proof-badge">📊 22 free reports</span>
+    <span class="cta-proof-sep">·</span>
+    <span class="cta-proof-badge">1 intelligence collection</span>
+  </div>
+  <h2>Want this done for your topic?</h2>
+  <p>Every report on this site — all 22 of them — came from a single deep-dive intelligence collection. One dataset. Dozens of angles. For $69, I'll run the same process on your niche, product, or audience and hand you the raw signal.</p>
+  <a href="mailto:signup@quantummerlin.com?subject=Custom%20Report%20Request" class="cta-btn">Commission a Custom Collection — $69</a>
+  <div class="cta-price">One-time fee · Delivered within 48 hours · No subscription</div>
+</div>
+</div>
+
+<footer>
+  <p>© 2026 Aether Intelligence · All reports synthesised from public community data · <a href="../index.html">Back to Reports</a></p>
+</footer>
+
+<script>
+  let activeFilter = 'all';
+
+  function setFilter(pattern, btn) {
+    activeFilter = pattern;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterHooks();
+  }
+
+  function filterHooks() {
+    const query = document.getElementById('hookSearch').value.toLowerCase();
+    const cards = document.querySelectorAll('.hook-card');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const patternMatch = activeFilter === 'all' || card.dataset.pattern === activeFilter;
+      const textContent = card.textContent.toLowerCase();
+      const queryMatch = query === '' || textContent.includes(query);
+
+      if (patternMatch && queryMatch) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    const countEl = document.getElementById('resultsCount');
+    countEl.innerHTML = `Showing <span>${visible}</span> hook${visible !== 1 ? 's' : ''}`;
+  }
+
+  function copyHook(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy Hook';
+        btn.classList.remove('copied');
+      }, 2000);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy Hook';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>

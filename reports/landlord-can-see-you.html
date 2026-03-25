@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Landlord Can See You | Aether Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --accent-red: #ef4444;
+            --accent-orange: #f97316;
+            --accent-amber: #fbbf24;
+            --gradient-hero: linear-gradient(135deg, #ef4444 0%, #f97316 50%, #0a0a0f 100%);
+            --gradient-warning: linear-gradient(135deg, #ef4444, #fbbf24);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: var(--gradient-warning);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 120px 3rem 80px;
+            background: var(--gradient-hero);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(239, 68, 68, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(251, 191, 36, 0.2) 0%, transparent 40%);
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent-red);
+            margin-bottom: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 60px rgba(239, 68, 68, 0.5);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+        }
+        
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-warning);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+        }
+        
+        /* Section Styles */
+        .section {
+            padding: 80px 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Warning Section */
+        .warning-section {
+            background: var(--bg-secondary);
+            padding: 80px 3rem;
+        }
+        
+        .warning-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .warning-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-red);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(251, 191, 36, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .warning-box p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .warning-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Concern Cards */
+        .concern-section {
+            background: var(--bg-primary);
+            padding: 80px 3rem;
+        }
+        
+        .concern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .concern-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        .concern-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .concern-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .concern-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .concern-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        /* Quote Block */
+        .quote-section {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            padding: 80px 3rem;
+        }
+        
+        .quote-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .big-quote {
+            font-size: 1.75rem;
+            font-weight: 500;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .big-quote::before {
+            content: '"';
+            font-size: 6rem;
+            position: absolute;
+            top: -2rem;
+            left: -2rem;
+            color: rgba(239, 68, 68, 0.2);
+            font-family: Georgia, serif;
+        }
+        
+        .quote-author {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        /* Rights Section */
+        .rights-section {
+            background: var(--bg-secondary);
+            padding: 80px 3rem;
+        }
+        
+        .rights-list {
+            max-width: 800px;
+            margin: 3rem auto 0;
+        }
+        
+        .rights-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .rights-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .rights-number {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-warning);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        
+        .rights-content h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rights-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        /* Key Takeaways */
+        .takeaways {
+            background: var(--bg-primary);
+            padding: 80px 3rem;
+        }
+        
+        .takeaway-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .takeaway-item {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(251, 191, 36, 0.05));
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .takeaway-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: rgba(239, 68, 68, 0.2);
+            margin-bottom: 1rem;
+        }
+        
+        .takeaway-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .takeaway-item p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+
+        .cta-proof {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+        }
+        .cta-proof-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        .cta-proof-sep {
+            opacity: 0.3;
+            font-size: 1rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient-hero);
+            padding: 100px 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(239, 68, 68, 0.4);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            padding: 40px 3rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero {
+                padding: 100px 1.5rem 60px;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .section,
+            .warning-section,
+            .concern-section,
+            .quote-section,
+            .rights-section,
+            .takeaways,
+            .cta-section {
+                padding: 60px 1.5rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="../index.html" class="logo">
+            <img src="../logo.png" alt="Aether Intelligence Logo">
+            <span class="logo-text">Aether Intelligence</span>
+        </a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="../patterns.html">Patterns</a>
+            <a href="../methodology.html">Methodology</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">🔒 Tenant Privacy Crisis</span>
+            <h1>The Landlord Can See You</h1>
+            <p class="hero-subtitle">I analysed 17,000 comments about rental housing and discovered a terrifying new trend: landlords installing smart locks without consent—and using them to track tenants' every move.</p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">900</div>
+                    <div class="stat-label">Insights Extracted</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Documented Cases</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Legal Protections in Most States</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Warning Section -->
+    <section class="warning-section">
+        <div class="warning-container">
+            <h3 class="warning-title">⚠️ The New Surveillance Frontier</h3>
+            <div class="warning-box">
+                <p>Imagine coming home to find your landlord has replaced your deadbolt with a smart lock—and they didn't tell you. Now they have an app that shows exactly when you come and go. They can lock you out remotely. They can track your patterns. And in most places, it's completely legal.</p>
+                <p>This isn't a dystopian future. It's happening right now, and tenants are discovering they have almost no legal recourse.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Concerns -->
+    <section class="concern-section">
+        <div class="section-header">
+            <h2>What Tenants Discovered</h2>
+            <p>When landlords install smart locks without consent, these are the fears that keep tenants awake at night.</p>
+        </div>
+        
+        <div class="concern-grid">
+            <div class="concern-card">
+                <div class="concern-icon">📱</div>
+                <h4 class="concern-title">Real-Time Tracking</h4>
+                <p class="concern-description">The landlord's app shows exactly when you lock and unlock your door. They know when you leave for work, when you come home, when you go out at night. Your patterns are their data.</p>
+            </div>
+            
+            <div class="concern-card">
+                <div class="concern-icon">🔐</div>
+                <h4 class="concern-title">Remote Lock-Out Power</h4>
+                <p class="concern-description">With one tap, your landlord can lock you out of your own home. Dispute over rent? Complaint about repairs? They have a button that denies you access to your living space.</p>
+            </div>
+            
+            <div class="concern-card">
+                <div class="concern-icon">👥</div>
+                <h4 class="concern-title">Guest Monitoring</h4>
+                <p class="concern-description">The lock logs every entry. Landlords can see if you have guests over, how often, how long they stay. Overnight guests? They know. Dating? They know. Your privacy is gone.</p>
+            </div>
+            
+            <div class="concern-card">
+                <div class="concern-icon">⚖️</div>
+                <h4 class="concern-title">Retaliation Tool</h4>
+                <p class="concern-description">Multiple tenants reported that after complaining about conditions or requesting repairs, the landlord's attitude shifted—and the smart lock became a subtle threat. "Nice place you have here. Be a shame if you couldn't get in."</p>
+            </div>
+            
+            <div class="concern-card">
+                <div class="concern-icon">📊</div>
+                <h4 class="concern-title">Pattern Data Harvesting</h4>
+                <p class="concern-description">Your comings and goings create a detailed profile: work schedule, social life, sleep patterns. This data is stored in the cloud. Who owns it? Who can access it? Tenants don't know.</p>
+            </div>
+            
+            <div class="concern-card">
+                <div class="concern-icon">🚫</div>
+                <h4 class="concern-title">No Consent Required</h4>
+                <p class="concern-description">In most jurisdictions, landlords can change locks as long as they provide you a key. The fact that it's a smart lock tracking your movements? Not regulated. The law hasn't caught up.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="quote-section">
+        <div class="quote-container">
+            <blockquote class="big-quote">
+                If they have access to the app, they can remotely lock/unlock the door. As well as see when the door is locked/unlocked. Essentially trolling to see when you come and go. I'd be pissed.
+            </blockquote>
+            <p class="quote-author">— Tenant describing the problem</p>
+        </div>
+    </section>
+
+    <!-- Your Rights -->
+    <section class="rights-section">
+        <div class="section-header">
+            <h2>What Are Your Rights?</h2>
+            <p>The short answer: probably fewer than you think. But here's what tenants are discovering.</p>
+        </div>
+        
+        <div class="rights-list">
+            <div class="rights-item">
+                <div class="rights-number">1</div>
+                <div class="rights-content">
+                    <h4>Check Your Lease</h4>
+                    <p>Some leases have clauses about lock changes or security devices. If your lease doesn't mention smart locks or surveillance, you may have grounds to challenge the installation.</p>
+                </div>
+            </div>
+            <div class="rights-item">
+                <div class="rights-number">2</div>
+                <div class="rights-content">
+                    <h4>Quiet Enjoyment Laws</h4>
+                    <p>Most states have "quiet enjoyment" protections that prevent landlords from interfering with your use of the property. Tracking your movements could violate this—but it's untested legal ground.</p>
+                </div>
+            </div>
+            <div class="rights-item">
+                <div class="rights-number">3</div>
+                <div class="rights-content">
+                    <h4>Notice Requirements</h4>
+                    <p>Some jurisdictions require landlords to give notice before entering your unit. Does installing a tracking device count as "entering"? Another legal grey area.</p>
+                </div>
+            </div>
+            <div class="rights-item">
+                <div class="rights-number">4</div>
+                <div class="rights-content">
+                    <h4>The Gap in the Law</h4>
+                    <p>Smart locks are new enough that most tenant-landlord laws don't address them specifically. You're in uncharted territory—and landlords know it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Takeaways -->
+    <section class="takeaways">
+        <div class="section-header">
+            <h2>Protecting Yourself</h2>
+            <p>If you're a tenant—or about to become one—here's what you need to know.</p>
+        </div>
+        
+        <div class="takeaway-grid">
+            <div class="takeaway-item">
+                <div class="takeaway-number">01</div>
+                <h4>Ask Before You Sign</h4>
+                <p>Before signing a lease, ask specifically about smart locks, surveillance devices, and who has access to entry data. Get answers in writing.</p>
+            </div>
+            <div class="takeaway-item">
+                <div class="takeaway-number">02</div>
+                <h4>Document Everything</h4>
+                <p>If a landlord installs a smart lock without notice, document the installation, the app's data access, and any communications. This could be evidence if laws change.</p>
+            </div>
+            <div class="takeaway-item">
+                <div class="takeaway-number">03</div>
+                <h4>Push for Legislation</h4>
+                <p>The law is behind the technology. Tenant advocacy groups are pushing for smart lock regulations. Find your local group and add your voice.</p>
+            </div>
+            <div class="takeaway-item">
+                <div class="takeaway-number">04</div>
+                <h4>The Power Imbalance Is Real</h4>
+                <p>Until laws catch up, landlords hold the power. They can track your movements, lock you out, and claim it's "security." Know the landscape before you rent.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-proof">
+                <span class="cta-proof-label">📊 22 free reports</span>
+                <span class="cta-proof-sep">·</span>
+                <span class="cta-proof-label">1 intelligence collection</span>
+            </div>
+            <h3 class="cta-title">Want this done for your topic?</h3>
+            <p class="cta-text">Every report on this site — all 22 of them — came from a single deep-dive intelligence collection. One dataset. Dozens of angles. For $69, I'll run the same process on your niche, product, or audience and hand you the raw signal.</p>
+            <a href="mailto:signup@quantummerlin.com?subject=Custom%20Report%20Request" class="btn btn-primary">Commission a Custom Collection — $69</a>
+            <a href="../index.html" class="btn btn-secondary">Back to All Reports</a>
+        </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../index.html">Home</a>
+                <a href="../patterns.html">Patterns</a>
+                <a href="../methodology.html">Methodology</a>
+            </div>
+            <p class="copyright">© 2025 Aether Intelligence. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

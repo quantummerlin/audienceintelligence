@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Token Cost Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #8892b0;
+            font-size: 1.1rem;
+        }
+        
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccd6f6;
+            font-size: 0.9rem;
+        }
+        
+        select, input[type="number"], input[type="range"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+        
+        select option {
+            background: #1a1a2e;
+        }
+        
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .range-container input[type="range"] {
+            flex: 1;
+            padding: 0;
+        }
+        
+        .range-value {
+            min-width: 80px;
+            text-align: right;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+        
+        .results {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 44, 191, 0.1));
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            color: #8892b0;
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .result-value.warning {
+            color: #ffd700;
+        }
+        
+        .result-value.danger {
+            color: #ff6b6b;
+        }
+        
+        .result-value.success {
+            color: #4ade80;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-table th {
+            color: #8892b0;
+            font-weight: normal;
+            font-size: 0.85rem;
+        }
+        
+        .comparison-table tr.highlight {
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .comparison-table .savings {
+            color: #4ade80;
+            font-weight: bold;
+        }
+        
+        .tips {
+            margin-top: 40px;
+        }
+        
+        .tip-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #00d4ff;
+        }
+        
+        .tip-card h3 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .tip-card p {
+            color: #8892b0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .preset-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #ccd6f6;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .preset-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #8892b0;
+            font-size: 0.85rem;
+        }
+        
+        footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧮 OpenClaw Token Cost Calculator</h1>
+            <p class="subtitle">Estimate your API costs and find the cheapest model for your needs</p>
+        </header>
+        
+        <div class="calculator-grid">
+            <!-- Input Card -->
+            <div class="card">
+                <h2>📊 Your Usage</h2>
+                
+                <div class="form-group">
+                    <label>Quick Presets</label>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" onclick="setPreset('light')">Light Use</button>
+                        <button class="preset-btn" onclick="setPreset('moderate')">Moderate</button>
+                        <button class="preset-btn" onclick="setPreset('heavy')">Heavy</button>
+                        <button class="preset-btn" onclick="setPreset('24/7')">24/7 Agent</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Model</label>
+                    <select id="model" onchange="calculate()">
+                        <optgroup label="Anthropic Claude">
+                            <option value="claude-opus-4">Claude Opus 4 (Most Capable)</option>
+                            <option value="claude-sonnet-4" selected>Claude Sonnet 4 (Balanced)</option>
+                            <option value="claude-haiku">Claude Haiku 3.5 (Fast & Cheap)</option>
+                        </optgroup>
+                        <optgroup label="OpenAI GPT">
+                            <option value="gpt-4">GPT-4 (Capable)</option>
+                            <option value="gpt-4-turbo">GPT-4 Turbo (Faster)</option>
+                            <option value="gpt-4o-mini">GPT-4o Mini (Cheapest)</option>
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Budget)</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>API Calls per Day</label>
+                    <div class="range-container">
+                        <input type="range" id="callsPerDay" min="10" max="10000" value="500" oninput="updateRangeValue('callsPerDay', 'callsValue'); calculate()">
+                        <span class="range-value" id="callsValue">500</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Average Tokens per Call (Input)</label>
+                    <div class="range-container">
+                        <input type="range" id="tokensPerCall" min="100" max="10000" value="2000" step="100" oninput="updateRangeValue('tokensPerCall', 'tokensValue'); calculate()">
+                        <span class="range-value" id="tokensValue">2,000</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Average Output Tokens per Call</label>
+                    <div class="range-container">
+                        <input type="range" id="outputTokens" min="50" max="5000" value="500" step="50" oninput="updateRangeValue('outputTokens', 'outputValue'); calculate()">
+                        <span class="range-value" id="outputValue">500</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Days per Month</label>
+                    <input type="number" id="daysPerMonth" value="30" min="1" max="31" onchange="calculate()">
+                </div>
+            </div>
+            
+            <!-- Results Card -->
+            <div class="card results">
+                <h2>💰 Cost Estimate</h2>
+                
+                <div class="result-item">
+                    <span class="result-label">Daily Cost</span>
+                    <span class="result-value" id="dailyCost">$3.00</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Weekly Cost</span>
+                    <span class="result-value" id="weeklyCost">$21.00</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Monthly Cost</span>
+                    <span class="result-value" id="monthlyCost">$90.00</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Tokens per Day</span>
+                    <span class="result-value" id="tokensPerDay">1,000,000</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Cost Rating</span>
+                    <span class="result-value" id="costRating">Moderate</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Model Comparison -->
+        <div class="card">
+            <h2>📈 Model Comparison (Same Usage)</h2>
+            <p style="color: #8892b0; margin-bottom: 20px;">See how much you'd pay with different models</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Daily</th>
+                        <th>Monthly</th>
+                        <th>vs Selected</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonBody">
+                    <!-- Filled by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Tips -->
+        <div class="tips">
+            <h2 style="margin-bottom: 20px; color: #00d4ff;">💡 Cost-Saving Tips</h2>
+            
+            <div class="tip-card">
+                <h3>🎯 Use the Right Model for the Task</h3>
+                <p>Most agent tasks don't need Opus or GPT-4. Use Sonnet or GPT-4o Mini for routine operations. Switch to premium models only for complex reasoning tasks.</p>
+            </div>
+            
+            <div class="tip-card">
+                <h3>📊 Enable Memory Compression</h3>
+                <p>OpenClaw's default memory sends full conversation history. Enable compression to reduce token usage by 50-70%.</p>
+            </div>
+            
+            <div class="tip-card">
+                <h3>🛑 Set Budget Caps</h3>
+                <p>Add a daily spend limit in your config to prevent runaway agents. A $10 cap could save you from a $200 surprise bill.</p>
+            </div>
+            
+            <div class="tip-card">
+                <h3>🔄 Implement Caching</h3>
+                <p>Enable response caching for repeated queries. This can save 10-30% on tokens for common operations.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Built for the OpenClaw community • Pricing updated 2024 • <a href="https://openai.com/pricing" target="_blank">OpenAI Pricing</a> • <a href="https://anthropic.com/pricing" target="_blank">Anthropic Pricing</a></p>
+            <p style="margin-top: 10px;">⚠️ Estimates are approximate. Actual costs vary based on exact token counts and provider pricing changes.</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Pricing data (per 1M tokens)
+        const pricing = {
+            'claude-opus-4': { input: 15.00, output: 75.00, name: 'Claude Opus 4' },
+            'claude-sonnet-4': { input: 3.00, output: 15.00, name: 'Claude Sonnet 4' },
+            'claude-haiku': { input: 0.80, output: 4.00, name: 'Claude Haiku 3.5' },
+            'gpt-4': { input: 30.00, output: 60.00, name: 'GPT-4' },
+            'gpt-4-turbo': { input: 10.00, output: 30.00, name: 'GPT-4 Turbo' },
+            'gpt-4o-mini': { input: 0.15, output: 0.60, name: 'GPT-4o Mini' },
+            'gpt-3.5-turbo': { input: 0.50, output: 1.50, name: 'GPT-3.5 Turbo' }
+        };
+        
+        const presets = {
+            'light': { calls: 50, inputTokens: 1000, outputTokens: 300 },
+            'moderate': { calls: 500, inputTokens: 2000, outputTokens: 500 },
+            'heavy': { calls: 2000, inputTokens: 3000, outputTokens: 1000 },
+            '24/7': { calls: 5000, inputTokens: 2000, outputTokens: 800 }
+        };
+        
+        function setPreset(name) {
+            const preset = presets[name];
+            document.getElementById('callsPerDay').value = preset.calls;
+            document.getElementById('tokensPerCall').value = preset.inputTokens;
+            document.getElementById('outputTokens').value = preset.outputTokens;
+            updateRangeValue('callsPerDay', 'callsValue');
+            updateRangeValue('tokensPerCall', 'tokensValue');
+            updateRangeValue('outputTokens', 'outputValue');
+            calculate();
+        }
+        
+        function updateRangeValue(inputId, displayId) {
+            const value = document.getElementById(inputId).value;
+            document.getElementById(displayId).textContent = parseInt(value).toLocaleString();
+        }
+        
+        function calculate() {
+            const model = document.getElementById('model').value;
+            const callsPerDay = parseInt(document.getElementById('callsPerDay').value);
+            const tokensPerCall = parseInt(document.getElementById('tokensPerCall').value);
+            const outputTokens = parseInt(document.getElementById('outputTokens').value);
+            const daysPerMonth = parseInt(document.getElementById('daysPerMonth').value);
+            
+            const modelPrice = pricing[model];
+            
+            // Calculate tokens
+            const totalInputTokens = callsPerDay * tokensPerCall;
+            const totalOutputTokens = callsPerDay * outputTokens;
+            const totalTokens = totalInputTokens + totalOutputTokens;
+            
+            // Calculate costs
+            const dailyInputCost = (totalInputTokens / 1000000) * modelPrice.input;
+            const dailyOutputCost = (totalOutputTokens / 1000000) * modelPrice.output;
+            const dailyCost = dailyInputCost + dailyOutputCost;
+            const weeklyCost = dailyCost * 7;
+            const monthlyCost = dailyCost * daysPerMonth;
+            
+            // Update display
+            document.getElementById('dailyCost').textContent = '$' + dailyCost.toFixed(2);
+            document.getElementById('weeklyCost').textContent = '$' + weeklyCost.toFixed(2);
+            document.getElementById('monthlyCost').textContent = '$' + monthlyCost.toFixed(2);
+            document.getElementById('tokensPerDay').textContent = totalTokens.toLocaleString();
+            
+            // Cost rating
+            const ratingEl = document.getElementById('costRating');
+            if (dailyCost < 1) {
+                ratingEl.textContent = '✅ Low';
+                ratingEl.className = 'result-value success';
+            } else if (dailyCost < 10) {
+                ratingEl.textContent = '⚡ Moderate';
+                ratingEl.className = 'result-value warning';
+            } else {
+                ratingEl.textContent = '⚠️ High';
+                ratingEl.className = 'result-value danger';
+            }
+            
+            // Color coding for costs
+            const dailyEl = document.getElementById('dailyCost');
+            const monthlyEl = document.getElementById('monthlyCost');
+            
+            if (monthlyCost > 100) {
+                monthlyEl.className = 'result-value danger';
+            } else if (monthlyCost > 50) {
+                monthlyEl.className = 'result-value warning';
+            } else {
+                monthlyEl.className = 'result-value success';
+            }
+            
+            // Update comparison table
+            updateComparison(model, callsPerDay, tokensPerCall, outputTokens, daysPerMonth);
+        }
+        
+        function updateComparison(selectedModel, calls, inputTokens, outputTokens, days) {
+            const tbody = document.getElementById('comparisonBody');
+            tbody.innerHTML = '';
+            
+            const selectedPrice = pricing[selectedModel];
+            const selectedDailyCost = ((calls * inputTokens / 1000000) * selectedPrice.input) + 
+                                       ((calls * outputTokens / 1000000) * selectedPrice.output);
+            
+            for (const [key, data] of Object.entries(pricing)) {
+                const dailyCost = ((calls * inputTokens / 1000000) * data.input) + 
+                                  ((calls * outputTokens / 1000000) * data.output);
+                const monthlyCost = dailyCost * days;
+                const savings = selectedDailyCost - dailyCost;
+                
+                const tr = document.createElement('tr');
+                if (key === selectedModel) {
+                    tr.className = 'highlight';
+                }
+                
+                tr.innerHTML = `
+                    <td>${data.name}${key === selectedModel ? ' ✓' : ''}</td>
+                    <td>$${dailyCost.toFixed(2)}</td>
+                    <td>$${monthlyCost.toFixed(2)}</td>
+                    <td class="${savings > 0 ? 'savings' : ''}">${savings > 0 ? '-$' + (savings * days).toFixed(2) : savings < 0 ? '+$' + Math.abs(savings * days).toFixed(2) : '—'}</td>
+                `;
+                
+                tbody.appendChild(tr);
+            }
+        }
+        
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
