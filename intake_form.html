@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audience Intelligence Brief — Context Form</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <meta name="description" content="Fill in your brief to generate a custom AI analysis prompt for your Audience Intelligence Report." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Audience Intelligence Brief" />
+  <meta property="og:description" content="Fill in your brief and generate a ready-to-use AI analysis prompt." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://quantumtoolsmith.gumroad.com" />
+  <meta property="og:image" content="https://public-files.gumroad.com/audienceintelligence-cover.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
+      --purple-dark: #5b21b6;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-500: #64748b;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --green: #16a34a;
+      --green-bg: #dcfce7;
+      --white: #ffffff;
+      --radius: 10px;
+      --shadow: 0 4px 24px rgba(15,23,42,.10);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--slate-100);
+      color: var(--slate-800);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── HEADER ─── */
+    .site-header {
+      background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-700) 100%);
+      color: var(--white);
+      padding: 36px 24px 30px;
+      text-align: center;
+    }
+    .site-header h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .site-header p {
+      font-size: 1rem;
+      color: #94a3b8;
+      max-width: 540px;
+      margin: 0 auto 12px;
+    }
+    .header-brand a {
+      color: #a78bfa;
+      font-size: 0.82rem;
+      text-decoration: none;
+      letter-spacing: 0.4px;
+    }
+    .header-brand a:hover { text-decoration: underline; }
+
+    /* ─── STEP INDICATOR ─── */
+    .steps-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .step-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 99px;
+      background: var(--slate-100);
+      color: var(--slate-500);
+      border: 1.5px solid var(--slate-200);
+      transition: all .2s;
+    }
+    .step-pill.active {
+      background: var(--purple-light);
+      color: var(--purple);
+      border-color: var(--purple);
+    }
+    .step-pill .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: var(--white);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .step-pill:not(.active) .num { background: var(--slate-400); }
+
+    /* ─── MAIN LAYOUT ─── */
+    .page-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ─── SECTION CARDS ─── */
+    .form-section {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .section-head {
+      background: linear-gradient(90deg, var(--purple) 0%, var(--purple-dark) 100%);
+      color: var(--white);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.20);
+      font-weight: 800;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .section-head h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    .section-head p {
+      font-size: 0.82rem;
+      opacity: 0.82;
+      margin: 2px 0 0;
+    }
+    .section-body {
+      padding: 28px;
+    }
+
+    /* ─── FORM FIELDS ─── */
+    .field-group {
+      margin-bottom: 24px;
+    }
+    .field-group:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--slate-800);
+      margin-bottom: 5px;
+    }
+    label .hint {
+      display: block;
+      font-weight: 400;
+      color: var(--slate-500);
+      font-size: 0.80rem;
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      border: 1.5px solid var(--slate-200);
+      border-radius: 7px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      font-family: inherit;
+      color: var(--slate-800);
+      background: var(--slate-50);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+      background: var(--white);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    input::placeholder, textarea::placeholder { color: #b0bad0; }
+
+    /* ─── RADIO / CHECKBOX GROUPS ─── */
+    .radio-group, .check-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .radio-group label,
+    .check-group label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.90rem;
+      color: var(--slate-800);
+      padding: 10px 14px;
+      border: 1.5px solid var(--slate-200);
+      border-radius: 8px;
+      transition: all .15s;
+      background: var(--slate-50);
+    }
+    .radio-group label:hover,
+    .check-group label:hover {
+      border-color: var(--purple);
+      background: var(--purple-light);
+    }
+    .radio-group input[type="radio"],
+    .check-group input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      accent-color: var(--purple);
+    }
+    .radio-group label.selected,
+    .check-group label.checked {
+      border-color: var(--purple);
+      background: var(--purple-light);
+      color: var(--purple-dark);
+    }
+    .option-desc {
+      font-size: 0.78rem;
+      color: var(--slate-500);
+      font-weight: 400;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ─── CONDITIONAL BLOCK ─── */
+    .conditional-block {
+      border: 1.5px dashed var(--slate-200);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 16px;
+      background: var(--slate-50);
+      display: none;
+    }
+    .conditional-block.shown { display: block; }
+    .conditional-block > .field-group:last-child { margin-bottom: 0; }
+
+    /* two-col on wider screens */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 520px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ─── COMMENTS BOX ─── */
+    #comments {
+      min-height: 220px;
+      font-family: "Menlo", "Consolas", monospace;
+      font-size: 0.83rem;
+      line-height: 1.55;
+    }
+
+    /* ─── GENERATE BUTTON ─── */
+    .generate-wrap {
+      text-align: center;
+      margin-top: 36px;
+    }
+    .btn-generate {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+      color: var(--white);
+      font-size: 1.05rem;
+      font-weight: 800;
+      padding: 17px 48px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 18px rgba(124,58,237,.35);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(124,58,237,.45);
+    }
+    .btn-generate:active { transform: translateY(0); }
+
+    /* ─── OUTPUT PANEL ─── */
+    #output-section {
+      display: none;
+      margin-top: 40px;
+    }
+    #output-section.shown { display: block; }
+
+    .output-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .output-head {
+      background: linear-gradient(90deg, var(--green) 0%, #15803d 100%);
+      color: var(--white);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .output-head h3 { font-size: 1rem; font-weight: 700; }
+    .btn-copy {
+      background: rgba(255,255,255,0.20);
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.40);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 7px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-copy:hover { background: rgba(255,255,255,0.32); }
+    .btn-copy.copied { background: rgba(255,255,255,0.40); }
+
+    #prompt-output {
+      padding: 28px;
+      font-family: "Menlo", "Consolas", "Courier New", monospace;
+      font-size: 0.80rem;
+      line-height: 1.65;
+      color: var(--slate-800);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 520px;
+      overflow-y: auto;
+      background: #fafafa;
+    }
+
+    .output-instructions {
+      background: var(--green-bg);
+      border-top: 1px solid #bbf7d0;
+      padding: 16px 28px;
+      font-size: 0.85rem;
+      color: #15803d;
+      font-weight: 600;
+    }
+    .output-instructions ol {
+      margin: 8px 0 0 18px;
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    /* ─── FOOTER ─── */
+    .site-footer {
+      text-align: center;
+      padding: 32px 20px;
+      font-size: 0.82rem;
+      color: var(--slate-500);
+    }
+    .site-footer a { color: var(--purple); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+
+    /* ─── VALIDATION ─── */
+    .field-error {
+      display: none;
+      font-size: 0.78rem;
+      color: #dc2626;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .has-error input, .has-error textarea, .has-error select {
+      border-color: #dc2626 !important;
+    }
+    .has-error .field-error { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <h1>Audience Intelligence Brief</h1>
+  <p>Fill in your brief below, click <strong>Generate My Prompt</strong>, and paste the result into your AI to run the full analysis.</p>
+  <div class="header-brand">
+    <a href="https://quantumtoolsmith.gumroad.com" target="_blank" rel="noopener">by quantumtoolsmith.gumroad.com</a>
+  </div>
+</header>
+
+<!-- ═══ STEPS ═══ -->
+<nav class="steps-bar" aria-label="Form sections">
+  <div class="step-pill active"><span class="num">A</span> The Campaign</div>
+  <div class="step-pill active"><span class="num">B</span> Reply Preferences</div>
+  <div class="step-pill active"><span class="num">C</span> Your Voice</div>
+  <div class="step-pill active"><span class="num">D</span> Post &amp; Comments</div>
+</nav>
+
+<main class="page-wrap">
+  <form id="brief-form" novalidate>
+
+    <!-- ═══ SECTION A ═══ -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-num">A</span>
+        <div>
+          <h2>Who Is This Report For?</h2>
+          <p>Tell us about the client and their relationship to the post being analysed.</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="field-group">
+          <label for="client_name">
+            Client Name / Organisation
+            <span class="hint">The person or group commissioning this report. Not necessarily the post author.</span>
+          </label>
+          <input type="text" id="client_name" placeholder="e.g. Truth Protects The Innocent — family support campaign" />
+        </div>
+
+        <div class="field-group">
+          <label for="client_goal">
+            Client Goal
+            <span class="hint">What do you want to achieve with this analysis?</span>
+          </label>
+          <textarea id="client_goal" rows="3" placeholder="e.g. Gather public sentiment evidence for our campaign website, identify potential allies, find content ideas for our social channels, build evidence of support for legal use"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label for="post_author">
+            Post Author / Content Creator
+            <span class="hint">Who made the post being analysed? Are they affiliated with you or independent?</span>
+          </label>
+          <input type="text" id="post_author" placeholder="e.g. MP Emanuele Pozzolo — Italian politician. NOT affiliated with our campaign." />
+        </div>
+
+        <div class="field-group">
+          <label>
+            Your Relationship to This Post
+            <span class="hint">This changes how every section of the report is framed.</span>
+          </label>
+          <div class="radio-group" id="relationship-group">
+            <label>
+              <input type="radio" name="relationship" value="WE MADE THIS POST" />
+              <div>
+                WE MADE THIS POST
+                <span class="option-desc">Reply advice is written directly for you as the creator.</span>
+              </div>
+            </label>
+            <label>
+              <input type="radio" name="relationship" value="WE ARE SUPPORTERS" />
+              <div>
+                WE ARE SUPPORTERS
+                <span class="option-desc">We did not make this post but we support the cause it discusses. Advice focuses on amplification and ally recruitment.</span>
+              </div>
+            </label>
+            <label>
+              <input type="radio" name="relationship" value="WE ARE RESEARCHERS" />
+              <div>
+                WE ARE RESEARCHERS
+                <span class="option-desc">Purely analytical. No advocacy angle. Report is objective and data-focused.</span>
+              </div>
+            </label>
+            <label>
+              <input type="radio" name="relationship" value="WE ARE OPPONENTS" />
+              <div>
+                WE ARE OPPONENTS
+                <span class="option-desc">We are analysing opposition content. Report focuses on counter-strategy and narrative weaknesses.</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="platforms">
+            Your Own Platforms
+            <span class="hint">Where will this intelligence be applied? List all relevant channels.</span>
+          </label>
+          <input type="text" id="platforms" placeholder="e.g. Campaign website, Facebook page, press releases, Instagram, petition campaign" />
+        </div>
+
+      </div><!-- /section-body -->
+    </div><!-- /section A -->
+
+
+    <!-- ═══ SECTION B ═══ -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-num">B</span>
+        <div>
+          <h2>Reply Preferences</h2>
+          <p>Replying is not always the right move. Tell us what role engagement plays for you.</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="field-group">
+          <label>
+            Do You Want Reply Recommendations?
+            <span class="hint">If yes, the report will include a full Reply Strategy Matrix with a tiered list of what to reply to, what to avoid, and what to handle privately.</span>
+          </label>
+          <div class="radio-group" id="reply-want-group">
+            <label>
+              <input type="radio" name="want_reply" value="YES" id="want-reply-yes" />
+              <div>
+                YES — include reply strategy and specific comments to engage with
+                <span class="option-desc">Best for creators and campaign pages who are actively managing comments.</span>
+              </div>
+            </label>
+            <label>
+              <input type="radio" name="want_reply" value="NO" id="want-reply-no" />
+              <div>
+                NO — analysis only, skip all reply advice
+                <span class="option-desc">Best for researchers, legal use, or when you simply want audience insights without engagement planning.</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Conditional reply fields -->
+        <div class="conditional-block" id="reply-details">
+
+          <div class="field-group">
+            <label>
+              Primary Goals From Replying
+              <span class="hint">Tick everything that applies. The report will prioritise recommendations that serve these goals.</span>
+            </label>
+            <div class="check-group" id="reply-goals-group">
+              <label><input type="checkbox" name="reply_goals" value="Drive traffic to our website / petition" /> Drive traffic to our website / petition</label>
+              <label><input type="checkbox" name="reply_goals" value="Recruit allies and supporters" /> Recruit allies and supporters</label>
+              <label><input type="checkbox" name="reply_goals" value="Correct misinformation" /> Correct misinformation</label>
+              <label><input type="checkbox" name="reply_goals" value="Thank and retain existing supporters" /> Thank and retain existing supporters</label>
+              <label><input type="checkbox" name="reply_goals" value="Neutralise attacks without escalating" /> Neutralise attacks without escalating</label>
+              <label><input type="checkbox" name="reply_goals" value="Boost algorithmic reach of this post" /> Boost algorithmic reach of this post</label>
+              <label><input type="checkbox" name="reply_goals" value="Gather intelligence (find people with useful knowledge)" /> Gather intelligence — find people with useful knowledge or connections</label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>
+              Reply Capacity
+              <span class="hint">How much time and resource do you realistically have to engage in comments?</span>
+            </label>
+            <div class="radio-group" id="capacity-group">
+              <label>
+                <input type="radio" name="capacity" value="LOW" />
+                <div>LOW — give me the top 3 most important replies only</div>
+              </label>
+              <label>
+                <input type="radio" name="capacity" value="MEDIUM" />
+                <div>MEDIUM — give me up to 10 prioritised replies</div>
+              </label>
+              <label>
+                <input type="radio" name="capacity" value="HIGH" />
+                <div>HIGH — give me every comment worth engaging with</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="avoid_topics">
+              Topics to Avoid Engaging With
+              <span class="hint">Any topics, people, or debates you want to stay away from? The report will flag these as DO NOT REPLY.</span>
+            </label>
+            <textarea id="avoid_topics" rows="2" placeholder="e.g. Do not engage with political party debates&#10;Do not engage with questions about the hospital incident&#10;Do not engage with personal attacks on the post author"></textarea>
+          </div>
+
+          <div class="field-group">
+            <label>
+              Include a "DO NOT REPLY" List?
+              <span class="hint">Flags high-risk comments that would be counterproductive to engage with.</span>
+            </label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="do_not_reply_list" value="YES" />
+                <div>YES — flag comments that could harm our position if we engage</div>
+              </label>
+              <label>
+                <input type="radio" name="do_not_reply_list" value="NO" />
+                <div>NO — not needed</div>
+              </label>
+            </div>
+          </div>
+
+        </div><!-- /conditional reply-details -->
+
+      </div><!-- /section-body -->
+    </div><!-- /section B -->
+
+
+    <!-- ═══ SECTION C ═══ -->
+    <div class="form-section" id="section-c">
+      <div class="section-head">
+        <span class="section-num">C</span>
+        <div>
+          <h2>Your Voice</h2>
+          <p>Only needed if you selected YES for reply recommendations above.</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="two-col">
+          <div class="field-group">
+            <label for="page_name">
+              Page Name / Handle
+              <span class="hint">The name or handle you will reply from.</span>
+            </label>
+            <input type="text" id="page_name" placeholder="e.g. Truth Protects The Innocent / @veritaprotegge" />
+          </div>
+          <div class="field-group">
+            <label for="reply_tone">
+              Reply Tone / Voice
+              <span class="hint">How should your replies sound?</span>
+            </label>
+            <input type="text" id="reply_tone" placeholder="e.g. Warm, factual, never aggressive, redirects to the children" />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="reply_goals_specific">
+            What Should People DO After Reading Your Reply?
+            <span class="hint">Name the specific action you want them to take.</span>
+          </label>
+          <textarea id="reply_goals_specific" rows="2" placeholder="e.g. Visit the campaign website, sign the petition, share the post, feel heard and supported, understand the facts of the case"></textarea>
+        </div>
+
+      </div><!-- /section-body -->
+    </div><!-- /section C -->
+
+
+    <!-- ═══ SECTION D ═══ -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-num">D</span>
+        <div>
+          <h2>Post Information &amp; Comments</h2>
+          <p>Paste the comments you want analysed here.</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="two-col">
+          <div class="field-group">
+            <label for="post_url">
+              Post URL
+              <span class="hint">The URL of the post being analysed.</span>
+            </label>
+            <input type="url" id="post_url" placeholder="https://www.facebook.com/reel/..." />
+          </div>
+          <div class="field-group">
+            <label for="platform">
+              Platform
+            </label>
+            <select id="platform">
+              <option value="">— select —</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Instagram">Instagram</option>
+              <option value="TikTok">TikTok</option>
+              <option value="YouTube">YouTube</option>
+              <option value="Twitter / X">Twitter / X</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="comment_count">
+            Approximate Comment Count
+            <span class="hint">How many comments are you pasting below?</span>
+          </label>
+          <input type="number" id="comment_count" min="1" placeholder="e.g. 472" style="max-width: 180px;" />
+        </div>
+
+        <div class="field-group">
+          <label for="comments">
+            Comments to Analyse
+            <span class="hint">Paste all raw comment text below. One comment per line is ideal. Exported CSV text works fine.</span>
+          </label>
+          <textarea id="comments" placeholder="Paste your comments here..."></textarea>
+        </div>
+
+      </div><!-- /section-body -->
+    </div><!-- /section D -->
+
+
+    <!-- ═══ GENERATE BUTTON ═══ -->
+    <div class="generate-wrap">
+      <button type="button" class="btn-generate" onclick="generatePrompt()">
+        Generate My Prompt →
+      </button>
+    </div>
+
+  </form><!-- /brief-form -->
+
+
+  <!-- ═══ OUTPUT PANEL ═══ -->
+  <div id="output-section">
+    <div class="output-card">
+      <div class="output-head">
+        <h3>[OK] Your Custom Prompt Is Ready</h3>
+        <button class="btn-copy" onclick="copyPrompt()">Copy to Clipboard</button>
+      </div>
+      <pre id="prompt-output"></pre>
+      <div class="output-instructions">
+        How to use this prompt:
+        <ol>
+          <li>Click <strong>Copy to Clipboard</strong> above.</li>
+          <li>Open your preferred AI (Claude, ChatGPT, Gemini, etc.).</li>
+          <li>Paste the entire prompt into a new conversation and send.</li>
+          <li>Paste the finished report text into <code>html_wrapper.py</code> to generate your branded HTML report.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Audience Intelligence Report &mdash; <a href="https://quantumtoolsmith.gumroad.com" target="_blank" rel="noopener">quantumtoolsmith.gumroad.com</a></p>
+</footer>
+
+
+<script>
+  // ─── Live styling for radio / checkbox selections ───────────────────────
+  document.querySelectorAll('.radio-group input[type="radio"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var group = this.closest('.radio-group');
+      group.querySelectorAll('label').forEach(function(l) { l.classList.remove('selected'); });
+      this.closest('label').classList.add('selected');
+    });
+  });
+
+  document.querySelectorAll('.check-group input[type="checkbox"]').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('label').classList.toggle('checked', this.checked);
+    });
+  });
+
+  // ─── Show / hide reply details block ─────────────────────────────────────
+  document.querySelectorAll('input[name="want_reply"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var block = document.getElementById('reply-details');
+      if (this.value === 'YES') {
+        block.classList.add('shown');
+      } else {
+        block.classList.remove('shown');
+      }
+    });
+  });
+
+  // ─── Generate prompt ─────────────────────────────────────────────────────
+  function val(id) {
+    var el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function radioVal(name) {
+    var el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : '';
+  }
+
+  function checkVals(name) {
+    var checked = document.querySelectorAll('input[name="' + name + '"]:checked');
+    return Array.from(checked).map(function(c) { return c.value; });
+  }
+
+  function generatePrompt() {
+    var clientName     = val('client_name');
+    var clientGoal     = val('client_goal');
+    var postAuthor     = val('post_author');
+    var relationship   = radioVal('relationship');
+    var platforms      = val('platforms');
+    var wantReply      = radioVal('want_reply');
+    var replyGoals     = checkVals('reply_goals');
+    var capacity       = radioVal('capacity');
+    var avoidTopics    = val('avoid_topics');
+    var doNotReplyList = radioVal('do_not_reply_list');
+    var pageName       = val('page_name');
+    var replyTone      = val('reply_tone');
+    var replyGoalsSpec = val('reply_goals_specific');
+    var postUrl        = val('post_url');
+    var platform       = val('platform');
+    var commentCount   = val('comment_count');
+    var comments       = val('comments');
+
+    // ─── Build context block ───────────────────────────────────────────────
+    var ctx = '';
+    ctx += '═══════════════════════════════════════════════════════════════════════\n';
+    ctx += 'AUDIENCE INTELLIGENCE REPORT — CONTEXT BLOCK\n';
+    ctx += '═══════════════════════════════════════════════════════════════════════\n\n';
+
+    ctx += '── SECTION A — WHO IS THIS REPORT FOR? ──\n\n';
+    ctx += 'CLIENT NAME / ORGANISATION:\n' + (clientName || '[Not provided]') + '\n\n';
+    ctx += 'CLIENT GOAL:\n' + (clientGoal || '[Not provided]') + '\n\n';
+    ctx += 'POST AUTHOR / CONTENT CREATOR:\n' + (postAuthor || '[Not provided]') + '\n\n';
+    ctx += 'CLIENT RELATIONSHIP TO POST:\n→ ' + (relationship || '[Not selected]') + '\n\n';
+    ctx += "CLIENT'S OWN PLATFORMS:\n" + (platforms || '[Not provided]') + '\n\n';
+
+    ctx += '── SECTION B — REPLY PREFERENCES ──\n\n';
+    ctx += 'DO YOU WANT REPLY RECOMMENDATIONS?\n→ ' + (wantReply || '[Not selected]') + '\n\n';
+
+    if (wantReply === 'YES') {
+      ctx += 'PRIMARY GOALS FROM REPLYING:\n';
+      if (replyGoals.length > 0) {
+        replyGoals.forEach(function(g) { ctx += '→ ' + g + '\n'; });
+      } else {
+        ctx += '→ [None selected]\n';
+      }
+      ctx += '\n';
+      ctx += 'REPLY CAPACITY:\n→ ' + (capacity || '[Not selected]') + '\n\n';
+      ctx += 'TOPICS TO AVOID ENGAGING WITH:\n' + (avoidTopics || '[None specified]') + '\n\n';
+      ctx += 'INCLUDE A "DO NOT REPLY" LIST?\n→ ' + (doNotReplyList || '[Not selected]') + '\n\n';
+    }
+
+    if (wantReply === 'YES' && (pageName || replyTone || replyGoalsSpec)) {
+      ctx += '── SECTION C — YOUR VOICE ──\n\n';
+      ctx += 'PAGE NAME / HANDLE:\n' + (pageName || '[Not provided]') + '\n\n';
+      ctx += 'REPLY TONE / VOICE:\n' + (replyTone || '[Not provided]') + '\n\n';
+      ctx += 'WHAT SHOULD PEOPLE DO AFTER YOUR REPLY:\n' + (replyGoalsSpec || '[Not provided]') + '\n\n';
+    }
+
+    ctx += '── SECTION D — POST INFORMATION ──\n\n';
+    ctx += 'POST URL:\n' + (postUrl || '[Not provided]') + '\n\n';
+    ctx += 'PLATFORM:\n' + (platform || '[Not provided]') + '\n\n';
+    ctx += 'APPROXIMATE COMMENT COUNT:\n' + (commentCount || '[Not provided]') + '\n\n';
+
+    // ─── Analysis instructions (static master prompt) ─────────────────────
+    var analysis = '';
+    analysis += '═══════════════════════════════════════════════════════════════════════\n';
+    analysis += 'ANALYSIS INSTRUCTIONS — DO NOT MODIFY\n';
+    analysis += '═══════════════════════════════════════════════════════════════════════\n\n';
+
+    analysis += 'You are an expert audience researcher, market analyst, and social media strategist.\n\n';
+    analysis += 'Your task is to analyse the dataset of social media comments below and produce a\nprofessional Audience Intelligence Report. Use the context block above to calibrate\nevery section — advice, framing, and strategy must reflect who the client is, what\ntheir goal is, and their relationship to the post.\n\n';
+    analysis += 'If CLIENT RELATIONSHIP is WE ARE SUPPORTERS or WE ARE OPPONENTS, do not write advice\nas if the client made the post. All engagement advice must reflect the client\'s actual position.\n\n';
+
+    analysis += '─── STEP 1 — CLEAN THE DATA ───────────────────────────────────────────\n';
+    analysis += '• Ignore duplicate comments\n• Ignore spam or bot-like comments\n• Ignore emoji-only or single-word meaningless replies\n• Focus on substantive audience feedback\n\n';
+
+    analysis += '─── STEP 2 — COMMENT CLUSTERING ───────────────────────────────────────\n';
+    analysis += 'Group similar comments into clusters. For each cluster:\n• Short cluster title\n• Estimated comment count\n• 3–5 example comments\n\n';
+
+    analysis += '─── STEP 3 — AUDIENCE INTELLIGENCE REPORT ─────────────────────────────\n\n';
+
+    var sections = [
+      ['1 — OVERVIEW', 'Platform, comment count, general reaction, brief summary. Add one sentence on what this data means specifically for this client.'],
+      ['2 — AUDIENCE SENTIMENT', 'Positive / Neutral+Curious / Negative+Skeptical / Mixed breakdown. Explain emotional tone. If client is SUPPORTERS or OPPONENTS, note what proportion is favourable to their position.'],
+      ['3 — KEY THEMES', 'Most common topics with estimated frequency. Flag which themes are most strategically relevant to the CLIENT GOAL.'],
+      ['4 — AUDIENCE QUESTIONS', 'Most common viewer questions, grouped by similarity. Indicate which the client could or should answer publicly.'],
+      ['5 — AUDIENCE FRUSTRATIONS', 'Confusion, objections, misunderstandings. Note which frustrations are opportunities for the client to address.'],
+      ['6 — AUDIENCE DESIRES', 'What viewers want more of, framed in terms of what the client could provide (content, action, information, products).'],
+      ['7 — VIRAL CONTENT TRIGGERS', 'Patterns explaining the post\'s strong engagement (curiosity, surprise, relatability, controversy, tagging behaviour, emotional reactions). How can the client replicate these?'],
+      ['8 — CONTENT OPPORTUNITIES', '5–10 content ideas based on comment patterns, tailored to the CLIENT\'S OWN PLATFORMS. Brief explanation of why each would resonate.'],
+      ['9 — ENGAGEMENT OPPORTUNITIES', 'Highest-value engagement opportunities FOR THE CLIENT.\n  If WE MADE THIS POST → what to reply to for max reach/loyalty\n  If WE ARE SUPPORTERS → what to amplify/share on their own channels\n  If WE ARE RESEARCHERS → what comment types merit deeper study\n  If WE ARE OPPONENTS → what reveals weaknesses in the opposing narrative'],
+      ['10 — LEAD / ALLY OPPORTUNITIES', 'Comments indicating strong alignment or potential for deeper relationship.\n  Commercial clients → buying intent, product enquiries\n  Campaign/advocacy → potential allies, signatories, advocates\n  Research → key informants, insider knowledge\n  Provide example comments and a suggested approach for each.'],
+      ['11 — FUTURE PRODUCT / CAMPAIGN OPPORTUNITIES', 'Unmet needs or gaps. Look for "I wish…", "Does this exist?", "Someone should…"\n  Identify 3–5 opportunities with comment evidence.'],
+      ['12 — AUDIENCE PROFILE', 'Likely demographics, interests, knowledge level, emotional orientation.\n  Flag which audience segments are most valuable to the client.'],
+      ['13 — TOP 10 COMMENTS WORTH ACTING ON', 'For CREATOR/SUPPORTER clients, categorise each as:\n  AMPLIFY PUBLICLY / RECRUIT PRIVATELY / MONITOR\n  Brief explanation of value and recommended action for each.'],
+      ['14 — STRATEGIC RECOMMENDATIONS', '3–5 specific, actionable recommendations calibrated entirely to CLIENT GOAL and CLIENT RELATIONSHIP. No generic advice.'],
+      ['15 — VIRAL PROBABILITY SCORE', 'Score 1–10. Explanation. Key comment patterns driving the score. One recommendation for maximising viral potential in future content.'],
+    ];
+
+    sections.forEach(function(s) {
+      analysis += 'SECTION ' + s[0] + '\n' + s[1] + '\n\n';
+    });
+
+    if (wantReply === 'YES') {
+      analysis += 'SECTION 16 — REPLY STRATEGY MATRIX\n';
+      analysis += 'Use REPLY GOALS, REPLY CAPACITY, TOPICS TO AVOID, and DO NOT REPLY settings from the context block.\n\n';
+      analysis += 'Format output as five tiers:\n\n';
+      analysis += '🟢 REPLY — HIGH VALUE, LOW RISK\nReplying is clearly beneficial. Do these first.\nFor each: Comment | Benefit | Risk | Suggested reply (copy-paste ready)\n\n';
+      analysis += '🟡 REPLY — MODERATE VALUE, CONSIDER CAREFULLY\nCould help but requires the right tone and timing.\nFor each: Comment | Benefit | Risk | Recommendation\n\n';
+      analysis += '🔴 DO NOT REPLY — HIGH RISK, LOW BENEFIT\nEngaging helps the opposition more than the client.\nFor each: Comment | Why not | What to do instead\n\n';
+      analysis += '🔵 PRIVATE MESSAGE — DO NOT REPLY PUBLICLY\nPeople who have something the client needs. Keep it out of the public thread.\nFor each: Comment | What they have | Private message goal | Suggested opening line\n\n';
+      analysis += '⚪ REACT ONLY — NO REPLY NEEDED\nA like or heart is sufficient.\nFor each: Comment | Why react only\n\n';
+      analysis += 'Also include: COMMENT REPLY SCRIPTS\nPre-written reply templates for the most common comment types observed.\nFor each script: Trigger condition | Reply script (with [NAME] and [LINK] placeholders) | Why it works strategically\n\n';
+    }
+
+    analysis += '─── FORMATTING INSTRUCTIONS ─────────────────────────────────────────\n';
+    analysis += '• Write clearly and professionally using numbered headings, bullet points, and tables where helpful.\n';
+    analysis += '• Every observation must be grounded in specific comment evidence. Quote actual comments.\n';
+    analysis += '• If CLIENT RELATIONSHIP is SUPPORTERS or OPPONENTS, write from the client\'s perspective — not the post author\'s.\n';
+    analysis += '• The report should read as a professional deliverable suitable for a client, legal body, or media team.\n\n';
+
+    // ─── Comments ─────────────────────────────────────────────────────────
+    var commentsBlock = '';
+    commentsBlock += '═══════════════════════════════════════════════════════════════════════\n';
+    commentsBlock += 'COMMENTS TO ANALYSE\n';
+    commentsBlock += '═══════════════════════════════════════════════════════════════════════\n\n';
+    commentsBlock += (comments || '[No comments pasted]') + '\n\n';
+    commentsBlock += '═══════════════════════════════════════════════════════════════════════\n';
+    commentsBlock += 'END OF PROMPT\n';
+    commentsBlock += '═══════════════════════════════════════════════════════════════════════\n';
+
+    var fullPrompt = ctx + '\n' + analysis + '\n' + commentsBlock;
+
+    // ─── Display output ────────────────────────────────────────────────────
+    document.getElementById('prompt-output').textContent = fullPrompt;
+    var outputSection = document.getElementById('output-section');
+    outputSection.classList.add('shown');
+
+    // Scroll to output
+    setTimeout(function() {
+      outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+
+  // ─── Copy to clipboard ────────────────────────────────────────────────────
+  function copyPrompt() {
+    var text = document.getElementById('prompt-output').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.querySelector('.btn-copy');
+      var original = btn.textContent;
+      btn.textContent = '[OK] Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 2500);
+    }).catch(function() {
+      // fallback
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      var btn = document.querySelector('.btn-copy');
+      btn.textContent = '[OK] Copied!';
+      setTimeout(function() { btn.textContent = 'Copy to Clipboard'; }, 2500);
+    });
+  }
+</script>
+</body>
+</html>
