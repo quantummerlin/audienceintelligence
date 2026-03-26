@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Ideas Database | Aether Intelligence</title>
+    <meta name="description" content="Market-validated startup ideas extracted from 200,000+ real conversations. Each idea backed by evidence, demand signal, and revenue potential.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --accent: #6366f1;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary);
+            line-height: 1.7; min-height: 100vh;
+        }
+        html { scroll-behavior: smooth; }
+
+        .bg-gradient {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.06) 0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+        .scroll-progress {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+            width: 0%; z-index: 1000; border-radius: 0 2px 2px 0;
+        }
+
+        /* Header */
+        .header-wrap {
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(10,10,15,0.8); border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .header-wrap header {
+            max-width: 1000px; margin: 0 auto; padding: 20px 24px;
+            border-bottom: none; display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo {
+            font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em;
+            color: var(--text-primary); display: flex; align-items: center;
+            gap: 8px; text-decoration: none;
+        }
+        .logo-icon { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+        nav a {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;
+            margin-left: 24px; transition: color 0.2s;
+        }
+        nav a:hover { color: var(--text-primary); }
+        nav a.active { color: var(--accent); }
+        .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+        .hamburger span { display: block; width: 24px; height: 2px; background: var(--text-primary); margin: 5px 0; border-radius: 2px; }
+        .mobile-nav {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10,10,15,0.97); backdrop-filter: blur(20px); z-index: 99;
+            flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a { color: var(--text-primary); text-decoration: none; font-size: 1.5rem; font-weight: 500; }
+        .mobile-nav a:hover { color: var(--accent); }
+
+        /* Hero */
+        .hero { padding: 80px 0 56px; text-align: center; }
+        .hero-tag {
+            display: inline-block; padding: 6px 14px;
+            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 20px; font-size: 0.8rem; color: var(--accent);
+            margin-bottom: 24px; letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        h1 {
+            font-size: 2.8rem; font-weight: 600; line-height: 1.15;
+            letter-spacing: -0.03em; margin-bottom: 20px;
+            background: linear-gradient(180deg, #ffffff 0%, #a0a0b0 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub { font-size: 1.1rem; color: var(--text-secondary); max-width: 580px; margin: 0 auto 32px; }
+
+        /* Stats row */
+        .index-stats {
+            display: flex; justify-content: center; gap: 48px;
+            padding: 32px 0; border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 48px;
+        }
+        .ix-stat { text-align: center; }
+        .ix-stat-value {
+            font-size: 1.8rem; font-weight: 700;
+            background: linear-gradient(135deg, #6366f1, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .ix-stat-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+        /* Search */
+        .search-wrap { position: relative; margin-bottom: 20px; }
+        .search-input {
+            width: 100%; padding: 14px 20px 14px 48px;
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; color: var(--text-primary); font-size: 0.95rem;
+            font-family: inherit; transition: border-color 0.3s;
+        }
+        .search-input:focus { outline: none; border-color: rgba(99,102,241,0.5); }
+        .search-input::placeholder { color: var(--text-secondary); }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
+
+        /* Filter bar */
+        .filter-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+        .filter-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+        .filter-pill {
+            padding: 6px 16px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1); background: transparent;
+            color: var(--text-secondary); font-size: 0.8rem; font-family: inherit;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .filter-pill:hover { border-color: rgba(99,102,241,0.4); color: var(--text-primary); }
+        .filter-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+        .sort-select {
+            padding: 7px 14px; background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+            color: var(--text-secondary); font-size: 0.82rem; font-family: inherit; cursor: pointer;
+        }
+
+        /* Results count */
+        .results-count { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-count span { color: var(--text-primary); font-weight: 600; }
+
+        /* Idea Cards */
+        .ideas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .idea-card {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 24px; transition: all 0.3s; cursor: default;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .idea-card:hover { border-color: rgba(99,102,241,0.25); transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,0,0,0.28); }
+        .idea-card.filter-hidden { display: none; }
+
+        .idea-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+        .idea-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); line-height: 1.4; letter-spacing: -0.01em; }
+
+        /* Badges */
+        .badge {
+            padding: 3px 9px; border-radius: 10px; font-size: 0.68rem;
+            font-weight: 600; white-space: nowrap; letter-spacing: 0.03em;
+        }
+        .badge-rev-high  { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+        .badge-rev-med   { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+        .badge-rev-low   { background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+        .badge-complex-low  { background: rgba(16,185,129,0.1); color: #34d399; }
+        .badge-complex-med  { background: rgba(245,158,11,0.1); color: #fbbf24; }
+        .badge-complex-high { background: rgba(239,68,68,0.1); color: #f87171; }
+
+        .idea-problem { font-size: 0.87rem; color: var(--text-secondary); line-height: 1.65; }
+        .idea-evidence {
+            background: var(--bg-secondary); border-radius: 8px; padding: 10px 14px;
+            font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;
+        }
+        .idea-evidence strong { color: var(--text-primary); }
+
+        .idea-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .idea-cat {
+            padding: 4px 10px; border-radius: 12px; font-size: 0.7rem;
+            font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+        }
+        .cat-ai       { background: rgba(99,102,241,0.12); color: #818cf8; }
+        .cat-econ     { background: rgba(245,158,11,0.12); color: #fbbf24; }
+        .cat-privacy  { background: rgba(239,68,68,0.12); color: #f87171; }
+        .cat-health   { background: rgba(14,165,233,0.12); color: #38bdf8; }
+        .cat-work     { background: rgba(16,185,129,0.12); color: #34d399; }
+        .cat-rel      { background: rgba(236,72,153,0.12); color: #f472b6; }
+        .cat-market   { background: rgba(139,92,246,0.12); color: #a78bfa; }
+        .cat-content  { background: rgba(251,191,36,0.12); color: #fcd34d; }
+
+        .idea-source {
+            display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.71rem;
+            text-decoration: none; border: 1px solid rgba(99,102,241,0.18); color: var(--accent);
+            transition: all 0.2s; margin-top: 4px;
+        }
+        .idea-source:hover { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.4); }
+
+        .revenue-line { font-size: 0.82rem; }
+        .revenue-line strong { color: var(--text-primary); }
+
+        /* Section header */
+        .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: 20px; margin-top: 48px; }
+
+        /* CTA Panel */
+        .cta-panel {
+            background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08));
+            border: 1px solid rgba(99,102,241,0.2); border-radius: 20px;
+            padding: 48px; margin: 48px 0; text-align: center;
+        }
+        .cta-panel h3 { font-size: 1.4rem; margin-bottom: 10px; }
+        .cta-panel p { color: var(--text-secondary); margin-bottom: 24px; max-width: 520px; margin-left: auto; margin-right: auto; }
+        .btn {
+            display: inline-block; padding: 14px 28px; border-radius: 10px;
+            font-size: 0.95rem; font-weight: 500; text-decoration: none;
+            transition: all 0.3s; cursor: pointer; border: none; font-family: inherit;
+        }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+
+        /* Newsletter */
+        .newsletter-cta {
+            background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px; padding: 40px; margin: 32px 0; text-align: center;
+        }
+        .newsletter-cta h3 { font-size: 1.2rem; margin-bottom: 8px; }
+        .newsletter-cta p { color: var(--text-secondary); margin-bottom: 20px; font-size: 0.92rem; }
+        .newsletter-form { display: flex; gap: 10px; max-width: 420px; margin: 0 auto; }
+        .newsletter-form input {
+            flex: 1; padding: 12px 16px; background: var(--bg-primary);
+            border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;
+            color: var(--text-primary); font-size: 0.9rem; font-family: inherit;
+        }
+        .newsletter-form input:focus { outline: none; border-color: var(--accent); }
+        .newsletter-form input::placeholder { color: var(--text-secondary); }
+        .newsletter-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 10px; }
+
+        /* Footer */
+        footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--text-secondary); font-size: 0.85rem; }
+        footer a { color: var(--text-secondary); text-decoration: none; margin: 0 14px; }
+        footer a:hover { color: var(--text-primary); }
+
+        /* BMC */
+        .bmc-float {
+            position: fixed; bottom: 24px; right: 24px; z-index: 999;
+            display: flex; align-items: center; gap: 10px;
+            background: #FFDD00; color: #000; padding: 11px 20px 11px 14px;
+            border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 0.88rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35); transition: transform .2s, box-shadow .2s;
+        }
+        .bmc-float:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.45); }
+        .bmc-float-icon { font-size: 1.15rem; }
+
+        /* Reveal */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .ideas-grid { grid-template-columns: 1fr; }
+            .index-stats { gap: 24px; }
+            .ix-stat-value { font-size: 1.4rem; }
+            .hamburger { display: block; }
+            nav { display: none; }
+            .newsletter-form { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .bmc-float-text { display: none; }
+            .bmc-float { padding: 11px 14px; }
+        }
+    </style>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="bg-gradient"></div>
+
+    <div class="mobile-nav" id="mobileNav">
+        <a href="index.html">Reports</a>
+        <a href="articles/">Articles</a>
+        <a href="trends.html">Trends</a>
+        <a href="startup-ideas.html" style="color:var(--accent);">Ideas</a>
+        <a href="patterns.html">Patterns</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="intake_form.html" style="color:var(--accent);">Custom Report</a>
+    </div>
+
+    <div class="header-wrap">
+        <header>
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Aether Intelligence" class="logo-icon">
+                Aether Intelligence
+            </a>
+            <nav>
+                <a href="index.html">Reports</a>
+                <a href="articles/">Articles</a>
+                <a href="trends.html">Trends</a>
+                <a href="startup-ideas.html" class="active">Ideas</a>
+                <a href="patterns.html">Patterns</a>
+                <a href="methodology.html">Methodology</a>
+                <a href="intake_form.html" style="color:var(--accent);border:1px solid rgba(99,102,241,0.3);padding:6px 14px;border-radius:8px;margin-left:8px;">Custom Report</a>
+            </nav>
+            <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMobileNav()">
+                <span></span><span></span><span></span>
+            </button>
+        </header>
+    </div>
+
+    <div class="container">
+        <section class="hero reveal">
+            <span class="hero-tag">Market Intelligence Database</span>
+            <h1>Startup ideas backed by<br>real demand evidence</h1>
+            <p class="hero-sub">Each idea extracted directly from pain points in 200,000+ public conversations. Not guesses — validated signal with engagement data attached.</p>
+        </section>
+
+        <div class="index-stats reveal">
+            <div class="ix-stat">
+                <div class="ix-stat-value">28</div>
+                <div class="ix-stat-label">Validated Ideas</div>
+            </div>
+            <div class="ix-stat">
+                <div class="ix-stat-value">8</div>
+                <div class="ix-stat-label">Categories</div>
+            </div>
+            <div class="ix-stat">
+                <div class="ix-stat-value">200K+</div>
+                <div class="ix-stat-label">Posts Scanned</div>
+            </div>
+            <div class="ix-stat">
+                <div class="ix-stat-value">32</div>
+                <div class="ix-stat-label">Source Reports</div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-wrap reveal">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="ideaSearch" placeholder="Search ideas, categories, problems…" oninput="searchIdeas(this.value)">
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar reveal">
+            <div class="filter-pills" id="filterPills">
+                <button class="filter-pill active" onclick="filterIdeas('all', this)">All (28)</button>
+                <button class="filter-pill" onclick="filterIdeas('AI & Tech', this)">AI & Tech</button>
+                <button class="filter-pill" onclick="filterIdeas('Privacy', this)">Privacy & Security</button>
+                <button class="filter-pill" onclick="filterIdeas('Economics', this)">Economics</button>
+                <button class="filter-pill" onclick="filterIdeas('Health', this)">Health</button>
+                <button class="filter-pill" onclick="filterIdeas('Marketplace', this)">Marketplace</button>
+                <button class="filter-pill" onclick="filterIdeas('Work', this)">Work & Career</button>
+                <button class="filter-pill" onclick="filterIdeas('Relationships', this)">Relationships</button>
+                <button class="filter-pill" onclick="filterIdeas('Content', this)">Content</button>
+            </div>
+            <select class="sort-select" id="sortSel" onchange="sortIdeas(this.value)">
+                <option value="evidence">Sort: Evidence Strength</option>
+                <option value="revenue-high">Revenue: High → Low</option>
+                <option value="easy">Complexity: Lowest First</option>
+            </select>
+        </div>
+
+        <div class="results-count" id="resultsCount"><span id="countNum">28</span> ideas shown</div>
+
+        <!-- Ideas Grid -->
+        <div class="ideas-grid reveal" id="ideasGrid">
+
+            <!-- Idea 1 -->
+            <div class="idea-card" data-cat="AI & Tech" data-revenue="high" data-complexity="med" data-evidence="95">
+                <div class="idea-header">
+                    <div class="idea-title">AI Legal Citation Verification Tool</div>
+                    <span class="badge badge-rev-high">$10K–$50K/mo</span>
+                </div>
+                <p class="idea-problem">AI tools are hallucinating legal citations submitted in real court cases. Lawyers are unknowingly citing fake case law. A verification layer that cross-references AI-generated citations against actual case databases would address an urgent, high-stakes gap.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> Documented instances of lawyers facing sanctions for AI-hallucinated citations. Professional liability exposure is driving demand. 2,702 related security incidents recorded.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-ai">AI & Tech</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>SaaS subscription per firm · $99–$499/mo</strong></div>
+                <a href="reports/vibe-coding-crisis.html" class="idea-source">Evidence: Vibe Coding Crisis →</a>
+            </div>
+
+            <!-- Idea 2 -->
+            <div class="idea-card" data-cat="Marketplace" data-revenue="high" data-complexity="med" data-evidence="90">
+                <div class="idea-header">
+                    <div class="idea-title">Marketplace Authenticity Verification Badge</div>
+                    <span class="badge badge-rev-high">$5K–$30K/mo</span>
+                </div>
+                <p class="idea-problem">Etsy and similar handmade marketplaces are flooded with dropshippers and resellers pretending to be artisans. Buyers have invented their own workarounds (process photo requests, technical questions) — signalling clear demand for a formal verification solution.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 731 community upvotes on the core complaint. Buyer-developed verification workarounds documented across hundreds of posts. Product-market fit screaming.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-market">Marketplace</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>B2B SaaS for platform operators · verification fees</strong></div>
+                <a href="reports/dropshippers-ruined-etsy.html" class="idea-source">Evidence: Dropshippers Ruined Etsy →</a>
+            </div>
+
+            <!-- Idea 3 -->
+            <div class="idea-card" data-cat="Work" data-revenue="high" data-complexity="low" data-evidence="88">
+                <div class="idea-header">
+                    <div class="idea-title">Bureaucracy Navigation Service</div>
+                    <span class="badge badge-rev-high">$3K–$20K/mo</span>
+                </div>
+                <p class="idea-problem">People with complex needs (disability claims, visa applications, insurance disputes, Medicare) consistently describe spending hours trying to navigate opaque, hostile systems. A concierge service that handles the paperwork and calls would relieve enormous pain.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> Recurring theme across 15+ discussion threads. Disability claim appeals, insurance denials, and government services dominate the complaint surface. Existing market estimated at $12B.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-work">Work & Career</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>Per-case fee $150–$800 · subscription for ongoing cases</strong></div>
+                <a href="articles/bureaucracy-navigation-service.html" class="idea-source">Evidence: $12B Market Report →</a>
+            </div>
+
+            <!-- Idea 4 -->
+            <div class="idea-card" data-cat="Privacy" data-revenue="med" data-complexity="med" data-evidence="87">
+                <div class="idea-header">
+                    <div class="idea-title">Smart Lock Accountability Platform</div>
+                    <span class="badge badge-rev-med">$2K–$10K/mo</span>
+                </div>
+                <p class="idea-problem">Landlords are installing smart locks without tenant consent — tracking every entry and exit in real-time. Tenants have no visibility, no audit trail, and no protection. A tenant-side access log app with timestamped records and legal notification templates would serve this urgent gap.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 15+ documented cases of landlords accessing properties using smart lock data. Legal gray zones confirmed. 17K+ community posts discussing privacy violation incidents.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-privacy">Privacy & Security</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$9.99/month app · B2B tenant advocacy orgs</strong></div>
+                <a href="reports/landlord-can-see-you.html" class="idea-source">Evidence: Your Landlord Can See You →</a>
+            </div>
+
+            <!-- Idea 5 -->
+            <div class="idea-card" data-cat="Health" data-revenue="high" data-complexity="med" data-evidence="85">
+                <div class="idea-header">
+                    <div class="idea-title">Pet End-of-Life Planning & Support Service</div>
+                    <span class="badge badge-rev-high">$5K–$25K/mo</span>
+                </div>
+                <p class="idea-problem">Pet owners face profound guilt and paralysis around euthanasia timing. Vet visits are clinical, judges are absent. A support service combining quality-of-life tracking, guided decision frameworks, and emotional support before and after the decision would fill a critical void.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 31,800+ community engagements on this topic. Recurring themes: "How do you know when it's time?" Travel guilt, second-guessing, delayed decisions causing suffering. High emotional urgency.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-health">Health</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$49–$99/month subscription · specialist consultation packages</strong></div>
+                <a href="reports/goodbye-decision.html" class="idea-source">Evidence: The Goodbye Decision →</a>
+            </div>
+
+            <!-- Idea 6 -->
+            <div class="idea-card" data-cat="Economics" data-revenue="med" data-complexity="low" data-evidence="82">
+                <div class="idea-header">
+                    <div class="idea-title">Subscription Audit & Recovery Tool</div>
+                    <span class="badge badge-rev-med">$2K–$15K/mo</span>
+                </div>
+                <p class="idea-problem">Consumers are paying for subscriptions they forgot about, features that were removed post-purchase, and "free trials" that silently auto-renewed. Anger is substantial and growing. A tool that audits, cancels, and disputes charges would have instant adoption.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 17K+ posts on subscription resentment. Physical car features locked behind subscriptions (heated seats, navigation). Software reverting to free tier after "purchase." High emotional urgency with payment data.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-econ">Economics</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>Freemium · $6.99/month premium · % of recovered funds</strong></div>
+                <a href="reports/you-dont-own-anything.html" class="idea-source">Evidence: You Don't Own Anything →</a>
+            </div>
+
+            <!-- Idea 7 -->
+            <div class="idea-card" data-cat="AI & Tech" data-revenue="high" data-complexity="high" data-evidence="90">
+                <div class="idea-header">
+                    <div class="idea-title">AI Security Audit Tool (for "Vibe Coders")</div>
+                    <span class="badge badge-rev-high">$10K–$40K/mo</span>
+                </div>
+                <p class="idea-problem">Non-technical founders using AI coding tools are shipping applications with embedded API keys, SQL injection vulnerabilities, and zero authentication. They don't know what they don't know. A scan-and-report tool targeting this cohort would address a genuine security crisis.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 2,702 leaked credentials found in vibe-coded repositories. 200+ real API keys exposed. Senior engineers publicly documenting the quality collapse in AI-assisted code. Growing regulatory exposure.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-ai">AI & Tech</span>
+                    <span class="badge badge-complex-high">High complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>Per-scan $49 · SaaS $199/month · agency white-label</strong></div>
+                <a href="reports/vibe-coding-crisis.html" class="idea-source">Evidence: Vibe Coding Crisis →</a>
+            </div>
+
+            <!-- Idea 8 -->
+            <div class="idea-card" data-cat="Content" data-revenue="high" data-complexity="low" data-evidence="80">
+                <div class="idea-header">
+                    <div class="idea-title">Photo Restoration Marketplace</div>
+                    <span class="badge badge-rev-high">$800–$5K/mo solo</span>
+                </div>
+                <p class="idea-problem">Family photo restoration is a high-demand, emotionally charged service. One operator documented earning $800/month as a side hustle. A marketplace that matches skilled operators with customers—with guaranteed turnaround and quality tiers—would scale what's currently fragmented.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> $800/month solo operations confirmed with real demand signal. High emotional attachment = willingness to pay premium. Matching marketplaces outperform solo operators 10x by volume.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-content">Content</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>20% marketplace commission · premium rush jobs</strong></div>
+                <a href="reports/idea-goldmine.html" class="idea-source">Evidence: The Product Idea Goldmine →</a>
+            </div>
+
+            <!-- Idea 9 -->
+            <div class="idea-card" data-cat="Content" data-revenue="med" data-complexity="low" data-evidence="78">
+                <div class="idea-header">
+                    <div class="idea-title">Hyperlocal Newsletter Monetization Kit</div>
+                    <span class="badge badge-rev-med">$1K–$4K/mo</span>
+                </div>
+                <p class="idea-problem">Niche newsletter operators are earning through ads and sponsorships ($1K/month at small scale) but lack the tools to pitch advertisers, create media kits, and manage sponsor relationships. A simple packaged system would unlock monetization for operators who have the audience but not the business tools.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> "$1K–ish in ads, working toward sponsorships at 5K–10K subs" — documented. Multiple operators at the same inflection point with no tooling. Clear demand for the infrastructure layer.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-content">Content</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$29/month SaaS · one-time kit purchase $99</strong></div>
+                <a href="reports/idea-goldmine.html" class="idea-source">Evidence: The Product Idea Goldmine →</a>
+            </div>
+
+            <!-- Idea 10 -->
+            <div class="idea-card" data-cat="Relationships" data-revenue="med" data-complexity="low" data-evidence="77">
+                <div class="idea-header">
+                    <div class="idea-title">Boundary Scripts & Communication Templates Library</div>
+                    <span class="badge badge-rev-med">$2K–$8K/mo</span>
+                </div>
+                <p class="idea-problem">People consistently struggle to articulate boundaries with toxic family members, difficult coworkers, and boundary-violating partners. They know what they want to communicate but can't find the words. A structured library of tested, situation-specific scripts would serve high demand.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 12,837 upvotes on the core problem. High emotional urgency. "I don't know what to say" is a recurring phrase across relationship conflict threads. Existing therapy content is too abstract.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-rel">Relationships</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$7/month membership · $49 one-time situation packs</strong></div>
+                <a href="reports/idea-goldmine.html" class="idea-source">Evidence: The Product Idea Goldmine →</a>
+            </div>
+
+            <!-- Idea 11 -->
+            <div class="idea-card" data-cat="Privacy" data-revenue="high" data-complexity="med" data-evidence="83">
+                <div class="idea-header">
+                    <div class="idea-title">Digital Footprint Privacy Audit Service</div>
+                    <span class="badge badge-rev-high">$3K–$20K/mo</span>
+                </div>
+                <p class="idea-problem">Ordinary people are discovering how much of their personal data is publicly accessible — from data broker profiles to old forum posts to leaked credential databases. A service that audits, removes, and monitors your digital footprint has a growing and aware market.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 18K+ posts on privacy concern. Surveillance state legislation covering 45 states driving awareness. First-time privacy "awakening" moment drives high willingness to pay. Existing services have poor UX.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-privacy">Privacy & Security</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$19/month subscription · one-time audit $99</strong></div>
+                <a href="reports/startup-opportunities.html" class="idea-source">Evidence: 10 Startup Opportunities →</a>
+            </div>
+
+            <!-- Idea 12 -->
+            <div class="idea-card" data-cat="Health" data-revenue="high" data-complexity="high" data-evidence="81">
+                <div class="idea-header">
+                    <div class="idea-title">ICU/ED Worker Mental Health Platform</div>
+                    <span class="badge badge-rev-high">$10K–$50K/mo</span>
+                </div>
+                <p class="idea-problem">Emergency and intensive care workers develop PTSD that goes unrecognised until after they leave their role — the environment normalises the trauma. A specialised platform with peer support, PTSD self-assessment, and anonymous professional access would serve a huge, underserved cohort.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> PTSD score 54 → 21 documented after ICU exit. 10-year career hidden impairment. 2,100 upvotes. Medical worker burnout is well-documented; specialised mental health tooling is almost non-existent.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-health">Health</span>
+                    <span class="badge badge-complex-high">High complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>B2B hospital contracts · $49/month individual · EAP partnerships</strong></div>
+                <a href="reports/icu-ptsd-hidden-toll.html" class="idea-source">Evidence: ICU PTSD Report →</a>
+            </div>
+
+            <!-- Idea 13 -->
+            <div class="idea-card" data-cat="Economics" data-revenue="med" data-complexity="low" data-evidence="75">
+                <div class="idea-header">
+                    <div class="idea-title">Relationship Financial Planning Tool</div>
+                    <span class="badge badge-rev-med">$2K–$8K/mo</span>
+                </div>
+                <p class="idea-problem">Financial stress is a leading cause of relationship breakdown — yet couples have no shared tool for aligning money expectations before they become conflicts. A guided financial compatibility assessment and joint planning tool would intercept conflict at the root.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> Financial stress drives 60%+ of documented toxic relationship patterns. Financial entitlement mismatch is measurable across 40K+ posts. Marriage counselors consistently cite money as #1 conflict topic.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-rel">Relationships</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$14/month couple subscription · one-time $29 assessment</strong></div>
+                <a href="reports/passive-income.html" class="idea-source">Evidence: Financial Stress Report →</a>
+            </div>
+
+            <!-- Idea 14 -->
+            <div class="idea-card" data-cat="Marketplace" data-revenue="med" data-complexity="med" data-evidence="72">
+                <div class="idea-header">
+                    <div class="idea-title">Legacy Software Migration Service</div>
+                    <span class="badge badge-rev-med">$5K–$25K/project</span>
+                </div>
+                <p class="idea-problem">Small businesses running critical operations on legacy systems (outdated accounting software, end-of-life databases, deprecated SaaS) are stuck because migration costs and risks feel too high. A specialist service with fixed-price packages and no-disruption migration is consistently requested.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> Validated across multiple B2B discussion threads. "We're still on X because switching would break everything" is a documented pattern. Market fragmented across generalist IT consultants with no specialist signal.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-market">Marketplace</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>Fixed-price project $5K–$25K · annual maintenance retainer</strong></div>
+                <a href="reports/startup-opportunities.html" class="idea-source">Evidence: 10 Startup Opportunities →</a>
+            </div>
+
+            <!-- Idea 15 -->
+            <div class="idea-card" data-cat="AI & Tech" data-revenue="high" data-complexity="low" data-evidence="86">
+                <div class="idea-header">
+                    <div class="idea-title">AI Output Humanization Checker</div>
+                    <span class="badge badge-rev-high">$5K–$20K/mo</span>
+                </div>
+                <p class="idea-problem">Audiences are increasingly detecting AI-generated content by instinct — and disengaging. Creators need tools that not only detect AI patterns in their own work but suggest specific rewrites to inject genuine emotional resonance. The market is validated and growing rapidly.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> Creators who switched from AI to genuine psychology earned 2× more. 6 measurable psychological mechanisms defined for human writing advantage. AI detection instinct is accelerating audience-side.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-ai">AI & Tech</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$19/month individual · $99/month creator teams</strong></div>
+                <a href="reports/ai-slop-vs-human.html" class="idea-source">Evidence: The Human Edge →</a>
+            </div>
+
+            <!-- Idea 16 -->
+            <div class="idea-card" data-cat="Work" data-revenue="med" data-complexity="low" data-evidence="74">
+                <div class="idea-header">
+                    <div class="idea-title">Hiring Transparency Platform</div>
+                    <span class="badge badge-rev-med">$3K–$15K/mo</span>
+                </div>
+                <p class="idea-problem">Both sides of the job market are frustrated and confused. Applicants get ghosted; employers get zero applications. A platform that gives real-time data on where posts are failing, what applicants see vs. what employers think they're showing, and market benchmarking would serve an acute pain point.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 0–2 applications per posting documented. 1-year rejection streaks logged. 5 failure layers identified in the system. Both sides are vocal and active in seeking solutions but existing platforms don't address the diagnosis gap.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-work">Work & Career</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$49/month employer · free applicant tier · data insights upsell</strong></div>
+                <a href="reports/ungrateful-economy.html" class="idea-source">Evidence: The Ungrateful Economy →</a>
+            </div>
+
+            <!-- Idea 17 -->
+            <div class="idea-card" data-cat="Health" data-revenue="med" data-complexity="low" data-evidence="70">
+                <div class="idea-header">
+                    <div class="idea-title">Sobriety Progress Tracker with Framing Science</div>
+                    <span class="badge badge-rev-med">$1K–$6K/mo</span>
+                </div>
+                <p class="idea-problem">Existing sobriety apps display raw day counts — which research shows creates psychological fatigue over time. A reframing engine that dynamically presents progress in the most motivating unit (days, weeks, months, years, milestones) based on the user's stage would drive measurably better outcomes.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 9 years vs. 3,200 days framing effect documented. The unit of measurement transforms achievement perception. 1,086 upvotes confirming the insight is widely resonant. Existing apps ignore this entirely.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-health">Health</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>Freemium · $4.99/month premium</strong></div>
+                <a href="reports/sobriety-journey.html" class="idea-source">Evidence: Sobriety Journey Report →</a>
+            </div>
+
+            <!-- Idea 18 -->
+            <div class="idea-card" data-cat="Marketplace" data-revenue="high" data-complexity="med" data-evidence="76">
+                <div class="idea-header">
+                    <div class="idea-title">Rural Supply Chain Aggregator (Bird Seed / Agricultural)</div>
+                    <span class="badge badge-rev-high">$5K–$30K/mo</span>
+                </div>
+                <p class="idea-problem">Rural communities struggle to access specialist products (quality bird seed, specific agricultural inputs, artisan goods) at reasonable prices without bulk-order minimums. An aggregator that coordinates collective buying across rural communities would unlock significant purchasing power.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> Validated across multiple rural community threads. Supply chain frustration → workaround behaviour documented. Specific products (wild bird seed) confirmed with price arbitrage opportunity. Physical logistics gap confirmed.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-market">Marketplace</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>Bulk commission margin 15–25% · membership for premium access</strong></div>
+                <a href="reports/startup-opportunities.html" class="idea-source">Evidence: 10 Startup Opportunities →</a>
+            </div>
+
+            <!-- Idea 19 -->
+            <div class="idea-card" data-cat="Relationships" data-revenue="med" data-complexity="low" data-evidence="68">
+                <div class="idea-header">
+                    <div class="idea-title">Family Language Mediation App</div>
+                    <span class="badge badge-rev-med">$1K–$5K/mo</span>
+                </div>
+                <p class="idea-problem">Multilingual families where one member speaks in a second language to exclude others represent a documented, under-addressed conflict pattern. A tool providing recorded translations, conflict documentation, and guided communication frameworks would serve this specific and emotional use case.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 13,300 community engagements on the bilingual backstab pattern. "Being gaslit in two languages" documented across cultures. High emotional urgency. No targeted product exists.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-rel">Relationships</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$9.99/month couples · mediation session upsell</strong></div>
+                <a href="reports/bilingual-backstab.html" class="idea-source">Evidence: The Bilingual Backstab →</a>
+            </div>
+
+            <!-- Idea 20 -->
+            <div class="idea-card" data-cat="AI & Tech" data-revenue="high" data-complexity="high" data-evidence="85">
+                <div class="idea-header">
+                    <div class="idea-title">Viral Content Psychology Engine</div>
+                    <span class="badge badge-rev-high">$8K–$40K/mo</span>
+                </div>
+                <p class="idea-problem">Creators can't reliably identify why their content performs or underperforms. The psychological triggers behind viral content (66 patterns identified across 8 categories) are teachable — but no tool currently teaches them through real examples with explanations attached.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 66 proven engagement triggers catalogued with 31,804 peak engagement validation. 8 psychological pattern categories defined. Existing content tools focus on metrics, not mechanisms.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-ai">AI & Tech</span>
+                    <span class="badge badge-complex-high">High complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$49/month creator tool · agency licensing $299/month</strong></div>
+                <a href="reports/viral-hooks-lab.html" class="idea-source">Evidence: Viral Hooks Lab →</a>
+            </div>
+
+            <!-- Idea 21 -->
+            <div class="idea-card" data-cat="Economics" data-revenue="med" data-complexity="low" data-evidence="71">
+                <div class="idea-header">
+                    <div class="idea-title">First Home Buyer Readiness Tracker</div>
+                    <span class="badge badge-rev-med">$1K–$6K/mo</span>
+                </div>
+                <p class="idea-problem">First-time home buyers consistently report being blindsided by the real cost of purchasing — hidden fees, down payment gaps averaging $47K, and credit score surprises. A guided tracker that maps the full path to purchase with real numbers would reduce the shock and build trust.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> Price-to-income at 7.8x documented. $47K average down payment gap confirmed. 21K+ community posts on housing anxiety. High emotional investment + financial planning gap = monetizable.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-econ">Economics</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>Freemium · $12/month premium · real estate broker referral fees</strong></div>
+                <a href="reports/housing-lie.html" class="idea-source">Evidence: The Housing Lie →</a>
+            </div>
+
+            <!-- Idea 22 -->
+            <div class="idea-card" data-cat="Content" data-revenue="high" data-complexity="med" data-evidence="82">
+                <div class="idea-header">
+                    <div class="idea-title">Community Intelligence Reports (B2B)</div>
+                    <span class="badge badge-rev-high">$5K–$50K/report</span>
+                </div>
+                <p class="idea-problem">Brands, agencies, and product teams need to know what their target audience actually thinks — not survey responses or focus groups, but raw unfiltered conversation at scale. Custom intelligence reports from high-engagement discussion communities deliver signal that no other research method can replicate.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 32 reports validating the methodology. 200K+ conversations processed. Existing market research industry ($40B) relies on surveys and panels — missing the unfiltered signal layer entirely.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-content">Content</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$69 single report · $499/month ongoing intelligence feed</strong></div>
+                <a href="intake_form.html" class="idea-source">You can already do this → Request Custom Report</a>
+            </div>
+
+            <!-- Idea 23 -->
+            <div class="idea-card" data-cat="Work" data-revenue="med" data-complexity="low" data-evidence="69">
+                <div class="idea-header">
+                    <div class="idea-title">Side Hustle Scam Detector & Legitimacy Scorer</div>
+                    <span class="badge badge-rev-med">$1K–$6K/mo</span>
+                </div>
+                <p class="idea-problem">Legitimate side hustle opportunities are drowning in scams, MLMs, and misleading earnings claims. People waste months on fake opportunities. A tool that scores the legitimacy of any side hustle based on known red flags, payment structure, and community signal would prevent enormous financial harm.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 940+ documented pain points around scam prevalence. 17K posts on side hustle frustration. "Legitimate opportunities disappear under the weight of scam noise" — documented pattern across multiple threads.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-work">Work & Career</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>Freemium · $6/month premium reports · affiliate for legitimate platforms</strong></div>
+                <a href="reports/side-hustle-trap.html" class="idea-source">Evidence: The Side Hustle Trap →</a>
+            </div>
+
+            <!-- Idea 24 -->
+            <div class="idea-card" data-cat="Marketplace" data-revenue="med" data-complexity="med" data-evidence="74">
+                <div class="idea-header">
+                    <div class="idea-title">Market Gap Intelligence Service</div>
+                    <span class="badge badge-rev-med">$3K–$15K/mo</span>
+                </div>
+                <p class="idea-problem">Product teams waste months on competitor analysis using surface-level data. The real gaps live in community complaints — where users describe exactly what's missing in language that's immediately actionable. A dedicated service surfacing these gaps would save teams months of research.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 15 verified competitor gaps extracted across 8 market sectors with peak signals up to 900+. Each gap includes exact complaint language, missing feature specification, and opportunity description.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-market">Marketplace</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$299 report · $999/month ongoing competitive intelligence</strong></div>
+                <a href="reports/competitor-gaps.html" class="idea-source">Evidence: Market Gap Intelligence →</a>
+            </div>
+
+            <!-- Idea 25 -->
+            <div class="idea-card" data-cat="Economics" data-revenue="high" data-complexity="med" data-evidence="78">
+                <div class="idea-header">
+                    <div class="idea-title">Windfall Wealth Coaching (Inheritance / Lottery)</div>
+                    <span class="badge badge-rev-high">$5K–$30K/mo</span>
+                </div>
+                <p class="idea-problem">Sudden wealth — from inheritance, legal settlements, or unexpected windfalls — follows a documented psychological collapse pattern. Recipients with scarcity mindsets consistently destroy the windfall within 2–5 years through the "generosity trap." Specialised coaching intercepts this before it's too late.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 6 documented cycle phases. Universal pattern across cultures and income levels. Existing financial advisors address money mechanics, not psychology. High willingness to pay due to stakes.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-econ">Economics</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$500–$2,000 per coaching engagement · group cohort $299</strong></div>
+                <a href="reports/poor-mindset.html" class="idea-source">Evidence: The Poor Mindset →</a>
+            </div>
+
+            <!-- Idea 26 -->
+            <div class="idea-card" data-cat="Health" data-revenue="med" data-complexity="low" data-evidence="66">
+                <div class="idea-header">
+                    <div class="idea-title">Clinical Language Education Platform</div>
+                    <span class="badge badge-rev-med">$1K–$5K/mo</span>
+                </div>
+                <p class="idea-problem">Casual misuse of clinical terms (OCD, PTSD, trauma, bipolar) creates a measurable "trivialization tax" on people with genuine diagnoses. An educational platform targeted at HR departments, schools, and content creators that teaches appropriate clinical language use would address institutional demand.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 1,240 upvotes validating widespread frustration. Language dilution documented across mental health communities. HR training market actively seeking DEI and language sensitivity content. Institutional B2B angle provides defensibility.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-health">Health</span>
+                    <span class="badge badge-complex-low">Low complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>B2B corporate training $2K–$10K/year · individual course $49</strong></div>
+                <a href="reports/ocd-trivialization.html" class="idea-source">Evidence: OCD Trivialization Tax →</a>
+            </div>
+
+            <!-- Idea 27 -->
+            <div class="idea-card" data-cat="AI & Tech" data-revenue="high" data-complexity="med" data-evidence="80">
+                <div class="idea-header">
+                    <div class="idea-title">Quantum Manifestation Practitioner Certification</div>
+                    <span class="badge badge-rev-high">$5K–$20K/mo</span>
+                </div>
+                <p class="idea-problem">The quantum manifestation and law of assumption space has 6,960+ community upvotes across 100+ posts, 12 mapped techniques, and a clear practitioner-seeker structure. A vetted certification system for coaches — bridging psychological technique with community credibility signals — would dominate an unstructured market.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 90K+ words of community content analysed. $B+ manifestation coaching market. Practitioners are already monetising without standardisation. Clear demand for vetted, technique-grounded coaches.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-content">Content</span>
+                    <span class="badge badge-complex-med">Medium complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>$499–$999 certification · annual renewal $199 · marketplace listing</strong></div>
+                <a href="reports/quantum-manifestation.html" class="idea-source">Evidence: Quantum Manifestation Report →</a>
+            </div>
+
+            <!-- Idea 28 -->
+            <div class="idea-card" data-cat="Marketplace" data-revenue="high" data-complexity="high" data-evidence="84">
+                <div class="idea-header">
+                    <div class="idea-title">Celebrity Encounter Content Marketplace</div>
+                    <span class="badge badge-rev-high">$5K–$25K/mo</span>
+                </div>
+                <p class="idea-problem">Negative celebrity encounters generate 3.5× more engagement than positive ones. This is a measurable, monetizable bias. A platform curating verified celebrity encounter stories with structured engagement optimisation — for entertainment brands, gossip publications, and social channels — would exploit a documented and underserved content gap.</p>
+                <div class="idea-evidence"><strong>Evidence:</strong> 3.5× negativity bias measured. 26K total engagement from a single analysis. Barry Bonds (20K upvotes negative) vs. Uncle Phil Drummond (5,990 positive) documented. Entertainment media pays premium for verified firsthand accounts.</div>
+                <div class="idea-meta">
+                    <span class="idea-cat cat-market">Marketplace</span>
+                    <span class="badge badge-complex-high">High complexity</span>
+                </div>
+                <div class="revenue-line">Revenue model: <strong>Licensing stories to media · sponsored celebrity brand safety reports</strong></div>
+                <a href="reports/celebrity-encounters.html" class="idea-source">Evidence: Celebrity Polarity Effect →</a>
+            </div>
+
+        </div><!-- /#ideasGrid -->
+
+        <!-- Custom Report CTA -->
+        <div class="cta-panel reveal">
+            <h3>Want validated ideas for your specific niche?</h3>
+            <p>Every idea above came from running the same process on a different topic. For $69, I'll run it on yours — your target audience, your market, your pain points extracted from real conversations at scale.</p>
+            <a href="intake_form.html" class="btn btn-primary">Commission a Custom Intelligence Report — $69</a>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="newsletter-cta reveal" id="newsletter">
+            <h3>New ideas added weekly</h3>
+            <p>Subscribe to get notified when new validated ideas are added to the database.</p>
+            <form class="newsletter-form" action="mailto:signup@quantummerlin.com" method="post" enctype="text/plain">
+                <input type="email" name="email" placeholder="your@email.com" required>
+                <button type="submit" class="btn btn-primary">Subscribe Free</button>
+            </form>
+            <p class="newsletter-note">Join 1,200+ readers. No spam, unsubscribe any time.</p>
+        </div>
+
+        <footer>
+            <p>Aether Intelligence — Human insight, extracted from real conversations</p>
+            <div style="margin-top: 16px;">
+                <a href="index.html">Reports</a>
+                <a href="trends.html">Trends</a>
+                <a href="startup-ideas.html">Ideas</a>
+                <a href="patterns.html">Patterns</a>
+                <a href="methodology.html">Methodology</a>
+                <a href="about.html">About</a>
+                <a href="mailto:signup@quantummerlin.com">Contact</a>
+            </div>
+            <p style="margin-top:20px;font-size:0.8rem;color:#555566;">
+                If this research saved you time, <a href="https://buymeacoffee.com/quantummerlin" target="_blank" rel="noopener" style="color:#8888a0;">a coffee is always appreciated ☕</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Buy Me a Coffee -->
+    <a href="https://buymeacoffee.com/quantummerlin" target="_blank" rel="noopener" class="bmc-float" aria-label="Buy Me a Coffee">
+        <span class="bmc-float-icon">☕</span>
+        <span class="bmc-float-text">Buy me a coffee</span>
+    </a>
+
+    <script>
+    (function() {
+        // Scroll progress
+        const bar = document.getElementById('scrollProgress');
+        window.addEventListener('scroll', () => {
+            const s = document.documentElement.scrollTop;
+            const h = document.documentElement.scrollHeight - window.innerHeight;
+            bar.style.width = (s / h * 100) + '%';
+        }, { passive: true });
+
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+        }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Mobile nav
+        window.toggleMobileNav = function() {
+            document.getElementById('mobileNav').classList.toggle('open');
+        };
+
+        // All cards
+        const allCards = Array.from(document.querySelectorAll('.idea-card'));
+        let activeFilter = 'all';
+        let searchQuery = '';
+
+        function updateVisible() {
+            let visible = 0;
+            allCards.forEach(card => {
+                const catMatch = activeFilter === 'all' || card.dataset.cat === activeFilter;
+                const q = searchQuery.toLowerCase();
+                const textMatch = !q || card.textContent.toLowerCase().includes(q);
+                const show = catMatch && textMatch;
+                card.classList.toggle('filter-hidden', !show);
+                if (show) visible++;
+            });
+            document.getElementById('countNum').textContent = visible;
+        }
+
+        window.filterIdeas = function(cat, btn) {
+            activeFilter = cat;
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            updateVisible();
+        };
+
+        window.searchIdeas = function(val) {
+            searchQuery = val;
+            updateVisible();
+        };
+
+        window.sortIdeas = function(method) {
+            const grid = document.getElementById('ideasGrid');
+            const cards = Array.from(grid.querySelectorAll('.idea-card'));
+            cards.sort((a, b) => {
+                if (method === 'evidence') return parseInt(b.dataset.evidence) - parseInt(a.dataset.evidence);
+                if (method === 'revenue-high') {
+                    const rOrder = { high: 0, med: 1, low: 2 };
+                    return (rOrder[a.dataset.revenue] || 2) - (rOrder[b.dataset.revenue] || 2);
+                }
+                if (method === 'easy') {
+                    const cOrder = { low: 0, med: 1, high: 2 };
+                    return (cOrder[a.dataset.complexity] || 1) - (cOrder[b.dataset.complexity] || 1);
+                }
+                return 0;
+            });
+            cards.forEach(c => grid.appendChild(c));
+        };
+    })();
+    </script>
+</body>
+</html>

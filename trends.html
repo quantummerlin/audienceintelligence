@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Intelligence Index | Aether Intelligence</title>
+    <meta name="description" content="Live trend intelligence index — ranked by momentum, sentiment, and signal strength. Extracted from 200,000+ public conversations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        .bg-gradient {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+            width: 0%; z-index: 1000; transition: width 0.05s linear;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* Sticky Header */
+        .header-wrap {
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .header-wrap header {
+            max-width: 1000px; margin: 0 auto;
+            padding: 20px 24px; border-bottom: none;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo {
+            font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em;
+            color: var(--text-primary); display: flex; align-items: center;
+            gap: 8px; text-decoration: none;
+        }
+        .logo-icon { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+
+        nav a {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;
+            margin-left: 24px; transition: color 0.2s;
+        }
+        nav a:hover { color: var(--text-primary); }
+        nav a.active { color: var(--accent); }
+
+        .hamburger {
+            display: none; background: none; border: none; cursor: pointer; padding: 8px;
+        }
+        .hamburger span {
+            display: block; width: 24px; height: 2px; background: var(--text-primary);
+            margin: 5px 0; transition: all 0.3s ease; border-radius: 2px;
+        }
+        .mobile-nav {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 10, 15, 0.97); backdrop-filter: blur(20px);
+            z-index: 99; flex-direction: column; align-items: center;
+            justify-content: center; gap: 32px;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a {
+            color: var(--text-primary); text-decoration: none; font-size: 1.5rem;
+            font-weight: 500; transition: color 0.2s;
+        }
+        .mobile-nav a:hover { color: var(--accent); }
+
+        /* Hero */
+        .hero {
+            padding: 80px 0 56px;
+            text-align: center;
+        }
+        .hero-tag {
+            display: inline-block; padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px; font-size: 0.8rem; color: var(--accent);
+            margin-bottom: 24px; letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        h1 {
+            font-size: 2.8rem; font-weight: 600; line-height: 1.15;
+            letter-spacing: -0.03em; margin-bottom: 20px;
+            background: linear-gradient(180deg, #ffffff 0%, #a0a0b0 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub {
+            font-size: 1.1rem; color: var(--text-secondary);
+            max-width: 580px; margin: 0 auto 32px;
+        }
+        .update-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 16px; background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.2); border-radius: 8px;
+            font-size: 0.8rem; color: #10b981;
+        }
+        .update-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #10b981;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+        }
+
+        /* Index Stats */
+        .index-stats {
+            display: flex; justify-content: center; gap: 48px;
+            padding: 32px 0; border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 48px;
+        }
+        .ix-stat { text-align: center; }
+        .ix-stat-value {
+            font-size: 1.8rem; font-weight: 700;
+            background: linear-gradient(135deg, #6366f1, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .ix-stat-label {
+            font-size: 0.75rem; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+        }
+        .filter-pills {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        .filter-pill {
+            padding: 6px 16px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1); background: transparent;
+            color: var(--text-secondary); font-size: 0.8rem; font-family: inherit;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .filter-pill:hover { border-color: rgba(99,102,241,0.4); color: var(--text-primary); }
+        .filter-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+        .sort-select {
+            padding: 7px 14px; background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+            color: var(--text-secondary); font-size: 0.82rem; font-family: inherit;
+            cursor: pointer;
+        }
+        .sort-select:focus { outline: none; border-color: rgba(99,102,241,0.4); }
+
+        /* Trend Cards */
+        .trend-card {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 24px 28px; margin-bottom: 12px;
+            display: grid; grid-template-columns: auto 1fr auto;
+            gap: 20px; align-items: center;
+            transition: all 0.3s ease; cursor: default;
+        }
+        .trend-card:hover {
+            border-color: rgba(99,102,241,0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+        }
+
+        /* Rank */
+        .trend-rank {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: var(--bg-secondary); display: flex;
+            align-items: center; justify-content: center;
+            font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        /* Main content */
+        .trend-main {}
+        .trend-top {
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .trend-name {
+            font-size: 1.05rem; font-weight: 600; color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+        .trend-cat {
+            padding: 3px 10px; border-radius: 12px; font-size: 0.7rem;
+            font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+        }
+        .cat-ai       { background: rgba(99,102,241,0.12); color: #818cf8; }
+        .cat-econ     { background: rgba(245,158,11,0.12); color: #fbbf24; }
+        .cat-privacy  { background: rgba(239,68,68,0.12); color: #f87171; }
+        .cat-rel      { background: rgba(236,72,153,0.12); color: #f472b6; }
+        .cat-work     { background: rgba(16,185,129,0.12); color: #34d399; }
+        .cat-content  { background: rgba(139,92,246,0.12); color: #a78bfa; }
+        .cat-health   { background: rgba(14,165,233,0.12); color: #38bdf8; }
+        .cat-mindset  { background: rgba(251,191,36,0.12); color: #fcd34d; }
+        .cat-biz      { background: rgba(34,197,94,0.12); color: #4ade80; }
+
+        .trend-insight {
+            font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .trend-meta {
+            display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+        }
+        .trend-meta-item {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 0.75rem; color: var(--text-secondary);
+        }
+        .trend-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+        .trend-link {
+            display: inline-block; padding: 4px 10px; border-radius: 6px;
+            font-size: 0.72rem; text-decoration: none; border: 1px solid rgba(99,102,241,0.2);
+            color: var(--accent); transition: all 0.2s;
+        }
+        .trend-link:hover { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.4); }
+
+        /* Right: momentum */
+        .trend-right {
+            text-align: right; flex-shrink: 0; min-width: 90px;
+        }
+        .momentum {
+            font-size: 1.1rem; font-weight: 700; margin-bottom: 4px;
+        }
+        .momentum.hot { color: #f97316; }
+        .momentum.rising { color: #10b981; }
+        .momentum.steady { color: #a78bfa; }
+        .momentum.cooling { color: #64748b; }
+        .sentiment-badge {
+            font-size: 0.72rem; color: var(--text-secondary); display: block;
+        }
+        .signal-bar {
+            height: 4px; border-radius: 2px; margin-top: 8px;
+            background: rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+        .signal-fill {
+            height: 100%; border-radius: 2px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+        }
+
+        /* Featured / hot card */
+        .trend-card.is-hot {
+            border-color: rgba(249,115,22,0.2);
+            background: linear-gradient(135deg, var(--bg-card), rgba(249,115,22,0.03));
+        }
+
+        /* Section label */
+        .section-label {
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--text-secondary); margin-bottom: 20px; margin-top: 48px;
+        }
+
+        /* Category Overview Grid */
+        .category-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 16px; margin: 48px 0;
+        }
+        .cat-card {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px; padding: 20px; cursor: pointer;
+            transition: all 0.3s; text-decoration: none; display: block;
+        }
+        .cat-card:hover {
+            transform: translateY(-2px); box-shadow: 0 14px 32px rgba(0,0,0,0.25);
+        }
+        .cat-card-icon { font-size: 1.5rem; margin-bottom: 10px; }
+        .cat-card-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .cat-card-count { font-size: 0.78rem; color: var(--text-secondary); }
+        .cat-card-trend { font-size: 0.75rem; margin-top: 8px; font-weight: 500; }
+
+        /* Methodology note */
+        .method-note {
+            background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px; padding: 28px 32px; margin: 48px 0;
+        }
+        .method-note h3 { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
+        .method-note p {
+            font-size: 0.87rem; color: var(--text-secondary); line-height: 1.7;
+        }
+        .method-note a { color: var(--accent); text-decoration: none; }
+        .method-note a:hover { text-decoration: underline; }
+
+        /* Newsletter CTA */
+        .newsletter-cta {
+            background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08));
+            border: 1px solid rgba(99,102,241,0.2); border-radius: 20px;
+            padding: 48px; margin: 40px 0; text-align: center;
+        }
+        .newsletter-cta h3 { font-size: 1.4rem; margin-bottom: 10px; }
+        .newsletter-cta p { color: var(--text-secondary); margin-bottom: 24px; }
+        .newsletter-form {
+            display: flex; gap: 10px; max-width: 440px; margin: 0 auto;
+        }
+        .newsletter-form input {
+            flex: 1; padding: 13px 16px; background: var(--bg-primary);
+            border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;
+            color: var(--text-primary); font-size: 0.92rem; font-family: inherit;
+        }
+        .newsletter-form input:focus { outline: none; border-color: var(--accent); }
+        .newsletter-form input::placeholder { color: var(--text-secondary); }
+        .btn {
+            display: inline-block; padding: 13px 22px; border-radius: 10px;
+            font-size: 0.92rem; font-weight: 500; text-decoration: none;
+            transition: all 0.3s; cursor: pointer; border: none; font-family: inherit;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+        .newsletter-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 12px; }
+
+        /* Footer */
+        footer {
+            padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center; color: var(--text-secondary); font-size: 0.85rem;
+        }
+        footer a { color: var(--text-secondary); text-decoration: none; margin: 0 14px; }
+        footer a:hover { color: var(--text-primary); }
+
+        /* BMC */
+        .bmc-float {
+            position: fixed; bottom: 24px; right: 24px; z-index: 999;
+            display: flex; align-items: center; gap: 10px;
+            background: #FFDD00; color: #000;
+            padding: 11px 20px 11px 14px; border-radius: 50px;
+            text-decoration: none; font-weight: 700; font-size: 0.88rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+            transition: transform .2s, box-shadow .2s; font-family: inherit;
+        }
+        .bmc-float:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.45); }
+        .bmc-float-icon { font-size: 1.15rem; line-height: 1; }
+
+        /* Reveal */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Hidden by filter */
+        .trend-card.filter-hidden { display: none; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .trend-card { grid-template-columns: 1fr; gap: 12px; }
+            .trend-rank { width: 32px; height: 32px; }
+            .trend-right { text-align: left; }
+            .index-stats { gap: 24px; }
+            .ix-stat-value { font-size: 1.4rem; }
+            .category-grid { grid-template-columns: 1fr 1fr; }
+            .hamburger { display: block; }
+            nav { display: none; }
+            .newsletter-form { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .bmc-float { padding: 11px 14px; bottom: 16px; right: 16px; }
+            .bmc-float-text { display: none; }
+            .category-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="bg-gradient"></div>
+
+    <div class="mobile-nav" id="mobileNav">
+        <a href="index.html">Reports</a>
+        <a href="articles/">Articles</a>
+        <a href="trends.html" style="color:var(--accent);">Trends</a>
+        <a href="startup-ideas.html">Ideas</a>
+        <a href="patterns.html">Patterns</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="intake_form.html" style="color:var(--accent);">Custom Report</a>
+    </div>
+
+    <div class="header-wrap">
+        <header>
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Aether Intelligence" class="logo-icon">
+                Aether Intelligence
+            </a>
+            <nav>
+                <a href="index.html">Reports</a>
+                <a href="articles/">Articles</a>
+                <a href="trends.html" class="active">Trends</a>
+                <a href="startup-ideas.html">Ideas</a>
+                <a href="patterns.html">Patterns</a>
+                <a href="methodology.html">Methodology</a>
+                <a href="intake_form.html" style="color:var(--accent);border:1px solid rgba(99,102,241,0.3);padding:6px 14px;border-radius:8px;margin-left:8px;">Custom Report</a>
+            </nav>
+            <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMobileNav()">
+                <span></span><span></span><span></span>
+            </button>
+        </header>
+    </div>
+
+    <div class="container">
+        <section class="hero reveal">
+            <span class="hero-tag">Signal Intelligence Index</span>
+            <h1>What's trending across<br>200,000+ real conversations</h1>
+            <p class="hero-sub">Ranked by momentum, sentiment, and signal strength. Updated weekly from live community intelligence extractions.</p>
+            <div class="update-badge">
+                <div class="update-dot"></div>
+                Last updated March 24, 2026 &nbsp;·&nbsp; 12 active trends tracked
+            </div>
+        </section>
+
+        <div class="index-stats reveal">
+            <div class="ix-stat">
+                <div class="ix-stat-value">200K+</div>
+                <div class="ix-stat-label">Conversations Scanned</div>
+            </div>
+            <div class="ix-stat">
+                <div class="ix-stat-value">32</div>
+                <div class="ix-stat-label">Reports Published</div>
+            </div>
+            <div class="ix-stat">
+                <div class="ix-stat-value">12</div>
+                <div class="ix-stat-label">Live Trends</div>
+            </div>
+            <div class="ix-stat">
+                <div class="ix-stat-value">8</div>
+                <div class="ix-stat-label">Categories</div>
+            </div>
+        </div>
+
+        <!-- Category Cards -->
+        <p class="section-label">Browse by Category</p>
+        <div class="category-grid reveal">
+            <div class="cat-card" onclick="filterByCategory('AI & Tech')" style="border-top: 2px solid #818cf8;">
+                <div class="cat-card-icon">🤖</div>
+                <div class="cat-card-name">AI & Technology</div>
+                <div class="cat-card-count">3 active trends</div>
+                <div class="cat-card-trend" style="color:#818cf8;">🔥 Explosive momentum</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Economics')" style="border-top: 2px solid #fbbf24;">
+                <div class="cat-card-icon">💸</div>
+                <div class="cat-card-name">Economics & Money</div>
+                <div class="cat-card-count">3 active trends</div>
+                <div class="cat-card-trend" style="color:#fbbf24;">📈 Rising fast</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Relationships')" style="border-top: 2px solid #f472b6;">
+                <div class="cat-card-icon">💔</div>
+                <div class="cat-card-name">Relationships</div>
+                <div class="cat-card-count">2 active trends</div>
+                <div class="cat-card-trend" style="color:#f472b6;">📊 Steady signal</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Privacy')" style="border-top: 2px solid #f87171;">
+                <div class="cat-card-icon">🔒</div>
+                <div class="cat-card-name">Privacy & Security</div>
+                <div class="cat-card-count">2 active trends</div>
+                <div class="cat-card-trend" style="color:#f87171;">📈 Growing alarm</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Work & Culture')" style="border-top: 2px solid #34d399;">
+                <div class="cat-card-icon">⚡</div>
+                <div class="cat-card-name">Work & Culture</div>
+                <div class="cat-card-count">2 active trends</div>
+                <div class="cat-card-trend" style="color:#34d399;">📈 Rising backlash</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Health')" style="border-top: 2px solid #38bdf8;">
+                <div class="cat-card-icon">🧠</div>
+                <div class="cat-card-name">Mental Health</div>
+                <div class="cat-card-count">2 active trends</div>
+                <div class="cat-card-trend" style="color:#38bdf8;">📊 Steady signal</div>
+            </div>
+        </div>
+
+        <!-- Filter + Sort Bar -->
+        <p class="section-label">All Trends — Ranked by Signal Strength</p>
+        <div class="filter-bar">
+            <div class="filter-pills" id="filterPills">
+                <button class="filter-pill active" onclick="filterByCategory('All')">All</button>
+                <button class="filter-pill" onclick="filterByCategory('AI & Tech')">AI & Tech</button>
+                <button class="filter-pill" onclick="filterByCategory('Economics')">Economics</button>
+                <button class="filter-pill" onclick="filterByCategory('Relationships')">Relationships</button>
+                <button class="filter-pill" onclick="filterByCategory('Privacy')">Privacy</button>
+                <button class="filter-pill" onclick="filterByCategory('Work & Culture')">Work & Culture</button>
+                <button class="filter-pill" onclick="filterByCategory('Health')">Health</button>
+            </div>
+            <select class="sort-select" id="sortSelect" onchange="sortTrends(this.value)">
+                <option value="momentum">Sort: Momentum</option>
+                <option value="signal">Sort: Signal Strength</option>
+                <option value="alpha">Sort: A–Z</option>
+            </select>
+        </div>
+
+        <!-- Trends List -->
+        <div id="trendsList">
+
+            <!-- #1 -->
+            <div class="trend-card is-hot reveal" data-category="AI & Tech" data-momentum="340" data-signal="98">
+                <div class="trend-rank">#1</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">AI Job Displacement Anxiety</span>
+                        <span class="trend-cat cat-ai">AI & Tech</span>
+                    </div>
+                    <p class="trend-insight">Not replacing jobs—replacing tasks. Workers who adapt are thriving; those who don't are panicking. The fear is real but misdirected: the actual disruption is at the task level, not the job level.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 4 reports · 60K+ posts</span>
+                        <span class="trend-meta-item">😰 Sentiment: Anxious</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/vibe-coding-crisis.html" class="trend-link">Vibe Coding Crisis →</a>
+                        <a href="reports/ai-slop-vs-human.html" class="trend-link">AI Slop vs Human →</a>
+                        <a href="reports/ungrateful-economy.html" class="trend-link">Ungrateful Economy →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum hot">🔥 +340%</div>
+                    <span class="sentiment-badge">Explosive</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:98%"></div></div>
+                </div>
+            </div>
+
+            <!-- #2 -->
+            <div class="trend-card is-hot reveal" data-category="AI & Tech" data-momentum="280" data-signal="91">
+                <div class="trend-rank">#2</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Vibe Coding Collapse</span>
+                        <span class="trend-cat cat-ai">AI & Tech</span>
+                    </div>
+                    <p class="trend-insight">AI coding tools are enabling untrained developers to ship insecure, unmaintainable code at scale. 2,702 leaked credentials found. Senior engineers are quitting. A quality crisis is forming beneath the surface.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 1 report · 19K+ posts</span>
+                        <span class="trend-meta-item">😡 Sentiment: Alarmed</span>
+                        <span class="trend-meta-item">📅 March 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/vibe-coding-crisis.html" class="trend-link">Full Report →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum hot">🔥 +280%</div>
+                    <span class="sentiment-badge">Alarmed</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:91%"></div></div>
+                </div>
+            </div>
+
+            <!-- #3 -->
+            <div class="trend-card reveal" data-category="Economics" data-momentum="220" data-signal="87">
+                <div class="trend-rank">#3</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Subscription Economy Backlash</span>
+                        <span class="trend-cat cat-econ">Economics</span>
+                    </div>
+                    <p class="trend-insight">Ownership is a myth. Car seats, software, media—everything is a subscription now. People are documenting features vanishing after purchase and the slow appification of physical goods. Anger is compounding.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 2 reports · 18K+ posts</span>
+                        <span class="trend-meta-item">😠 Sentiment: Furious</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/you-dont-own-anything.html" class="trend-link">You Don't Own Anything →</a>
+                        <a href="reports/side-hustle-trap.html" class="trend-link">Side Hustle Trap →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum rising">📈 +220%</div>
+                    <span class="sentiment-badge">Escalating</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:87%"></div></div>
+                </div>
+            </div>
+
+            <!-- #4 -->
+            <div class="trend-card reveal" data-category="Privacy" data-momentum="195" data-signal="84">
+                <div class="trend-rank">#4</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Surveillance Normalization</span>
+                        <span class="trend-cat cat-privacy">Privacy</span>
+                    </div>
+                    <p class="trend-insight">Smart locks, OS-level age verification, biometric data harvesting—surveillance is being embedded into everyday infrastructure with political cover from "safety" narratives. A coordinated legislative campaign now spans 45 states.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 2 reports · 37K+ posts</span>
+                        <span class="trend-meta-item">😨 Sentiment: Fearful</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/surveillance-state.html" class="trend-link">Surveillance State →</a>
+                        <a href="reports/landlord-can-see-you.html" class="trend-link">Your Landlord Can See You →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum rising">📈 +195%</div>
+                    <span class="sentiment-badge">Alarmed</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:84%"></div></div>
+                </div>
+            </div>
+
+            <!-- #5 -->
+            <div class="trend-card reveal" data-category="Economics" data-momentum="180" data-signal="82">
+                <div class="trend-rank">#5</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Housing Unaffordability Crisis</span>
+                        <span class="trend-cat cat-econ">Economics</span>
+                    </div>
+                    <p class="trend-insight">Price-to-income ratios at 7.8x in major markets. A $47,000 average down payment gap. The real cause isn't supply—it's credit expansion that inflates asset prices while wages stagnate. Generational homeownership is collapsing.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 1 report · 21K+ posts</span>
+                        <span class="trend-meta-item">😡 Sentiment: Hopeless/Angry</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/housing-lie.html" class="trend-link">The Housing Lie →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum rising">📈 +180%</div>
+                    <span class="sentiment-badge">Frustrated</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:82%"></div></div>
+                </div>
+            </div>
+
+            <!-- #6 -->
+            <div class="trend-card reveal" data-category="Work & Culture" data-momentum="165" data-signal="79">
+                <div class="trend-rank">#6</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Hustle Culture Disillusionment</span>
+                        <span class="trend-cat cat-work">Work & Culture</span>
+                    </div>
+                    <p class="trend-insight">The 5AM wake-up routine mythology is collapsing. People who lived the hustle grind are surfacing what they lost: relationships, health, years. The backlash isn't laziness—it's survivors reporting the real cost.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 2 reports · 36K+ posts</span>
+                        <span class="trend-meta-item">😮‍💨 Sentiment: Exhausted/Bitter</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/5am-lie.html" class="trend-link">The 5AM Lie →</a>
+                        <a href="reports/side-hustle-trap.html" class="trend-link">Side Hustle Trap →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum rising">📈 +165%</div>
+                    <span class="sentiment-badge">Disillusioned</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:79%"></div></div>
+                </div>
+            </div>
+
+            <!-- #7 -->
+            <div class="trend-card reveal" data-category="AI & Tech" data-momentum="145" data-signal="76">
+                <div class="trend-rank">#7</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">AI Content Saturation ("Slop") Fatigue</span>
+                        <span class="trend-cat cat-ai">AI & Tech</span>
+                    </div>
+                    <p class="trend-insight">Audiences are developing AI-detection instincts. Creators who abandoned AI writing in favour of genuine psychology and storytelling are earning 2× more. The market is self-correcting against generic content faster than predicted.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 2 reports · 20K+ posts</span>
+                        <span class="trend-meta-item">🤔 Sentiment: Selective/Defensive</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/ai-slop-vs-human.html" class="trend-link">The Human Edge →</a>
+                        <a href="reports/viral-hooks-lab.html" class="trend-link">Viral Hooks Lab →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum rising">📈 +145%</div>
+                    <span class="sentiment-badge">Selective</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:76%"></div></div>
+                </div>
+            </div>
+
+            <!-- #8 -->
+            <div class="trend-card reveal" data-category="Relationships" data-momentum="120" data-signal="73">
+                <div class="trend-rank">#8</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Financial Entitlement in Relationships</span>
+                        <span class="trend-cat cat-rel">Relationships</span>
+                    </div>
+                    <p class="trend-insight">TikTok is programming unrealistic financial expectations in romantic relationships. 2.3B views on "billionaire content." 42% of sampled relationships ended over financial expectation mismatches. A measurable media-to-behaviour pipeline.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 2 reports · 41K+ posts</span>
+                        <span class="trend-meta-item">😤 Sentiment: Frustrated</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/billionaire-marriage-delusion.html" class="trend-link">Billionaire Marriage Delusion →</a>
+                        <a href="reports/passive-income.html" class="trend-link">Financial Stress Report →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum steady">📊 +120%</div>
+                    <span class="sentiment-badge">Tense</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:73%"></div></div>
+                </div>
+            </div>
+
+            <!-- #9 -->
+            <div class="trend-card reveal" data-category="Work & Culture" data-momentum="105" data-signal="70">
+                <div class="trend-rank">#9</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Labour Market Breakdown</span>
+                        <span class="trend-cat cat-work">Work & Culture</span>
+                    </div>
+                    <p class="trend-insight">Both sides of the hiring market are frustrated. Employers see 0–2 applicants per posting. Workers with decade of experience are being rejected for grocery store roles. Five failure layers are driving this simultaneously and mainstream media isn't covering it.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 1 report · 14K+ posts</span>
+                        <span class="trend-meta-item">😕 Sentiment: Baffled/Angry</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/ungrateful-economy.html" class="trend-link">The Ungrateful Economy →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum steady">📊 +105%</div>
+                    <span class="sentiment-badge">Baffled</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:70%"></div></div>
+                </div>
+            </div>
+
+            <!-- #10 -->
+            <div class="trend-card reveal" data-category="Health" data-momentum="88" data-signal="65">
+                <div class="trend-rank">#10</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Medical PTSD Normalization</span>
+                        <span class="trend-cat cat-health">Health</span>
+                    </div>
+                    <p class="trend-insight">ICU and emergency department workers aren't recognising their trauma until after they leave. The high-stress environment normalises symptoms—PTSD scores dropping from 54 to 21 only after exit. The medical system is quietly burning out its defenders.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 1 report · 2K+ posts</span>
+                        <span class="trend-meta-item">😔 Sentiment: Sad/Concerned</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/icu-ptsd-hidden-toll.html" class="trend-link">ICU PTSD Report →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum steady">📊 +88%</div>
+                    <span class="sentiment-badge">Concerned</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:65%"></div></div>
+                </div>
+            </div>
+
+            <!-- #11 -->
+            <div class="trend-card reveal" data-category="Relationships" data-momentum="80" data-signal="62">
+                <div class="trend-rank">#11</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Digital Authenticity Crisis</span>
+                        <span class="trend-cat cat-rel">Relationships</span>
+                    </div>
+                    <p class="trend-insight">Marketplaces flooded with fake "handmade" goods. Dating apps optimising for engagement over connection. People are developing verification workarounds (asking for process photos, technical questions) as the trust infrastructure of the internet corrodes.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 2 reports · 6K+ posts</span>
+                        <span class="trend-meta-item">🤨 Sentiment: Skeptical</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/dropshippers-ruined-etsy.html" class="trend-link">Dropshippers Ruined Etsy →</a>
+                        <a href="reports/dating-nightmare.html" class="trend-link">Dating Nightmare →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum steady">📊 +80%</div>
+                    <span class="sentiment-badge">Skeptical</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:62%"></div></div>
+                </div>
+            </div>
+
+            <!-- #12 -->
+            <div class="trend-card reveal" data-category="Health" data-momentum="70" data-signal="58">
+                <div class="trend-rank">#12</div>
+                <div class="trend-main">
+                    <div class="trend-top">
+                        <span class="trend-name">Clinical Language Dilution</span>
+                        <span class="trend-cat cat-health">Health</span>
+                    </div>
+                    <p class="trend-insight">The casual misuse of clinical terms (OCD, PTSD, trauma) creates a constant "trivialization tax" on people with genuine diagnoses. Every conversation becomes a decision: correct the misuse and appear difficult, or stay silent and accept misrepresentation.</p>
+                    <div class="trend-meta">
+                        <span class="trend-meta-item">📊 1 report · 1K+ posts</span>
+                        <span class="trend-meta-item">😞 Sentiment: Resigned/Frustrated</span>
+                        <span class="trend-meta-item">📅 Q1 2026</span>
+                    </div>
+                    <div class="trend-links">
+                        <a href="reports/ocd-trivialization.html" class="trend-link">OCD Trivialization Tax →</a>
+                    </div>
+                </div>
+                <div class="trend-right">
+                    <div class="momentum steady">📊 +70%</div>
+                    <span class="sentiment-badge">Resigned</span>
+                    <div class="signal-bar"><div class="signal-fill" style="width:58%"></div></div>
+                </div>
+            </div>
+
+        </div><!-- /#trendsList -->
+
+        <!-- Methodology Note -->
+        <div class="method-note reveal">
+            <h3>📡 How momentum scores are calculated</h3>
+            <p>Momentum represents the percentage growth in community discussion volume around each topic compared to the prior 60-day baseline, weighted by post engagement (not raw volume). Sentiment is extracted from recurring emotional language patterns across thousands of posts. Signal strength reflects the number of independent discussions corroborating the same theme. Learn more on the <a href="methodology.html">Methodology page →</a></p>
+        </div>
+
+        <!-- Newsletter CTA -->
+        <div class="newsletter-cta reveal" id="newsletter">
+            <h3>Get the Weekly Trends Digest</h3>
+            <p>5 trends, 5 minutes, every Monday. What's rising, what's collapsing, and what it means.</p>
+            <form class="newsletter-form" action="mailto:signup@quantummerlin.com" method="post" enctype="text/plain">
+                <input type="email" name="email" placeholder="your@email.com" required>
+                <button type="submit" class="btn btn-primary">Subscribe Free</button>
+            </form>
+            <p class="newsletter-note">Join 1,200+ readers. No spam, unsubscribe any time.</p>
+        </div>
+
+        <footer>
+            <p>Aether Intelligence — Human insight, extracted from real conversations</p>
+            <div style="margin-top: 16px;">
+                <a href="index.html">Reports</a>
+                <a href="trends.html">Trends</a>
+                <a href="startup-ideas.html">Ideas</a>
+                <a href="patterns.html">Patterns</a>
+                <a href="methodology.html">Methodology</a>
+                <a href="about.html">About</a>
+                <a href="mailto:signup@quantummerlin.com">Contact</a>
+            </div>
+            <p style="margin-top:20px;font-size:0.8rem;color:#555566;">
+                If this research saved you time, <a href="https://buymeacoffee.com/quantummerlin" target="_blank" rel="noopener" style="color:#8888a0;">a coffee is always appreciated ☕</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Buy Me a Coffee floating button -->
+    <a href="https://buymeacoffee.com/quantummerlin" target="_blank" rel="noopener" class="bmc-float" aria-label="Buy Me a Coffee">
+        <span class="bmc-float-icon">☕</span>
+        <span class="bmc-float-text">Buy me a coffee</span>
+    </a>
+
+    <script>
+    (function() {
+        // Scroll progress
+        const bar = document.getElementById('scrollProgress');
+        window.addEventListener('scroll', () => {
+            const s = document.documentElement.scrollTop;
+            const h = document.documentElement.scrollHeight - window.innerHeight;
+            bar.style.width = (s / h * 100) + '%';
+        }, { passive: true });
+
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Mobile nav
+        window.toggleMobileNav = function() {
+            document.getElementById('mobileNav').classList.toggle('open');
+            document.getElementById('hamburger').classList.toggle('open');
+        };
+
+        // Filter by category
+        window.filterByCategory = function(cat) {
+            // Update pills
+            document.querySelectorAll('.filter-pill').forEach(p => {
+                p.classList.toggle('active', p.textContent.trim() === cat || (cat === 'All' && p.textContent.trim() === 'All'));
+            });
+            // Show/hide cards
+            document.querySelectorAll('.trend-card').forEach(card => {
+                const show = cat === 'All' || card.dataset.category === cat;
+                card.classList.toggle('filter-hidden', !show);
+            });
+            // Update ranks
+            let rank = 1;
+            document.querySelectorAll('.trend-card:not(.filter-hidden) .trend-rank').forEach(el => {
+                el.textContent = '#' + rank++;
+            });
+            // Scroll to list
+            document.getElementById('trendsList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        // Sort
+        window.sortTrends = function(method) {
+            const list = document.getElementById('trendsList');
+            const cards = Array.from(list.querySelectorAll('.trend-card'));
+            cards.sort((a, b) => {
+                if (method === 'momentum') return parseInt(b.dataset.momentum) - parseInt(a.dataset.momentum);
+                if (method === 'signal')   return parseInt(b.dataset.signal) - parseInt(a.dataset.signal);
+                if (method === 'alpha') {
+                    const na = a.querySelector('.trend-name').textContent;
+                    const nb = b.querySelector('.trend-name').textContent;
+                    return na.localeCompare(nb);
+                }
+                return 0;
+            });
+            cards.forEach(c => list.appendChild(c));
+            // Refresh ranks
+            let r = 1;
+            cards.forEach(c => { c.querySelector('.trend-rank').textContent = '#' + r++; });
+        };
+    })();
+    </script>
+</body>
+</html>
