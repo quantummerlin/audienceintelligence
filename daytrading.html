@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day Trading Blueprint — Client Report | April 2026</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <style>
+    /* =========================================================
+       RESET & BASE
+    ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0a1628;
+      --navy-2:  #0f2044;
+      --navy-3:  #162d5e;
+      --gold:    #c9a84c;
+      --gold-lt: #f0cb67;
+      --green:   #21b882;
+      --red:     #e85555;
+      --amber:   #f5a623;
+      --slate:   #1e2f4e;
+      --slate-2: #263d60;
+      --text:    #e8edf5;
+      --muted:   #8fa3be;
+      --card-bg: #132038;
+      --border:  #1f3356;
+      --accent:  #3b82f6;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* =========================================================
+       SCROLLBAR
+    ========================================================= */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--navy-2); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* =========================================================
+       TOP NAV
+    ========================================================= */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,22,40,0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .nav-brand .dot {
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.7rem;
+      border-radius: 5px;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold); background: rgba(201,168,76,0.1); }
+
+    .nav-date {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-2) 0%, var(--navy-3) 50%, #0a1628 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 50%, rgba(201,168,76,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(33,184,130,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: center;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 span { color: var(--gold); }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 480px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-meta-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-meta-value {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+
+    .stat-card.green::before  { background: var(--green); }
+    .stat-card.red::before    { background: var(--red); }
+    .stat-card.gold::before   { background: var(--gold); }
+    .stat-card.accent::before { background: var(--accent); }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-card.green .stat-number  { color: var(--green); }
+    .stat-card.red .stat-number    { color: var(--red); }
+    .stat-card.gold .stat-number   { color: var(--gold); }
+    .stat-card.accent .stat-number { color: var(--accent); }
+
+    .stat-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* =========================================================
+       LAYOUT
+    ========================================================= */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* =========================================================
+       SECTION HEADERS
+    ========================================================= */
+    .section {
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-of-type { border-bottom: none; }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 680px;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+
+    /* =========================================================
+       CARDS
+    ========================================================= */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+    }
+
+    .card-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card h3 .icon {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .card p, .card li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .card ul { padding-left: 1.2rem; }
+    .card ul li { margin-bottom: 0.4rem; }
+
+    /* =========================================================
+       QUOTE BLOCKS
+    ========================================================= */
+    .quote-block {
+      border-left: 3px solid var(--gold);
+      padding: 1.25rem 1.5rem;
+      background: rgba(201,168,76,0.06);
+      border-radius: 0 10px 10px 0;
+      margin: 1.5rem 0;
+    }
+
+    .quote-block p {
+      font-style: italic;
+      font-size: 0.97rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .quote-block .source {
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    /* =========================================================
+       CALLOUT BOXES
+    ========================================================= */
+    .callout {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1.25rem 1.5rem;
+      border-radius: 10px;
+      margin: 1.5rem 0;
+    }
+
+    .callout-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+    .callout p {
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .callout.warning {
+      background: rgba(232,85,85,0.08);
+      border: 1px solid rgba(232,85,85,0.25);
+    }
+    .callout.warning p { color: #f0a0a0; }
+
+    .callout.tip {
+      background: rgba(33,184,130,0.08);
+      border: 1px solid rgba(33,184,130,0.25);
+    }
+    .callout.tip p { color: #7ddfc3; }
+
+    .callout.info {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.25);
+    }
+    .callout.info p { color: #93c5fd; }
+
+    .callout.gold {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.3);
+    }
+    .callout.gold p { color: #e8d498; }
+
+    .callout.red {
+      background: rgba(232,85,85,0.08);
+      border: 1px solid rgba(232,85,85,0.3);
+    }
+    .callout.red p { color: #f0a0a0; }
+
+    .callout.blue {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.3);
+    }
+    .callout.blue p { color: #93c5fd; }
+
+    /* =========================================================
+       PILL / BADGE
+    ========================================================= */
+    .pill {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .pill-green  { background: rgba(33,184,130,0.15); color: var(--green); }
+    .pill-red    { background: rgba(232,85,85,0.15);  color: var(--red); }
+    .pill-gold   { background: rgba(201,168,76,0.15); color: var(--gold); }
+    .pill-blue   { background: rgba(59,130,246,0.15); color: var(--accent); }
+
+    /* =========================================================
+       STEP LIST
+    ========================================================= */
+    .step-list { display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0; }
+
+    .step-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--slate);
+      border: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .step-content h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .step-content p {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* =========================================================
+       TABLE
+    ========================================================= */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .data-table th {
+      background: var(--slate);
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.8rem 1rem;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+    .data-table td:first-child { color: var(--text); font-weight: 600; }
+
+    /* =========================================================
+       TIMELINE
+    ========================================================= */
+    .timeline { position: relative; padding-left: 2rem; }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.75rem;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--gold), var(--green));
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -1.65rem;
+      top: 0.25rem;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--navy);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.2);
+    }
+
+    .timeline-item.phase-2 .timeline-dot { background: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+    .timeline-item.phase-3 .timeline-dot { background: var(--green); box-shadow: 0 0 0 3px rgba(33,184,130,0.2); }
+
+    .timeline-period {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+
+    .timeline-item.phase-2 .timeline-period { color: var(--accent); }
+    .timeline-item.phase-3 .timeline-period { color: var(--green); }
+
+    .timeline-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-body {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .timeline-tasks {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .timeline-task {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .timeline-task::before {
+      content: '→';
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .timeline-item.phase-2 .timeline-task::before { color: var(--accent); }
+    .timeline-item.phase-3 .timeline-task::before { color: var(--green); }
+
+    /* =========================================================
+       PROGRESS BAR
+    ========================================================= */
+    .progress-bar-wrap { margin: 0.5rem 0; }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--slate);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+
+    /* =========================================================
+       RISK MATRIX
+    ========================================================= */
+    .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .risk-item {
+      background: var(--slate);
+      border-radius: 10px;
+      padding: 1.25rem;
+      border-top: 3px solid;
+      text-align: center;
+    }
+
+    .risk-item.low     { border-color: var(--green); }
+    .risk-item.medium  { border-color: var(--amber); }
+    .risk-item.high    { border-color: var(--red); }
+
+    .risk-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .risk-item.low    .risk-label { color: var(--green); }
+    .risk-item.medium .risk-label { color: var(--amber); }
+    .risk-item.high   .risk-label { color: var(--red); }
+
+    .risk-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .risk-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* =========================================================
+       STRATEGY CARD
+    ========================================================= */
+    .strategy-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .strategy-header {
+      background: var(--slate);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .strategy-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .strategy-body {
+      padding: 1.5rem;
+    }
+
+    .strategy-body ol {
+      padding-left: 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .strategy-body li {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .strategy-body li strong { color: var(--text); }
+
+    /* =========================================================
+       MARKET TICKER
+    ========================================================= */
+    .market-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .market-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+
+    .market-ticker { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .market-price  { font-size: 1.4rem; font-weight: 800; color: var(--text); margin: 0.2rem 0; }
+    .market-change { font-size: 0.82rem; font-weight: 600; }
+    .market-change.up   { color: var(--green); }
+    .market-change.down { color: var(--red); }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    .footer {
+      background: var(--navy-2);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-disclaimer {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 600px;
+    }
+
+    .footer-brand {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-align: right;
+    }
+
+    .footer-brand span {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* =========================================================
+       HIGHLIGHTS / INLINE
+    ========================================================= */
+    .hl-green  { color: var(--green);  font-weight: 700; }
+    .hl-red    { color: var(--red);    font-weight: 700; }
+    .hl-gold   { color: var(--gold);   font-weight: 700; }
+    .hl-blue   { color: var(--accent); font-weight: 700; }
+
+    /* =========================================================
+       DIVIDER
+    ========================================================= */
+    .divider {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 2rem 0;
+    }
+
+    /* =========================================================
+       PRINT
+    ========================================================= */
+    @media print {
+      .top-nav { display: none; }
+      .section { padding: 2rem 0; }
+      body { background: white; color: black; }
+      .card, .strategy-card { border: 1px solid #ccc; }
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+    @media (max-width: 900px) {
+      .hero-grid       { grid-template-columns: 1fr; }
+      .card-grid-2     { grid-template-columns: 1fr; }
+      .card-grid-3     { grid-template-columns: 1fr 1fr; }
+      .risk-grid       { grid-template-columns: 1fr 1fr; }
+      .market-row      { grid-template-columns: 1fr 1fr; }
+      .nav-links       { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .card-grid-3     { grid-template-columns: 1fr; }
+      .risk-grid       { grid-template-columns: 1fr; }
+      .market-row      { grid-template-columns: 1fr 1fr; }
+      .stat-grid       { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     TOP NAV
+============================================================ -->
+<nav class="top-nav">
+  <div class="nav-brand">
+    <div class="dot"></div>
+    Day Trading Blueprint
+  </div>
+  <ul class="nav-links">
+    <li><a href="#mindset">Mindset</a></li>
+    <li><a href="#strategy">Strategy</a></li>
+    <li><a href="#risk">Risk</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#market">Market</a></li>
+    <li><a href="#plan">Action Plan</a></li>
+    <li><a href="#blowups" style="color:var(--red);">⚠ Blowups</a></li>
+    <li><a href="#advanced">Advanced</a></li>
+  </ul>
+  <div class="nav-date">April 8, 2026</div>
+</nav>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-badge">
+        <span>●</span> Client Intelligence Report
+      </div>
+      <h1>The <span>Day Trader's</span> Blueprint</h1>
+      <p class="hero-sub">
+        A comprehensive, data-driven onboarding guide sourced directly from active trading communities — real traders, real results, real warnings. Built to give you the clearest possible path from zero to consistent profitability.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Report Date</span>
+          <span class="hero-meta-value">April 8, 2026</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Data Source</span>
+          <span class="hero-meta-value">Reddit Trading Communities</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Posts Analyzed</span>
+          <span class="hero-meta-value">300+ Threads</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Market Focus</span>
+          <span class="hero-meta-value">Equities &amp; Futures</span>
+        </div>
+      </div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-number">90–95%</div>
+        <div class="stat-label">Retail Traders Fail</div>
+        <div class="stat-sub">Brokerage data confirms this across all studies</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-number">2–3 yrs</div>
+        <div class="stat-label">Avg. Time to Profitability</div>
+        <div class="stat-sub">In a well-structured, supported learning environment</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-number">$25k</div>
+        <div class="stat-label">PDT Rule Threshold</div>
+        <div class="stat-sub">Reform imminent — potential removal within 90 days</div>
+      </div>
+      <div class="stat-card accent">
+        <div class="stat-number">VIX 26</div>
+        <div class="stat-label">Current Volatility</div>
+        <div class="stat-sub">Elevated due to US-Iran conflict — strategy adjustments required</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 1 — REALITY CHECK & MINDSET
+============================================================ -->
+<section class="section" id="mindset">
+  <div class="section-inner">
+    <div class="section-label">Section 01</div>
+    <h2 class="section-title">Reality Check &amp; The Right Mindset</h2>
+    <p class="section-desc">
+      The single biggest predictor of trading success is not your strategy — it's your psychology. The data from thousands of active traders makes this unmistakably clear. Before placing a single real dollar, you must honestly confront these truths.
+    </p>
+
+    <div class="callout warning">
+      <div class="callout-icon">⚠️</div>
+      <p><strong>The hard truth:</strong> 90–95% of retail day traders lose money. This is not a scare tactic — it is derived directly from brokerage data and independent academic studies across multiple markets. The good news: the 5–10% who succeed typically share identifiable, learnable behaviours. This report focuses entirely on those behaviours.</p>
+    </div>
+
+    <div class="quote-block">
+      <p>"Trading is the hardest way to make easy money. If beginners knew how hard it would actually be, 99% would quit before they started."</p>
+      <div class="source">r/algotrading — 170 upvotes, April 2026</div>
+    </div>
+
+    <div class="card-grid-2" style="margin-top:2rem;">
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(232,85,85,0.15);">🧠</span> The 5 Psychological Traps</h3>
+        <ul>
+          <li><strong>Revenge trading</strong> — After a loss, sizing up or entering impulsively to "win it back." This is the #1 account killer identified across the dataset.</li>
+          <li><strong>FOMO entry</strong> — Chasing a move that already happened without a valid setup. You buy tops and sell bottoms.</li>
+          <li><strong>Holding losers, cutting winners</strong> — Extremely common beginner pattern (loss aversion). Losses compound; profits get pocketed too early.</li>
+          <li><strong>Overleveraging</strong> — Using full size on every trade means one bad day can erase weeks of gains.</li>
+          <li><strong>Overtrading</strong> — The market doesn't owe you 10 setups a day. Most profitable traders take 1–3 high-conviction trades per session.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(33,184,130,0.15);">✅</span> The Mindset of Profitable Traders</h3>
+        <ul>
+          <li><strong>Process over profit</strong> — Focus on executing your rules perfectly, not on the money. Profit follows process.</li>
+          <li><strong>Statistical thinking</strong> — No single trade matters. What matters is whether your edge plays out over 50–100 trades.</li>
+          <li><strong>Boring is beautiful</strong> — The most profitable traders describe their sessions as "boring." Excitement usually means risk.</li>
+          <li><strong>Stop &amp; walk</strong> — Setting a daily profit target and walking away when you hit it is one of the highest-value behaviours in the dataset.</li>
+          <li><strong>Clear invalidation</strong> — Know exactly when your trade idea is wrong before you enter. If price reaches X, you're out — no negotiating.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top:2rem;">
+      <p>"If every single person is telling me to stick to strict rules, don't revenge trade, no FOMO, no greed — then why would I decide to do something completely different? You literally have the answer in front of your face. Half the time I see people asking why they're not profitable and they immediately answer their own question."</p>
+      <div class="source">r/Daytrading — 309 upvotes (8 months profitable, consistently green)</div>
+    </div>
+
+    <div class="quote-block">
+      <p>"Trading itself is very easy. The more years I spent in the markets, the more I realized I needed to do less. The markets only move up and down. A simple model can provide long-term profitability. But most people want instant satisfaction — which causes them to overleverage, overtrade, and overrisk."</p>
+      <div class="source">r/Daytrading — 6-year veteran, multiple markets</div>
+    </div>
+
+    <hr class="divider" />
+
+    <h3 style="font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:1rem;">Realistic Timeline Expectations</h3>
+    <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1.5rem;">Based on aggregated community data, here is what the learning curve actually looks like for disciplined beginners with a structured approach:</p>
+
+    <div class="card" style="padding:1.5rem;">
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span>Months 1–3: Foundation (Paper Trading Only)</span>
+            <span class="hl-gold">Phase 1</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:33%; background:var(--gold);"></div>
+          </div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span>Months 4–9: Micro Live Account — Rule Adherence</span>
+            <span class="hl-blue">Phase 2</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:60%; background:var(--accent);"></div>
+          </div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span>Months 10–18: Break-Even — Edge Refinement</span>
+            <span style="color:var(--amber); font-weight:700;">Phase 3</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:80%; background:var(--amber);"></div>
+          </div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span>Month 18+: Consistent Profitability</span>
+            <span class="hl-green">Target</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:100%; background:var(--green);"></div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:0.78rem; color:var(--muted); margin-top:1.25rem;">⚡ Some traders reach profitability in 8–12 months with strong discipline and structured learning. The best-documented case in the dataset achieved consistent profitability at month 8 and cites strong psychological discipline as the primary differentiator.</p>
+    </div>
+
+    <div class="callout gold" style="margin-top:1.5rem;">
+      <div class="callout-icon">💡</div>
+      <p><strong>Key insight from the data:</strong> Traders who failed and rebuilt typically identify the same turning point — the moment they stopped trying to make money and started trying to follow their rules perfectly. The money followed automatically.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 2 — STRATEGY & SETUPS
+============================================================ -->
+<section class="section" id="strategy" style="background:rgba(255,255,255,0.01);">
+  <div class="section-inner">
+    <div class="section-label">Section 02</div>
+    <h2 class="section-title">Proven Strategies &amp; Setup Playbook</h2>
+    <p class="section-desc">
+      The following strategies appear repeatedly across the dataset as the most commonly used by consistently profitable traders. They prioritise simplicity, clear rules, and defined risk — exactly what beginners need.
+    </p>
+
+    <div class="callout info">
+      <div class="callout-icon">📌</div>
+      <p><strong>Start with ONE strategy.</strong> Master it completely before adding anything else. The traders in this dataset who failed most often were those who kept switching strategies every few weeks. The traders who succeeded picked one, journaled it obsessively, and refined it over months.</p>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:1.5rem; margin-top:2rem;">
+
+      <!-- ORB -->
+      <div class="strategy-card">
+        <div class="strategy-header">
+          <div class="strategy-name">⚡ Strategy 1 — Opening Range Breakout (ORB)</div>
+          <div style="display:flex; gap:0.5rem;">
+            <span class="pill pill-green">Top Picked</span>
+            <span class="pill pill-blue">Beginner Friendly</span>
+          </div>
+        </div>
+        <div class="strategy-body">
+          <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.25rem;">The most frequently cited strategy in the dataset. Used successfully by traders ranging from beginners to professionals trading funded accounts. Traded primarily on <strong style="color:var(--text);">MNQ, MES, SPY, QQQ</strong>. Best applied during the <strong style="color:var(--text);">NY session (9:45am–1:00pm ET)</strong>.</p>
+          <ol>
+            <li><strong>Mark the Opening Range</strong> — At 9:45 AM ET, lock the first 15-minute candle's High and Low. This is your ORB. Do not trade the first 15 minutes — it is noise.</li>
+            <li><strong>Map secondary levels</strong> — Pre-Market High/Low (4:00–9:30 ET) and Weekly High/Low serve as profit targets and confirmation zones.</li>
+            <li><strong>Wait for the Break</strong> — After 9:45 AM, wait for price to break the ORB High or Low with clear conviction and momentum. No guessing.</li>
+            <li><strong>Wait for the Retest</strong> — Do NOT chase the breakout. Wait for price to pull back and retest the broken OR boundary. This is your entry zone.</li>
+            <li><strong>Confirm entry</strong> — Look for a candle that holds the level and closes back in the direction of the break. For safer entries, wait for a second confirming candle.</li>
+            <li><strong>Define your stop BEFORE entry</strong> — Stop goes just beyond the retest level (below for longs, above for shorts). If you don't know your stop, you don't take the trade.</li>
+            <li><strong>Take profit</strong> — First targets are PM High/PM Low, then weekly extensions if momentum holds. Define exits before entry — not while in the trade.</li>
+            <li><strong>Cut off at 1:00 PM ET</strong> — Afternoon sessions are typically low-conviction chop. This is proven in multiple traders' journaling data in the dataset.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- 9 EMA Retest -->
+      <div class="strategy-card">
+        <div class="strategy-header">
+          <div class="strategy-name">📈 Strategy 2 — 15m Trend Continuation (9 EMA Retest)</div>
+          <div style="display:flex; gap:0.5rem;">
+            <span class="pill pill-gold">Intermediate</span>
+          </div>
+        </div>
+        <div class="strategy-body">
+          <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.25rem;">Used extensively by the trader with 93 consecutive green trading days (5-month streak, 578 trades, 74.9% win rate, $18,419 profit). Pairs naturally with the ORB as a continuation setup when the opening range has already broken cleanly.</p>
+          <ol>
+            <li><strong>Confirm trend direction</strong> — Price must be clearly trending on the 15-minute chart above (bullish) or below (bearish) the 9 EMA.</li>
+            <li><strong>Wait for the pullback</strong> — Price pulls back to the 9 EMA. This is the setup trigger — not a signal to enter immediately.</li>
+            <li><strong>Look for rejection</strong> — You want to see price reject off the 9 EMA with a clear candle pattern (rejection wick, engulfing, inside bar close).</li>
+            <li><strong>Add RSI confluence</strong> — RSI pulling back to 40–50 in an uptrend (or 50–60 in a downtrend) adds high-probability confirmation.</li>
+            <li><strong>Set stop below the EMA retest candle</strong> — Clear invalidation. If price closes back through the EMA, the trend assumption is wrong.</li>
+            <li><strong>Target the prior swing high/low</strong> — Minimum 2:1 risk-to-reward ratio. Partial profit taking at 1:1 is acceptable to protect capital.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- VWAP / S&R -->
+      <div class="strategy-card">
+        <div class="strategy-header">
+          <div class="strategy-name">🎯 Strategy 3 — VWAP + Structure Discretionary</div>
+          <div style="display:flex; gap:0.5rem;">
+            <span class="pill pill-blue">Flexible</span>
+          </div>
+        </div>
+        <div class="strategy-body">
+          <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.25rem;">Mentioned by experienced traders as a highly adaptable approach once screen time accumulates. Uses VWAP as the primary intraday anchor combined with key structure levels for context. One trader in the dataset generated $6,200 in 6 days using primarily this approach with ~9,000 hours of chart time.</p>
+          <ol>
+            <li><strong>Map VWAP on the chart</strong> — VWAP is the institutional "fair value" level for the day. Price above VWAP = bullish bias. Below = bearish bias.</li>
+            <li><strong>Identify key structure</strong> — Mark the prior day's High/Low, pre-market levels, and obvious support/resistance zones visible on the 5-minute chart.</li>
+            <li><strong>Wait for price to reach a level</strong> — Only trade when price is interacting with VWAP or a key structural level. Do not enter in the middle of nowhere.</li>
+            <li><strong>Confirm the reaction</strong> — Look for clear rejection. A single touch of a level is not a trade — wait for the reaction candle to confirm the bounce or rejection.</li>
+            <li><strong>Aggressive risk management</strong> — This strategy is discretionary and requires tight stops. If a level breaks, exit immediately — do not hope.</li>
+            <li><strong>Stop as soon as you're profitable for the day</strong> — The #1 stated discipline rule by VWAP-structure traders: set a daily target and walk away when hit.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="divider" />
+
+    <h3 style="font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:0.75rem;">Strategies to Avoid Early On</h3>
+
+    <div class="card-grid-3" style="margin-top:1rem;">
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(232,85,85,0.1);">🚫</span> Options YOLO Trading</h3>
+        <p>Multiple posts in the dataset show traders losing $50k–$200k+ on SPY options in single sessions. Options require an understanding of both direction AND timing AND volatility — three variables simultaneously. Not for beginners.</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(232,85,85,0.1);">🚫</span> Scalping (Under 5 Min)</h3>
+        <p>Extremely high screen-time requirement, significant spread costs, and requires near-perfect execution. The data shows even experienced traders often have a worse outcome scalping vs. holding higher-timeframe setups.</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(232,85,85,0.1);">🚫</span> Meme / News Momentum</h3>
+        <p>Chasing stocks that are "up 50% today" puts you at the back of the queue. By the time retail traders see the move, smart money is already distributing. Extremely high risk of buying tops.</p>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top:2rem;">
+      <p>"I trade mostly 15m ORB (breakout + retest), trend continuation with 15m 9EMA retests, and Inverse ORB when the opening range is wide — with RSI, EMA, index divergence, and volume profile as confluences. I trade MNQ only. 93 consecutive green trading days. 578 trades. $18,419 profit. 74.91% win rate."</p>
+      <div class="source">r/Daytrading — Verified data via TopstepX statistics link, April 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 3 — RISK MANAGEMENT
+============================================================ -->
+<section class="section" id="risk">
+  <div class="section-inner">
+    <div class="section-label">Section 03</div>
+    <h2 class="section-title">Risk Management Rules</h2>
+    <p class="section-desc">
+      Risk management is not optional — it is the entire game. The data is clear: traders who blew up accounts almost always cite poor risk management, not a bad strategy, as the root cause. These rules are non-negotiable.
+    </p>
+
+    <div class="risk-grid">
+      <div class="risk-item low">
+        <div class="risk-label">Recommended</div>
+        <div class="risk-value">1%</div>
+        <div class="risk-desc">Max risk per trade as a % of total account value</div>
+      </div>
+      <div class="risk-item low">
+        <div class="risk-label">Daily Loss Limit</div>
+        <div class="risk-value">2–3%</div>
+        <div class="risk-desc">Hard stop for the entire trading day — no exceptions</div>
+      </div>
+      <div class="risk-item low">
+        <div class="risk-label">Min Risk:Reward</div>
+        <div class="risk-value">2:1</div>
+        <div class="risk-desc">Never risk more than you stand to gain. Aim for 2:1 or better</div>
+      </div>
+      <div class="risk-item medium">
+        <div class="risk-label">Caution Zone</div>
+        <div class="risk-value">VIX 20+</div>
+        <div class="risk-desc">Reduce position size by 50% when VIX exceeds 20. Widen stops.</div>
+      </div>
+      <div class="risk-item medium">
+        <div class="risk-label">Max Trades/Day</div>
+        <div class="risk-value">3–5</div>
+        <div class="risk-desc">More trades = more slippage, more fees, more emotional decisions</div>
+      </div>
+      <div class="risk-item high">
+        <div class="risk-label">Never Do This</div>
+        <div class="risk-value">Full Port</div>
+        <div class="risk-desc">Risking your entire account on a single trade. Account-ending behaviour.</div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="card-grid-2">
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(201,168,76,0.15);">📏</span> Stop Loss Rules — The Right Way</h3>
+        <p style="margin-bottom:1rem;">One of the most common frustrations in the dataset: "Price hit my stop then went exactly where I expected." This is a stop placement problem, not a strategy problem.</p>
+        <ul>
+          <li><strong>Never place stops at obvious round numbers</strong> — $50.00, $100.00, etc. Liquidity sits at these levels and price sweeps them intentionally.</li>
+          <li><strong>Place stops past the structure level</strong> — Not at the level, but slightly beyond it. Give price room to breathe through normal volatility.</li>
+          <li><strong>Stop = idea invalidation, not dollar amount</strong> — "I'll stop out if I'm down $500" is backwards. Stop out when your trade thesis is proven wrong by price action.</li>
+          <li><strong>Do NOT widen stops after entry</strong> — This is a critical rule. If the move goes against you and you move your stop to "give it more room," you've abandoned your plan.</li>
+          <li><strong>In high VIX environments</strong> — Give stops an extra 10–20% of wiggle room. The market is hitting liquidity pools more aggressively right now (April 2026).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(33,184,130,0.15);">💰</span> Position Sizing Blueprint</h3>
+        <p style="margin-bottom:1rem;">Your position size should ALWAYS be calculated from your stop distance, not from a gut feel about how much you want to trade.</p>
+        <div class="callout tip" style="margin:1rem 0; padding:0.85rem 1rem;">
+          <div class="callout-icon">📐</div>
+          <p><strong>Formula:</strong> Position Size = (Account × Risk %) ÷ Distance to Stop Loss</p>
+        </div>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:0.75rem;"><em>Example: $10,000 account, 1% risk, stop 50 points away on MNQ = $100 risk ÷ $0.50/point = 200 contracts... but you'd trade 1–2 micros to be safe. Always start smaller than you think you need to.</em></p>
+        <ul>
+          <li><strong>Start with 1 micro contract</strong> — MES (S&amp;P 500 micro), MNQ (Nasdaq micro). Learn the feel of real money without major risk.</li>
+          <li><strong>Scale size with your strike rate</strong> — Do NOT size up simply because you're excited. Size up only after 30+ trades prove consistent execution.</li>
+          <li><strong>The 93-day green streak trader</strong> used 1–2 micros for the entire streak — proving small size + consistency &gt; big size + instability.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout warning" style="margin-top:1.5rem;">
+      <div class="callout-icon">🔴</div>
+      <p><strong>The Disposition Effect — The most dangerous psychological pattern in the dataset:</strong> Traders systematically hold losing trades too long (hoping for recovery) and exit winning trades too quickly (locking in gains out of fear). The result: average loss &gt; average win, even with a 60% win rate. The fix is mechanical: set a fixed take-profit target before you enter, and let it run. Set a fixed stop before you enter, and honour it.</p>
+    </div>
+
+    <hr class="divider" />
+
+    <h3 style="font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:1rem;">The Trading Journal: Your Most Valuable Tool</h3>
+    <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1.5rem;">Repeatedly cited in the dataset as the differentiator between traders who improve and those who spin their wheels. You cannot improve what you do not measure.</p>
+
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Journal Field</th>
+            <th>What to Record</th>
+            <th>Why It Matters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Date &amp; Time</td>
+            <td>Exact entry and exit timestamps</td>
+            <td>Reveals your best and worst performing time-of-day windows</td>
+          </tr>
+          <tr>
+            <td>Setup Type</td>
+            <td>ORB, EMA Retest, VWAP Bounce, etc.</td>
+            <td>Shows which setups perform best for YOUR psychology and style</td>
+          </tr>
+          <tr>
+            <td>Entry &amp; Stop</td>
+            <td>Price, level rationale, stop placement logic</td>
+            <td>Exposes stop-placement mistakes that cost you repeatedly</td>
+          </tr>
+          <tr>
+            <td>Risk:Reward planned</td>
+            <td>Planned RR before entry</td>
+            <td>Identifies if you're taking low-quality setups under pressure</td>
+          </tr>
+          <tr>
+            <td>Outcome + Notes</td>
+            <td>P&amp;L, what happened, emotional state</td>
+            <td>Connects emotional states to outcomes — shows you your patterns</td>
+          </tr>
+          <tr>
+            <td>Grade (A/B/C)</td>
+            <td>Did you follow your rules perfectly?</td>
+            <td>Grade execution, not results. A-grade losing trades are fine. C-grade winners are dangerous.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 4 — TOOLS & PLATFORMS
+============================================================ -->
+<section class="section" id="tools" style="background:rgba(255,255,255,0.01);">
+  <div class="section-inner">
+    <div class="section-label">Section 04</div>
+    <h2 class="section-title">Tools, Platforms &amp; Scanners</h2>
+    <p class="section-desc">
+      The right tools eliminate friction and information lag — the two silent account killers for new traders. Here's what the community is actually using and recommending in 2026.
+    </p>
+
+    <div class="card-grid-2">
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(59,130,246,0.15);">📊</span> Charting: TradingView</h3>
+        <p style="margin-bottom:0.75rem;">The overwhelming consensus choice in the dataset. Free tier is sufficient for beginners. The Pro plan ($19.95/mo) adds multiple charts, more indicators, and faster data.</p>
+        <ul>
+          <li><strong>Essential indicators to add:</strong> VWAP (daily), 9 EMA + 20 EMA (15m), Volume bars, RSI (14)</li>
+          <li><strong>Set alerts</strong> — Mark your key levels and set price alerts instead of staring at charts</li>
+          <li><strong>One trader automated the entire ORB strategy</strong> as a TradingView Pine Script, mapping all levels automatically</li>
+          <li>Free at <strong>tradingview.com</strong></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(201,168,76,0.15);">🔍</span> Scanners: Finding Your Stocks</h3>
+        <p style="margin-bottom:0.75rem;">The dataset highlights a critical beginner problem: delayed data causing you to see moves after they've happened. Real-time streaming data is non-negotiable for day trading.</p>
+        <ul>
+          <li><strong>Finviz (finviz.com)</strong> — Free screener, great for pre-market research. Filter by volume, float, % change.</li>
+          <li><strong>Trade Ideas</strong> — AI-powered real-time scanner. High cost (~$1,000/yr) but widely used by full-time traders.</li>
+          <li><strong>Thinkorswim (TD Ameritrade/Schwab)</strong> — Free scanner with the platform. Solid for equities.</li>
+          <li><strong>For futures:</strong> No scanner needed — trade the same instruments every day (MNQ, MES, NQ, ES).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card-grid-3" style="margin-top:1.5rem;">
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(33,184,130,0.15);">🏦</span> Brokers for Beginners</h3>
+        <ul>
+          <li><strong>Tastytrade</strong> — Low futures commissions, beginner-friendly UI, popular in the dataset</li>
+          <li><strong>Tradovate</strong> — Monthly flat-fee futures trading, excellent for active traders</li>
+          <li><strong>Interactive Brokers (IBKR)</strong> — Professional-grade, lowest margin rates, steeper learning curve</li>
+          <li><strong>Webull / Robinhood</strong> — Stocks only, zero commission, good for absolute beginners learning market mechanics (not for serious day trading)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(245,166,35,0.15);">📓</span> Trading Journals</h3>
+        <ul>
+          <li><strong>TraderSync</strong> — Most popular in the dataset. Automatic trade import, performance analytics, pattern recognition</li>
+          <li><strong>Edgewonk</strong> — Advanced analytics, emotion tracking, particularly good for strategy-focused traders</li>
+          <li><strong>Google Sheets</strong> — Free, fully customisable. Multiple experienced traders in the dataset use this exclusively</li>
+          <li><strong>Minimum viable journal:</strong> Date, ticker, setup, entry, stop, target, outcome, notes. If you do nothing else, do this.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(59,130,246,0.15);">📚</span> Learning Resources</h3>
+        <ul>
+          <li><strong>Linda Raschke</strong> — Trading legend, decades of fund management. Active on X. Free content.</li>
+          <li><strong>Michael Martins</strong> — Active fund manager, free content on YouTube</li>
+          <li><strong>Peter Brandt</strong> — 50-year trading veteran. Market Wizards series. Active on X.</li>
+          <li><strong>Books:</strong> "Market Wizards" (Schwager), "Trading in the Zone" (Douglas), "How to Day Trade for a Living" (Aziz)</li>
+          <li><strong>Avoid:</strong> Course sellers who primarily show lifestyle content (cars, watches, P&amp;L screenshots). If they're not focused on the actual trade mechanics, they're marketers — not traders.</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <h3 style="font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:0.75rem;">Prop Firms — Opportunity or Trap?</h3>
+    <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1.5rem;">Prop firms (firms that fund traders who pass "challenge" evaluations) are extremely popular in the dataset — but also polarising. The community is divided. Here is the honest picture:</p>
+
+    <div class="card-grid-2">
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(33,184,130,0.15);">✅</span> Prop Firm Upside</h3>
+        <ul>
+          <li>Access to significant capital ($25k–$150k+) without personal risk to your own savings</li>
+          <li>Structured rules (daily loss limits, profit targets) that can actually benefit discipline</li>
+          <li>Passing an evaluation proves your strategy has an actual real-money edge</li>
+          <li>Successful traders have withdrawn real monthly income from funded accounts</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(232,85,85,0.15);">⚠️</span> Prop Firm Risks</h3>
+        <ul>
+          <li>Evaluation fees ($150–$800) can add up to thousands before passing</li>
+          <li>Strict rules create psychological pressure ("just $50 more to hit target") that can cause account-busting decisions</li>
+          <li>Many prop firms have failed or paused payouts in 2025–2026. Research the firm's financial standing before paying evaluation fees.</li>
+          <li><strong>Recommendation:</strong> Build your edge on a personal live micro account first. Only consider prop firms once you are consistently profitable across 30+ real trades.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout warning" style="margin-top:1.5rem;">
+      <div class="callout-icon">⚠️</div>
+      <p><strong>"Tori Trades charges &gt;$5k for her course"</strong> — This was an actively discussed post in the dataset. There are legitimate educators and there are marketers posing as educators. A reliable signal: if the content is more about lifestyle and income claims than actual chart reading and trade mechanics, proceed with extreme caution. The traders cited in this report (Raschke, Brandt, Martins) all give away high-quality content for free.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 5 — CURRENT MARKET CONDITIONS (APRIL 2026)
+============================================================ -->
+<section class="section" id="market">
+  <div class="section-inner">
+    <div class="section-label">Section 05</div>
+    <h2 class="section-title">Current Market Environment — April 2026</h2>
+    <p class="section-desc">
+      Understanding the macro environment you are entering is critical. The market you will learn to trade in is significantly different from a calm bull market. Here is an honest picture of what is happening right now and what it means for new traders.
+    </p>
+
+    <div class="market-row">
+      <div class="market-card">
+        <div class="market-ticker">VIX</div>
+        <div class="market-price">26.0</div>
+        <div class="market-change down">↑ Elevated — Caution Mode</div>
+      </div>
+      <div class="market-card">
+        <div class="market-ticker">S&amp;P 500 Trend</div>
+        <div class="market-price">Bearish</div>
+        <div class="market-change down">↓ War Risk Premium Active</div>
+      </div>
+      <div class="market-card">
+        <div class="market-ticker">Oil (WTI)</div>
+        <div class="market-price">Near Records</div>
+        <div class="market-change down">↑ Hormuz Disruption Risk</div>
+      </div>
+      <div class="market-card">
+        <div class="market-ticker">PDT Reform</div>
+        <div class="market-price">Imminent</div>
+        <div class="market-change up">↑ $25k min may be removed</div>
+      </div>
+    </div>
+
+    <div class="card-grid-2">
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(232,85,85,0.15);">🌍</span> US-Iran Conflict &amp; Markets</h3>
+        <p style="margin-bottom:0.75rem;">The single most impactful macro factor in the trading community right now. Direct implications for new traders:</p>
+        <ul>
+          <li><strong>VIX at 26</strong> — Significantly elevated. Multiple traders in the dataset report their standard strategies have seen win rates drop 20–40% in this environment.</li>
+          <li><strong>Oil infrastructure attacks</strong> — Iran is targeting regional refineries and desalination plants. If Hormuz closes fully, analysts expect months-long oil supply disruption.</li>
+          <li><strong>News-driven gaps</strong> — Overnight geopolitical developments are creating unpredictable morning gaps. Pre-market research is now essential, not optional.</li>
+          <li><strong>Adaptation required:</strong> Reduce position size by 50% in high-VIX conditions. Allow wider stops. Favour shorter holds. Avoid directional overnight positions.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(59,130,246,0.15);">📋</span> Regulatory Changes to Watch</h3>
+        <p style="margin-bottom:0.75rem;">Two significant structural changes are either confirmed or imminent:</p>
+        <ul>
+          <li><strong>PDT Rule Reform</strong> — The Pattern Day Trader rule (requiring $25,000 minimum to make more than 3 day trades per week) is widely expected to be eliminated or significantly relaxed within 90 days based on broker conversations. This is massively bullish for undercapitalised beginners.</li>
+          <li><strong>NASDAQ-100 Rule Change</strong> — Confirmed rule changes allow new companies (SpaceX, OpenAI IPOs anticipated) to join the index within 15 days of listing without a minimum float. Creates new volatility dynamics in index-tracking instruments.</li>
+          <li><strong>Action:</strong> Do not structure your learning around PDT rules as if they are permanent. Plan for a post-PDT environment.</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <h3 style="font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:1rem;">How Experienced Traders Are Adapting Right Now</h3>
+
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Challenge</th>
+            <th>What the Data Shows</th>
+            <th>Recommended Adaptation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>VIX at 26</td>
+            <td>Standard strategies lose 20–40% win rate above VIX 20</td>
+            <td>Halve position size, widen stops by 10–20%, take fewer trades</td>
+          </tr>
+          <tr>
+            <td>Choppy trend environment</td>
+            <td>Trend-following algos saw 40% win rate drops since mid-2025</td>
+            <td>Add mean-reversion overlay; use regime detection before applying trend signals</td>
+          </tr>
+          <tr>
+            <td>Oil price volatility</td>
+            <td>Energy stocks (OXY, CVX, XOM) are the strongest performers in the dataset this month</td>
+            <td>Energy sector long bias while Hormuz risk remains elevated; watch daily for ceasefire news</td>
+          </tr>
+          <tr>
+            <td>News-driven gaps</td>
+            <td>Iran-related news moving markets ±3% overnight repeatedly</td>
+            <td>Read pre-market news before every session. No trades until you understand why the market is opening where it is.</td>
+          </tr>
+          <tr>
+            <td>Strategy failure streak</td>
+            <td>Traders mistake market regime change for psychology problems</td>
+            <td>Review last 50 trades in your journal. If consistent execution but poor results, the market changed — adapt the system.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout gold" style="margin-top:1.5rem;">
+      <div class="callout-icon">💡</div>
+      <p><strong>Silver lining for new traders entering now:</strong> Learning to trade in a high-volatility, news-driven environment builds more robust skills than learning in a quiet bull market. Traders who develop discipline during volatile conditions perform significantly better when markets calm down. You are being forged in the hardest possible environment — which is actually an advantage long-term.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 6 — 90-DAY ACTION PLAN
+============================================================ -->
+<section class="section" id="plan" style="background:rgba(255,255,255,0.01);">
+  <div class="section-inner">
+    <div class="section-label">Section 06</div>
+    <h2 class="section-title">Your 90-Day Action Plan</h2>
+    <p class="section-desc">
+      A structured, week-by-week roadmap from absolute beginner to first live trade — built on what the data shows actually works. Every stage has clear, measurable milestones before you advance.
+    </p>
+
+    <div class="callout tip">
+      <div class="callout-icon">✅</div>
+      <p><strong>Gate rule:</strong> You do not advance to the next phase until you have hit the milestone of the current phase. There are no exceptions. Rushing phases is the most common reason traders fail in the first 6 months.</p>
+    </div>
+
+    <div style="margin-top:2.5rem;">
+      <div class="timeline">
+
+        <!-- PHASE 1 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-period">Weeks 1–2 — Phase 1A</div>
+          <div class="timeline-title">Education Foundation (Zero Charts Required)</div>
+          <div class="timeline-body">Build vocabulary and conceptual understanding before ever opening a chart. You cannot navigate a map you cannot read.</div>
+          <div class="timeline-tasks">
+            <div class="timeline-task">Read "How to Day Trade for a Living" by Andrew Aziz (skim for concepts, not gospel)</div>
+            <div class="timeline-task">Watch Linda Raschke content on YouTube — understand how professionals think</div>
+            <div class="timeline-task">Learn the basics: candlestick reading, support/resistance, volume, what VWAP is and why it matters</div>
+            <div class="timeline-task">Open a TradingView free account. Explore the interface and add: VWAP, 9 EMA, 20 EMA, RSI</div>
+            <div class="timeline-task">Understand the PDT rule — know the current status and its implications for your account size</div>
+          </div>
+          <div style="margin-top:0.75rem;"><span class="pill pill-gold">Milestone: Can explain ORB, VWAP, and why 90% of traders fail — without notes</span></div>
+        </div>
+
+        <!-- PHASE 2 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-period">Weeks 3–4 — Phase 1B</div>
+          <div class="timeline-title">Strategy Selection &amp; Chart Study</div>
+          <div class="timeline-body">Pick ONE strategy from Section 2 (recommendation: ORB for absolute beginners). Study the charts — not to trade, just to observe.</div>
+          <div class="timeline-tasks">
+            <div class="timeline-task">Pull up NQ or ES futures on TradingView. Set chart to 15-minute timeframe</div>
+            <div class="timeline-task">Every day, mark the ORB at 9:45 EST. Watch what price does. Do NOT trade.</div>
+            <div class="timeline-task">Mark where you would have entered, placed your stop, and taken profit. Write it down.</div>
+            <div class="timeline-task">After 5 trading days, review: How often did the ORB break and retest? How often did it fail?</div>
+            <div class="timeline-task">Open a paper trading account (TradingView has one built in, or use Thinkorswim's paperMoney)</div>
+          </div>
+          <div style="margin-top:0.75rem;"><span class="pill pill-gold">Milestone: Can identify a valid ORB setup on a replay chart in under 60 seconds</span></div>
+        </div>
+
+        <!-- PHASE 3 -->
+        <div class="timeline-item phase-2">
+          <div class="timeline-dot"></div>
+          <div class="timeline-period">Weeks 5–8 — Phase 2</div>
+          <div class="timeline-title">Paper Trading — 30 Minimum Trades</div>
+          <div class="timeline-body">Execute the strategy on paper money with FULL discipline — as if it is real money. Set up the journal NOW and record every single trade. Most people skip this phase. That is why most people fail.</div>
+          <div class="timeline-tasks">
+            <div class="timeline-task">Trade paper money only — for MNQ/MES futures OR simulated stock account</div>
+            <div class="timeline-task">Execute exactly as if real: define entry, stop, and target BEFORE clicking</div>
+            <div class="timeline-task">Journal every trade: setup type, entry price, stop price, planned RR, actual outcome, grade (A/B/C)</div>
+            <div class="timeline-task">Review weekly: What is your average RR actually achieved? Win rate? Are you honouring stops?</div>
+            <div class="timeline-task">Set a daily session time — same window every day (recommend 9:45–11:30 AM ET)</div>
+            <div class="timeline-task">Read pre-market news (Reuters, Bloomberg) before every session. Know why the market opened where it did.</div>
+          </div>
+          <div style="margin-top:0.75rem;"><span class="pill pill-blue">Milestone: 30 paper trades journaled. Win rate ≥40%. Avg RR achieved ≥1.5:1. Zero revenge trades.</span></div>
+        </div>
+
+        <!-- PHASE 4 -->
+        <div class="timeline-item phase-2">
+          <div class="timeline-dot"></div>
+          <div class="timeline-period">Weeks 9–10 — Phase 2B</div>
+          <div class="timeline-title">Paper Trade Review &amp; Rule Refinement</div>
+          <div class="timeline-body">Before going live, review everything. Identify patterns in your journal. Where are you losing? Is it a specific setup type? A specific time of day? A market VIX level?</div>
+          <div class="timeline-tasks">
+            <div class="timeline-task">Review all 30 trades. Separate A-grade from C-grade trades. What does the P&amp;L look like if you removed C-grade trades?</div>
+            <div class="timeline-task">Identify your best performing time window in the session</div>
+            <div class="timeline-task">Write your trading plan: max 1 page. Entry rules, stop rules, exit rules, daily max trades, daily max loss = DONE for the day</div>
+            <div class="timeline-task">Share your plan with a trusted person (mentor, advisor) for accountability</div>
+          </div>
+          <div style="margin-top:0.75rem;"><span class="pill pill-blue">Milestone: Written trading plan exists. Journal shows improving trend over last 10 trades.</span></div>
+        </div>
+
+        <!-- PHASE 5 -->
+        <div class="timeline-item phase-3">
+          <div class="timeline-dot"></div>
+          <div class="timeline-period">Weeks 11–13 — Phase 3</div>
+          <div class="timeline-title">First Live Account — Micro Size Only</div>
+          <div class="timeline-body">Going live is a psychological step change even if the money is small. Expect your discipline to drop initially — this is normal. Your only goal here is rule adherence, not profit.</div>
+          <div class="timeline-tasks">
+            <div class="timeline-task">Open a live account with Tastytrade or Tradovate (futures) or IBKR (stocks/futures)</div>
+            <div class="timeline-task">Fund with an amount you are 100% comfortable LOSING. Recommend $2,000–$5,000 to trade micro contracts</div>
+            <div class="timeline-task">Trade 1 micro contract only (MES = S&amp;P 500, MNQ = Nasdaq). No scaling until Phase 4.</div>
+            <div class="timeline-task">Your daily max loss = $50. If you lose $50, you are done for the day. Walk away.</div>
+            <div class="timeline-task">Journal every trade identically to paper trading. Grade yourself on execution, not P&amp;L.</div>
+            <div class="timeline-task">If you feel emotional urge to revenge trade or size up — close platform and walk away.</div>
+          </div>
+          <div style="margin-top:0.75rem;"><span class="pill pill-green">Milestone: 20 live trades. Positive expectancy. Zero days where you violated your daily loss limit.</span></div>
+        </div>
+
+        <!-- PHASE 6 -->
+        <div class="timeline-item phase-3">
+          <div class="timeline-dot"></div>
+          <div class="timeline-period">Week 13+ — Phase 4 (Ongoing)</div>
+          <div class="timeline-title">Continuous Improvement &amp; Scaling</div>
+          <div class="timeline-body">Scale position size only when 50+ live trades prove positive expectancy at your current size. The market will always be there tomorrow. Capital preservation is the primary objective until consistency is proven.</div>
+          <div class="timeline-tasks">
+            <div class="timeline-task">Monthly review: Win rate, average RR, biggest losing day, biggest winning day, drawdown</div>
+            <div class="timeline-task">Only scale when: 50 trades at current size show positive expectancy AND you have not violated your rules in the last 20 trades</div>
+            <div class="timeline-task">Explore the 9 EMA retest strategy as a complement to ORB once ORB is mastered</div>
+            <div class="timeline-task">Consider prop firm evaluation only after 3 consecutive profitable months on live account</div>
+            <div class="timeline-task">Continue reading: "Trading in the Zone" (Douglas) for psychology, "Market Wizards" (Schwager) for perspective</div>
+          </div>
+          <div style="margin-top:0.75rem;"><span class="pill pill-green">Ongoing Milestone: Positive monthly P&amp;L for 3 consecutive months → consider scaling or prop firm</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <h3 style="font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:1rem;">Daily Routine Template (Trading Day)</h3>
+
+    <div class="card">
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Pre-Market Research (8:00–9:30 AM ET)</h4>
+            <p>Read Reuters or Bloomberg headlines. Check: Any major geopolitical news overnight? Earnings reports pre-market? Economic data releases today? Mark pre-market high/low on the chart. Write a bias: bullish, bearish, or no bias.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Wait for the Open (9:30–9:45 AM ET)</h4>
+            <p>Do nothing. This is the hardest discipline to build. The first 15 minutes are institutional order flow, stop hunting, and noise. Watch, take notes, but do not trade.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Lock the ORB (9:45 AM ET)</h4>
+            <p>Draw horizontal lines at the 9:45 candle high and low. These are now your key levels. Confirm your daily bias with what the market is showing you — does the open match your pre-market thesis?</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Active Trading Window (9:45 AM – 1:00 PM ET)</h4>
+            <p>Wait for valid setups only. Max 3 trades per day in Phase 1–2. Define entry, stop, and target before clicking. Place trade. Walk away from the screen until your stop or target is hit.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>End of Session Review (Post 1:00 PM ET)</h4>
+            <p>Journal all trades taken. Grade your execution. What did you do well? What rule did you break, if any? What market context will you carry into tomorrow? Record all of this.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout gold" style="margin-top:1.5rem;">
+      <div class="callout-icon">🏆</div>
+      <p><strong>The most important thing in this entire report:</strong> Your goal for the first 90 days is NOT to make money. Your goal is to prove to yourself that you can follow a set of rules consistently, under pressure, with real stakes. If you can do that — the profit will follow. Every consistently profitable trader in this dataset says the same thing in different words. The discipline comes first. The money comes second.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 7 — THE BLOWUP PATTERNS
+============================================================ -->
+<section class="section" id="blowups" style="background:rgba(232,85,85,0.03); border-top:1px solid rgba(232,85,85,0.15);">
+  <div class="section-inner">
+    <div class="section-label" style="color:var(--red);">Warning File</div>
+    <h2 class="section-title">The 5 Blowup Patterns</h2>
+    <p class="section-desc">These are real accounts from this dataset. Every pattern below has occurred multiple times in the community this week alone. Your ability to recognise yourself in one of these before capital is at risk may be the most valuable thing in this entire report.</p>
+
+    <div class="callout red" style="margin-bottom:2rem;">
+      <div class="callout-icon">⚠️</div>
+      <p>"A few of you will get lucky — which is actually worse — because your hubris is going to convince you to double up on your bets." — r/Trading, 151 upvotes</p>
+    </div>
+
+    <!-- Blowup 1 -->
+    <div style="border:1px solid rgba(232,85,85,0.25); border-radius:12px; padding:1.5rem; margin-bottom:1.25rem; background:rgba(10,22,40,0.6);">
+      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+        <span style="background:var(--red); color:#fff; font-size:0.7rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:4px; letter-spacing:0.08em; text-transform:uppercase;">Pattern 01</span>
+        <h3 style="margin:0; font-size:1.05rem; color:var(--text);">The Addiction Spiral</h3>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:0.75rem;"><em>"$85k/year sales manager. Lost my job, girlfriend of 7 years, and burned bridges with family and friends. Now homeless with my two cats."</em></p>
+      <p style="font-size:0.88rem;">What started as day trading options turned into a full trading addiction. Every dollar made went straight back in. <strong>Never withdrew a single dollar</strong> — just kept losing and depositing more. Chasing the idea of turning $1k into $100k seen online. Ignored every rule: no stop losses, oversized positions, constant chasing.</p>
+      <div style="margin-top:0.75rem; padding:0.6rem 0.85rem; background:rgba(232,85,85,0.08); border-left:3px solid var(--red); border-radius:4px; font-size:0.83rem;"><strong style="color:var(--red);">Warning signs:</strong> Trading more than 4 hours/day, inability to step away from charts, depositing to "make it back," never withdrawing a single profit.</div>
+    </div>
+
+    <!-- Blowup 2 -->
+    <div style="border:1px solid rgba(232,85,85,0.25); border-radius:12px; padding:1.5rem; margin-bottom:1.25rem; background:rgba(10,22,40,0.6);">
+      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+        <span style="background:var(--red); color:#fff; font-size:0.7rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:4px; letter-spacing:0.08em; text-transform:uppercase;">Pattern 02</span>
+        <h3 style="margin:0; font-size:1.05rem; color:var(--text);">The Millionaire Reset</h3>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:0.75rem;"><em>"Started with $300k. Ran it to $3.3 million. Now at $53k. My retirement and life money are gone."</em></p>
+      <p style="font-size:0.88rem;">Built $300k ($200k taxable + $100k IRA) to a peak of $3.3M through skilled early trades. Then came the 0DTE SPY options — small positions at first, then much larger. Got tilted, chased losses, nuked accounts. The trader's own words: <em>"I basically had financial freedom if I just kept everything in indexes but no."</em></p>
+      <div style="margin-top:0.75rem; padding:0.6rem 0.85rem; background:rgba(232,85,85,0.08); border-left:3px solid var(--red); border-radius:4px; font-size:0.83rem;"><strong style="color:var(--red);">Warning signs:</strong> Moving from your working strategy to a "faster" instrument (0DTEs, options). Redepositing after a significant gain phase. The belief that you can "make it back."</div>
+    </div>
+
+    <!-- Blowup 3 -->
+    <div style="border:1px solid rgba(232,85,85,0.25); border-radius:12px; padding:1.5rem; margin-bottom:1.25rem; background:rgba(10,22,40,0.6);">
+      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+        <span style="background:var(--red); color:#fff; font-size:0.7rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:4px; letter-spacing:0.08em; text-transform:uppercase;">Pattern 03</span>
+        <h3 style="margin:0; font-size:1.05rem; color:var(--text);">The Overconfidence Blowup</h3>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:0.75rem;"><em>"I quadrupled my account over 3 months and blew it all up in 3 days."</em> — r/Daytrading, 251 upvotes</p>
+      <p style="font-size:0.88rem;">Three years of trading experience. Exceptional performance period builds dangerous confidence. The moment a streak of wins convinces you the market is finally "figured out," position size escalates past the logical risk threshold. One adverse market move against an outsized position triggers the cascade. A month of gains eliminated in a session.</p>
+      <div style="margin-top:0.75rem; padding:0.6rem 0.85rem; background:rgba(232,85,85,0.08); border-left:3px solid var(--red); border-radius:4px; font-size:0.83rem;"><strong style="color:var(--red);">Warning signs:</strong> Increasing position size after a winning streak. Thinking "I've figured it out." Feeling invincible. Skipping the pre-trade checklist because you "just know."</div>
+    </div>
+
+    <!-- Blowup 4 -->
+    <div style="border:1px solid rgba(232,85,85,0.25); border-radius:12px; padding:1.5rem; margin-bottom:1.25rem; background:rgba(10,22,40,0.6);">
+      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+        <span style="background:var(--red); color:#fff; font-size:0.7rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:4px; letter-spacing:0.08em; text-transform:uppercase;">Pattern 04</span>
+        <h3 style="margin:0; font-size:1.05rem; color:var(--text);">The Pig Gets Slaughtered</h3>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:0.75rem;"><em>"I was up 20% in 6 minutes. I forgot to set my stop loss because I was deciding between taking profit at $0.34 or $0.39. I lost everything."</em> — r/Daytrading</p>
+      <p style="font-size:0.88rem;">A trade goes immediately and spectacularly right. The sudden rush of unrealised profit triggers analysis paralysis — instead of executing the pre-planned exit, the mind starts negotiating between a good target and a better one. In those seconds of greed-induced hesitation, protection was never placed. The market reversed and took back every gain.</p>
+      <div style="margin-top:0.75rem; padding:0.6rem 0.85rem; background:rgba(232,85,85,0.08); border-left:3px solid var(--red); border-radius:4px; font-size:0.83rem;"><strong style="color:var(--red);">Rule:</strong> Stop loss placement is the FIRST action after entry confirmation — not a step you return to. The stop goes in before you think about profit. Full stop. No exceptions.</div>
+    </div>
+
+    <!-- Blowup 5 -->
+    <div style="border:1px solid rgba(232,85,85,0.25); border-radius:12px; padding:1.5rem; margin-bottom:1.25rem; background:rgba(10,22,40,0.6);">
+      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+        <span style="background:var(--red); color:#fff; font-size:0.7rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:4px; letter-spacing:0.08em; text-transform:uppercase;">Pattern 05</span>
+        <h3 style="margin:0; font-size:1.05rem; color:var(--text);">The Macro Blindspot</h3>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:0.75rem;"><em>"I lost 17% of my account last month. I traded against every Iran/Trump announcement without checking the news first. I was dumb. Please don't be like me."</em> — r/Daytrading, 61 upvotes</p>
+      <p style="font-size:0.88rem;">Every spike, every violent reversal, every stop hunt — each one had a macro trigger that was publicly available before the move. The trader ignored geopolitical catalysts entirely, treating price action as if it existed in a vacuum. In a market defined by an active war and political volatility, this approach cost 17% of account equity in a single month.</p>
+      <div style="margin-top:0.75rem; padding:0.6rem 0.85rem; background:rgba(232,85,85,0.08); border-left:3px solid var(--red); border-radius:4px; font-size:0.83rem;"><strong style="color:var(--red);">Daily protocol:</strong> Check geopolitical and economic calendar BEFORE opening charts. In April 2026 specifically — VIX 26+, active US-Iran conflict, and Trump policy risk are daily variables that must be factored into every entry decision.</div>
+    </div>
+
+    <div class="callout gold" style="margin-top:1.5rem;">
+      <div class="callout-icon">💡</div>
+      <p><strong>The common thread across all 5 patterns:</strong> None of these traders lacked skills. All of them had moments of genuine profitability. What destroyed them was not a lack of ability — it was a single failure of discipline at a critical moment. The strategy that protects you from these patterns is not a better indicator. It is a non-negotiable rule set that you do not break under any circumstance — not under euphoria, not under pressure, not under time stress.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 8 — ADVANCED INTELLIGENCE STRATEGIES
+============================================================ -->
+<section class="section" id="advanced">
+  <div class="section-inner">
+    <div class="section-label">Level Up</div>
+    <h2 class="section-title">Advanced Intelligence Strategies</h2>
+    <p class="section-desc">Once the fundamentals are solid (90+ days of consistent execution), these approaches add a second layer of edge. They require research discipline and systematic thinking — not suited for Phase 1, but essential for Phase 3+.</p>
+
+    <!-- Insider Trading Strategy -->
+    <h3 style="font-size:1.2rem; color:var(--gold); margin-bottom:1rem; margin-top:0;">Strategy A: AI-Assisted Insider Signal Tracking</h3>
+    <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1.25rem;">Sourced from r/Daytrading — a fully documented 4-step strategy that uses SEC Form 4 filings to identify clustered insider buying in small-cap stocks, then uses AI (Claude/Xynth) to filter, score, and generate actionable trade setups.</p>
+
+    <div class="card-grid-3" style="margin-bottom:1.5rem;">
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(59,130,246,0.15);">🔍</span> Step 1 — Filter Insider Buys</h3>
+        <ul style="font-size:0.83rem;">
+          <li><strong>Market cap under $500M</strong> — Large caps get priced in seconds by algos. Small caps fly under institutional radar.</li>
+          <li><strong>2+ unique insiders</strong> buying within 30 days. One buyer is noise. A cluster is a signal.</li>
+          <li><strong>Non-routine buyers only</strong> — Flag and exclude anyone who bought in the same calendar quarter in any of the prior 3 years.</li>
+          <li><strong>Purchase ≥ 5–10% of annual comp</strong>, or increases position by 10%+. Small symbolic buys mean nothing.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(33,184,130,0.15);">🛡️</span> Step 2 — Survival Check</h3>
+        <ul style="font-size:0.83rem;">
+          <li><strong>Altman Z-Score &gt; 1.81</strong> — Below this the company is in statistical distress. Reject.</li>
+          <li><strong>Current Ratio &gt; 1.0</strong> — Can the company cover short-term obligations?</li>
+          <li><strong>Debt maturity check</strong> — If &gt;30% of total debt matures within 12 months AND credit rating is below investment-grade, reject.</li>
+        </ul>
+        <p style="font-size:0.78rem; color:var(--muted); margin-top:0.5rem;">This step is a safety net, not a prediction. It eliminates the companies most likely to fail before the insider signal plays out.</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(201,168,76,0.15);">📊</span> Step 3 — Score the Signal</h3>
+        <ul style="font-size:0.83rem;">
+          <li><strong>Purchase Quality (0–30 pts)</strong> — % of annual comp, first-time buyer bonus (+5), routine penalty (–15).</li>
+          <li><strong>Cluster Strength (0–20 pts)</strong> — 2 insiders=5pts, 5+=20pts. All in 7 days: +5 bonus.</li>
+          <li><strong>Price Context (0–15 pts)</strong> — Within 15% of 52-week low = max points. Near 52-week high = 0.</li>
+          <li><strong>Earnings Proximity (0–15 pts)</strong> — Earnings within 60 days = max 15 pts. Natural catalyst timing.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout blue" style="margin-bottom:2rem;">
+      <div class="callout-icon">⚙️</div>
+      <p><strong>Step 4 — Trade Execution:</strong> Buy common stock (not options). Set stop-loss at the nearest swing low. The insider signal tells you <em>direction</em>, not price or timing. The author's data shows selling within 30 days of the entry produces the highest average returns. You will find 1–2 viable candidates every 2–3 weeks. Use Claude or a similar AI agent to automate the SEC Form 4 scanning — doing it manually burns out in a week.</p>
+    </div>
+
+    <!-- 10-K Risk Analysis Section -->
+    <h3 style="font-size:1.2rem; color:var(--gold); margin-bottom:1rem;">Strategy B: 10-K Risk Analysis for Macro-Aware Trading</h3>
+    <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1.25rem;">A Reddit analyst read 98 S&P 500 10-K annual reports (2,570 upvotes) scanning the "Risk Factors" section for 8 themes: tariffs, war, geopolitical, oil/energy, sanctions, supply chain, interest rates, recession. The findings reveal which sectors are quietly panicking vs. which are genuinely insulated — critical intelligence for a macro-volatile April 2026 environment.</p>
+
+    <div class="data-table" style="margin-bottom:1.5rem;">
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Tickers</th>
+            <th>Exposure Level</th>
+            <th>Trading Implication</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Highest Macro Risk</strong></td>
+            <td>MS, C, BAC, GS, JPM</td>
+            <td style="color:var(--red);">🔴 EXTREME</td>
+            <td>Banks — not oil — are screaming loudest about war/credit risk in SEC filings. 200+ geopolitical mentions in recent 10-Ks.</td>
+          </tr>
+          <tr>
+            <td><strong>Energy Exposed</strong></td>
+            <td>CVX (188 oil mentions), EOG (142)</td>
+            <td style="color:var(--amber);">🟡 HIGH</td>
+            <td>Expected but still high. Watch Strait of Hormuz headlines directly.</td>
+          </tr>
+          <tr>
+            <td><strong>Semiconductor Trap</strong></td>
+            <td>NVDA (50 sanctions mentions), CDNS</td>
+            <td style="color:var(--amber);">🟡 HIGH</td>
+            <td>The AI moat is built on a fragile geopolitical foundation. Strait closure = chip supply chain disruption.</td>
+          </tr>
+          <tr>
+            <td><strong>Pharma (Surprise)</strong></td>
+            <td>REGN (36 tariff mentions)</td>
+            <td style="color:var(--amber);">🟡 MODERATE</td>
+            <td>Raw material supply chains more trade-war exposed than most assume.</td>
+          </tr>
+          <tr>
+            <td><strong>Safe Havens</strong></td>
+            <td>PGR, UNH, NFLX, COST</td>
+            <td style="color:var(--green);">🟢 LOW</td>
+            <td>Fewer than 8 total war/tariff mentions in recent 10-Ks. These are the "sleep at night" sectors per the analysis.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout gold">
+      <div class="callout-icon">📌</div>
+      <p><strong>Key insight:</strong> The market is pricing in a soft landing or short war. The banks are filing 200-page warnings about systemic credit collapse. Either the banks are covering themselves with legal boilerplate, or they are seeing a credit crunch that retail is completely ignoring. In April 2026 — with VIX at 26 and active geopolitical escalation — this gap between market pricing and institutional risk disclosure is one of the most important contexts for any active trader to understand.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     RECOMMENDED READING
+============================================================ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Appendix</div>
+    <h2 class="section-title">Essential Reading &amp; Further Resources</h2>
+    <p class="section-desc">Curated from community consensus — these resources consistently appear in the discussions of profitable traders.</p>
+
+    <div class="card-grid-3">
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(201,168,76,0.15);">📖</span> Must-Read Books</h3>
+        <ul>
+          <li><strong>Trading in the Zone</strong> — Mark Douglas. The definitive psychology book. Read this before spending money on any course.</li>
+          <li><strong>Market Wizards</strong> — Jack Schwager. Interviews with 50+ legendary traders. Reveals what actually works long-term.</li>
+          <li><strong>How to Day Trade for a Living</strong> — Andrew Aziz. Practical beginner framework.</li>
+          <li><strong>Reminiscences of a Stock Operator</strong> — Edwin Lefèvre. Trading timeless lessons through narrative.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(59,130,246,0.15);">🎥</span> Credible Content Creators</h3>
+        <ul>
+          <li><strong>Linda Raschke</strong> — X and YouTube. Trading legend. 30+ year track record.</li>
+          <li><strong>Peter Brandt</strong> — X and YouTube. Classical charting master. 50-year career.</li>
+          <li><strong>Michael Martins</strong> — YouTube. Active fund manager. Free education.</li>
+          <li><strong>SMB Capital</strong> — YouTube. Professional prop firm with consistent free education content.</li>
+        </ul>
+        <p style="font-size:0.78rem; color:var(--red); margin-top:0.75rem;">⚠️ Red flag: If a creator's content is mostly about their lifestyle, income claims, cars, and watches — they are a marketer. Move on.</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon" style="background:rgba(33,184,130,0.15);">🌐</span> Key Communities</h3>
+        <ul>
+          <li><strong>r/Daytrading</strong> — Large, active community. Mix of beginners and experienced traders. Ask questions, read advice threads.</li>
+          <li><strong>r/algotrading</strong> — For systematic/algo approach. Technical but extremely high-quality discussion.</li>
+          <li><strong>r/DayTradingPro</strong> — Smaller but higher signal-to-noise ratio. More experienced members.</li>
+          <li><strong>r/stocks + r/investing</strong> — Essential for macro context and broader market understanding.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-disclaimer">
+      <strong style="color:var(--text);">Disclaimer &amp; Risk Warning</strong><br><br>
+      This report has been produced for educational and informational purposes only. It does not constitute personalised financial advice, and no content herein should be interpreted as a recommendation to buy or sell any specific financial instrument. Day trading involves a high level of risk. The majority of retail day traders lose money. Past performance of strategies discussed is not indicative of future results. All trading involves risk of loss, including possible loss of principal. This report draws on publicly available community discussions and is intended as an educational overview only. Always conduct your own research and consider seeking independent financial advice before committing capital to any trading strategy.
+    </div>
+    <div class="footer-brand">
+      Day Trading Blueprint
+      <span>Client Report — April 8, 2026</span>
+      <span>Data: Reddit Trading Communities</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
