@@ -1,0 +1,438 @@
+================================================================================
+   AUDIENCE INTELLIGENCE — SCRAPER & TOOL INSTRUCTIONS
+================================================================================
+
+Prerequisites
+─────────────
+  • Python >= 3.8
+  • Google Chrome installed
+  • Install the package:  pip install -e .
+  • For report generation:  pip install openai>=1.14.0
+  • Set OPENAI_API_KEY env var for LLM-powered reports
+
+
+================================================================================
+1. FACEBOOK COMMENT EXPORTER
+================================================================================
+
+Command:   fb-export <url> [options]
+Alt:       python -m fb_comment_exporter.cli <url> [options]
+
+Arguments:
+  url                          Facebook post/reel URL (required)
+  -o, --output FILE            Output file path           [default: comments.csv]
+  -f, --format {csv,json}      Output format              [default: csv]
+  --no-headless                Show browser window (debug) [default: hidden]
+  --max-scrolls N              Max scroll iterations       [default: 100]
+  --scroll-pause SECS          Seconds between scrolls     [default: 2.5]
+  --max-load-more N            Max "View more comments" clicks [default: 30]
+  --max-reply-expansions N     Max reply thread expansions [default: 20]
+  --max-comments N             Stop after N comments       [default: unlimited]
+  --no-expand-replies          Skip expanding reply threads
+  --email EMAIL                Facebook login email
+  --password PASSWORD          Facebook login password
+  -v, --version                Print version
+
+Output columns:  author, text, timestamp, likes, replies_count,
+                 comment_id, url, is_reply, reply_to
+
+Features:
+  • Network interception — captures GraphQL responses for better extraction
+  • Crash-safe checkpointing — auto-saves to outputs/_checkpoint_<slug>.json
+    every 50 comments; resumes automatically if restarted
+  • Persistent Chrome profile — saves login session in chrome_profile/
+  • Multi-language cookie/popup dismissal
+  • Deduplication via MD5 fingerprinting
+
+Examples:
+  fb-export https://facebook.com/post/12345
+  fb-export https://facebook.com/post/12345 -o my_comments.csv
+  fb-export https://facebook.com/post/12345 -f json -o comments.json
+  fb-export https://facebook.com/post/12345 --no-headless --email user@email.com
+  fb-export https://facebook.com/reel/67890 --max-comments 500
+
+
+================================================================================
+2. INSTAGRAM COMMENT EXPORTER
+================================================================================
+
+Command:   ig-export <url> [options]
+Alt:       python -m ig_comment_exporter.cli <url> [options]
+
+Arguments:
+  url                          Instagram post or reel URL (required)
+  -o, --output FILE            Output file path           [default: ig_comments.csv]
+  -f, --format {csv,json}      Output format              [default: csv]
+  --no-headless                Show browser window         [default: hidden]
+  --max-scrolls N              Max scroll iterations       [default: 150]
+  --scroll-pause SECS          Seconds between scrolls     [default: 2.0]
+  --max-load-more N            Max "load more" clicks      [default: 60]
+  --max-reply-expansions N     Max reply thread expansions  [default: 40]
+  --max-comments N             Stop after N comments        [default: unlimited]
+  --no-expand-replies          Skip expanding reply threads
+  --username USER              Instagram login username
+  --password PASSWORD          Instagram login password
+  -v, --version                Print version
+
+Output columns:  author, text, timestamp, likes, replies_count,
+                 comment_id, url, is_reply, reply_to
+
+Features:
+  • Handles GDPR cookie banners automatically
+  • Login-wall dismissal (Escape + "Not now")
+  • "View all N comments" expansion
+  • Reel vs. post layout detection
+  • "See translation" / "more" text expansion
+  • Crash-safe checkpointing (outputs/ig_ckpt_<slug>.json)
+
+Examples:
+  ig-export https://www.instagram.com/p/ABC123/
+  ig-export https://www.instagram.com/reel/XYZ789/ -o comments.json -f json
+  ig-export https://www.instagram.com/p/ABC123/ --no-headless --max-scrolls 200
+  ig-export https://www.instagram.com/p/ABC123/ --max-comments 1000
+
+
+================================================================================
+3. YOUTUBE COMMENT EXPORTER
+================================================================================
+
+Command:   yt-export <url> [options]
+Alt:       python -m yt_comment_exporter.cli <url> [options]
+
+Arguments:
+  url                          YouTube video or Shorts URL (required)
+  -o, --output FILE            Output file path           [default: yt_comments.csv]
+  -f, --format {csv,json}      Output format              [default: csv]
+  --no-headless                Show browser window         [default: hidden]
+  --max-scrolls N              Max scroll iterations       [default: 200]
+  --scroll-pause SECS          Seconds between scrolls     [default: 2.5]
+  --max-reply-expansions N     Max reply thread expansions  [default: 50]
+  --max-comments N             Stop after N comments        [default: unlimited]
+  --no-expand-replies          Skip expanding reply threads
+  --sort-newest                Sort by newest first         [default: top comments]
+  -v, --version                Print version
+
+No login arguments — YouTube comments are public.
+
+Output columns:  author, text, timestamp, likes, replies_count,
+                 comment_id, url, is_reply, reply_to, is_pinned
+
+Supported URL formats:
+  • youtube.com/watch?v=VIDEO_ID
+  • youtu.be/VIDEO_ID
+  • youtube.com/shorts/VIDEO_ID
+  • youtube.com/embed/VIDEO_ID
+
+Features:
+  • Cookie consent (GDPR) auto-dismissal
+  • Lazy-loaded comment section handling
+  • Sort toggle (Top ↔ Newest)
+  • Shorts vs. regular video layout support
+  • "Read more" text expansion
+  • Pinned comment detection
+  • Crash-safe checkpointing (outputs/yt_ckpt_<video_id>.json)
+
+Examples:
+  yt-export https://www.youtube.com/watch?v=dQw4w9WgXcQ
+  yt-export https://youtu.be/dQw4w9WgXcQ -o out.json -f json
+  yt-export https://www.youtube.com/shorts/ABC -o shorts.csv
+  yt-export https://www.youtube.com/watch?v=XYZ --sort-newest --max-comments 500
+
+
+================================================================================
+4. SOCIAL MEDIA VIDEO / AUDIO DOWNLOADER
+================================================================================
+
+Prerequisites (in addition to base requirements):
+  • pip install yt-dlp
+  • ffmpeg installed and on PATH (required for audio extraction and best quality)
+    Download: https://ffmpeg.org/download.html
+
+Command:   python download_video.py
+           (Interactive — prompts for URL, mode, and quality)
+
+Batch mode (multiple URLs from a text file, one URL per line):
+   python download_video.py --batch
+
+Supported platforms (and thousands more via yt-dlp):
+  • Facebook  (posts, reels, watch, fb.watch)
+  • YouTube   (videos, Shorts, playlists)
+  • Instagram (reels, posts)
+  • TikTok
+  • Twitter / X
+  • Reddit
+  • Twitch
+  • Vimeo
+  • Dailymotion
+  • Pinterest, LinkedIn, Snapchat
+  Full list: https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md
+
+Download modes (prompted interactively):
+  [1] Video (MP4)          — saves as .mp4
+  [2] Audio only (MP3)     — extracts audio as 192kbps .mp3 (requires ffmpeg)
+  [3] Thumbnail only       — saves cover image as .jpg (no video)
+
+Video quality options (only shown in Video mode):
+  [1] Best quality          — highest available resolution (default)
+  [2] 1080p                 — up to 1080p
+  [3] 720p                  — up to 720p
+  [4] 480p                  — up to 480p
+  [5] Worst (smallest file) — lowest available resolution
+
+Additional options (prompted after mode selection):
+  Subtitles      — download .srt captions alongside video (video mode only)
+  Embed thumbnail— embed cover art into MP3 file (audio mode only, requires ffmpeg)
+  Trim / clip    — specify start and end timestamps to download a segment
+                   e.g. start: 1:30  end: 4:00  (requires ffmpeg)
+  Proxy          — route download through a proxy (http/socks5)
+  Custom filename— override output filename with a yt-dlp template
+                   e.g. %(title)s.%(ext)s
+
+Info preview:
+  Before each download the tool fetches the title, duration, channel name,
+  and available quality options, then asks you to confirm before proceeding.
+
+Download history:
+  Every successful download is logged to outputs/download_history.json.
+  View the last 15 entries with:
+    python download_video.py --history
+
+Output:    outputs/<uploader>_<video_id>.mp4  (video)
+           outputs/<uploader>_<video_id>.mp3  (audio)
+           outputs/<uploader>_<video_id>.jpg  (thumbnail)
+
+Authentication:
+  • Automatically uses the Chrome session saved in chrome_profile/
+    (created by running python run.py and logging in to Facebook).
+  • Public content works without login.
+  • Private or friends-only content requires a saved session.
+    Run python run.py first to log in and save your session.
+
+Batch file format (plain text, one URL per line):
+  # Comments starting with # are ignored
+  https://www.youtube.com/watch?v=dQw4w9WgXcQ
+  https://www.facebook.com/reel/12345
+  https://www.tiktok.com/@user/video/67890
+
+Commands:
+  python download_video.py             — single URL, interactive
+  python download_video.py --batch     — batch from text file
+  python download_video.py --history   — view download history
+
+Python API:
+  from fb_video_downloader import FacebookVideoDownloader
+
+  dl = FacebookVideoDownloader(
+      output_dir="outputs",
+      quality="720",           # "best", "worst", or height e.g. "720"
+      audio_only=False,        # True = MP3 output
+      thumbnail_only=False,    # True = image only
+      subtitles=False,         # True = download .srt captions
+      embed_thumbnail=False,   # True = embed art in MP3
+      start_time="1:30",       # trim start (optional)
+      end_time="4:00",         # trim end (optional)
+      proxy=None,              # "http://host:port" or "socks5://host:port"
+      filename_template=None,  # e.g. "%(title)s.%(ext)s"
+      chrome_profile_dir="chrome_profile",
+  )
+  result = dl.download("https://www.youtube.com/watch?v=VIDEO_ID")
+  print(result.platform, result.title, result.resolution)
+
+  # Preview without downloading
+  info = dl.get_info("https://www.youtube.com/watch?v=VIDEO_ID")
+  print(info["title"], info["formats"], info["duration_seconds"])
+
+
+================================================================================
+5. INTERACTIVE FACEBOOK LAUNCHER (run.py)
+================================================================================
+
+Command:   python run.py
+           (No CLI arguments — fully interactive)
+
+What it does:
+  1. First-run login: Opens a visible Chrome window at facebook.com/login
+     for manual login. Saves session in chrome_profile/ for reuse.
+  2. Prompts for URL interactively.
+  3. Auto-resumes from crash checkpoints if found.
+  4. Uses aggressive settings: max_scrolls=500, max_load_more=500,
+     max_reply_expansions=50, headless=False.
+  5. Exports both CSV and JSON to:
+     outputs/comments_<timestamp>_<slug>.csv
+     outputs/comments_<timestamp>_<slug>.json
+  6. If the scraper crashes, exports whatever was saved in the checkpoint.
+
+
+================================================================================
+6. REPORT AGENT (LLM-Powered Report Generator)
+================================================================================
+
+Command:   python report_agent.py <csv> [options]
+
+Arguments:
+  csv                          Path to CSV file of comments (required*)
+  -c, --context FILE           Path to context JSON file
+  -o, --out FILE               Output HTML path       [default: outputs/report_<name>_<ts>.html]
+  --model MODEL                OpenAI model name      [default: gpt-4o]
+  --max-comments N             Max comments sent to LLM [default: 500]
+  --api-key KEY                OpenAI API key (or use OPENAI_API_KEY env var)
+  --new-context                Run interactive context wizard
+  --save-prompt                Save assembled prompt to prompt_assembled.txt
+  --from-report FILE           Convert a pre-written report.txt to HTML (skips LLM)
+
+  * csv is required unless using --new-context or --from-report
+
+Environment variable:  OPENAI_API_KEY (required for LLM calls unless --api-key is passed)
+
+Three modes:
+  1. --new-context        Interactive wizard → generates context.json
+  2. csv + LLM            Loads comments, calls OpenAI, produces HTML report
+  3. --from-report        Converts plain-text report → HTML without any LLM call
+
+Output: Professional HTML report with dark theme, sentiment bars, stat cards,
+        cluster cards, gold quotes, reply strategy matrix, viral probability
+        score, and pricing modal.
+
+Examples:
+  python report_agent.py --new-context
+  python report_agent.py comments.csv --context context.json
+  python report_agent.py comments.csv --context ctx.json --out report.html
+  python report_agent.py --from-report report.txt
+  python report_agent.py --from-report report.txt --context context.json
+
+
+================================================================================
+7. LOCAL ANALYZER (No LLM Required)
+================================================================================
+
+Command:   python analyze.py <input> [options]
+
+Arguments:
+  input                        Path to JSON checkpoint or CSV file (required)
+  --format {html,md}           Output format          [default: html]
+  --out FILE                   Output file path       [default: outputs/report_<base>_<ts>.<ext>]
+  --client NAME                Client name for report header [default: ""]
+
+No API keys or environment variables needed — uses local keyword lexicons.
+
+Examples:
+  python analyze.py outputs/comments.csv
+  python analyze.py outputs/_checkpoint_post.json --format md
+  python analyze.py comments.csv --client "Acme Corp" --out report.html
+
+
+================================================================================
+8. PWA WEB TOOL — Video Downloader (PythonAnywhere + GitHub Pages)
+================================================================================
+
+Architecture:
+  • Backend  — Flask API (downloader_api/)  → hosted on PythonAnywhere ($5/mo)
+  • Frontend — PWA HTML page (docs/downloader.html) → hosted on GitHub Pages (free)
+
+New files:
+  downloader_api/app.py          Flask API (info / prepare / status / file endpoints)
+  downloader_api/requirements.txt
+  downloader_api/wsgi.py         PythonAnywhere WSGI entry point
+  docs/downloader.html           PWA frontend (matches site design)
+  docs/downloader-manifest.json  PWA manifest (installable to home screen)
+  docs/sw-downloader.js          Service worker (offline shell caching)
+
+─── DEPLOY: PythonAnywhere backend ────────────────────────────────────────────
+
+1. Sign up at pythonanywhere.com ($5/mo Hacker plan — no network restrictions)
+
+2. Open a Bash console and clone / upload the repo:
+     git clone https://github.com/YOURUSERNAME/audienceintelligence.git
+   OR upload a zip via the Files tab.
+
+3. Install dependencies:
+     cd audienceintelligence/downloader_api
+     pip3 install --user -r requirements.txt
+
+4. Edit wsgi.py — replace YOURUSERNAME with your PythonAnywhere username:
+     nano downloader_api/wsgi.py
+
+5. In the PythonAnywhere dashboard:
+   Web tab → Add a new web app → Manual configuration → Python 3.10
+   WSGI configuration file → paste the full path:
+     /home/YOURUSERNAME/audienceintelligence/downloader_api/wsgi.py
+   → Save → Reload
+
+6. Set the ALLOWED_ORIGINS environment variable (Web tab → Environment variables):
+     ALLOWED_ORIGINS=https://ai.quantummerlin.com
+
+7. Test the health endpoint:
+     https://YOURUSERNAME.pythonanywhere.com/api/health
+
+─── DEPLOY: GitHub Pages frontend ─────────────────────────────────────────────
+
+1. Edit docs/downloader.html — update the BACKEND_URL constant near the top:
+     const BACKEND_URL = 'https://YOURUSERNAME.pythonanywhere.com';
+
+2. Commit and push to GitHub — the page goes live at:
+     https://ai.quantummerlin.com/downloader.html
+
+─── PWA installation ───────────────────────────────────────────────────────────
+
+  • Chrome/Edge desktop: address bar → Install icon
+  • Android: browser menu → Add to Home Screen
+  • iOS Safari: Share → Add to Home Screen
+  • An install prompt banner also appears automatically on the page
+
+─── API reference ──────────────────────────────────────────────────────────────
+
+  POST /api/info
+    Body:    { "url": "https://..." }
+    Returns: { title, platform, duration_seconds, uploader, formats, is_playlist, playlist_count }
+
+  POST /api/prepare
+    Body:    { url, mode, quality, subtitles, embed_thumbnail, start_time, end_time }
+    mode:    "video" | "audio" | "thumbnail"
+    Returns: { "token": "uuid" }
+
+  GET  /api/status/<token>
+    Returns: { status, progress, speed, eta, title, platform, resolution, duration, error }
+
+  GET  /api/file/<token>
+    Returns: file download (served once, deleted after 60 s)
+
+  GET  /api/health
+    Returns: { "status": "ok" }
+
+Rate limit: 20 requests per 60 seconds per IP.
+Temp files are cleaned up automatically after 10 minutes.
+
+
+================================================================================
+TYPICAL WORKFLOW
+================================================================================
+
+  1. Scrape comments:
+     fb-export https://facebook.com/post/12345 -o comments.csv --max-comments 1000
+
+  2. Generate context (first time only):
+     python report_agent.py --new-context
+
+  3. Generate report:
+     python report_agent.py comments.csv --context context.json
+
+  4. Find your report in outputs/
+
+
+================================================================================
+NOTES
+================================================================================
+
+  • All scrapers save crash checkpoints automatically. If a scrape is
+    interrupted, just re-run the same command — it will resume.
+
+  • The chrome_profile/ directory stores your browser session. Delete it
+    to reset login state.
+
+  • outputs/ is gitignored. Reports and exports stay local.
+
+  • All three scrapers produce the same CSV schema (author, text,
+    timestamp, likes, etc.) so they work interchangeably with the
+    report agent and analyzer.
+
+================================================================================

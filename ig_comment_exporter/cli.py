@@ -84,6 +84,13 @@ def main():
     )
 
     parser.add_argument(
+        "--max-comments",
+        type=int,
+        default=None,
+        help="Stop scraping after collecting this many comments (default: no limit)",
+    )
+
+    parser.add_argument(
         "--no-expand-replies",
         action="store_true",
         help="Skip expanding reply threads",
@@ -127,6 +134,7 @@ def main():
             expand_replies=not args.no_expand_replies,
             max_load_more_clicks=args.max_load_more,
             max_reply_expansions=args.max_reply_expansions,
+            max_comments=args.max_comments,
         ) as scraper:
 
             comments = scraper.scrape_comments(

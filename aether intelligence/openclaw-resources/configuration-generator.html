@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Configuration Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0d1b2a 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #8892b0;
+            font-size: 1.1rem;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #00d4ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .form-section h3 {
+            font-size: 0.95rem;
+            color: #a855f7;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #ccd6f6;
+            font-size: 0.85rem;
+        }
+        
+        .hint {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        
+        input[type="text"], input[type="number"], input[type="password"], select, textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 0.95rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            font-family: monospace;
+            resize: vertical;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+        
+        select option {
+            background: #1a1a3e;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .checkbox-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #00d4ff;
+        }
+        
+        .checkbox-item span {
+            font-size: 0.85rem;
+            color: #ccd6f6;
+        }
+        
+        .range-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .range-input input[type="range"] {
+            flex: 1;
+            accent-color: #00d4ff;
+        }
+        
+        .range-input .value {
+            min-width: 60px;
+            text-align: right;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+        
+        .preset-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            padding: 10px 18px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: #ccd6f6;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .preset-btn:hover, .preset-btn.active {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(168, 85, 247, 0.2));
+            border-color: #00d4ff;
+            color: #fff;
+        }
+        
+        .output-section {
+            position: relative;
+        }
+        
+        .output-section pre {
+            background: #0a0a1a;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #e2e8f0;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+        
+        .copy-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: #00d4ff;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .download-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+        }
+        
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #fbbf24;
+        }
+        
+        .inline-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ OpenClaw Configuration Generator</h1>
+            <p class="subtitle">Generate secure, production-ready configs in seconds — no YAML expertise needed</p>
+        </header>
+        
+        <div class="main-grid">
+            <!-- Input Side -->
+            <div class="card">
+                <h2>📝 Configure Your Agent</h2>
+                
+                <!-- Quick Presets -->
+                <div class="form-section">
+                    <h3>🚀 Quick Start Presets</h3>
+                    <div class="preset-selector">
+                        <button class="preset-btn" onclick="loadPreset('marketing')">📢 Marketing</button>
+                        <button class="preset-btn" onclick="loadPreset('research')">🔍 Research</button>
+                        <button class="preset-btn" onclick="loadPreset('coding')">💻 Coding</button>
+                        <button class="preset-btn" onclick="loadPreset('personal')">🤖 Personal Asst</button>
+                        <button class="preset-btn" onclick="loadPreset('secure')">🔒 Secure</button>
+                    </div>
+                </div>
+                
+                <!-- Basic Settings -->
+                <div class="form-section">
+                    <h3>📋 Basic Settings</h3>
+                    <div class="form-group">
+                        <label>Agent Name</label>
+                        <input type="text" id="agentName" value="My Agent" oninput="generateConfig()">
+                    </div>
+                    <div class="inline-inputs">
+                        <div class="form-group">
+                            <label>API Provider</label>
+                            <select id="apiProvider" onchange="updateModelOptions(); generateConfig()">
+                                <option value="openai">OpenAI</option>
+                                <option value="anthropic" selected>Anthropic</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <select id="model" onchange="generateConfig()">
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>API Key</label>
+                        <input type="password" id="apiKey" placeholder="sk-... (will show as env variable)" oninput="generateConfig()">
+                        <p class="hint">Leave empty to use environment variable</p>
+                    </div>
+                </div>
+                
+                <!-- Budget & Cost Control -->
+                <div class="form-section">
+                    <h3>💰 Budget Controls</h3>
+                    <div class="inline-inputs">
+                        <div class="form-group">
+                            <label>Daily Limit ($)</label>
+                            <input type="number" id="dailyLimit" value="10" min="1" oninput="generateConfig()">
+                        </div>
+                        <div class="form-group">
+                            <label>Monthly Limit ($)</label>
+                            <input type="number" id="monthlyLimit" value="100" min="1" oninput="generateConfig()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Max Tokens per Response</label>
+                        <div class="range-input">
+                            <input type="range" id="maxTokens" min="500" max="8000" value="2000" oninput="document.getElementById('maxTokensValue').textContent = this.value; generateConfig()">
+                            <span class="value" id="maxTokensValue">2000</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Memory Settings -->
+                <div class="form-section">
+                    <h3>🧠 Memory Configuration</h3>
+                    <div class="form-group">
+                        <label>Memory Type</label>
+                        <select id="memoryType" onchange="generateConfig()">
+                            <option value="simple">Simple (Default)</option>
+                            <option value="compressed" selected>Compressed (Efficient)</option>
+                            <option value="semantic">Semantic (Vector-based)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Max Conversation History</label>
+                        <div class="range-input">
+                            <input type="range" id="maxHistory" min="5" max="100" value="20" oninput="document.getElementById('maxHistoryValue').textContent = this.value; generateConfig()">
+                            <span class="value" id="maxHistoryValue">20</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Capabilities -->
+                <div class="form-section">
+                    <h3>🔧 Capabilities</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="capWebSearch" checked onchange="generateConfig()">
+                            <span>Web Search</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="capFileOps" checked onchange="generateConfig()">
+                            <span>File Operations</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="capCodeExec" onchange="generateConfig()">
+                            <span>Code Execution</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="capEmail" onchange="generateConfig()">
+                            <span>Email</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Safety Settings -->
+                <div class="form-section">
+                    <h3>🛡️ Safety Settings</h3>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="requireConfirmation" checked onchange="generateConfig()">
+                            Require confirmation before important actions
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Allowed Directories (comma-separated)</label>
+                        <input type="text" id="allowedDirs" value="/workspace" oninput="generateConfig()">
+                        <p class="hint">Restrict file access to these directories</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Timeout (seconds)</label>
+                        <input type="number" id="timeout" value="600" min="60" oninput="generateConfig()">
+                        <p class="hint">Stop execution after this time</p>
+                    </div>
+                </div>
+                
+                <!-- Custom Instructions -->
+                <div class="form-section">
+                    <h3>📝 Custom Instructions</h3>
+                    <div class="form-group">
+                        <label>System Prompt / Instructions</label>
+                        <textarea id="instructions" placeholder="Tell your agent how to behave..." oninput="generateConfig()"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Output Side -->
+            <div class="card output-section">
+                <h2>📄 Generated Configuration</h2>
+                <button class="copy-btn" onclick="copyConfig()">📋 Copy</button>
+                <pre id="configOutput"></pre>
+                <button class="download-btn" onclick="downloadConfig()">⬇️ Download config.yaml</button>
+                
+                <div class="warning-box">
+                    ⚠️ <strong>Security Note:</strong> Never commit this file to public repositories. 
+                    Use environment variables for API keys in production.
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Built for the OpenClaw community • Generated configs are starting points — adjust as needed</p>
+        </footer>
+    </div>
+    
+    <script>
+        const models = {
+            openai: [
+                { value: 'gpt-4o-mini', label: 'GPT-4o Mini (Cheap)' },
+                { value: 'gpt-4o', label: 'GPT-4o (Balanced)' },
+                { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
+                { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo (Budget)' }
+            ],
+            anthropic: [
+                { value: 'claude-3-5-sonnet', label: 'Claude 3.5 Sonnet (Balanced)' },
+                { value: 'claude-3-opus', label: 'Claude 3 Opus (Capable)' },
+                { value: 'claude-3-haiku', label: 'Claude 3 Haiku (Fast)' }
+            ]
+        };
+        
+        const presets = {
+            marketing: {
+                name: 'Marketing Assistant',
+                provider: 'anthropic',
+                model: 'claude-3-5-sonnet',
+                dailyLimit: 20,
+                monthlyLimit: 200,
+                capabilities: ['webSearch', 'fileOps'],
+                instructions: 'You are a marketing assistant. Help with content creation, social media, and campaign planning. Always maintain a professional brand voice.'
+            },
+            research: {
+                name: 'Research Assistant',
+                provider: 'openai',
+                model: 'gpt-4o-mini',
+                dailyLimit: 5,
+                monthlyLimit: 50,
+                capabilities: ['webSearch'],
+                instructions: 'You are a research assistant. Search for information, summarize findings, and cite sources. Be thorough but concise.'
+            },
+            coding: {
+                name: 'Coding Assistant',
+                provider: 'anthropic',
+                model: 'claude-3-5-sonnet',
+                dailyLimit: 15,
+                monthlyLimit: 150,
+                capabilities: ['webSearch', 'fileOps', 'codeExec'],
+                instructions: 'You are a coding assistant. Write clean, well-documented code. Explain your reasoning. Test code before presenting.'
+            },
+            personal: {
+                name: 'Personal Assistant',
+                provider: 'openai',
+                model: 'gpt-4o-mini',
+                dailyLimit: 5,
+                monthlyLimit: 30,
+                capabilities: ['webSearch', 'fileOps', 'email'],
+                instructions: 'You are a personal assistant. Help with scheduling, email drafting, and organization. Be efficient and proactive.'
+            },
+            secure: {
+                name: 'Secure Agent',
+                provider: 'anthropic',
+                model: 'claude-3-haiku',
+                dailyLimit: 3,
+                monthlyLimit: 30,
+                capabilities: ['fileOps'],
+                instructions: 'You are a security-conscious agent. Minimize data exposure. Verify all actions before executing.',
+                requireConfirmation: true
+            }
+        };
+        
+        function updateModelOptions() {
+            const provider = document.getElementById('apiProvider').value;
+            const modelSelect = document.getElementById('model');
+            modelSelect.innerHTML = '';
+            
+            models[provider].forEach(m => {
+                const option = document.createElement('option');
+                option.value = m.value;
+                option.textContent = m.label;
+                modelSelect.appendChild(option);
+            });
+        }
+        
+        function loadPreset(presetName) {
+            const preset = presets[presetName];
+            
+            document.getElementById('agentName').value = preset.name;
+            document.getElementById('apiProvider').value = preset.provider;
+            updateModelOptions();
+            document.getElementById('model').value = preset.model;
+            document.getElementById('dailyLimit').value = preset.dailyLimit;
+            document.getElementById('monthlyLimit').value = preset.monthlyLimit;
+            document.getElementById('instructions').value = preset.instructions || '';
+            
+            // Reset all capabilities
+            document.getElementById('capWebSearch').checked = false;
+            document.getElementById('capFileOps').checked = false;
+            document.getElementById('capCodeExec').checked = false;
+            document.getElementById('capEmail').checked = false;
+            
+            // Enable preset capabilities
+            preset.capabilities.forEach(cap => {
+                if (cap === 'webSearch') document.getElementById('capWebSearch').checked = true;
+                if (cap === 'fileOps') document.getElementById('capFileOps').checked = true;
+                if (cap === 'codeExec') document.getElementById('capCodeExec').checked = true;
+                if (cap === 'email') document.getElementById('capEmail').checked = true;
+            });
+            
+            document.getElementById('requireConfirmation').checked = preset.requireConfirmation !== false;
+            
+            // Highlight active button
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            generateConfig();
+        }
+        
+        function generateConfig() {
+            const name = document.getElementById('agentName').value || 'My Agent';
+            const provider = document.getElementById('apiProvider').value;
+            const model = document.getElementById('model').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const dailyLimit = document.getElementById('dailyLimit').value;
+            const monthlyLimit = document.getElementById('monthlyLimit').value;
+            const maxTokens = document.getElementById('maxTokens').value;
+            const memoryType = document.getElementById('memoryType').value;
+            const maxHistory = document.getElementById('maxHistory').value;
+            const requireConfirmation = document.getElementById('requireConfirmation').checked;
+            const allowedDirs = document.getElementById('allowedDirs').value;
+            const timeout = document.getElementById('timeout').value;
+            const instructions = document.getElementById('instructions').value;
+            
+            const capWebSearch = document.getElementById('capWebSearch').checked;
+            const capFileOps = document.getElementById('capFileOps').checked;
+            const capCodeExec = document.getElementById('capCodeExec').checked;
+            const capEmail = document.getElementById('capEmail').checked;
+            
+            const capabilities = [];
+            if (capWebSearch) capabilities.push('web_search');
+            if (capFileOps) capabilities.push('file_operations');
+            if (capCodeExec) capabilities.push('code_execution');
+            if (capEmail) capabilities.push('email');
+            
+            let config = `# OpenClaw Agent Configuration
+# Generated by OpenClaw Configuration Generator
+# Save this file as: config.yaml
+
+# ============================================
+# BASIC SETTINGS
+# ============================================
+name: "${name}"
+
+# ============================================
+# API CONFIGURATION
+# ============================================
+api:
+  provider: "${provider}"
+  model: "${model}"
+${apiKey ? `  key: "${apiKey}"` : `  # Use environment variable: ${provider.toUpperCase()}_API_KEY`}
+  max_tokens: ${maxTokens}
+
+# ============================================
+# BUDGET CONTROL
+# Prevent runaway API costs
+# ============================================
+budget:
+  daily_limit: ${dailyLimit}    # $${dailyLimit} max per day
+  monthly_limit: ${monthlyLimit}  # $${monthlyLimit} max per month
+  alert_threshold: 0.8  # Alert at 80% of limit
+
+# ============================================
+# MEMORY CONFIGURATION
+# Controls how agent remembers context
+# ============================================
+memory:
+  type: "${memoryType}"  # simple, compressed, or semantic
+  max_history: ${maxHistory}  # Number of messages to remember
+${memoryType === 'compressed' ? `  summarization: true
+  summary_trigger: 5  # Summarize after 5 exchanges` : ''}
+
+# ============================================
+# CAPABILITIES
+# What your agent can do
+# ============================================
+capabilities:
+${capabilities.length > 0 ? capabilities.map(c => `  - ${c}`).join('\n') : '  []  # No special capabilities enabled'}
+
+# ============================================
+# SAFETY SETTINGS
+# Protect your system and data
+# ============================================
+safety:
+  require_confirmation: ${requireConfirmation}
+  allowed_directories:
+${allowedDirs.split(',').map(d => `    - "${d.trim()}"`).join('\n')}
+  blocked_commands:
+    - "rm -rf"
+    - "sudo"
+    - "chmod 777"
+    - "mkfs"
+    - "dd if="
+
+# ============================================
+# EXECUTION LIMITS
+# Prevent runaway agents
+# ============================================
+execution:
+  timeout: ${timeout}  # Stop after ${timeout} seconds
+  max_iterations: 50   # Maximum action loops
+  on_timeout: "save_state"  # Don't lose progress
+
+# ============================================
+# OUTPUT SETTINGS
+# ============================================
+output:
+  verbosity: "normal"  # quiet, normal, or verbose
+  format: "markdown"   # Output format
+`;
+
+            if (instructions.trim()) {
+                config += `
+# ============================================
+# CUSTOM INSTRUCTIONS
+# Tell your agent how to behave
+# ============================================
+instructions: |
+${instructions.split('\n').map(line => '  ' + line).join('\n')}
+`;
+            }
+
+            config += `
+# ============================================
+# LOGGING
+# ============================================
+logging:
+  level: INFO
+  format: json
+  output: /var/log/openclaw/agent.log
+
+# ============================================
+# CACHE (Optional - improves efficiency)
+# ============================================
+cache:
+  enabled: true
+  ttl: 3600  # Cache for 1 hour
+`;
+
+            document.getElementById('configOutput').textContent = config;
+        }
+        
+        function copyConfig() {
+            const config = document.getElementById('configOutput').textContent;
+            navigator.clipboard.writeText(config).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        function downloadConfig() {
+            const config = document.getElementById('configOutput').textContent;
+            const blob = new Blob([config], { type: 'text/yaml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'config.yaml';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Initialize
+        updateModelOptions();
+        generateConfig();
+    </script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Free Comment Sentiment Analyzer &mdash; Audience Intelligence</title>
+  <meta name="description" content="Paste social media comments and instantly get a sentiment breakdown, detected themes, and key questions. Free &mdash; no signup, no API key needed.">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Quantum Merlin Ltd">
+  <meta name="theme-color" content="#0a0e1a">
+  <link rel="canonical" href="https://ai.quantummerlin.com/sentiment.html">
+  <meta property="og:title" content="Free Comment Sentiment Analyzer &mdash; Audience Intelligence">
+  <meta property="og:description" content="Paste social media comments and instantly get sentiment breakdown, themes, and questions. 100% free, runs in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ai.quantummerlin.com/sentiment.html">
+  <meta property="og:locale" content="en_AU">
+  <meta property="og:site_name" content="Audience Intelligence">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23818cf8'/><stop offset='1' stop-color='%2322d3ee'/></linearGradient></defs><circle cx='50' cy='50' r='50' fill='%230a0e1a'/><line x1='50' y1='22' x2='20' y2='72' stroke='%23818cf8' stroke-width='2.5' opacity='.6'/><line x1='50' y1='22' x2='80' y2='72' stroke='%2322d3ee' stroke-width='2.5' opacity='.6'/><line x1='20' y1='72' x2='80' y2='72' stroke='%23818cf8' stroke-width='2.5' opacity='.4'/><circle cx='50' cy='22' r='7' fill='url(%23g)'/><circle cx='20' cy='72' r='7' fill='%23818cf8'/><circle cx='80' cy='72' r='7' fill='%2322d3ee'/></svg>">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tool-hero{padding:110px 0 48px;text-align:center;}
+    .tool-hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:var(--clr-heading);line-height:1.15;margin-bottom:14px;}
+    .tool-hero p{font-size:1rem;color:var(--clr-muted);max-width:520px;margin:0 auto 24px;line-height:1.7;}
+    .badge-free{display:inline-flex;align-items:center;gap:6px;background:rgba(52,211,153,.12);color:var(--clr-success);border:1px solid rgba(52,211,153,.2);border-radius:999px;padding:5px 14px;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px;}
+
+    .tool-card{background:var(--clr-card);border:1px solid var(--clr-border);border-radius:var(--radius-lg);padding:32px;margin-bottom:24px;}
+
+    .textarea-wrap{position:relative;margin-bottom:20px;}
+    .textarea-wrap textarea{width:100%;min-height:220px;background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);padding:16px;font-family:var(--ff-sans);font-size:.9rem;color:var(--clr-text);resize:vertical;transition:border-color var(--transition);}
+    .textarea-wrap textarea:focus{outline:none;border-color:var(--clr-primary);}
+    .char-count{position:absolute;bottom:10px;right:14px;font-size:.75rem;color:var(--clr-muted);}
+
+    .btn-analyse{width:100%;padding:14px;font-size:1rem;font-weight:700;border:none;border-radius:var(--radius);background:linear-gradient(135deg,var(--clr-primary),var(--clr-accent));color:#fff;cursor:pointer;transition:opacity var(--transition);}
+    .btn-analyse:hover{opacity:.88;}
+    .btn-analyse:disabled{opacity:.45;cursor:default;}
+
+    /* Results */
+    #results{display:none;margin-top:0;}
+    .sentiment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+    .sent-card{background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);padding:20px 16px;text-align:center;}
+    .sent-card__label{font-size:.75rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--clr-muted);margin-bottom:8px;}
+    .sent-card__pct{font-size:2rem;font-weight:800;line-height:1;margin-bottom:6px;}
+    .sent-card__count{font-size:.8rem;color:var(--clr-muted);}
+    .sent-card.pos .sent-card__pct{color:var(--clr-success);}
+    .sent-card.neg .sent-card__pct{color:#f87171;}
+    .sent-card.neu .sent-card__pct{color:var(--clr-warn);}
+    .bar-track{height:8px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;margin-top:8px;}
+    .bar-fill{height:100%;border-radius:999px;transition:width .6s ease;}
+    .bar-fill.pos{background:var(--clr-success);}
+    .bar-fill.neg{background:#f87171;}
+    .bar-fill.neu{background:var(--clr-warn);}
+
+    .section-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--clr-muted);margin-bottom:14px;}
+    .theme-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;}
+    .theme-chip{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--clr-primary-l);border-radius:999px;padding:6px 14px;font-size:.82rem;font-weight:500;}
+    .theme-chip span{color:var(--clr-muted);margin-left:4px;font-size:.75rem;}
+
+    .question-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+    .question-list li{background:var(--clr-surface);border:1px solid var(--clr-border);border-left:3px solid var(--clr-accent);border-radius:0 var(--radius) var(--radius) 0;padding:10px 16px;font-size:.88rem;color:var(--clr-text);}
+
+    .insight-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
+    .insight-list li{display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--clr-text);}
+    .insight-list li::before{content:'→';color:var(--clr-accent);flex-shrink:0;margin-top:1px;}
+
+    .upsell-banner{background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(34,211,238,.08));border:1px solid rgba(99,102,241,.2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;margin-bottom:16px;}
+    .upsell-banner h3{font-size:1.1rem;font-weight:700;color:var(--clr-heading);margin-bottom:8px;}
+    .upsell-banner p{font-size:.88rem;color:var(--clr-muted);margin-bottom:18px;line-height:1.6;}
+    .upsell-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+    .empty-note{text-align:center;padding:60px 20px;color:var(--clr-muted);font-size:.9rem;}
+
+    @media(max-width:600px){.sentiment-grid{grid-template-columns:1fr;}.upsell-btns{flex-direction:column;}}
+  </style>
+</head>
+<body>
+
+<!-- ======================= NAVIGATION ======================= -->
+<nav class="nav" id="nav">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" stroke="url(#navGrad)" stroke-width="2"/>
+        <circle cx="16" cy="10" r="2.5" fill="#818cf8"/>
+        <circle cx="10" cy="20" r="2.5" fill="#22d3ee"/>
+        <circle cx="22" cy="20" r="2.5" fill="#818cf8"/>
+        <line x1="16" y1="12.5" x2="10" y2="17.5" stroke="#818cf8" stroke-width="1.5" opacity=".6"/>
+        <line x1="16" y1="12.5" x2="22" y2="17.5" stroke="#22d3ee" stroke-width="1.5" opacity=".6"/>
+        <line x1="10" y1="20" x2="22" y2="20" stroke="#818cf8" stroke-width="1.5" opacity=".4"/>
+        <defs><linearGradient id="navGrad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+      </svg>
+      Audience Intelligence
+    </a>
+    <button class="nav__toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+    <div class="nav__links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="tools.html" style="color:var(--clr-accent)">Free Tools</a>
+      <a href="examples.html">Examples</a>
+      <a href="brief.html" class="btn btn-primary btn-sm nav__cta">Get Your Report</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ======================= HERO ======================= -->
+<section class="tool-hero">
+  <div class="container">
+    <div class="badge-free">✓ Free &mdash; no signup required</div>
+    <h1>Comment <span class="text-gradient">Sentiment Checker</span></h1>
+    <p>Paste any social media comments and instantly see how your audience feels — sentiment breakdown, detected themes, and questions they're asking. Runs entirely in your browser.</p>
+  </div>
+</section>
+
+<!-- ======================= MAIN ======================= -->
+<main style="padding-bottom:80px;">
+  <div class="container" style="max-width:760px;">
+
+    <!-- Input card -->
+    <div class="tool-card">
+      <div class="section-label">Paste comments below (one per line)</div>
+      <div class="textarea-wrap">
+        <textarea id="commentsInput" placeholder="This video changed my life! Where can I buy this?
+How long does it take to see results?
+I've been doing this for 3 months and it actually works 🔥
+Not worth it tbh, mine broke after a week 👎
+Can you make a tutorial for beginners?
+Tagging @Sarah you need to see this!
+LOL I literally just tried this yesterday
+Great content as always, keep it up 💯
+When is part 2 coming out?"></textarea>
+        <span class="char-count" id="charCount">0 comments</span>
+      </div>
+      <button class="btn-analyse" id="analyseBtn" onclick="runAnalysis()">Analyse Comments</button>
+    </div>
+
+    <!-- Results -->
+    <div id="results">
+
+      <!-- Sentiment breakdown -->
+      <div class="tool-card">
+        <div class="section-label">Sentiment Breakdown</div>
+        <div class="sentiment-grid">
+          <div class="sent-card pos">
+            <div class="sent-card__label">Positive</div>
+            <div class="sent-card__pct" id="posPct">—</div>
+            <div class="sent-card__count" id="posCount"></div>
+            <div class="bar-track"><div class="bar-fill pos" id="posBar" style="width:0%"></div></div>
+          </div>
+          <div class="sent-card neu">
+            <div class="sent-card__label">Neutral</div>
+            <div class="sent-card__pct" id="neuPct">—</div>
+            <div class="sent-card__count" id="neuCount"></div>
+            <div class="bar-track"><div class="bar-fill neu" id="neuBar" style="width:0%"></div></div>
+          </div>
+          <div class="sent-card neg">
+            <div class="sent-card__label">Negative</div>
+            <div class="sent-card__pct" id="negPct">—</div>
+            <div class="sent-card__count" id="negCount"></div>
+            <div class="bar-track"><div class="bar-fill neg" id="negBar" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div id="insightsList"></div>
+      </div>
+
+      <!-- Themes -->
+      <div class="tool-card" id="themesCard" style="display:none;">
+        <div class="section-label">Detected Themes</div>
+        <div class="theme-chips" id="themeChips"></div>
+      </div>
+
+      <!-- Questions -->
+      <div class="tool-card" id="questionsCard" style="display:none;">
+        <div class="section-label">Questions Being Asked</div>
+        <ul class="question-list" id="questionsList"></ul>
+      </div>
+
+      <!-- Upsell banners -->
+      <div class="upsell-banner">
+        <h3>Want the full AI-powered report?</h3>
+        <p>Get 15 deep-dive sections including lead opportunities, viral triggers, content ideas, and strategic recommendations — using your own OpenAI key, completely free.</p>
+        <div class="upsell-btns">
+          <a href="analyze.html" class="btn btn-primary">Try the Free AI Analyzer →</a>
+        </div>
+      </div>
+
+      <div class="upsell-banner" style="background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(99,102,241,.08));">
+        <h3>Want us to scrape &amp; deliver the report?</h3>
+        <p>We collect thousands of comments from any public post and generate a full professional Audience Intelligence Report — you don't lift a finger. From $20 AUD.</p>
+        <div class="upsell-btns">
+          <a href="brief.html" class="btn btn-secondary">Get a Full Report →</a>
+        </div>
+      </div>
+
+    </div><!-- /results -->
+
+  </div>
+</main>
+
+<!-- ======================= FOOTER ======================= -->
+<footer style="border-top:1px solid var(--clr-border);padding:32px 0;text-align:center;">
+  <div class="container">
+    <p style="color:var(--clr-muted);font-size:.85rem;">
+      &copy; 2025 Quantum Merlin Ltd &mdash;
+      <a href="privacy.html">Privacy</a> &middot;
+      <a href="terms.html">Terms</a> &middot;
+      <a href="tools.html">Free Tools</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+// ─── Lexicons ───────────────────────────────────────────────────────────────
+const POS_EN = [
+  "love","amazing","awesome","great","best","incredible","fantastic","perfect",
+  "beautiful","brilliant","excellent","outstanding","wonderful","helpful","useful",
+  "superb","inspiring","motivated","excited","grateful","glad","recommend",
+  "impressed","magnificent","terrific","wow","fire","goat","legend","iconic","real",
+  "honest","smart","kind","generous","supportive","valid","correct","agree","good",
+  "nice","thanks","thank","bravo","yes","true"
+];
+const NEG_EN = [
+  "hate","terrible","awful","worst","bad","disappointing","poor","waste","scam",
+  "fake","boring","shame","disgrace","unacceptable","wrong","corrupt","pathetic",
+  "disgusting","horrible","stupid","useless","trash","garbage","toxic","annoying",
+  "frustrating","angry","upset","unfair","broken","failed","misleading","overrated",
+  "regret","disappointed","sad","fraud","clickbait","ripped off"
+];
+const POS_EMOJIS = ["😍","🔥","💯","👏","🙏","❤️","💪","✅","👍","😊","🥰","🤩","💎","⭐","🌟","✨","🎉","🏆","🙌"];
+const NEG_EMOJIS = ["👎","😡","🤬","😤","🤢","😒","🙄","😠","😞","😔","💔","🚫","❌"];
+
+const THEMES = {
+  "💰 Buying Intent":     ["where to buy","how much","price","available","link","order","cost","purchase","buy","sell","shop","get one","how do i get"],
+  "📚 Tutorial Request":  ["how to","how do","tutorial","guide","step by step","explain","show me","walk me through","teach me","instructions"],
+  "🌟 Strong Praise":     ["amazing","love this","best","awesome","incredible","so good","fire","legend","goat","phenomenal","brilliant","changed my life","changed my"],
+  "😤 Criticism":         ["not working","doesn't work","broken","bug","issue","problem","refund","terrible","awful","waste","scam","fake","stopped working"],
+  "📖 Personal Story":    ["i tried","i did","i've been","my experience","i used","i made","i bought","i got","i watched","i started","been doing"],
+  "👥 Tag A Friend":      ["@"],
+  "😂 Humour":            ["lol","lmao","haha","dying","dead","🤣","😂","i'm dead","i can't","i literally"],
+  "🔔 Wants More Content":["follow","more content","subscribe","part 2","part two","need more","keep going","please continue","next video","keep making"],
+  "🤔 Scepticism":        ["really?","are you sure","i doubt","not sure","seems fake","too good to be true","prove it","show proof"]
+};
+
+// ─── Count comment lines ────────────────────────────────────────────────────
+document.getElementById('commentsInput').addEventListener('input', function() {
+  const lines = this.value.split('\n').filter(l => l.trim().length > 2);
+  document.getElementById('charCount').textContent = lines.length + ' comment' + (lines.length !== 1 ? 's' : '');
+});
+
+// ─── Main analysis ──────────────────────────────────────────────────────────
+function runAnalysis() {
+  const raw = document.getElementById('commentsInput').value;
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 2);
+
+  if (lines.length === 0) {
+    alert('Please paste at least one comment to analyse.');
+    return;
+  }
+
+  const btn = document.getElementById('analyseBtn');
+  btn.disabled = true;
+  btn.textContent = 'Analysing…';
+
+  setTimeout(() => {
+    const result = analyse(lines);
+    renderResults(result);
+    btn.disabled = false;
+    btn.textContent = 'Analyse Comments';
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 400);
+}
+
+function analyse(lines) {
+  let pos = 0, neg = 0, neutral = 0;
+  const questions = [];
+  const themeCounts = {};
+
+  for (const line of lines) {
+    const lower = line.toLowerCase();
+    let ps = 0, ns = 0;
+
+    for (const kw of POS_EN) if (lower.includes(kw)) ps++;
+    for (const kw of NEG_EN) if (lower.includes(kw)) ns++;
+    for (const e of POS_EMOJIS) if (line.includes(e)) ps++;
+    for (const e of NEG_EMOJIS) if (line.includes(e)) ns++;
+
+    if (ps > ns) pos++;
+    else if (ns > ps) neg++;
+    else neutral++;
+
+    if (line.includes('?')) questions.push(line);
+
+    for (const [theme, kws] of Object.entries(THEMES)) {
+      if (kws.some(kw => lower.includes(kw))) {
+        themeCounts[theme] = (themeCounts[theme] || 0) + 1;
+      }
+    }
+  }
+
+  const topThemes = Object.entries(themeCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  return { total: lines.length, pos, neg, neutral, questions: questions.slice(0, 10), topThemes };
+}
+
+function pct(n, total) {
+  return total === 0 ? '0%' : Math.round((n / total) * 100) + '%';
+}
+
+function renderResults(r) {
+  const { total, pos, neg, neutral, questions, topThemes } = r;
+
+  document.getElementById('posPct').textContent = pct(pos, total);
+  document.getElementById('posCount').textContent = pos + ' of ' + total + ' comments';
+  document.getElementById('posBar').style.width = pct(pos, total);
+
+  document.getElementById('neuPct').textContent = pct(neutral, total);
+  document.getElementById('neuCount').textContent = neutral + ' of ' + total + ' comments';
+  document.getElementById('neuBar').style.width = pct(neutral, total);
+
+  document.getElementById('negPct').textContent = pct(neg, total);
+  document.getElementById('negCount').textContent = neg + ' of ' + total + ' comments';
+  document.getElementById('negBar').style.width = pct(neg, total);
+
+  // Insight bullets
+  const insights = [];
+  const posP = (pos / total) * 100;
+  const negP = (neg / total) * 100;
+  if (posP >= 60) insights.push('Strong positive audience response — this content resonates well.');
+  else if (posP >= 40) insights.push('Moderately positive reception with a mixed audience.');
+  else if (negP >= 40) insights.push('High negative sentiment — audience frustrations need addressing.');
+  if (questions.length > 3) insights.push(questions.length + ' questions detected — your audience wants more information or clarity.');
+  if (topThemes.some(t => t[0].includes('Buying'))) insights.push('Buying intent signals found — there may be a commercial opportunity here.');
+  if (topThemes.some(t => t[0].includes('Tutorial'))) insights.push('Tutorial requests detected — educational follow-up content would perform well.');
+  if (topThemes.some(t => t[0].includes('More Content'))) insights.push('Audience asking for more — high retention and loyalty signals.');
+
+  const insightEl = document.getElementById('insightsList');
+  if (insights.length) {
+    insightEl.innerHTML = '<div class="section-label" style="margin-top:20px;">Key Signals</div><ul class="insight-list">' +
+      insights.map(i => `<li>${i}</li>`).join('') + '</ul>';
+  } else {
+    insightEl.innerHTML = '';
+  }
+
+  // Themes
+  if (topThemes.length) {
+    document.getElementById('themesCard').style.display = 'block';
+    document.getElementById('themeChips').innerHTML = topThemes.map(([theme, count]) =>
+      `<div class="theme-chip">${theme} <span>${count}</span></div>`
+    ).join('');
+  }
+
+  // Questions
+  if (questions.length) {
+    document.getElementById('questionsCard').style.display = 'block';
+    document.getElementById('questionsList').innerHTML = questions.map(q =>
+      `<li>${q.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</li>`
+    ).join('');
+  }
+}
+</script>
+
+<script>
+// Nav toggle
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+</script>
+</body>
+</html>

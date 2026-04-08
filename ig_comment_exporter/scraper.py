@@ -153,6 +153,7 @@ class InstagramCommentScraper:
         expand_replies: bool = True,
         max_load_more_clicks: int = 60,
         max_reply_expansions: int = 40,
+        max_comments: Optional[int] = None,
         chrome_profile_dir: Optional[str] = None,
     ):
         self.headless = headless
@@ -162,6 +163,7 @@ class InstagramCommentScraper:
         self.expand_replies = expand_replies
         self.max_load_more_clicks = max_load_more_clicks
         self.max_reply_expansions = max_reply_expansions
+        self.max_comments = max_comments
         self.chrome_profile_dir = chrome_profile_dir
 
         self.driver: Optional[webdriver.Chrome] = None
@@ -829,6 +831,10 @@ class InstagramCommentScraper:
             # 3. Harvest visible comments
             added = self._harvest_comments()
             total = len(self._all_comments)
+
+            if self.max_comments and total >= self.max_comments:
+                print(f"  Comment target reached ({self.max_comments}) — stopping")
+                break
 
             if total > last_total:
                 no_new = 0

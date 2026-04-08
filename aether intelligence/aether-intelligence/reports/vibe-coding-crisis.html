@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Coding Tools Are Leaking Real Secrets | Aether Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --accent: #f59e0b;
+            --accent-glow: rgba(245, 158, 11, 0.3);
+            --danger: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(239, 68, 68, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+        
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .logo-icon { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+        
+        nav a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; margin-left: 32px; transition: color 0.2s; }
+        nav a:hover { color: var(--text-primary); }
+        
+        .hero { padding: 60px 0 40px; }
+        
+        .report-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            background: linear-gradient(180deg, #ffffff 0%, #a0a0b0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-meta { display: flex; flex-wrap: wrap; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 32px; }
+        
+        .hero-intro {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            padding-bottom: 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .highlight { color: var(--accent); font-weight: 500; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--danger); margin-bottom: 4px; }
+        .stat-card .label { font-size: 0.85rem; color: var(--text-secondary); }
+        
+        .section { padding: 40px 0; }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title .badge {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent);
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .pattern {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .pattern.danger {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), transparent);
+        }
+        
+        .pattern-number { font-size: 0.75rem; color: var(--accent); font-weight: 500; letter-spacing: 0.05em; margin-bottom: 12px; display: block; }
+        
+        .pattern-title { font-size: 1.2rem; font-weight: 500; color: var(--text-primary); margin-bottom: 12px; }
+        
+        .pattern-desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px; }
+        
+        .quote {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-style: italic;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .quote.danger {
+            background: rgba(239, 68, 68, 0.08);
+            border-left-color: var(--danger);
+        }
+        
+        .shock-stat {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 32px 0;
+            text-align: center;
+        }
+        
+        .shock-stat .number { font-size: 3.5rem; font-weight: 700; color: var(--danger); }
+        .shock-stat .desc { color: var(--text-secondary); font-size: 1rem; margin-top: 8px; }
+        
+        .person-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        .person-card .icon { font-size: 2rem; }
+        .person-card .content { flex: 1; }
+        .person-card .role { font-size: 0.8rem; color: var(--accent); margin-bottom: 4px; }
+        .person-card .title { font-weight: 500; margin-bottom: 8px; }
+        .person-card .desc { color: var(--text-secondary); font-size: 0.9rem; }
+        
+        .cta-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 48px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .cta-title { font-size: 1.5rem; margin-bottom: 12px; }
+        .cta-text { color: var(--text-secondary); margin-bottom: 24px; }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4); }
+        .btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-primary); margin-left: 12px; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.05); }
+        
+        footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--text-secondary); font-size: 0.85rem; }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.6rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .cta-section { padding: 32px 24px; }
+            nav { display: none; }
+            .pattern { padding: 24px; }
+            .person-card { flex-direction: column; }
+        }
+    
+        .cta-proof {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+        }
+        .cta-proof-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        .cta-proof-sep {
+            opacity: 0.3;
+            font-size: 1rem;
+        }
+
+        </style>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <a href="../index.html" class="logo">
+                <img src="../logo.png" alt="Aether Intelligence" class="logo-icon">
+                Aether Intelligence
+            </a>
+            <nav>
+                <a href="../index.html#reports">Reports</a>
+                <a href="../index.html#custom">Custom</a>
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <span class="report-tag">Report #004 • AI & Security</span>
+            <h1>AI coding tools are leaking real secrets — and senior developers are quitting because of it</h1>
+            <div class="hero-meta">
+                <span>📊 20,946 comments analyzed</span>
+                <span>🔐 Security Crisis</span>
+                <span>💼 Workplace Impact</span>
+            </div>
+            <p class="hero-intro">
+                I analyzed over 20,000 comments from developers and discovered a disturbing trend: AI coding assistants are leaking real credentials, and the "vibe coders" who rely on them are driving experienced developers to quit. One senior IT professional resigned <span class="highlight">without another job lined up</span> — that's how bad it's gotten.
+            </p>
+        </section>
+        
+        <div class="shock-stat">
+            <div class="number">2,702</div>
+            <div class="desc">hard-coded credentials extracted from GitHub Copilot suggestions<br><strong>200 were real, working secrets</strong></div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value">40%</div>
+                <div class="label">Higher Secret Leak Rate with Copilot</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">20</div>
+                <div class="label">Years Experience of Resigning Dev</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">0</div>
+                <div class="label">Backup Jobs Lined Up</div>
+            </div>
+        </div>
+        
+        <section class="section">
+            <h2 class="section-title">
+                🔐 The Security Nightmare
+                <span class="badge">CRITICAL VULNERABILITY</span>
+            </h2>
+            
+            <div class="pattern danger">
+                <span class="pattern-number">THE LEAK</span>
+                <h3 class="pattern-title">Your AI Assistant Is Exfiltrating Your Secrets</h3>
+                <p class="pattern-desc">Researchers extracted 2,702 hard-coded credentials from GitHub Copilot's suggestions. Two hundred of those were <strong>real, working secrets</strong> — API keys, database passwords, authentication tokens that could have been used to access production systems.</p>
+                <div class="quote danger">"Researchers extracted 2,702 hard-coded credentials from GitHub Copilot's suggestions. 200 were real, working secrets."</div>
+            </div>
+            
+            <div class="pattern danger">
+                <span class="pattern-number">THE MECHANISM</span>
+                <h3 class="pattern-title">How Copilot Learns and Leaks Your Secrets</h3>
+                <p class="pattern-desc">When you use GitHub Copilot, it analyzes your codebase to provide suggestions. If your code contains API keys, database credentials, or authentication tokens — even in comments or "hidden" files — Copilot can learn them and suggest them in completions for other users.</p>
+                <div class="quote danger">"Repos with Copilot active have 40% higher secret leak rate."</div>
+            </div>
+            
+            <div class="pattern">
+                <span class="pattern-number">THE HUNTARR CASE</span>
+                <h3 class="pattern-title">Entire Media Stacks Exposed Without Authentication</h3>
+                <p class="pattern-desc">One security researcher discovered that Huntarr — a popular automation tool — exposes API keys for Sonarr, Radarr, Prowlarr, and every connected app <strong>without requiring login</strong>. Anyone on your network (or the internet, if misconfigured) can pull your credentials and gain full control.</p>
+                <div class="quote">"TLDR: If you have Huntarr exposed on your stack, anyone can pull your API keys for Sonarr, Radarr, Prowlarr, and every other connected app without logging in, gaining full control over your media stack."</div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">
+                👨‍💻 The Human Cost
+                <span class="badge">BURNOUT CRISIS</span>
+            </h2>
+            
+            <div class="person-card">
+                <div class="icon">😤</div>
+                <div class="content">
+                    <div class="role">SENIOR DEVELOPER, 20 YEARS EXPERIENCE</div>
+                    <div class="title">"I'm quitting my job due to vibe coders and poor leadership."</div>
+                    <div class="desc">This isn't someone job-hopping for better pay. This is a veteran developer with two decades of experience walking away <emph>without another position lined up</emph>. The frustration with AI-obsessed leadership and declining code quality became unsustainable.</div>
+                </div>
+            </div>
+            
+            <div class="person-card">
+                <div class="icon">😰</div>
+                <div class="content">
+                    <div class="role">SECURITY ENGINEER</div>
+                    <div class="title">"Vibe coding is creating a generation of insecure, unmaintainable software."</div>
+                    <div class="desc">The term "vibe coding" has emerged to describe a style of development where developers prompt AI tools to generate code without understanding what it does. The result: code that works (sometimes) but is riddled with security vulnerabilities and impossible to maintain.</div>
+                </div>
+            </div>
+            
+            <div class="person-card">
+                <div class="icon">🚨</div>
+                <div class="content">
+                    <div class="role">IT PROFESSIONAL</div>
+                    <div class="title">"Security risks, loss of professional joy after years in IT."</div>
+                    <div class="desc">The pattern is consistent: experienced professionals who spent years mastering their craft are watching leadership prioritize speed over quality, AI-generated code over human understanding. The result is burnout, resentment, and exodus.</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">
+                🎯 What "Vibe Coding" Actually Is
+                <span class="badge">DEFINING THE PROBLEM</span>
+            </h2>
+            
+            <div class="pattern">
+                <span class="pattern-number">THE PHENOMENON</span>
+                <h3 class="pattern-title">Prompt-Driven Development Without Understanding</h3>
+                <p class="pattern-desc">"Vibe coding" is when developers use AI assistants to generate code they don't fully understand. They prompt, copy, paste, and ship. When it works, they move on. When it breaks, they prompt again. The underlying logic remains a black box.</p>
+            </div>
+            
+            <div class="pattern">
+                <span class="pattern-number">THE RISK</span>
+                <h3 class="pattern-title">Security Vulnerabilities Baked Into Production</h3>
+                <p class="pattern-desc">AI-generated code often contains subtle security flaws that pass functional testing. Hardcoded credentials, improper authentication, SQL injection vulnerabilities, and insecure data handling are common. The developer who prompted the code doesn't know they're there.</p>
+            </div>
+            
+            <div class="pattern">
+                <span class="pattern-number">THE CULTURAL CLASH</span>
+                <h3 class="pattern-title">Experienced Developers vs. AI-First Leadership</h3>
+                <p class="pattern-desc">The friction isn't just about code quality. It's about values. Experienced developers value craftsmanship, understanding, and security. Leadership values speed, cost savings, and "AI transformation." The result is an exodus of institutional knowledge.</p>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">
+                🛡️ What You Can Do
+                <span class="badge">PROTECTION STRATEGIES</span>
+            </h2>
+            
+            <div class="pattern">
+                <h3 class="pattern-title">1. Never Put Secrets in Code — Even "Temporarily"</h3>
+                <p class="pattern-desc">AI assistants learn from everything in your codebase. A secret that was "just for testing" becomes a suggestion for another user's production code. Use environment variables, secret managers, and never commit credentials.</p>
+            </div>
+            
+            <div class="pattern">
+                <h3 class="pattern-title">2. Audit AI-Generated Code Before Shipping</h3>
+                <p class="pattern-desc">Every line of AI-generated code should be reviewed as if a junior developer wrote it. Check for hardcoded values, security flaws, and logic errors. If you can't explain what it does, don't ship it.</p>
+            </div>
+            
+            <div class="pattern">
+                <h3 class="pattern-title">3. Consider Local-First AI Assistants</h3>
+                <p class="pattern-desc">Tools that run locally on your machine don't send your code to external servers. This eliminates the risk of your codebase being used to train models that might leak your secrets to other users.</p>
+            </div>
+            
+            <div class="pattern">
+                <h3 class="pattern-title">4. For Leaders: Balance Speed with Quality</h3>
+                <p class="pattern-desc">The senior developers leaving aren't anti-AI. They're anti-bad-AI. Used well, AI assistants can boost productivity. Used poorly, they create technical debt and security vulnerabilities that take years to fix. Listen to your experienced staff.</p>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-proof">
+                <span class="cta-proof-label">📊 22 free reports</span>
+                <span class="cta-proof-sep">·</span>
+                <span class="cta-proof-label">1 intelligence collection</span>
+            </div>
+            <h3 class="cta-title">Want this done for your topic?</h3>
+            <p class="cta-text">Every report on this site — all 22 of them — came from a single deep-dive intelligence collection. One dataset. Dozens of angles. For $69, I'll run the same process on your niche, product, or audience and hand you the raw signal.</p>
+            <a href="mailto:signup@quantummerlin.com?subject=Custom%20Report%20Request" class="btn btn-primary">Commission a Custom Collection — $69</a>
+            <a href="../index.html" class="btn btn-secondary">Back to All Reports</a>
+        </section>
+        
+        <footer>
+            <p>Aether Intelligence — Human insight, extracted from real data</p>
+        </footer>
+    </div>
+</body>
+</html>

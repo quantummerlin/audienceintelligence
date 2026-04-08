@@ -131,6 +131,7 @@ class FacebookCommentScraper:
         expand_replies: bool = True,
         max_load_more_clicks: int = 30,
         max_reply_expansions: int = 20,
+        max_comments: Optional[int] = None,
         chrome_profile_dir: Optional[str] = None,
     ):
         if not SELENIUM_AVAILABLE:
@@ -142,6 +143,7 @@ class FacebookCommentScraper:
         self.expand_replies = expand_replies
         self.max_load_more_clicks = max_load_more_clicks
         self.max_reply_expansions = max_reply_expansions
+        self.max_comments = max_comments
         self.chrome_profile_dir = chrome_profile_dir
         self._total_load_more_clicks = 0
         self._all_comments: Dict[str, Comment] = {}  # fingerprint -> Comment, global across scrolls
@@ -635,6 +637,10 @@ if (!window._fbCapturedResponses) {
             # 2. Harvest everything currently visible
             added = self._harvest_visible()
             total = len(self._all_comments)
+
+            if self.max_comments and total >= self.max_comments:
+                print(f"  Comment target reached ({self.max_comments}) — stopping")
+                break
 
             if total > last_total:
                 no_new = 0

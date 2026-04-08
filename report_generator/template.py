@@ -202,7 +202,8 @@ a { color: var(--accent); text-decoration: none; }
 /* ── Section Layout ── */
 .section {
     page-break-inside: avoid;
-    margin-bottom: 36px;
+    max-width: 820px;
+    margin: 0 auto 36px;
     padding: 28px 32px;
     background: var(--surface);
     border: 1px solid var(--border);
@@ -279,7 +280,8 @@ a { color: var(--accent); text-decoration: none; }
     border-left: 3px solid var(--accent);
     border-radius: 0 10px 10px 0;
     padding: 14px 18px;
-    margin: 10px 0;
+    max-width: 720px;
+    margin: 10px auto;
     font-style: italic;
     color: var(--muted);
     font-size: 0.92rem;
@@ -299,7 +301,8 @@ a { color: var(--accent); text-decoration: none; }
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 12px;
-    margin: 16px 0;
+    max-width: 780px;
+    margin: 16px auto;
 }
 .stat-card {
     background: var(--card);
@@ -334,7 +337,8 @@ a { color: var(--accent); text-decoration: none; }
     height: 28px;
     border-radius: 14px;
     overflow: hidden;
-    margin: 16px 0;
+    max-width: 780px;
+    margin: 16px auto;
     border: 1px solid var(--border);
 }
 .sentiment-bar__segment {
@@ -358,7 +362,8 @@ a { color: var(--accent); text-decoration: none; }
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px 18px;
-    margin: 10px 0;
+    max-width: 780px;
+    margin: 10px auto;
     page-break-inside: avoid;
 }
 .cluster-card__header {
@@ -385,9 +390,10 @@ a { color: var(--accent); text-decoration: none; }
 /* ── Table ── */
 .report-table {
     width: 100%;
+    max-width: 780px;
+    margin: 14px auto;
     border-collapse: separate;
     border-spacing: 0;
-    margin: 14px 0;
     font-size: 0.88rem;
     border-radius: 12px;
     overflow: hidden;
@@ -441,7 +447,8 @@ a { color: var(--accent); text-decoration: none; }
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 24px 28px;
-    margin: 16px 0;
+    max-width: 780px;
+    margin: 16px auto;
 }
 .score-circle {
     width: 80px;
@@ -479,7 +486,8 @@ a { color: var(--accent); text-decoration: none; }
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px 18px;
-    margin: 10px 0;
+    max-width: 780px;
+    margin: 10px auto;
     page-break-inside: avoid;
 }
 .reply-card__rank {
@@ -522,7 +530,8 @@ a { color: var(--accent); text-decoration: none; }
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px 18px;
-    margin: 10px 0;
+    max-width: 780px;
+    margin: 10px auto;
     page-break-inside: avoid;
 }
 .idea-card__title {
@@ -544,6 +553,49 @@ a { color: var(--accent); text-decoration: none; }
 .idea-card__rationale {
     font-size: 0.88rem;
     color: var(--muted);
+}
+
+/* ── Alert / Warning Box ── */
+.alert { border-radius: 12px; padding: 16px 20px; margin: 14px auto; max-width: 780px; }
+.alert--danger { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); }
+.alert--warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25); }
+.alert--info { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.25); }
+.alert--success { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.25); }
+.alert__title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.alert--danger .alert__title { color: var(--danger); }
+.alert--warn .alert__title { color: var(--warn); }
+.alert--info .alert__title { color: var(--primary-light); }
+.alert--success .alert__title { color: var(--success); }
+
+/* ── Gold Quote Hall ── */
+.gold-quote { background: var(--card); border: 1px solid rgba(251,191,36,0.2); border-radius: 12px; padding: 16px 18px; margin: 10px auto; max-width: 780px; }
+.gold-quote--diamond { border-color: rgba(99,102,241,0.4); background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(34,211,238,0.03)); }
+.gold-quote__text { font-style: italic; color: var(--text); font-size: 0.95rem; line-height: 1.6; margin-bottom: 10px; }
+.gold-quote__meta { font-size: 0.75rem; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap; }
+.gold-quote__meta span { background: var(--card-alt); padding: 2px 8px; border-radius: 6px; }
+
+/* ── Closing Mandate Box ── */
+.mandate-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(34,211,238,0.05));
+    border: 1px solid rgba(99,102,241,0.3); border-radius: 16px; padding: 36px 40px; margin: 36px auto;
+    text-align: center; max-width: 820px;
+}
+.mandate-box__statement { font-size: 1.15rem; font-weight: 600; color: var(--text); line-height: 1.7; }
+
+/* ── Decision Tree / Code Block ── */
+.decision-tree {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 14px auto;
+    max-width: 780px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--accent-light);
+    white-space: pre;
+    overflow-x: auto;
 }
 
 /* ── Footer ── */

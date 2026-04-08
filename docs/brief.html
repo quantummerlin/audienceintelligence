@@ -360,15 +360,30 @@
       </div>
       <div class="section-body">
 
-        <div class="field-group" id="fg-post-url">
-          <label for="post_url">Post URL <span class="req">*</span>
-            <span class="hint">Paste the full link to the post, reel, or video.</span>
-          </label>
-          <input type="url" id="post_url" name="post_url" placeholder="https://www.tiktok.com/@creator/video/..." />
-          <div class="field-error">Please enter the post URL.</div>
+        <div class="field-group">
+          <label>Report Type <span class="req">*</span></label>
+          <div class="radio-group radio-group--horizontal" id="report-type-group">
+            <label><input type="radio" name="report_type" value="Single Post" checked /><div>Single Post Analysis<span class="option-desc">One post / video / thread &mdash; from $20 AUD</span></div></label>
+            <label><input type="radio" name="report_type" value="Community Intelligence" /><div>Community Intelligence<span class="option-desc">Entire subreddit &mdash; 100&ndash;500+ posts &mdash; $99 AUD</span></div></label>
+          </div>
         </div>
 
-        <div class="field-group">
+        <div class="field-group" id="fg-post-url">
+          <label for="post_url" id="lbl-post-url">Post URL <span class="req">*</span>
+            <span class="hint" id="hint-post-url">Paste the full link to the post, reel, or video.</span>
+          </label>
+          <input type="url" id="post_url" name="post_url" placeholder="https://www.tiktok.com/@creator/video/..." />
+          <div class="field-error">Please enter the URL.</div>
+        </div>
+
+        <div class="field-group" id="fg-date-range" style="display:none;">
+          <label for="date_range">Date Range
+            <span class="hint">Optional &mdash; e.g. &ldquo;Last 6 months&rdquo; or &ldquo;All time&rdquo;. Defaults to all available posts.</span>
+          </label>
+          <input type="text" id="date_range" name="date_range" placeholder="e.g. Jan&ndash;Mar 2026, or All time" />
+        </div>
+
+        <div class="field-group" id="fg-platform">
           <label>Platform <span class="req">*</span></label>
           <div class="radio-group radio-group--horizontal" id="platform-group">
             <label><input type="radio" name="platform" value="TikTok" /><div>TikTok</div></label>
@@ -478,6 +493,39 @@
 </footer>
 
 <script>
+  // -- Report type toggle
+  (function() {
+    function updateReportType() {
+      var isCommunity = document.querySelector('input[name="report_type"]:checked').value === 'Community Intelligence';
+      var lblUrl = document.getElementById('lbl-post-url');
+      var hintUrl = document.getElementById('hint-post-url');
+      var inputUrl = document.getElementById('post_url');
+      var fgDateRange = document.getElementById('fg-date-range');
+      var fgPlatform = document.getElementById('fg-platform');
+      if (isCommunity) {
+        lblUrl.childNodes[0].textContent = 'Subreddit URL ';
+        hintUrl.textContent = 'Paste the full subreddit URL, e.g. https://www.reddit.com/r/mycommunity/';
+        inputUrl.placeholder = 'https://www.reddit.com/r/mycommunity/';
+        fgDateRange.style.display = 'block';
+        fgPlatform.style.display = 'none';
+      } else {
+        lblUrl.childNodes[0].textContent = 'Post URL ';
+        hintUrl.textContent = 'Paste the full link to the post, reel, or video.';
+        inputUrl.placeholder = 'https://www.tiktok.com/@creator/video/...';
+        fgDateRange.style.display = 'none';
+        fgPlatform.style.display = 'block';
+      }
+    }
+    document.querySelectorAll('input[name="report_type"]').forEach(function(r) {
+      r.addEventListener('change', updateReportType);
+    });
+    // Pre-select Community Intelligence if URL has ?type=community
+    if (window.location.search.indexOf('type=community') !== -1) {
+      var ci = document.querySelector('input[name="report_type"][value="Community Intelligence"]');
+      if (ci) { ci.checked = true; ci.closest('label').classList.add('selected'); updateReportType(); }
+    }
+  })();
+
   // -- Radio / checkbox live styling
   document.querySelectorAll('.radio-group input[type="radio"]').forEach(function(r) {
     r.addEventListener('change', function() {
@@ -519,8 +567,13 @@
     if (!orderId) ok = false;
 
     var platform = document.querySelector('input[name="platform"]:checked');
-    document.getElementById('err-platform').style.display = platform ? 'none' : 'block';
-    if (!platform) ok = false;
+    var isCommunityMode = document.querySelector('input[name="report_type"]:checked') && document.querySelector('input[name="report_type"]:checked').value === 'Community Intelligence';
+    if (!isCommunityMode) {
+      document.getElementById('err-platform').style.display = platform ? 'none' : 'block';
+      if (!platform) ok = false;
+    } else {
+      document.getElementById('err-platform').style.display = 'none';
+    }
 
     return ok;
   }

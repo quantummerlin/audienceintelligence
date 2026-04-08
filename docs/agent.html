@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Audience Intelligence Agent &mdash; For Agencies &amp; AI Builders</title>
+  <meta name="description" content="A self-hosted audience intelligence pipeline that mines Reddit and social media comments at scale, then delivers AI-generated reports automatically. Coming soon for agencies and AI builders.">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Quantum Merlin Ltd">
+  <meta name="theme-color" content="#0a0e1a">
+  <link rel="canonical" href="https://ai.quantummerlin.com/agent.html">
+  <meta property="og:title" content="Audience Intelligence Agent — For Agencies &amp; AI Builders">
+  <meta property="og:description" content="A self-hosted pipeline that scrapes, analyses, and delivers audience intelligence reports automatically. Early access coming soon.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ai.quantummerlin.com/agent.html">
+  <meta property="og:locale" content="en_AU">
+  <meta property="og:site_name" content="Audience Intelligence">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23818cf8'/><stop offset='1' stop-color='%2322d3ee'/></linearGradient></defs><circle cx='50' cy='50' r='50' fill='%230a0e1a'/><line x1='50' y1='22' x2='20' y2='72' stroke='%23818cf8' stroke-width='2.5' opacity='.6'/><line x1='50' y1='22' x2='80' y2='72' stroke='%2322d3ee' stroke-width='2.5' opacity='.6'/><line x1='20' y1='72' x2='80' y2='72' stroke='%23818cf8' stroke-width='2.5' opacity='.4'/><circle cx='50' cy='22' r='7' fill='url(%23g)'/><circle cx='20' cy='72' r='7' fill='%23818cf8'/><circle cx='80' cy='72' r='7' fill='%2322d3ee'/></svg>">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Hero ── */
+    .agent-hero{padding:120px 0 80px;text-align:center;position:relative;overflow:hidden;}
+    .agent-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(168,85,247,.12),transparent);pointer-events:none;}
+    .agent-hero__eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);border-radius:999px;padding:6px 16px;font-size:.78rem;font-weight:700;letter-spacing:.08em;color:#c084fc;text-transform:uppercase;margin-bottom:28px;}
+    .agent-hero__eyebrow span{width:8px;height:8px;border-radius:50%;background:#a855f7;display:inline-block;animation:pulse 1.8s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.85);}}
+    .agent-hero h1{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:800;color:var(--clr-heading);line-height:1.1;letter-spacing:-.03em;margin-bottom:20px;}
+    .agent-hero__sub{font-size:1.1rem;color:var(--clr-muted);max-width:600px;margin:0 auto 40px;line-height:1.75;}
+
+    /* ── How it works ── */
+    .pipeline{padding:80px 0;}
+    .pipeline__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--clr-border);border-radius:var(--radius-lg);overflow:hidden;}
+    .pipeline__step{background:var(--clr-card);padding:36px 28px;text-align:center;}
+    .pipeline__step:first-child{border-radius:var(--radius-lg) 0 0 var(--radius-lg);}
+    .pipeline__step:last-child{border-radius:0 var(--radius-lg) var(--radius-lg) 0;}
+    .pipeline__num{font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;color:var(--clr-primary-l);letter-spacing:.1em;margin-bottom:16px;opacity:.7;}
+    .pipeline__icon{font-size:2.2rem;margin-bottom:16px;display:block;}
+    .pipeline__title{font-size:1rem;font-weight:700;color:var(--clr-heading);margin-bottom:8px;}
+    .pipeline__desc{font-size:.84rem;color:var(--clr-muted);line-height:1.65;}
+
+    /* ── Features ── */
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;padding:0 0 80px;}
+    .feat-card{background:var(--clr-card);border:1px solid var(--clr-border);border-radius:var(--radius-lg);padding:28px;transition:border-color var(--transition);}
+    .feat-card:hover{border-color:rgba(168,85,247,.3);}
+    .feat-card__icon{font-size:1.8rem;margin-bottom:16px;display:block;}
+    .feat-card__title{font-size:1rem;font-weight:700;color:var(--clr-heading);margin-bottom:8px;}
+    .feat-card__desc{font-size:.86rem;color:var(--clr-muted);line-height:1.65;}
+
+    /* ── Audience ── */
+    .for-section{padding:60px 0 80px;}
+    .for-section__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+    .for-card{background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.15);border-radius:var(--radius-lg);padding:24px 20px;text-align:center;}
+    .for-card__icon{font-size:1.6rem;margin-bottom:12px;display:block;}
+    .for-card__title{font-size:.95rem;font-weight:700;color:var(--clr-heading);margin-bottom:6px;}
+    .for-card__desc{font-size:.82rem;color:var(--clr-muted);line-height:1.6;}
+
+    /* ── Waitlist form ── */
+    .waitlist{padding:80px 0 120px;}
+    .waitlist__inner{max-width:520px;margin:0 auto;text-align:center;}
+    .waitlist__inner h2{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:var(--clr-heading);margin-bottom:12px;}
+    .waitlist__inner p{color:var(--clr-muted);line-height:1.75;margin-bottom:32px;}
+    .waitlist__form{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+    .waitlist__form input[type="email"]{flex:1;min-width:240px;padding:14px 18px;background:var(--clr-card);border:1px solid var(--clr-border);border-radius:var(--radius);color:var(--clr-text);font-family:inherit;font-size:.95rem;outline:none;transition:border-color var(--transition);}
+    .waitlist__form input[type="email"]:focus{border-color:var(--clr-primary-l);}
+    .waitlist__form input[type="email"]::placeholder{color:var(--clr-muted);}
+    .waitlist__form button{padding:14px 28px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-weight:700;font-size:.9rem;border:none;border-radius:var(--radius);cursor:pointer;font-family:inherit;transition:opacity var(--transition);}
+    .waitlist__form button:hover{opacity:.85;}
+    .waitlist__thanks{display:none;margin-top:20px;color:var(--clr-success);font-weight:600;font-size:.95rem;}
+    .waitlist__note{font-size:.8rem;color:var(--clr-muted);margin-top:16px;}
+
+    @media(max-width:640px){
+      .pipeline__step:first-child,.pipeline__step:last-child{border-radius:0;}
+      .pipeline__grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ======================= NAVIGATION ======================= -->
+<nav class="nav" id="nav">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" stroke="url(#navGrad)" stroke-width="2"/>
+        <circle cx="16" cy="10" r="2.5" fill="#818cf8"/>
+        <circle cx="10" cy="20" r="2.5" fill="#22d3ee"/>
+        <circle cx="22" cy="20" r="2.5" fill="#818cf8"/>
+        <line x1="16" y1="12.5" x2="10" y2="17.5" stroke="#818cf8" stroke-width="1.5" opacity=".6"/>
+        <line x1="16" y1="12.5" x2="22" y2="17.5" stroke="#22d3ee" stroke-width="1.5" opacity=".6"/>
+        <line x1="10" y1="20" x2="22" y2="20" stroke="#818cf8" stroke-width="1.5" opacity=".4"/>
+        <defs><linearGradient id="navGrad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+      </svg>
+      Audience Intelligence
+    </a>
+    <button class="nav__toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+    <div class="nav__links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="tools.html">Free Tools</a>
+      <a href="examples.html">Examples</a>
+      <a href="agent.html" style="color:var(--clr-accent)">For Agencies</a>
+      <a href="brief.html" class="btn btn-primary btn-sm nav__cta">Get Your Report</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ======================= HERO ======================= -->
+<section class="agent-hero">
+  <div class="container">
+    <div class="agent-hero__eyebrow"><span></span> Coming Soon &mdash; Early Access</div>
+    <h1>Audience Intelligence<br><span class="text-gradient">Agent Pipeline</span></h1>
+    <p class="agent-hero__sub">
+      A fully automated pipeline that mines subreddits and social platforms, clusters themes, scores viral potential, and delivers professional HTML reports &mdash; without you touching a single line of prompt engineering.
+    </p>
+    <a href="#waitlist" class="btn btn-primary" style="background:linear-gradient(135deg,#a855f7,#7c3aed);margin-right:12px;">Join the Waitlist</a>
+    <a href="examples.html" class="btn btn-outline">See Example Reports</a>
+  </div>
+</section>
+
+<!-- ======================= HOW IT WORKS ======================= -->
+<section class="pipeline">
+  <div class="container">
+    <div class="section-header text-center" style="margin-bottom:48px;">
+      <span class="badge">How It Works</span>
+      <h2>Four Steps. Zero Manual Work.</h2>
+      <p style="color:var(--clr-muted);max-width:480px;margin:0 auto;">Point the agent at a subreddit or social account and it handles everything from data collection to final report delivery.</p>
+    </div>
+    <div class="pipeline__grid">
+      <div class="pipeline__step">
+        <div class="pipeline__num">01</div>
+        <span class="pipeline__icon">&#x1F578;</span>
+        <div class="pipeline__title">Mine</div>
+        <p class="pipeline__desc">PRAW-powered Reddit scraper pulls 100&ndash;500+ posts and all their comments from any subreddit on demand.</p>
+      </div>
+      <div class="pipeline__step">
+        <div class="pipeline__num">02</div>
+        <span class="pipeline__icon">&#x1F9E0;</span>
+        <div class="pipeline__title">Cluster</div>
+        <p class="pipeline__desc">Comments are batched, deduplicated, and routed through GPT-4 to surface themes, sentiment, and viral signals.</p>
+      </div>
+      <div class="pipeline__step">
+        <div class="pipeline__num">03</div>
+        <span class="pipeline__icon">&#x1F4CA;</span>
+        <div class="pipeline__title">Report</div>
+        <p class="pipeline__desc">18 structured intelligence sections are generated automatically — competitor mapping, power users, product opportunities, viral triggers, and more.</p>
+      </div>
+      <div class="pipeline__step">
+        <div class="pipeline__num">04</div>
+        <span class="pipeline__icon">&#x1F4E8;</span>
+        <div class="pipeline__title">Deliver</div>
+        <p class="pipeline__desc">A polished, self-contained HTML report is exported and can be emailed, hosted, or dropped into your client workflow automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FEATURES ======================= -->
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="section-header text-center" style="margin-bottom:48px;">
+      <span class="badge">What&rsquo;s Inside</span>
+      <h2>Built for Scale</h2>
+      <p style="color:var(--clr-muted);max-width:480px;margin:0 auto;">Everything already built and battle-tested in production. The agent run uses the same pipeline that generated the reports in the Examples section.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <span class="feat-card__icon">&#x1F578;</span>
+        <div class="feat-card__title">Multi-Community Scraping</div>
+        <p class="feat-card__desc">PRAW-based Reddit miner with configurable post limits, date ranges, and comment depth. Handles pagination and API rate limits automatically.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-card__icon">&#x1F4AC;</span>
+        <div class="feat-card__title">Smart Comment Batching</div>
+        <p class="feat-card__desc">Thousands of comments are chunked into GPT-4 context windows and analysed in parallel batches — no context overflow, no truncated data.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-card__icon">&#x1F3AF;</span>
+        <div class="feat-card__title">18-Section Report Template</div>
+        <p class="feat-card__desc">Community overview, sentiment analysis, viral triggers, top voices, competitor intelligence, product opportunities, strategic recommendations, and more &mdash; all structured, all automated.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-card__icon">&#x1F9EC;</span>
+        <div class="feat-card__title">Viral Probability Scoring</div>
+        <p class="feat-card__desc">Every post cluster is scored on a 1&ndash;10 viral probability scale using engagement patterns, sentiment spikes, and comment velocity data.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-card__icon">&#x1F4C4;</span>
+        <div class="feat-card__title">Portable HTML Output</div>
+        <p class="feat-card__desc">Reports are fully self-contained HTML files with embedded styles &mdash; no external dependencies, easy to email, host, or send to clients as-is.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-card__icon">&#x2699;&#xFE0F;</span>
+        <div class="feat-card__title">Extensible &amp; API-Ready</div>
+        <p class="feat-card__desc">Python-based pipeline designed for extension. Plug in your own LLM, add new data sources (Instagram, YouTube, TikTok), or wire it into your existing automation stack.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= WHO IT'S FOR ======================= -->
+<section class="for-section">
+  <div class="container">
+    <div class="section-header text-center" style="margin-bottom:40px;">
+      <span class="badge">Who It&rsquo;s For</span>
+      <h2>Built for Builders</h2>
+    </div>
+    <div class="for-section__grid">
+      <div class="for-card">
+        <span class="for-card__icon">&#x1F3E2;</span>
+        <div class="for-card__title">Marketing Agencies</div>
+        <p class="for-card__desc">Deliver community intelligence at scale for clients without scaling your headcount.</p>
+      </div>
+      <div class="for-card">
+        <span class="for-card__icon">&#x1F916;</span>
+        <div class="for-card__title">AI Builders</div>
+        <p class="for-card__desc">Drop a production-ready intelligence pipeline into your own AI product or agent stack.</p>
+      </div>
+      <div class="for-card">
+        <span class="for-card__icon">&#x1F4BB;</span>
+        <div class="for-card__title">Developers</div>
+        <p class="for-card__desc">Self-host the full pipeline. Bring your own API keys and run it on any server or local machine.</p>
+      </div>
+      <div class="for-card">
+        <span class="for-card__icon">&#x1F9EA;</span>
+        <div class="for-card__title">Researchers</div>
+        <p class="for-card__desc">Mine niche communities for product validation, trend research, or academic analysis in minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= WAITLIST ======================= -->
+<section class="waitlist" id="waitlist">
+  <div class="container">
+    <div class="waitlist__inner">
+      <h2>Get <span class="text-gradient">Early Access</span></h2>
+      <p>The agent pipeline is in active development. Drop your email and we&rsquo;ll reach out when early access opens &mdash; along with pricing, docs, and a private demo.</p>
+      <form class="waitlist__form" id="waitlistForm" action="https://formspree.io/f/mzzpgnrr" method="POST">
+        <input type="email" name="email" placeholder="your@email.com" required autocomplete="email" />
+        <input type="hidden" name="source" value="agent-waitlist" />
+        <button type="submit">Notify Me</button>
+      </form>
+      <div class="waitlist__thanks" id="waitlistThanks">&#x2714; You&rsquo;re on the list. We&rsquo;ll be in touch.</div>
+      <p class="waitlist__note">No spam. Unsubscribe any time. We&rsquo;ll only email when it matters.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="footer__logo">&#x25B2; Audience Intelligence</span>
+      <p class="footer__tagline">Understand your audience. Create content that converts.</p>
+    </div>
+    <div class="footer__links">
+      <a href="index.html">Home</a>
+      <a href="examples.html">Examples</a>
+      <a href="tools.html">Free Tools</a>
+      <a href="brief.html">Get Report</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+    <p class="footer__copy">&copy; 2026 Quantum Merlin Ltd &middot; <a href="mailto:ai@quantummerlin.com">ai@quantummerlin.com</a></p>
+  </div>
+</footer>
+
+<script>
+  // Nav toggle
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // Waitlist form
+  var form = document.getElementById('waitlistForm');
+  var thanks = document.getElementById('waitlistThanks');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var data = new FormData(form);
+      fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+        .then(function(res) {
+          if (res.ok) {
+            form.style.display = 'none';
+            thanks.style.display = 'block';
+          } else {
+            alert('Something went wrong — please email us directly at ai@quantummerlin.com');
+          }
+        })
+        .catch(function() {
+          alert('Something went wrong — please email us directly at ai@quantummerlin.com');
+        });
+    });
+  }
+</script>
+</body>
+</html>

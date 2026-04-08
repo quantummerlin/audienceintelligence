@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I analysed 7,347 comments about OpenClaw | Aether Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --warning: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-left: 32px;
+            transition: color 0.2s;
+        }
+        
+        nav a:hover {
+            color: var(--text-primary);
+        }
+        
+        .hero {
+            padding: 60px 0 40px;
+        }
+        
+        .report-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            background: linear-gradient(180deg, #ffffff 0%, #a0a0b0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+        }
+        
+        .hero-intro {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            padding-bottom: 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 32px 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+        
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Section */
+        .section {
+            padding: 40px 0;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title .badge {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent);
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .pattern {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .pattern.warning {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), transparent);
+        }
+        
+        .pattern-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .pattern-number {
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+        
+        
+        .pattern-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        
+        .pattern-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        
+        .quote {
+            background: rgba(99, 102, 241, 0.08);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-style: italic;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        /* Product Ideas */
+        .idea-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .idea-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .idea-card .problem {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        
+        .idea-card .evidence {
+            background: rgba(34, 197, 94, 0.1);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #22c55e;
+        }
+        
+        /* Viral Hooks */
+        .hook-grid {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .hook-item {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .hook-number {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+            min-width: 40px;
+        }
+        
+        .hook-text {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+        
+
+        .cta-proof {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+        }
+        .cta-proof-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        .cta-proof-sep {
+            opacity: 0.3;
+            font-size: 1rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 48px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        
+        .cta-text {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--text-primary);
+            margin-left: 12px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-section {
+                padding: 32px 24px;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .pattern {
+                padding: 24px;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <a href="../index.html" class="logo">
+                <img src="../logo.png" alt="Aether Intelligence" class="logo-icon">
+                Aether Intelligence
+            </a>
+            <nav>
+                <a href="../index.html#reports">Reports</a>
+                <a href="../index.html#custom">Custom</a>
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <span class="report-tag">Report #001 • AI & Automation</span>
+            <h1>I analysed 7,347 real user comments about OpenClaw… here's what actually works</h1>
+            <div class="hero-meta">
+                <span>📊 17 Pain Points</span>
+                <span>💡 15 Product Ideas</span>
+                <span>🎯 Rising & Established Trends</span>
+            </div>
+            <p class="hero-intro">
+                OpenClaw is an open-source autonomous AI agent framework that's exploding in popularity. But underneath the hype, users are struggling with runaway costs, security nightmares, and broken workflows. This report extracts the signal from 7,347 real user comments.
+            </p>
+        </section>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value">$300</div>
+                <div class="label">Avg Daily Cost (24/7)</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">~2,000</div>
+                <div class="label">CVEs in Official Image</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">15x</div>
+                <div class="label">Opus vs Sonnet Cost</div>
+            </div>
+        </div>
+        
+        <!-- Pain Points Section -->
+        <section class="section">
+            <h2 class="section-title">
+                🔥 Top Pain Points
+                <span class="badge">HIGH ENGAGEMENT</span>
+            </h2>
+            
+            <div class="pattern warning">
+                <div class="pattern-header">
+                    <span class="pattern-number">#1 RUNAWAY COSTS</span>
+                    
+                </div>
+                <h3 class="pattern-title">API Cost Overruns Are Bankrupting Users</h3>
+                <p class="pattern-desc">The most common pain point: unexpected bills ranging from $200-400/month. Users report $300/day for 24/7 operation. Single "runaway agents" produce $200+ surprise charges overnight. Opus is 10-15x more expensive than Sonnet.</p>
+                <div class="quote">"Just got hit with a $200 bill because my OpenClaw agent went into a loop overnight. Opus is 10-15x more expensive than Sonnet and it adds up FAST."</div>
+                <div class="quote">"Running OpenClaw 24/7 costs me $300/day. That's $9k a month just in API calls. Completely unsustainable."</div>
+            </div>
+            
+            <div class="pattern warning">
+                <div class="pattern-header">
+                    <span class="pattern-number">#2 MEMORY FAILURES</span>
+                    
+                </div>
+                <h3 class="pattern-title">Context Amnesia & Infinite Looping</h3>
+                <p class="pattern-desc">Agents frequently lose conversational context after just 3 messages, causing them to repeat questions, re-ask for clarification, and execute the same inefficient decisions in circular patterns.</p>
+                <div class="quote">"OpenClaw agents keep forgetting what we discussed 3 messages ago. I have to re-explain everything every single time it loops."</div>
+                <div class="quote">"The context looping is insane. It repeats itself, makes the same dumb decisions, and burns through my token limit while getting nowhere."</div>
+            </div>
+            
+            <div class="pattern warning">
+                <div class="pattern-header">
+                    <span class="pattern-number">#3 SECURITY</span>
+                    
+                </div>
+                <h3 class="pattern-title">Security Swiss Cheese in Self-Hosted Deployments</h3>
+                <p class="pattern-desc">The official Docker image ships with approximately 2,000 known CVEs. API keys stored in plaintext in logs and config files. ClawHub skills can execute arbitrary system commands with full filesystem access.</p>
+                <div class="quote">"Official OpenClaw image has like 2k CVEs. I'm basically hosting a vulnerability farm on my server."</div>
+                <div class="quote">"Found my API keys in plaintext in the logs. Anyone with filesystem access can steal them and rack up charges."</div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <span class="pattern-number">#4 TECHNICAL BARRIER</span>
+                    
+                </div>
+                <h3 class="pattern-title">Non-Developers Can't Set It Up</h3>
+                <p class="pattern-desc">Requires extensive DevOps knowledge, custom rule authoring, and guardrail configuration. Not accessible to technical founders and operations teams without dedicated engineering support.</p>
+                <div class="quote">"Tried to set up OpenClaw for my marketing team but gave up after 3 days. You need to be a devops engineer just to get it running."</div>
+                <div class="quote">"The amount of custom rules and guardrails you need to write just to make it safe is ridiculous. This isn't 'low-code' it's 'write-your-own-framework'."</div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <span class="pattern-number">#5 DOCUMENTATION</span>
+                    
+                </div>
+                <h3 class="pattern-title">Documentation Actively Sabotages Success</h3>
+                <p class="pattern-desc">Unstructured, filled with irrelevant implementation details, fails to address common setup scenarios. Not properly crawled by search engines.</p>
+                <div class="quote">"The docs are completely unstructured. Can't find anything and Google doesn't even crawl them properly."</div>
+                <div class="quote">"Documentation is full of irrelevant details about internal architecture but missing the actual 'how do I make it stop looping' steps I need."</div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <span class="pattern-number">#6 STABILITY</span>
+                    
+                </div>
+                <h3 class="pattern-title">Chronic Breaking Changes</h3>
+                <p class="pattern-desc">OpenClaw breaks frequently with updates, requires constant maintenance and hot-fixing, lacks backward compatibility. Unreliable for production workflows.</p>
+                <div class="quote">"OpenClaw breaks every other update. I spend more time fixing the framework than actually using it for work."</div>
+                <div class="quote">"It's so buggy I can't rely on it for production work. Constantly have to debug the framework itself instead of my actual business logic."</div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <span class="pattern-number">#7 TOKEN BLOAT</span>
+                    
+                </div>
+                <h3 class="pattern-title">Inefficient Default Memory Management</h3>
+                <p class="pattern-desc">Default memory configurations consume excessive tokens by sending redundant context or failing to compress conversation history, causing agents to forget while inflating costs.</p>
+                <div class="quote">"Default memory management is trash. It burns tokens like crazy and agents still forget previous conversations immediately."</div>
+                <div class="quote">"Token bloat is real. It repeats questions I already answered because the memory buffer is too small, doubling my costs for zero benefit."</div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <span class="pattern-number">#8 MODEL SELECTION</span>
+                    
+                </div>
+                <h3 class="pattern-title">Model Selection Paralysis</h3>
+                <p class="pattern-desc">Users lack guidance on which LLM models perform best for specific agentic tasks, leading to expensive trial-and-error with premium models when smaller alternatives would suffice.</p>
+                <div class="quote">"Wasted hundreds on trial and error trying to find which LLM works best for my specific agentic tasks. No guidance anywhere."</div>
+                <div class="quote">"Burned through $50 in Opus tokens before realizing Sonnet could handle my workflow. Need a model picker or cost optimizer badly."</div>
+            </div>
+        </section>
+        
+        <!-- Product Ideas Section -->
+        <section class="section">
+            <h2 class="section-title">
+                💡 Product Opportunities
+                <span class="badge">MARKET GAPS</span>
+            </h2>
+            
+            <div class="idea-card">
+                <h4>1. Smart LLM Cost Router</h4>
+                <p class="problem">Automatically routes agent tasks to the cheapest adequate model instead of defaulting to expensive Opus-tier APIs.</p>
+                <div class="evidence">📊 Prevents $300/day runaway costs and surprise $200+ bills</div>
+            </div>
+            
+            <div class="idea-card">
+                <h4>2. Agent Memory Compression Engine</h4>
+                <p class="problem">Eliminates token bloat and context forgetting by compressing conversation history and maintaining structured memory.</p>
+                <div class="evidence">📊 ~12 users cited memory failures and token waste as critical blockers</div>
+            </div>
+            
+            <div class="idea-card">
+                <h4>3. OpenClaw Security Hardening Suite</h4>
+                <p class="problem">Patches the ~2,000 CVEs in official images, secures API keys, sandbox filesystem access.</p>
+                <div class="evidence">📊 "Official OpenClaw image has like 2k CVEs" — enterprise adoption impossible without this</div>
+            </div>
+            
+            <div class="idea-card">
+                <h4>4. No-Code Agent Configuration Builder</h4>
+                <p class="problem">Allows non-technical users to configure agents through visual interface instead of YAML configs.</p>
+                <div class="evidence">📊 ~5 users mentioned setup complexity as barrier — "need to be a devops engineer"</div>
+            </div>
+            
+            <div class="idea-card">
+                <h4>5. Real-Time Token Budget Guardian</h4>
+                <p class="problem">Hard-stops agents when daily spend hits configurable limits to prevent $400+ monthly surprises.</p>
+                <div class="evidence">📊 ~9 users referenced bill shock from runaway agents</div>
+            </div>
+            
+            <div class="idea-card">
+                <h4>6. Production-Grade OpenClaw Hosting (PaaS)</h4>
+                <p class="problem">Managed, secure, scalable hosting without the ~2k CVEs, exposed gateways, or plaintext credential issues.</p>
+                <div class="evidence">📊 "I can't self-host this securely" — OpenClaw is self-hosted only, no managed platform exists</div>
+            </div>
+        </section>
+        
+        <!-- Trends Section -->
+        <section class="section">
+            <h2 class="section-title">
+                📈 Rising Trends
+                <span class="badge">WHAT'S ACCELERATING</span>
+            </h2>
+            
+            <div class="pattern">
+                <h3 class="pattern-title">1. Aggressive Cost Optimization & Dynamic Model Triage</h3>
+                <p class="pattern-desc">Users shifting from "always use the best model" to sophisticated cost-benefit analysis, explicitly comparing Opus vs Sonnet pricing ratios and implementing hard spending caps.</p>
+                <div class="quote">"Switched from Opus to Sonnet and cut my bill from $400/month to $40 but now the agent is dumber, need a way to auto-switch between them based on task complexity"</div>
+            </div>
+            
+            <div class="pattern">
+                <h3 class="pattern-title">2. Memory Architecture as Primary Differentiator</h3>
+                <p class="pattern-desc">Accelerating demand for persistent, hierarchical memory solutions that prevent context loss and token bloat, moving beyond simple vector stores.</p>
+                <div class="quote">"The default memory is burning tokens like crazy, agent asks me the same question five times because it forgot the answer from two messages ago"</div>
+            </div>
+            
+            <div class="pattern">
+                <h3 class="pattern-title">3. Security Hardening for Production Deployments</h3>
+                <p class="pattern-desc">Growing awareness that official container images contain thousands of CVEs, driving demand for minimal, scanned, production-ready configurations.</p>
+                <div class="quote">"Found like 2k CVEs in the official OpenClaw image, can't believe people are running this with API keys exposed to the filesystem"</div>
+            </div>
+            
+            <div class="pattern">
+                <h3 class="pattern-title">4. No-Code Agent Configuration Interfaces</h3>
+                <p class="pattern-desc">Non-technical users forcing the community to create GUI wrappers and simplified setup flows, moving away from pure CLI/config file setups.</p>
+                <div class="quote">"Tried to set this up for my marketing team but they can't handle YAML files and terminal commands, need a simple web UI"</div>
+            </div>
+        </section>
+        
+        <!-- Established Trends -->
+        <section class="section">
+            <h2 class="section-title">
+                📊 Established Trends
+                <span class="badge">ONGOING PATTERNS</span>
+            </h2>
+            
+            <div class="hook-grid">
+                <div class="hook-item">
+                    <span class="hook-number">#1</span>
+                    <span class="hook-text">Chronic Token Consumption Anxiety — users constantly monitoring dashboards, terrified of $300/day charges</span>
+                </div>
+                <div class="hook-item">
+                    <span class="hook-number">#2</span>
+                    <span class="hook-text">The Infinite Loop Phenomenon — agents stuck in circular logic, burning $15/hour doing nothing</span>
+                </div>
+                <div class="hook-item">
+                    <span class="hook-number">#3</span>
+                    <span class="hook-text">Self-Hosting Security Negligence — deploying with plaintext credentials despite knowing the risks</span>
+                </div>
+                <div class="hook-item">
+                    <span class="hook-number">#4</span>
+                    <span class="hook-text">Documentation Archaeology — digging through Discord threads for basic setup info</span>
+                </div>
+                <div class="hook-item">
+                    <span class="hook-number">#5</span>
+                    <span class="hook-text">The "It Worked Yesterday" Syndrome — constant maintenance, debugging, version pinning</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-proof">
+                <span class="cta-proof-label">📊 22 free reports</span>
+                <span class="cta-proof-sep">·</span>
+                <span class="cta-proof-label">1 intelligence collection</span>
+            </div>
+            <h3 class="cta-title">Want this done for your topic?</h3>
+            <p class="cta-text">Every report on this site — all 22 of them — came from a single deep-dive intelligence collection. One dataset. Dozens of angles. For $69, I'll run the same process on your niche, product, or audience and hand you the raw signal.</p>
+            <a href="mailto:signup@quantummerlin.com?subject=Custom%20Report%20Request" class="btn btn-primary">Commission a Custom Collection — $69</a>
+            <a href="../index.html" class="btn btn-secondary">Back to All Reports</a>
+        </section>
+        
+        <footer>
+            <p>Aether Intelligence — Human insight, extracted from real data</p>
+        </footer>
+    </div>
+</body>
+</html>

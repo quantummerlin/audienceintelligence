@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Free AI Comment Analyzer &mdash; Audience Intelligence</title>
+  <meta name="description" content="Paste social media comments and generate a full professional Audience Intelligence Report using your own OpenAI key. Free forever &mdash; your key, your cost.">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Quantum Merlin Ltd">
+  <meta name="theme-color" content="#0a0e1a">
+  <link rel="canonical" href="https://ai.quantummerlin.com/analyze.html">
+  <meta property="og:title" content="Free AI Comment Analyzer &mdash; Audience Intelligence">
+  <meta property="og:description" content="Generate a full 15-section Audience Intelligence Report from any social media comments. Free — bring your own OpenAI key.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ai.quantummerlin.com/analyze.html">
+  <meta property="og:locale" content="en_AU">
+  <meta property="og:site_name" content="Audience Intelligence">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23818cf8'/><stop offset='1' stop-color='%2322d3ee'/></linearGradient></defs><circle cx='50' cy='50' r='50' fill='%230a0e1a'/><line x1='50' y1='22' x2='20' y2='72' stroke='%23818cf8' stroke-width='2.5' opacity='.6'/><line x1='50' y1='22' x2='80' y2='72' stroke='%2322d3ee' stroke-width='2.5' opacity='.6'/><line x1='20' y1='72' x2='80' y2='72' stroke='%23818cf8' stroke-width='2.5' opacity='.4'/><circle cx='50' cy='22' r='7' fill='url(%23g)'/><circle cx='20' cy='72' r='7' fill='%23818cf8'/><circle cx='80' cy='72' r='7' fill='%2322d3ee'/></svg>">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tool-hero{padding:110px 0 48px;text-align:center;}
+    .tool-hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:var(--clr-heading);line-height:1.15;margin-bottom:14px;}
+    .tool-hero p{font-size:1rem;color:var(--clr-muted);max-width:560px;margin:0 auto 10px;line-height:1.7;}
+    .badge-free{display:inline-flex;align-items:center;gap:6px;background:rgba(52,211,153,.12);color:var(--clr-success);border:1px solid rgba(52,211,153,.2);border-radius:999px;padding:5px 14px;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px;}
+
+    .tool-card{background:var(--clr-card);border:1px solid var(--clr-border);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:20px;}
+    .tool-card__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;}
+    .tool-card__title{font-size:1rem;font-weight:700;color:var(--clr-heading);}
+    .step-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--clr-primary);color:#fff;font-size:.75rem;font-weight:700;flex-shrink:0;}
+
+    .key-row{display:flex;gap:10px;align-items:stretch;}
+    .key-input{flex:1;background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);padding:11px 14px;font-family:var(--ff-mono);font-size:.85rem;color:var(--clr-text);transition:border-color var(--transition);}
+    .key-input:focus{outline:none;border-color:var(--clr-primary);}
+    .btn-sm-action{padding:10px 18px;font-size:.82rem;font-weight:600;border:none;border-radius:var(--radius);cursor:pointer;transition:opacity var(--transition);white-space:nowrap;}
+    .btn-save{background:var(--clr-primary);color:#fff;}
+    .btn-save:hover{opacity:.85;}
+    .btn-clear{background:rgba(255,255,255,.06);color:var(--clr-muted);border:1px solid var(--clr-border);}
+    .btn-clear:hover{opacity:.7;}
+
+    .key-saved-note{font-size:.78rem;color:var(--clr-success);margin-top:10px;display:none;}
+    .key-security{font-size:.75rem;color:var(--clr-muted);margin-top:10px;line-height:1.55;}
+    .key-security a{color:var(--clr-accent);font-size:.75rem;}
+
+    .settings-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+    .form-group{display:flex;flex-direction:column;gap:6px;}
+    .form-label{font-size:.75rem;font-weight:600;color:var(--clr-muted);letter-spacing:.06em;text-transform:uppercase;}
+    .form-select,.form-input{background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);padding:10px 14px;font-family:var(--ff-sans);font-size:.88rem;color:var(--clr-text);transition:border-color var(--transition);}
+    .form-select:focus,.form-input:focus{outline:none;border-color:var(--clr-primary);}
+    .form-select option{background:var(--clr-surface);}
+
+    .textarea-wrap{position:relative;}
+    .textarea-wrap textarea{width:100%;min-height:260px;background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);padding:14px;font-family:var(--ff-sans);font-size:.88rem;color:var(--clr-text);resize:vertical;transition:border-color var(--transition);line-height:1.55;}
+    .textarea-wrap textarea:focus{outline:none;border-color:var(--clr-primary);}
+    .char-count{position:absolute;bottom:10px;right:14px;font-size:.72rem;color:var(--clr-muted);}
+
+    .generate-btn{width:100%;padding:16px;font-size:1.05rem;font-weight:700;border:none;border-radius:var(--radius);background:linear-gradient(135deg,var(--clr-primary),var(--clr-accent));color:#fff;cursor:pointer;transition:opacity var(--transition);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;}
+    .generate-btn:hover:not(:disabled){opacity:.88;}
+    .generate-btn:disabled{opacity:.4;cursor:default;}
+
+    /* Status bar */
+    .status-bar{display:none;background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--clr-muted);}
+    .spinner{width:16px;height:16px;border:2px solid var(--clr-border);border-top-color:var(--clr-primary);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* Report output */
+    #reportWrap{display:none;}
+    .report-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;}
+    .report-header h2{font-size:1.15rem;font-weight:700;color:var(--clr-heading);}
+    .btn-export{padding:9px 18px;font-size:.82rem;font-weight:600;border:1px solid var(--clr-border);border-radius:var(--radius);background:rgba(255,255,255,.04);color:var(--clr-text);cursor:pointer;transition:opacity var(--transition);}
+    .btn-export:hover{opacity:.75;}
+
+    .report-body{background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);padding:28px 32px;font-size:.9rem;line-height:1.75;color:var(--clr-text);min-height:200px;}
+    .report-body h2{font-size:1.25rem;font-weight:800;color:var(--clr-heading);margin:28px 0 10px;border-bottom:1px solid var(--clr-border);padding-bottom:8px;}
+    .report-body h2:first-child{margin-top:0;}
+    .report-body h3{font-size:1.05rem;font-weight:700;color:var(--clr-primary-l);margin:20px 0 8px;}
+    .report-body h4{font-size:.95rem;font-weight:700;color:var(--clr-accent);margin:16px 0 6px;}
+    .report-body p{margin-bottom:10px;}
+    .report-body ul{padding-left:0;margin-bottom:12px;}
+    .report-body li{padding:3px 0 3px 20px;position:relative;color:var(--clr-text);}
+    .report-body li::before{content:'•';position:absolute;left:6px;color:var(--clr-accent);}
+    .report-body strong{color:var(--clr-heading);font-weight:600;}
+    .report-body em{color:var(--clr-muted);}
+    .report-body code{background:rgba(99,102,241,.1);color:var(--clr-primary-l);border-radius:4px;padding:1px 6px;font-family:var(--ff-mono);font-size:.82em;}
+    .report-body br{display:block;content:'';margin-bottom:6px;}
+    .cursor{display:inline-block;width:2px;height:1em;background:var(--clr-accent);animation:blink .7s step-end infinite;vertical-align:text-bottom;margin-left:2px;}
+    @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+    .error-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:var(--radius);padding:14px 18px;color:#fca5a5;font-size:.88rem;margin-bottom:20px;display:none;}
+
+    .upsell-banner{background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(34,211,238,.08));border:1px solid rgba(99,102,241,.2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;margin-bottom:16px;}
+    .upsell-banner h3{font-size:1.1rem;font-weight:700;color:var(--clr-heading);margin-bottom:8px;}
+    .upsell-banner p{font-size:.88rem;color:var(--clr-muted);margin-bottom:18px;line-height:1.6;}
+    .upsell-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+    @media(max-width:600px){.settings-row{grid-template-columns:1fr;}.key-row{flex-direction:column;}.upsell-btns{flex-direction:column;}}
+  </style>
+</head>
+<body>
+
+<!-- ======================= NAVIGATION ======================= -->
+<nav class="nav" id="nav">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" stroke="url(#navGrad)" stroke-width="2"/>
+        <circle cx="16" cy="10" r="2.5" fill="#818cf8"/>
+        <circle cx="10" cy="20" r="2.5" fill="#22d3ee"/>
+        <circle cx="22" cy="20" r="2.5" fill="#818cf8"/>
+        <line x1="16" y1="12.5" x2="10" y2="17.5" stroke="#818cf8" stroke-width="1.5" opacity=".6"/>
+        <line x1="16" y1="12.5" x2="22" y2="17.5" stroke="#22d3ee" stroke-width="1.5" opacity=".6"/>
+        <line x1="10" y1="20" x2="22" y2="20" stroke="#818cf8" stroke-width="1.5" opacity=".4"/>
+        <defs><linearGradient id="navGrad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+      </svg>
+      Audience Intelligence
+    </a>
+    <button class="nav__toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+    <div class="nav__links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="tools.html" style="color:var(--clr-accent)">Free Tools</a>
+      <a href="examples.html">Examples</a>
+      <a href="brief.html" class="btn btn-primary btn-sm nav__cta">Get Your Report</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ======================= HERO ======================= -->
+<section class="tool-hero">
+  <div class="container">
+    <div class="badge-free">✓ Free &mdash; bring your own OpenAI key</div>
+    <h1>Free <span class="text-gradient">AI Comment Analyzer</span></h1>
+    <p>Paste any social media comments and generate a complete 15-section Audience Intelligence Report — sentiment, content ideas, lead opportunities, viral triggers, and more.</p>
+    <p style="font-size:.82rem;color:var(--clr-muted);">Your API key never leaves your browser. Calls go directly to OpenAI. ~$0.002 per report.</p>
+  </div>
+</section>
+
+<!-- ======================= MAIN ======================= -->
+<main style="padding-bottom:80px;">
+  <div class="container" style="max-width:800px;">
+
+    <!-- Step 1: API Key -->
+    <div class="tool-card">
+      <div class="tool-card__header">
+        <span class="step-badge">1</span>
+        <span class="tool-card__title">OpenAI API Key</span>
+        <span id="keyStatus" style="font-size:.78rem;color:var(--clr-success);display:none;">✓ Key saved</span>
+      </div>
+      <div class="key-row">
+        <input type="password" id="keyInput" class="key-input" placeholder="sk-proj-..." autocomplete="off" spellcheck="false">
+        <button class="btn-sm-action btn-save" onclick="saveKey()">Save Key</button>
+        <button class="btn-sm-action btn-clear" onclick="clearKey()">Clear</button>
+      </div>
+      <div class="key-security">
+        🔒 Your key is stored only in this browser's <code>localStorage</code> and sent directly to OpenAI — it never touches our servers.
+        Get a key at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>.
+        GPT-4o-mini costs ~$0.002 per report.
+      </div>
+    </div>
+
+    <!-- Step 2: Settings -->
+    <div class="tool-card">
+      <div class="tool-card__header">
+        <span class="step-badge">2</span>
+        <span class="tool-card__title">Context (optional)</span>
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <label class="form-label" for="platform">Platform</label>
+          <select id="platform" class="form-select">
+            <option value="Social media">Not specified</option>
+            <option value="YouTube">YouTube</option>
+            <option value="Instagram">Instagram</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Facebook">Facebook</option>
+            <option value="Reddit">Reddit</option>
+            <option value="Twitter / X">Twitter / X</option>
+            <option value="LinkedIn">LinkedIn</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="topic">Post Topic / Context</label>
+          <input type="text" id="topic" class="form-input" placeholder="e.g. fitness tutorial, product launch…">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Comments -->
+    <div class="tool-card">
+      <div class="tool-card__header">
+        <span class="step-badge">3</span>
+        <span class="tool-card__title">Paste Comments</span>
+      </div>
+      <div class="textarea-wrap">
+        <textarea id="commentsInput" placeholder="Paste your comments here — one per line, or as a block of text. There's no minimum or maximum, but 20–500 comments gives the best results."></textarea>
+        <span class="char-count" id="charCount">0 chars</span>
+      </div>
+      <button class="generate-btn" id="generateBtn" onclick="generateReport()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Generate Full Report
+      </button>
+    </div>
+
+    <!-- Error box -->
+    <div class="error-box" id="errorBox"></div>
+
+    <!-- Status -->
+    <div class="status-bar" id="statusBar" style="display:none;">
+      <div class="spinner"></div>
+      <span id="statusText">Connecting to OpenAI…</span>
+    </div>
+
+    <!-- Report output -->
+    <div id="reportWrap" style="display:none;">
+      <div class="tool-card" style="padding:0;overflow:hidden;">
+        <div style="padding:20px 28px;border-bottom:1px solid var(--clr-border);">
+          <div class="report-header">
+            <h2>Audience Intelligence Report</h2>
+            <button class="btn-export" onclick="exportReport()">Export as Text</button>
+          </div>
+        </div>
+        <div class="report-body" id="reportBody"></div>
+      </div>
+
+      <!-- Upsell -->
+      <div class="upsell-banner" style="margin-top:8px;">
+        <h3>Want us to do the heavy lifting?</h3>
+        <p>We scrape thousands of comments from any public post, run a full analysis, and deliver a polished professional report — no API key, no copy-pasting. From $20 AUD.</p>
+        <div class="upsell-btns">
+          <a href="brief.html" class="btn btn-primary">Get a Full Report →</a>
+          <a href="examples.html" class="btn btn-secondary">See Examples</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ======================= FOOTER ======================= -->
+<footer style="border-top:1px solid var(--clr-border);padding:32px 0;text-align:center;">
+  <div class="container">
+    <p style="color:var(--clr-muted);font-size:.85rem;">
+      &copy; 2025 Quantum Merlin Ltd &mdash;
+      <a href="privacy.html">Privacy</a> &middot;
+      <a href="terms.html">Terms</a> &middot;
+      <a href="tools.html">Free Tools</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+// ─── System prompt ─────────────────────────────────────────────────────────
+const SYSTEM_PROMPT = `You are an expert audience researcher, market analyst, and social media strategist.
+
+Your task is to analyse a dataset of social media comments from a single post and produce a professional Audience Intelligence Report for a content creator or business.
+
+Follow these steps:
+
+STEP 1 – Clean the Data
+• Ignore duplicates, spam, bot-like comments, and emoji-only or meaningless replies.
+• Focus on meaningful audience feedback.
+
+STEP 2 – Comment Clustering
+Group similar comments into clusters. For each cluster provide a title, estimated count, and 3–5 example comments.
+
+STEP 3 – Full Audience Intelligence Report with these sections:
+
+1. Overview – platform, comment count, general reaction, brief summary.
+2. Audience Sentiment – positive/neutral/negative estimate, emotional tone.
+3. Key Themes – top topics discussed; explain each.
+4. Audience Questions – most common questions, grouped by similarity.
+5. Audience Frustrations – confusion, objections, misunderstandings.
+6. Audience Desires – what viewers want more of (tutorials, links, products, etc.).
+7. Viral Content Triggers – patterns explaining strong engagement (curiosity, controversy, relatability, humour, etc.).
+8. Content Opportunities – 5–10 content ideas directly inspired by the comments; explain why each would perform well.
+9. Engagement Opportunities – which types of comments the creator should reply to and why.
+10. Lead Opportunities – comments showing buying intent; provide examples and suggested responses.
+11. Future Product Opportunities – unmet needs or product ideas evident in the comments.
+12. Audience Profile – likely demographics, expertise level, motivations.
+13. Top 10 Comments Worth Replying To – list them with a brief reason for each.
+14. Strategic Recommendations – 3–5 actionable recommendations.
+15. Viral Probability Score – score 1–10 with explanation of key comment patterns contributing to it.
+
+Write clearly and professionally using headings (##) and bullet points. The report should be suitable for a paying client.`;
+
+// ─── Key management ─────────────────────────────────────────────────────────
+function saveKey() {
+  const val = document.getElementById('keyInput').value.trim();
+  if (!val.startsWith('sk-')) {
+    alert('That doesn\'t look like a valid OpenAI key (should start with "sk-").');
+    return;
+  }
+  localStorage.setItem('oai_key', val);
+  document.getElementById('keyInput').value = '●'.repeat(20);
+  document.getElementById('keyStatus').style.display = 'inline';
+}
+
+function clearKey() {
+  localStorage.removeItem('oai_key');
+  document.getElementById('keyInput').value = '';
+  document.getElementById('keyStatus').style.display = 'none';
+}
+
+function getKey() {
+  const stored = localStorage.getItem('oai_key');
+  if (stored) return stored;
+  const typed = document.getElementById('keyInput').value.trim();
+  return typed || null;
+}
+
+// Restore key indicator on load
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('oai_key')) {
+    document.getElementById('keyInput').value = '●'.repeat(20);
+    document.getElementById('keyStatus').style.display = 'inline';
+  }
+});
+
+// ─── Char counter ────────────────────────────────────────────────────────────
+document.getElementById('commentsInput').addEventListener('input', function() {
+  document.getElementById('charCount').textContent = this.value.length.toLocaleString() + ' chars';
+});
+
+// ─── Markdown renderer ──────────────────────────────────────────────────────
+function esc(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function inlineMd(s) {
+  return s
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>');
+}
+
+function renderMd(text) {
+  const lines = text.split('\n');
+  let html = '';
+  let inList = false;
+  let inNumbered = false;
+
+  for (const raw of lines) {
+    const line = raw;
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith('## ')) {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (inNumbered) { html += '</ol>'; inNumbered = false; }
+      html += `<h2>${inlineMd(esc(trimmed.slice(3)))}</h2>`;
+    } else if (trimmed.startsWith('### ')) {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (inNumbered) { html += '</ol>'; inNumbered = false; }
+      html += `<h3>${inlineMd(esc(trimmed.slice(4)))}</h3>`;
+    } else if (trimmed.startsWith('#### ')) {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (inNumbered) { html += '</ol>'; inNumbered = false; }
+      html += `<h4>${inlineMd(esc(trimmed.slice(5)))}</h4>`;
+    } else if (/^[-•*] /.test(trimmed)) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      if (inNumbered) { html += '</ol>'; inNumbered = false; }
+      html += `<li>${inlineMd(esc(trimmed.replace(/^[-•*] /, '')))}</li>`;
+    } else if (/^\d+\. /.test(trimmed)) {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (!inNumbered) { html += '<ol>'; inNumbered = true; }
+      html += `<li>${inlineMd(esc(trimmed.replace(/^\d+\. /, '')))}</li>`;
+    } else if (trimmed === '') {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (inNumbered) { html += '</ol>'; inNumbered = false; }
+    } else {
+      if (inList) { html += '</ul>'; inList = false; }
+      if (inNumbered) { html += '</ol>'; inNumbered = false; }
+      html += `<p>${inlineMd(esc(trimmed))}</p>`;
+    }
+  }
+  if (inList) html += '</ul>';
+  if (inNumbered) html += '</ol>';
+  return html;
+}
+
+// ─── Generate report ────────────────────────────────────────────────────────
+let abortCtrl = null;
+let rawReport = '';
+
+async function generateReport() {
+  const key = getKey();
+  const comments = document.getElementById('commentsInput').value.trim();
+  const platform = document.getElementById('platform').value;
+  const topic = document.getElementById('topic').value.trim();
+
+  // Validation
+  if (!key) {
+    showError('Please enter your OpenAI API key in Step 1 first.');
+    return;
+  }
+  if (!key.startsWith('sk-')) {
+    showError('Your API key doesn\'t look right — it should start with "sk-".');
+    return;
+  }
+  if (comments.length < 20) {
+    showError('Please paste at least a few comments to analyse.');
+    return;
+  }
+  if (comments.length > 120000) {
+    showError('Comments are too long (max ~120,000 characters). Try a smaller sample.');
+    return;
+  }
+
+  hideError();
+  setGenerating(true);
+
+  const userContent = [
+    `Platform: ${platform}`,
+    topic ? `Post Topic: ${topic}` : '',
+    '',
+    'COMMENTS TO ANALYSE:',
+    comments
+  ].filter(Boolean).join('\n');
+
+  rawReport = '';
+  const reportBody = document.getElementById('reportBody');
+  reportBody.innerHTML = '<span class="cursor"></span>';
+  document.getElementById('reportWrap').style.display = 'block';
+  document.getElementById('reportWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  setStatus('Sending to OpenAI…');
+
+  abortCtrl = new AbortController();
+
+  try {
+    const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        stream: true,
+        max_tokens: 4096,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: userContent }
+        ]
+      }),
+      signal: abortCtrl.signal
+    });
+
+    if (!resp.ok) {
+      const errData = await resp.json().catch(() => ({}));
+      const msg = errData?.error?.message || `HTTP ${resp.status}`;
+      throw new Error(msg);
+    }
+
+    setStatus('Generating report…');
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') break;
+        try {
+          const chunk = JSON.parse(data);
+          const content = chunk.choices?.[0]?.delta?.content;
+          if (content) {
+            rawReport += content;
+            reportBody.innerHTML = renderMd(rawReport) + '<span class="cursor"></span>';
+            // Auto-scroll while generating
+            reportBody.scrollTop = reportBody.scrollHeight;
+          }
+        } catch { /* skip unparseable chunks */ }
+      }
+    }
+
+    // Final render without cursor
+    reportBody.innerHTML = renderMd(rawReport);
+
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      reportBody.innerHTML = renderMd(rawReport) + '<p style="color:var(--clr-muted);font-style:italic;">— Generation stopped —</p>';
+    } else {
+      showError('OpenAI error: ' + err.message);
+      if (!rawReport) {
+        document.getElementById('reportWrap').style.display = 'none';
+      }
+    }
+  } finally {
+    setGenerating(false);
+    abortCtrl = null;
+  }
+}
+
+function setGenerating(on) {
+  const btn = document.getElementById('generateBtn');
+  const bar = document.getElementById('statusBar');
+  btn.disabled = on;
+  btn.innerHTML = on
+    ? '<div class="spinner" style="border-top-color:#fff"></div> Generating…'
+    : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Generate Full Report';
+  bar.style.display = on ? 'flex' : 'none';
+}
+
+function setStatus(msg) {
+  document.getElementById('statusText').textContent = msg;
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBox');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function hideError() {
+  document.getElementById('errorBox').style.display = 'none';
+}
+
+function exportReport() {
+  if (!rawReport) return;
+  const blob = new Blob([rawReport], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'audience-intelligence-report.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+
+<script>
+// Nav toggle
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+</script>
+</body>
+</html>

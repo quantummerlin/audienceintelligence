@@ -1,0 +1,411 @@
+this is the changes we need to make to the super prompt which we then have to think about the form and how we collect the information.
+
+ we need to clarify that, right? not just the url. because in this case we are supporters of the family trying to get the general consensus for their website. we we need to be able to have that prompt custimisable.
+SuperNinja
+Exactly right. The prompt needs a context block at the top that the user fills in before running the analysis. Without it, the AI has to guess who the client is, what their goal is, and who the content creator is — and it guesses wrong, like it did with Section 13.
+
+Here's what the customisable context block should capture:
+
+THE FIVE THINGS THE PROMPT NEEDS TO KNOW
+1. Who is the CLIENT? The person or organisation commissioning the report.
+
+e.g. "The Trevallion-Birmingham family support campaign"
+NOT the person who made the post
+2. Who is the CONTENT CREATOR / POST AUTHOR? The person who made the post being analysed.
+
+e.g. "MP Emanuele Pozzolo — Italian politician, not affiliated with the campaign"
+This determines whether reply advice is "what should WE say" or "what should THEY say"
+3. What is the CLIENT'S GOAL? What does the client want to achieve with this analysis?
+
+e.g. "Gather public sentiment data to display on a campaign website"
+e.g. "Identify allies and supporters to recruit"
+e.g. "Build evidence of public support for a legal case"
+e.g. "Find content ideas for our own social media"
+These produce completely different reports
+4. What is the CLIENT'S RELATIONSHIP to the post?
+
+Are they the creator? → Reply advice is for them directly
+Are they a supporter? → Reply advice is about amplification and recruitment
+Are they opponents? → Report focuses on counter-strategy
+Are they neutral researchers? → Report is purely analytical
+5. What PLATFORM does the client operate on? Where will this intelligence be used?
+
+Their own website
+Their own social media
+A legal document
+A press release
+A petition campaign
+Here's what the updated prompt header looks like:
+
+
+═══════════════════════════════════════════════════════
+AUDIENCE INTELLIGENCE REPORT — CONTEXT BLOCK
+Fill this in before running the analysis.
+═══════════════════════════════════════════════════════
+
+CLIENT NAME / ORGANISATION:
+[Who commissioned this report?]
+e.g. "Truth Protects The Innocent — family support campaign"
+
+CLIENT GOAL:
+[What does the client want to achieve with this analysis?]
+e.g. "Gather public sentiment evidence for campaign website,
+      identify potential allies, find content ideas for
+      our own social channels, build evidence of public
+      support for legal and media use"
+
+POST AUTHOR / CONTENT CREATOR:
+[Who made the post being analysed?]
+e.g. "MP Emanuele Pozzolo — Italian politician.
+      NOT affiliated with the client campaign."
+
+CLIENT RELATIONSHIP TO POST:
+[How does the client relate to this post?]
+Options:
+  → WE MADE THIS POST (reply advice is for us)
+  → WE ARE SUPPORTERS (advice is about amplification)
+  → WE ARE RESEARCHERS (purely analytical)
+  → WE ARE OPPONENTS (counter-strategy focus)
+e.g. "WE ARE SUPPORTERS — we did not make this post
+      but we support the cause it discusses"
+
+CLIENT'S OWN PLATFORM / WHERE THIS WILL BE USED:
+[Where will the intelligence from this report be applied?]
+e.g. "Campaign website, press releases, legal documentation,
+      our own Facebook and Instagram pages"
+
+POST URL:
+[The URL of the post being analysed]
+e.g. https://www.facebook.com/reel/1924420691613532
+
+COMMENTS TO ANALYSE:
+[Paste comments here]
+
+═══════════════════════════════════════════════════════
+HOW THIS CHANGES THE REPORT
+Once the context block is filled in, every section recalibrates automatically:
+
+Section	Without Context	With Context (Supporters)
+Section 9 — Engagement
+"The MP should reply to..."
+"The campaign should amplify these comments on their own channels..."
+Section 10 — Leads
+"Convert commenters into customers"
+"Recruit these commenters as allies, signatories, and advocates"
+Section 13 — Top 10 Comments
+Mixed up MP vs campaign advice
+Split into: amplify publicly / recruit privately / monitor as threats
+Section 14 — Strategy
+Advice for the MP's credibility
+Advice for the campaign's evidence-gathering and mobilisation
+Section 15 — Viral Score
+"Will this post go viral?"
+"How do we harness this post's existing viral energy for our campaign?"
+Want me to write the complete updated prompt with the context block built in, and then re-run the Batch 3 analysis using the correct context for the family campaign? That way you'll have both the clean prompt template AND a correctly-targeted report as an example of it working properly.
+
+
+Schedule Automation
+Rate the response
+
+Tell us why?
+
+Incorrect
+
+Poor
+
+Fair
+
+Good
+
+Superb
+/chat we can reply as the facebook page
+SuperNinja
+Perfect — that changes things significantly. If the campaign has a Facebook page, then the reply advice becomes direct and actionable — the campaign can engage in the comments section of any post discussing the case, not just posts they created.
+
+That adds a sixth field to the context block:
+
+6. REPLY IDENTITY Who will be doing the replying?
+
+The name/handle of the Facebook page
+The tone/voice of that page
+Whether replies should be emotional, factual, legal, or a mix
+And it opens up a whole new strategic layer that the current prompt completely misses:
+
+WHAT CHANGES WHEN YOU CAN REPLY AS THE PAGE
+Section 9 — Engagement Opportunities becomes much more powerful:
+
+Instead of:
+
+"The MP should reply to Sofia Massari..."
+
+It becomes:
+
+"Reply as [Page Name] to Sofia Massari with: 'We hear you. Here is what is happening right now: [link to update]. Please share this so more people know.' "
+
+Actual draft replies. Not just suggestions.
+
+Section 13 — Top 10 Comments gets completely restructured:
+
+Each entry now includes a ready-to-post reply the page can copy, paste, and send. No interpretation needed. Just execute.
+
+New section unlocked — Section 16: COMMENT REPLY SCRIPTS
+
+A bank of pre-written replies for the most common comment types:
+
+The "what is behind this?" comments → one reply template
+The "words not deeds" comments → one reply template
+The "Caivano contradiction" comments → one reply template
+The "attack on MP" comments → one reply template
+The supportive comments → one reply template
+The "Mattarella must act" comments → one reply template
+The page manager just matches the comment type to the script, personalises the name, and posts. Fast, consistent, on-message.
+
+Section 10 — Leads becomes a recruitment funnel:
+
+Instead of just identifying potential allies, it now includes:
+
+A public reply to draw them in
+A follow-up private message script to recruit them
+So the updated sixth field looks like this:
+
+
+REPLY IDENTITY:
+[Who will be replying in the comments?]
+
+Page Name / Handle:
+e.g. "Truth Protects The Innocent"
+     "@veritaprotegge" 
+
+Reply Voice / Tone:
+e.g. "Warm, factual, grateful for support,
+      never aggressive, always redirects to
+      the family's humanity and the children"
+
+Reply Goals:
+e.g. "Drive traffic to campaign website,
+      recruit signatories for petition,
+      correct misinformation about the case,
+      thank supporters, neutralise attacks
+      without escalating"
+THE COMPLETE UPDATED CONTEXT BLOCK
+Here's the full thing together:
+
+
+═══════════════════════════════════════════════════════════
+AUDIENCE INTELLIGENCE REPORT — CONTEXT BLOCK
+Complete all fields before running the analysis.
+═══════════════════════════════════════════════════════════
+
+CLIENT NAME / ORGANISATION:
+[Who commissioned this report?]
+
+
+CLIENT GOAL:
+[What does the client want to achieve with this analysis?]
+
+
+POST AUTHOR / CONTENT CREATOR:
+[Who made the post being analysed?]
+[Are they affiliated with the client or independent?]
+
+
+CLIENT RELATIONSHIP TO POST:
+→ WE MADE THIS POST
+→ WE ARE SUPPORTERS (we did not make this post)
+→ WE ARE RESEARCHERS (purely analytical)
+→ WE ARE OPPONENTS (counter-strategy)
+
+
+CLIENT'S OWN PLATFORMS:
+[Where will this intelligence be applied?]
+
+
+REPLY IDENTITY:
+Page Name / Handle:
+Reply Tone / Voice:
+Reply Goals:
+
+
+POST URL:
+[URL of the post being analysed]
+
+
+COMMENTS TO ANALYSE:
+[Paste comments below this line]
+
+═══════════════════════════════════════════════════════════
+WHAT I RECOMMEND WE DO NOW
+Three options — tell me which you want:
+
+Option A — Write the complete updated master prompt with the context block built in, ready to use on any future batch of comments
+
+Option B — Re-run the Batch 3 analysis right now using the correct context (family campaign, can reply as the Facebook page) so you have a properly targeted report as a working example
+
+Option C — Both: write the master prompt first, then immediately run Batch 3 through it so you can see the difference side by side
+
+Which do you want?
+
+
+Schedule Automation
+Rate the response
+
+Tell us why?
+
+Incorrect
+
+Poor
+
+Fair
+
+Good
+
+Superb
+/chat so we ask on the form that do they want to get insights on who possibily to replay, what would they get out of it, would it be beneficial? sometimes it would be better not to reply
+SuperNinja
+Yes — exactly. This is a much more sophisticated way to think about it. Replying is not always the right move, and a good prompt should help the user decide first whether to reply at all, before it tells them how.
+
+This turns the reply section from a simple "here are comments to reply to" into a three-stage decision framework:
+
+THE THREE QUESTIONS BEFORE ANY REPLY
+Stage 1 — SHOULD we reply at all?
+
+Does replying benefit the campaign?
+Does replying risk amplifying something harmful?
+Does replying drag us into a debate that buries the family's story?
+Is silence more powerful than a response?
+Stage 2 — IF we reply, WHAT do we get out of it?
+
+More website traffic?
+More petition signatures?
+A recruited ally?
+Corrected misinformation?
+Demonstrated humanity and warmth?
+Algorithmic boost from the engagement?
+Stage 3 — HOW should we reply?
+
+Public reply in comments
+Private message
+No reply but a reaction (like/heart)
+No reply but share to our own page
+No reply at all — monitor only
+HOW THIS CHANGES THE FORM
+The form should ask the user to tell us their reply appetite — how much they want to engage, what they're comfortable with, and what their capacity is.
+
+Something like:
+
+
+REPLY PREFERENCES:
+
+Do you want reply recommendations?
+→ YES — give me specific comments to reply to
+→ NO — analysis only, no reply advice needed
+
+If YES:
+
+What is your primary goal from replying?
+(tick all that apply)
+→ Drive traffic to our website/petition
+→ Recruit allies and supporters
+→ Correct misinformation about the case
+→ Thank and retain existing supporters
+→ Neutralise attacks without escalating
+→ Boost algorithmic reach of the post
+→ Gather intelligence (find people who know things)
+
+How much capacity do you have to reply?
+→ LOW — give me the top 3 most important replies only
+→ MEDIUM — give me up to 10 replies
+→ HIGH — give me everything worth replying to
+
+Are there topics you want to AVOID engaging with?
+e.g. "Do not engage with political party debates"
+     "Do not engage with attacks on the MP"
+     "Do not engage with questions about the hospital incident"
+
+Should we include a "DO NOT REPLY" list?
+→ YES — flag comments that would be harmful to engage with
+→ NO — not needed
+WHAT THE REPORT THEN PRODUCES
+Instead of a flat list of "reply to these comments," the report produces a tiered decision matrix:
+
+🟢 REPLY — HIGH VALUE, LOW RISK
+Replying here is clearly beneficial. Do this first.
+
+Comment	Benefit	Risk	Suggested Reply
+Paolo Zennaro — "What is behind this?"
+High reach (115 likes), validates public suspicion, drives to website
+Low
+"We are asking the same question. Here is what we know so far: [link]"
+Sofia Massari — "Nobody can stop it"
+102 likes, turns despair into hope
+Low
+"We are trying. Here is what you can do right now: [petition link]"
+🟡 REPLY — MODERATE VALUE, CONSIDER CAREFULLY
+Replying could be beneficial but requires the right tone and timing.
+
+Comment	Benefit	Risk	Recommendation
+Domenico Garbo — Caivano law
+Corrects a damaging narrative
+Medium — could become a political debate
+Reply once, factually, then do not re-engage
+Aura Barba — "keyboard warriors, wood stove, no school"
+Addresses the only substantive pro-separation argument
+Medium — could amplify doubts
+Reply with warmth, not defensiveness
+🔴 DO NOT REPLY — HIGH RISK, LOW BENEFIT
+Engaging here helps the opposition more than the campaign.
+
+Comment	Why Not	What To Do Instead
+Pietro Quartani — "Put the gun back in its holster"
+Amplifies the MP's credibility problem, not the family's story
+Ignore. Let supporters counter organically.
+Paolo Criaco — "The mother isn't collaborative"
+Sophisticated attack. Any reply risks confirming the narrative.
+Address this in a standalone post, not in a comment thread.
+Alberto Silvestro — "If they don't like Italian law, go back to Australia"
+Xenophobic bait. Engaging legitimises it.
+Do not reply. Report if it escalates.
+🔵 PRIVATE MESSAGE — DO NOT REPLY PUBLICLY
+These people have something the campaign needs. Don't waste it in a public thread.
+
+Comment	What They Have	Private Message Goal
+Rita Filippi — "Do we know how parents behaved in hospital?"
+Possible inside knowledge of a hospital incident
+Find out what she knows
+Rosy Palasciano — "What money trail do social workers have?"
+Investigative instinct, possible connections
+Recruit as researcher or source
+Avvocato Angelo Pisani — "Follow"
+A named lawyer tracking the case
+Explore legal collaboration
+⚪ REACT ONLY — NO REPLY NEEDED
+A heart or like is enough. Replying adds nothing.
+
+Comment	Why React Only
+"Bravo!" "Bravissimo!" "Giustissimo!"
+Support acknowledged. No information value in a reply. A heart is warmer and faster.
+Short expressions of outrage
+The emotion is valid. A heart validates it without opening a thread.
+THE KEY INSIGHT THIS UNLOCKS
+The most important thing this framework does is protect the campaign from itself.
+
+The biggest mistake advocacy campaigns make on social media is over-replying — getting drawn into arguments, defending against attacks, engaging with bad-faith commenters, and accidentally making the story about the debate rather than the family.
+
+By building the "should we reply?" question into the form, the prompt forces the user to think strategically before they act emotionally. And in a case like this — where the family's children are at stake and every word is potentially scrutinised — that discipline could be the difference between a campaign that stays on message and one that gets derailed.
+
+WHAT I RECOMMEND WE BUILD
+A form with four sections:
+
+
+SECTION A — About the post and the campaign
+(who you are, what you want, your relationship to the post)
+
+SECTION B — About your reply appetite
+(do you want reply advice, what are your goals,
+what topics to avoid, how much capacity you have)
+
+SECTION C — About your voice
+(page name, tone, what you will and won't say)
+
+SECTION D — Paste your comments
+Want me to build the complete form now — either as a document you can use manually, or as an actual HTML form your web developer 

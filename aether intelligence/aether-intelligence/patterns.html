@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pattern Explorer | Aether Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-left: 32px;
+            transition: color 0.2s;
+        }
+        
+        nav a:hover, nav a.active {
+            color: var(--text-primary);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 60px 0 40px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            padding: 24px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 32px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .search-box input::placeholder {
+            color: var(--text-secondary);
+        }
+        
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 18px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .filter-btn:hover {
+            border-color: rgba(255,255,255,0.2);
+            color: var(--text-primary);
+        }
+        
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 24px;
+            padding: 16px 0;
+            margin-bottom: 24px;
+        }
+        
+        .stats-bar span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .stats-bar strong {
+            color: var(--text-primary);
+        }
+        
+        /* Pattern Grid */
+        .pattern-grid {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .pattern-card {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .pattern-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .pattern-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .pattern-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .pattern-id {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        .pattern-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        
+        .pattern-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        
+        .pattern-insight {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+            padding: 16px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .pattern-insight-label {
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+        
+        .pattern-insight-text {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-style: italic;
+        }
+        
+        .pattern-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            color: var(--accent);
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+        
+        .pattern-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 48px;
+            margin: 60px 0;
+            text-align: center;
+        }
+        
+        .cta-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        
+        .cta-section p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 16px;
+        }
+        
+        footer a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                min-width: auto;
+            }
+            
+            .filter-buttons {
+                justify-content: flex-start;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            nav {
+                display: none;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Aether Intelligence" class="logo-icon">
+                Aether Intelligence
+            </a>
+            <nav>
+                <a href="index.html">Reports</a>
+                <a href="patterns.html" class="active">Patterns</a>
+                <a href="methodology.html">Methodology</a>
+                <a href="index.html#custom">Custom</a>
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <h1>Pattern Explorer</h1>
+            <p>Search and filter through all extracted patterns from our analysis database.</p>
+        </section>
+        
+        <section class="filter-section">
+            <div class="filter-row">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search patterns...">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="Privacy & Surveillance">Privacy</button>
+                    <button class="filter-btn" data-filter="AI & Development">AI</button>
+                    <button class="filter-btn" data-filter="Relationships">Relationships</button>
+                    <button class="filter-btn" data-filter="Economics">Economics</button>
+                </div>
+            </div>
+        </section>
+        
+        <div class="stats-bar">
+            <span>Showing <strong id="resultCount">15</strong> patterns</span>
+            <span>•</span>
+            <span>From <strong>20,946</strong> comments analyzed</span>
+        </div>
+        
+        <div class="pattern-grid" id="patternGrid">
+            <!-- Patterns loaded via JavaScript -->
+        </div>
+        
+        <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-icon">🔍</div>
+            <p>No patterns found matching your search.</p>
+        </div>
+        
+        <section class="cta-section">
+            <h3>Want deeper analysis?</h3>
+            <p>Request a custom report on any topic and get actionable insights extracted from thousands of real comments.</p>
+            <a href="index.html#custom" class="btn btn-primary">Request Custom Report — $69</a>
+        </section>
+        
+        <footer>
+            <p>Aether Intelligence — Human insight, extracted from real data</p>
+            <div style="margin-top: 16px;">
+                <a href="index.html">Home</a>
+                <a href="patterns.html">Patterns</a>
+                <a href="methodology.html">Methodology</a>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        let patterns = [];
+        let currentFilter = 'all';
+        let searchTerm = '';
+        
+        // Load patterns from JSON
+        fetch('data/patterns.json')
+            .then(response => response.json())
+            .then(data => {
+                patterns = data;
+                renderPatterns();
+            })
+            .catch(err => {
+                console.error('Error loading patterns:', err);
+                document.getElementById('patternGrid').innerHTML = '<p style="color: var(--text-secondary); text-align: center;">Error loading patterns. Please refresh the page.</p>';
+            });
+        
+        function renderPatterns() {
+            const grid = document.getElementById('patternGrid');
+            const noResults = document.getElementById('noResults');
+            
+            // Filter patterns
+            let filtered = patterns.filter(p => {
+                const matchesFilter = currentFilter === 'all' || p.category === currentFilter;
+                const matchesSearch = searchTerm === '' || 
+                    p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    p.insight.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesFilter && matchesSearch;
+            });
+            
+            // Update count
+            document.getElementById('resultCount').textContent = filtered.length;
+            
+            // Show/hide no results
+            if (filtered.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            noResults.style.display = 'none';
+            
+            // Render cards
+            grid.innerHTML = filtered.map(p => `
+                <a href="reports/${p.topic}.html" class="pattern-card">
+                    <div class="pattern-header">
+                        <span class="pattern-category">${p.category}</span>
+                        <span class="pattern-id">#${p.id}</span>
+                    </div>
+                    <h3 class="pattern-title">${p.title}</h3>
+                    <p class="pattern-description">${p.description}</p>
+                    <div class="pattern-insight">
+                        <div class="pattern-insight-label">Key Insight</div>
+                        <div class="pattern-insight-text">"${p.insight}"</div>
+                    </div>
+                    <span class="pattern-link">Read Full Report →</span>
+                </a>
+            `).join('');
+        }
+        
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderPatterns();
+            });
+        });
+        
+        // Search input
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderPatterns();
+        });
+    </script>
+</body>
+</html>

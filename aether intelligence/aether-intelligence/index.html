@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether Intelligence | Human Insight, Extracted</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        
+        /* Subtle animated background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-left: 32px;
+            transition: color 0.2s;
+        }
+        
+        nav a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+        
+        .hero-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 24px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 600;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #ffffff 0%, #a0a0b0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-sub {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+        
+        /* Reports Section */
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+        
+        .section-filter {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .section-filter span {
+            color: var(--text-primary);
+            margin-left: 8px;
+        }
+        
+        /* Report Cards */
+        .report-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .report-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .report-number {
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+        
+        .report-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .report-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+            line-height: 1.4;
+        }
+        
+        .report-excerpt {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        .report-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 48px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        
+        .cta-text {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        /* Newsletter Section */
+        .newsletter-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 20px;
+            padding: 48px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .newsletter-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        
+        .newsletter-content p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 12px;
+            max-width: 450px;
+            margin: 0 auto 16px;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 14px 18px;
+            background: var(--bg-primary);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .newsletter-form input::placeholder {
+            color: var(--text-secondary);
+        }
+        
+        .newsletter-note {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .newsletter-form {
+                flex-direction: column;
+            }
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 16px;
+        }
+        
+        footer a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .hero {
+                padding: 60px 0 40px;
+            }
+            
+            .report-card {
+                padding: 24px;
+            }
+            
+            .report-title {
+                font-size: 1.15rem;
+            }
+            
+            .cta-section {
+                padding: 32px 24px;
+            }
+            
+            nav {
+                display: none;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Aether Intelligence" class="logo-icon">
+                Aether Intelligence
+            </a>
+            <nav>
+                <a href="#reports">Reports</a>
+                <a href="patterns.html">Patterns</a>
+                <a href="methodology.html">Methodology</a>
+                <a href="#newsletter">Newsletter</a>
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <span class="hero-tag">Human Insight Archive</span>
+            <h1>I analyse thousands of real user comments…<br>and extract what actually matters</h1>
+            <p class="hero-sub">Patterns, behaviours, and insights from real people — not opinions, not hype, just signal from noise.</p>
+        </section>
+        
+        <section class="section" id="reports">
+            <div class="section-header">
+                <span class="section-title">Latest Reports</span>
+                <span class="section-filter">Sorted by: <span>Recent</span></span>
+            </div>
+            
+            <!-- Report 1 -->
+            <a href="reports/openclaw.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #001</span>
+                    <div class="report-meta">
+                        <span>7 days of data</span>
+                        <span>•</span>
+                        <span>AI & Automation</span>
+                    </div>
+                </div>
+                <h2 class="report-title">I analysed 7,347 real user comments about OpenClaw…<br>here's what actually works</h2>
+                <p class="report-excerpt">Users are burning $200+ on runaway agents, the official Docker image has 2,000 CVEs, and most people are using the wrong models. But buried in the noise are clear patterns about what's actually working.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">7,347</span>
+                        <span class="stat-label">Comments Analysed</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">17</span>
+                        <span class="stat-label">Patterns Found</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">$200+</span>
+                        <span class="stat-label">Avg. Savings</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Report 2 -->
+            <a href="reports/passive-income.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #002</span>
+                    <div class="report-meta">
+                        <span>10 Pain Points</span>
+                        <span>•</span>
+                        <span>Finance</span>
+                    </div>
+                </div>
+                <h2 class="report-title">I analysed thousands of comments about passive income…<br>here's what's actually worth your time</h2>
+                <p class="report-excerpt">Financial stress is fueling 60%+ of toxic relationships, family financial abuse is widespread, and "passive" income requires 20+ hours/week. This report extracts what actually works from real user experiences.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">~380</span>
+                        <span class="stat-label">Key Issues Analyzed</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">10</span>
+                        <span class="stat-label">Pain Points</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">20</span>
+                        <span class="stat-label">Viral Hooks</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Report 3 -->
+            <a href="reports/surveillance-state.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #003</span>
+                    <div class="report-meta">
+                        <span>18,247 Comments</span>
+                        <span>•</span>
+                        <span>Privacy & Tech</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Surveillance State in Your Pocket</h2>
+                <p class="report-excerpt">I analysed 20,000+ comments and discovered a coordinated campaign to put age verification at the OS level—backed by fake advocacy groups and template legislation now in 45 states.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">14,297</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">45</span>
+                        <span class="stat-label">States Affected</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">$7.2M</span>
+                        <span class="stat-label">Lobbying Spent</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Report 4 -->
+            <a href="reports/vibe-coding-crisis.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #004</span>
+                    <div class="report-meta">
+                        <span>19,342 Comments</span>
+                        <span>•</span>
+                        <span>AI & Development</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The 'Vibe Coding' Crisis</h2>
+                <p class="report-excerpt">I analysed 20,000+ comments about AI coding tools and discovered a terrifying pattern: 2,702 leaked credentials, senior developers quitting in droves, and a new phenomenon called "vibe coding" that's secretly undermining software quality.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">2,702</span>
+                        <span class="stat-label">Leaked Credentials</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">1,906</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">200+</span>
+                        <span class="stat-label">Real API Keys</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Report 5 -->
+            <a href="reports/banana-that-saved-a-life.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #005</span>
+                    <div class="report-meta">
+                        <span>17,891 Comments</span>
+                        <span>•</span>
+                        <span>Relationships</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Banana That Saved a Life</h2>
+                <p class="report-excerpt">I analysed 20,000+ comments about relationships and discovered a terrifying pattern: the smaller the trigger, the more dangerous the partner. A banana argument led to attempted murder. This is the pattern survivors want you to recognise.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">7,049</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">847</span>
+                        <span class="stat-label">Stories Shared</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">94%</span>
+                        <span class="stat-label">Recognised Pattern</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Report 6 -->
+            <a href="reports/housing-lie.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #006</span>
+                    <div class="report-meta">
+                        <span>21,056 Comments</span>
+                        <span>•</span>
+                        <span>Economics</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Housing Lie</h2>
+                <p class="report-excerpt">I analysed 20,000+ comments about the housing market and discovered the real reason you can't afford a home—and it's not supply shortages. Follow the credit expansion to find who's really benefiting.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">2,032</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">$47K</span>
+                        <span class="stat-label">Down Payment Gap</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">7.8x</span>
+                        <span class="stat-label">Price-to-Income</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Report 7 -->
+            <a href="reports/billionaire-marriage-delusion.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #007</span>
+                    <div class="report-meta">
+                        <span>20,147 Comments</span>
+                        <span>•</span>
+                        <span>Relationships</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Billionaire Marriage Delusion</h2>
+                <p class="report-excerpt">I analysed 20,000+ comments about modern dating and discovered TikTok is programming women to chase a fantasy that doesn't exist—2.3B views on #BillionaireContent, but only 0.001% actual billionaires in the dating pool.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">7,987</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">2.3B</span>
+                        <span class="stat-label">TikTok Views</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">42%</span>
+                        <span class="stat-label">Ended Relationships</span>
+                    </div>
+                </div>
+            </a>
+            <a href="reports/goodbye-decision.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #008</span>
+                    <div class="report-meta">
+                        <span>16,834 Comments</span>
+                        <span>•</span>
+                        <span>Pets</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Goodbye Decision</h2>
+                <p class="report-excerpt">When do you say goodbye to a pet who still seems happy? Thousands of owners shared the agonizing paralysis of euthanizing terminally ill pets—travel schedules compounding the guilt, wondering if you're ending a life too soon or letting suffering continue.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">31,800</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">8+</span>
+                        <span class="stat-label">Key Stories</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">High</span>
+                        <span class="stat-label">Emotional Impact</span>
+                    </div>
+                </div>
+            </a>
+            <a href="reports/landlord-can-see-you.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #009</span>
+                    <div class="report-meta">
+                        <span>17,456 Comments</span>
+                        <span>•</span>
+                        <span>Privacy</span>
+                    </div>
+                </div>
+                <h2 class="report-title">Your Landlord Can See You</h2>
+                <p class="report-excerpt">Smart locks installed without consent are creating a new surveillance nightmare. Tenants discovered their landlords can track every entry and exit, remotely lock doors, and potentially facilitate illegal evictions—all legal gray zones.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">900</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">15+</span>
+                        <span class="stat-label">Cases Documented</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Growing</span>
+                        <span class="stat-label">Trend Alert</span>
+                    </div>
+                </div>
+            </a>
+            <a href="reports/bilingual-backstab.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #010</span>
+                    <div class="report-meta">
+                        <span>16,291 Comments</span>
+                        <span>•</span>
+                        <span>Relationships</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Bilingual Backstab</h2>
+                <p class="report-excerpt">Family members weaponize language barriers to critique everything from your cooking to your career—smiling to your face while disparaging you in a tongue they think you don't understand. The isolation of being gaslit in two languages.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">13,300</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">4</span>
+                        <span class="stat-label">Key Patterns</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">High</span>
+                        <span class="stat-label">Emotional Impact</span>
+                    </div>
+                </div>
+            </a>
+            <a href="reports/you-dont-own-anything.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #011</span>
+                    <div class="report-meta">
+                        <span>17,789 Comments</span>
+                        <span>•</span>
+                        <span>Economics</span>
+                    </div>
+                </div>
+                <h2 class="report-title">You Don't Own Anything Anymore</h2>
+                <p class="report-excerpt">From heated car seats to software you "bought" years ago, everything is becoming a subscription. The appification pipeline: first you buy it, then you license it, then you lose it when you stop paying—your data harvested along the way.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">110+</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">7+</span>
+                        <span class="stat-label">Industries Affected</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Growing</span>
+                        <span class="stat-label">Trend Intensity</span>
+                    </div>
+                </div>
+            </a>
+            <a href="reports/side-hustle-trap.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #012</span>
+                    <div class="report-meta">
+                        <span>17,091 Comments</span>
+                        <span>•</span>
+                        <span>Economics</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Side Hustle Trap</h2>
+                <p class="report-excerpt">Everyone's chasing passive income and remote work, but legitimate opportunities are drowning in scams. The search for trustworthy side hustles reveals the painful reality behind "easy money" promises and the legitimacy crisis in online work.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">940+</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">12+</span>
+                        <span class="stat-label">Pain Points</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">High</span>
+                        <span class="stat-label">Scam Prevalence</span>
+                    </div>
+                </div>
+            </a>
+            <a href="reports/idea-goldmine.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #013</span>
+                    <div class="report-meta">
+                        <span>16,447 Comments</span>
+                        <span>•</span>
+                        <span>Business</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Product Idea Goldmine</h2>
+                <p class="report-excerpt">We mined 17,000+ comments and surfaced 18 validated product ideas—each backed by real demand signals. From a $800/month photo restoration side hustle to an app that pays the mortgage, these are ideas people are already asking to exist.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">18</span>
+                        <span class="stat-label">Validated Ideas</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">$800/mo</span>
+                        <span class="stat-label">Smallest Proof</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Real</span>
+                        <span class="stat-label">Demand Signal</span>
+                    </div>
+                </div>
+            </a>
+            <a href="reports/poor-mindset.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #014</span>
+                    <div class="report-meta">
+                        <span>15,823 Comments</span>
+                        <span>•</span>
+                        <span>Money Psychology</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Poor Mindset</h2>
+                <p class="report-excerpt">Growing up with nothing and suddenly getting everything — why windfall wealth almost always disappears. The psychology of scarcity thinking, the generosity trap, and why lottery winners go broke. A pattern found across cultures and income levels.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">386</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">6</span>
+                        <span class="stat-label">Cycle Phases</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Universal</span>
+                        <span class="stat-label">Pattern</span>
+                    </div>
+                </div>
+            </a>
+            <a href="reports/5am-lie.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #015</span>
+                    <div class="report-meta">
+                        <span>18,903 Comments</span>
+                        <span>•</span>
+                        <span>Work & Life</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The 5AM Lie</h2>
+                <p class="report-excerpt">Wake up at 5AM. Morning routine. Work 19 hours. Wife eats dinner alone. This is the life hustle culture sells. We analysed thousands of accounts from people who lived it — and what they lost while chasing what they were promised.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">82</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">6</span>
+                        <span class="stat-label">Myths Debunked</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Silent</span>
+                        <span class="stat-label">Relationship Cost</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #016 -->
+            <a href="reports/gift-rejected.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #016</span>
+                    <div class="report-meta">
+                        <span>5,669 Insights</span>
+                        <span>•</span>
+                        <span>Relationships</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Gift That Broke Everything</h2>
+                <p class="report-excerpt">She spent weeks planning the perfect birthday gift. He opened it and said "uhhhh… what?" — and 5,669 people had something to say about it. What this conflict reveals about unspoken relationship contracts.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">5,669</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">87%</span>
+                        <span class="stat-label">Sided with Giver</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">6</span>
+                        <span class="stat-label">Conflict Phases</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #017 -->
+            <a href="reports/ungrateful-economy.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #017</span>
+                    <div class="report-meta">
+                        <span>14,200 Insights</span>
+                        <span>•</span>
+                        <span>Labour Markets</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Ungrateful Economy</h2>
+                <p class="report-excerpt">Employers getting 0–2 applicants per posting. Workers with 10 years experience rejected for grocery store jobs. A hiring system broken on both sides — and the five failure layers driving it.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">0–2</span>
+                        <span class="stat-label">Applications/posting</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">1 yr</span>
+                        <span class="stat-label">Rejection streak</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">5</span>
+                        <span class="stat-label">System Failures</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #018 -->
+            <a href="reports/sponge-paradox.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #018</span>
+                    <div class="report-meta">
+                        <span>250+ Insights</span>
+                        <span>•</span>
+                        <span>Consumer Psychology · Viral</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Sponge Paradox</h2>
+                <p class="report-excerpt">Sponge is dirty. Boil it clean. Now the pot is dirty. Clean the pot with the sponge. Sponge is dirty again. A viral observation that perfectly captured something universal — and a $14B market gap hiding in plain sight.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">250+</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">$14B</span>
+                        <span class="stat-label">Market Size</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">∞</span>
+                        <span class="stat-label">Loop Iterations</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #019 -->
+            <a href="reports/ai-slop-vs-human.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #019</span>
+                    <div class="report-meta">
+                        <span>200+ Insights</span>
+                        <span>•</span>
+                        <span>Content Strategy</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Human Edge: Why AI Slop Is Losing</h2>
+                <p class="report-excerpt">One creator stopped posting on social media entirely — their earnings doubled. Another abandoned AI writing and studied psychology instead. The data is clear: the creators who understand people are pulling away.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">2×</span>
+                        <span class="stat-label">Earnings after quitting AI</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">6</span>
+                        <span class="stat-label">Psych Mechanisms</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Short</span>
+                        <span class="stat-label">AI Slop Shelf Life</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #020 -->
+            <a href="reports/viral-hooks-lab.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">RESOURCE #020</span>
+                    <div class="report-meta">
+                        <span>27 Hooks</span>
+                        <span>•</span>
+                        <span>Interactive Tool</span>
+                    </div>
+                </div>
+                <h2 class="report-title">Viral Hooks Lab</h2>
+                <p class="report-excerpt">27 real hooks extracted from 17,091 comments — each with psychological breakdowns of exactly why it works. Filter by pattern (emotional dilemma, income milestone, counter-intuitive). Copy and adapt instantly.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">27</span>
+                        <span class="stat-label">Hooks Catalogued</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">5</span>
+                        <span class="stat-label">Hook Patterns</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">31,804</span>
+                        <span class="stat-label">Peak Engagement</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #021 -->
+            <a href="reports/pregnant-betrayal.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">REPORT #021</span>
+                    <div class="report-meta">
+                        <span>7,450 Insights</span>
+                        <span>•</span>
+                        <span>Family Dynamics</span>
+                    </div>
+                </div>
+                <h2 class="report-title">The Pregnancy Betrayal</h2>
+                <p class="report-excerpt">She asked her mother not to tell her sister she was pregnant. Her mother told her immediately — then lied about it for three months. What 7,450 responses reveal about trust, family favouritism, and the double betrayal.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">7,450</span>
+                        <span class="stat-label">Insights Extracted</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">3 mo.</span>
+                        <span class="stat-label">Duration of lie</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Double</span>
+                        <span class="stat-label">Betrayal layers</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #022 -->
+            <a href="reports/competitor-gaps.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">RESOURCE #022</span>
+                    <div class="report-meta">
+                        <span>15 Gaps</span>
+                        <span>•</span>
+                        <span>Market Intelligence · Interactive</span>
+                    </div>
+                </div>
+                <h2 class="report-title">Market Gap Intelligence</h2>
+                <p class="report-excerpt">15 verified competitor gaps extracted from real community complaints across 8 market sectors. Each gap includes the exact complaint, what's missing, and the specific product opportunity. Filterable by sector.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">15</span>
+                        <span class="stat-label">Verified Gaps</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">8</span>
+                        <span class="stat-label">Market Sectors</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">900+</span>
+                        <span class="stat-label">Peak Signal</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #023 -->
+            <a href="reports/celebrity-encounters.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">VIRAL #023</span>
+                    <div class="report-meta">
+                        <span>Celebrity</span>
+                        <span>•</span>
+                        <span>Public Figures · Polarity Analysis</span>
+                    </div>
+                </div>
+                <h2 class="report-title">Celebrity Polarity Effect</h2>
+                <p class="report-excerpt">Negative celebrity encounters generate 3.5x more engagement than positive ones. Barry Bonds' rudeness (20,000 upvotes) vs Uncle Phil's kindness (5,990 upvotes) reveals measurable negativity bias in celebrity content and social media dynamics.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">3.5x</span>
+                        <span class="stat-label">Negativity Bias</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">26K</span>
+                        <span class="stat-label">Total Engagement</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">High</span>
+                        <span class="stat-label">Signal Intensity</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #024 -->
+            <a href="reports/speakerphone-crisis.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">BEHAVIOR #024</span>
+                    <div class="report-meta">
+                        <span>Public</span>
+                        <span>•</span>
+                        <span>Social Etiquette · Situational Awareness</span>
+                    </div>
+                </div>
+                <h2 class="report-title">Speakerphone Crisis</h2>
+                <p class="report-excerpt">The universal frustration with public speakerphone use isn't about volume—it's about forced intimacy. ~40 comments reveal how speakerphone broadcasts private conversations, creating unwilling participants and social contract violations.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">40+</span>
+                        <span class="stat-label">Comments</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Universal</span>
+                        <span class="stat-label">Frustration</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">High</span>
+                        <span class="stat-label">Signal Intensity</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #025 -->
+            <a href="reports/dropshippers-ruined-etsy.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">MARKET #025</span>
+                    <div class="report-meta">
+                        <span>Etsy</span>
+                        <span>•</span>
+                        <span>Marketplace · Authenticity Crisis</span>
+                    </div>
+                </div>
+                <h2 class="report-title">Dropshippers Ruined Etsy</h2>
+                <p class="report-excerpt">The authenticity crisis in handmade marketplaces where fake goods crowd out real artisans. Buyers create their own verification workarounds—process photos, technical questions—revealing product-market fit screaming for authenticity verification solutions.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">731</span>
+                        <span class="stat-label">Upvotes</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">User-Generated</span>
+                        <span class="stat-label">Verification</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Startup</span>
+                        <span class="stat-label">Opportunity</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #026 -->
+            <a href="reports/icu-ptsd-hidden-toll.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">HEALTH #026</span>
+                    <div class="report-meta">
+                        <span>Medical</span>
+                        <span>•</span>
+                        <span>PTSD · Hidden Trauma</span>
+                    </div>
+                </div>
+                <h2 class="report-title">ICU PTSD: The Hidden Toll</h2>
+                <p class="report-excerpt">Medical workers often don't recognize trauma until after leaving high-stress environments. PTSD score dropped from 54 to 21 only after exiting ICU/ED work—the environment normalizes trauma, masking its true impact until it's too late.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">54→21</span>
+                        <span class="stat-label">PTSD Score Drop</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">2,100</span>
+                        <span class="stat-label">Upvotes</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">10</span>
+                        <span class="stat-label">Years Service</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #027 -->
+            <a href="reports/conspiracy-family-rupture.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">POLITICAL #027</span>
+                    <div class="report-meta">
+                        <span>Family</span>
+                        <span>•</span>
+                        <span>Polarization · Epistemic Bunkers</span>
+                    </div>
+                </div>
+                <h2 class="report-title">Conspiracy Family Rupture</h2>
+                <p class="report-excerpt">Political propaganda fracturing families through epistemic bunkers. When family members inhabit completely separate information realities, meaningful conversation becomes structurally impossible. The tragedy: disagreement on politics, disagreement on reality itself.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">364</span>
+                        <span class="stat-label">Upvotes</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Separate</span>
+                        <span class="stat-label">Realities</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">High</span>
+                        <span class="stat-label">Signal Intensity</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #028 -->
+            <a href="reports/sobriety-journey.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">RECOVERY #028</span>
+                    <div class="report-meta">
+                        <span>Sobriety</span>
+                        <span>•</span>
+                        <span>Milestones · Framing Effect</span>
+                    </div>
+                </div>
+                <h2 class="report-title">9 Years, 3,200 Days Sober</h2>
+                <p class="report-excerpt">The sobriety framing effect: counting in years versus days changes emotional weight. 3,200 days feels abstract and overwhelming. 9 years feels tangible and motivating. The unit of measurement transforms achievement perception and recovery momentum.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">9 yrs</span>
+                        <span class="stat-label">Sober</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">1,086</span>
+                        <span class="stat-label">Upvotes</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Psych</span>
+                        <span class="stat-label">Design Insight</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #029 -->
+            <a href="reports/ocd-trivialization.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">MENTAL #029</span>
+                    <div class="report-meta">
+                        <span>Language</span>
+                        <span>•</span>
+                        <span>Stigma · Emotional Labor</span>
+                    </div>
+                </div>
+                <h2 class="report-title">OCD Trivialization Tax</h2>
+                <p class="report-excerpt">Casual use of clinical terms creates persistent emotional labor for genuine sufferers. People with real conditions constantly decide: correct misusage (appear difficult) or stay silent (accept misrepresentation). It's a tax paid in every conversation.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">1,240</span>
+                        <span class="stat-label">Upvotes</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Language</span>
+                        <span class="stat-label">Dilution</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">High</span>
+                        <span class="stat-label">Signal Intensity</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #030 -->
+            <a href="reports/dating-nightmare.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">DATING #030</span>
+                    <div class="report-meta">
+                        <span>Modern</span>
+                        <span>•</span>
+                        <span>Apps · Connection Crisis</span>
+                    </div>
+                </div>
+                <h2 class="report-title">Dating: Easy Sex, Impossible Love</h2>
+                <p class="report-excerpt">The dating paradox: physical intimacy is abundant through apps, but meaningful connection feels impossible. 'It would require basically a part-time job to sift through all the jerks'—the ecosystem optimizes for engagement, not compatibility or partnership.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">200+</span>
+                        <span class="stat-label">Upvotes</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Part-Time</span>
+                        <span class="stat-label">Job Scale</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">High</span>
+                        <span class="stat-label">Emotional Toll</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #031 -->
+            <a href="reports/viral-hooks-2.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">RESOURCE #031</span>
+                    <div class="report-meta">
+                        <span>66</span>
+                        <span>•</span>
+                        <span>Viral Hooks · Pattern Library</span>
+                    </div>
+                </div>
+                <h2 class="report-title">66 Viral Hooks: Complete Collection</h2>
+                <p class="report-excerpt">66 proven engagement triggers extracted from high-engagement AskReddit threads, categorized into 8 psychological patterns: Shock & Taboo, Regret & Confession, Contradiction & Surprise, Identity & Status, Relationship Drama, Political & Social, Insight & Advice, Relatable Humor.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">66</span>
+                        <span class="stat-label">Total Hooks</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">8</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Proven</span>
+                        <span class="stat-label">Engagement</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Report #032 -->
+            <a href="reports/startup-opportunities.html" class="report-card">
+                <div class="report-header">
+                    <span class="report-number">STARTUP #032</span>
+                    <div class="report-meta">
+                        <span>10</span>
+                        <span>•</span>
+                        <span>Validated Ideas · Business Models</span>
+                    </div>
+                </div>
+                <h2 class="report-title">10 Startup Opportunities: Market-Validated</h2>
+                <p class="report-excerpt">10 startup ideas extracted from real user complaints and unmet needs. Each includes validation evidence, suggested business model, defensibility analysis, and risk assessment. From bird seed supply to digital footprint privacy to legacy system upgrades.</p>
+                <div class="report-stats">
+                    <div class="stat">
+                        <span class="stat-value">10</span>
+                        <span class="stat-label">Validated Ideas</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">31</span>
+                        <span class="stat-label">User Validations</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">Real</span>
+                        <span class="stat-label">Market Pain</span>
+                    </div>
+                </div>
+            </a>
+
+        </section>
+        
+        <!-- Newsletter Section -->
+        <section class="newsletter-section" id="newsletter">
+            <div class="newsletter-content">
+                <h3>Get Weekly Insights</h3>
+                <p>New patterns and reports delivered to your inbox every week. No spam, just signal.</p>
+                <form class="newsletter-form" action="mailto:signup@quantummerlin.com" method="post" enctype="text/plain">
+                    <input type="email" name="email" placeholder="Enter your email" required>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+                <span class="newsletter-note">Join 1,200+ readers</span>
+            </div>
+        </section>
+        
+                <section class="cta-section" id="custom">
+            <div class="cta-proof">
+                <span class="cta-proof-label">📊 22 free reports</span>
+                <span class="cta-proof-sep">·</span>
+                <span class="cta-proof-label">1 intelligence collection</span>
+            </div>
+            <h3 class="cta-title">Want this done for your topic?</h3>
+            <p class="cta-text">Every report on this site — all 22 of them — came from a single deep-dive intelligence collection. One dataset. Dozens of angles. For $69, I'll run the same process on your niche, product, or audience and hand you the raw signal.</p>
+            <a href="mailto:signup@quantummerlin.com?subject=Custom%20Report%20Request" class="btn btn-primary">Commission a Custom Collection — $69</a>
+        </section>
+        
+        <footer>
+            <p>Aether Intelligence — Human insight, extracted from real data</p>
+            <div style="margin-top: 16px;">
+                <a href="patterns.html">Pattern Explorer</a>
+                <a href="methodology.html">Methodology</a>
+                <a href="mailto:signup@quantummerlin.com">Contact</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

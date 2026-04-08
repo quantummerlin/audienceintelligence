@@ -132,6 +132,7 @@ class YouTubeCommentScraper:
         timeout: int = 30,
         expand_replies: bool = True,
         max_reply_expansions: int = 50,
+        max_comments: Optional[int] = None,
         sort_newest: bool = False,
         chrome_profile_dir: Optional[str] = None,
     ):
@@ -141,6 +142,7 @@ class YouTubeCommentScraper:
         self.timeout = timeout
         self.expand_replies = expand_replies
         self.max_reply_expansions = max_reply_expansions
+        self.max_comments = max_comments
         self.sort_newest = sort_newest
         self.chrome_profile_dir = chrome_profile_dir
 
@@ -802,6 +804,10 @@ class YouTubeCommentScraper:
             # 3. Harvest all visible comments
             added = self._harvest_top_level_comments()
             total = len(self._all_comments)
+
+            if self.max_comments and total >= self.max_comments:
+                print(f"  Comment target reached ({self.max_comments}) — stopping")
+                break
 
             if total > last_total:
                 no_new = 0
