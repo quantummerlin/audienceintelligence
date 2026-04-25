@@ -805,6 +805,7 @@
         .now-bar {
             position: fixed; bottom: 0; left: 0; right: 0;
             height: var(--nowbar-h);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
             background: rgba(6, 6, 14, 0.98);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -890,11 +891,13 @@
             height: var(--mobnav-h);
             background: rgba(6, 6, 14, 0.97);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid rgba(255,255,255,0.06);
             z-index: 150;
             flex-direction: row;
             justify-content: space-around;
             align-items: center;
+            -webkit-tap-highlight-color: transparent;
         }
         .mob-nav-item {
             display: flex; flex-direction: column; align-items: center; gap: 3px;
@@ -920,29 +923,106 @@
            RESPONSIVE
         ===================================================== */
         @media (max-width: 1100px) {
-            .browse-grid { grid-template-columns: repeat(4, 1fr); }
             .stats-row { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* ── MOBILE: everything below 900px ── */
         @media (max-width: 900px) {
-            .app-shell { grid-template-columns: 1fr; }
+            /* Let the page scroll naturally — kill the overflow:hidden shell */
+            html, body {
+                height: auto;
+                overflow: auto;
+                overflow-x: hidden;
+            }
+
+            /* Flatten the app shell to a normal block */
+            .app-shell {
+                display: block;
+                height: auto;
+                overflow: visible;
+                grid-template-columns: unset;
+            }
+
+            /* Hide desktop sidebar */
             .sidebar { display: none; }
-            .content-scroll { padding: 18px; padding-bottom: calc(var(--mobnav-h) + 12px); }
-            .topbar { padding: 0 18px; }
+
+            /* Main column is now full width, normal flow */
+            .main-content {
+                overflow: visible;
+                height: auto;
+                display: block;
+            }
+
+            /* Topbar sticks to top of viewport */
+            .topbar {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                padding: 0 16px;
+            }
+
+            /* Content scrolls with the page — remove inner scroll */
+            .content-scroll {
+                overflow: visible;
+                height: auto;
+                padding: 16px 16px calc(var(--nowbar-h) + var(--mobnav-h) + 24px);
+            }
+
+            /* Shrink hero on mobile */
+            .featured-hero { min-height: 200px; }
+            .hero-content { padding: 22px 20px; }
             .hero-stats-strip { display: none; }
-            .news-grid { grid-template-columns: 1fr; }
-            .browse-grid { grid-template-columns: repeat(2, 1fr); }
-            .now-left { width: auto; }
-            .mobile-bottom-nav { display: flex; }
-        }
-        @media (max-width: 600px) {
-            body { overflow: auto; }
-            .app-shell { height: auto; overflow: visible; }
-            .main-content { overflow: visible; }
-            .content-scroll { overflow: visible; }
-            .featured-hero { min-height: 220px; }
-            .hero-content { padding: 22px; }
+            .hero-title { font-size: clamp(1.25rem, 5.5vw, 1.9rem); }
+
+            /* Stats row: 2 columns */
             .stats-row { grid-template-columns: repeat(2, 1fr); }
+
+            /* News: single column */
+            .news-grid { grid-template-columns: 1fr; }
+
+            /* Browse: 2 columns */
             .browse-grid { grid-template-columns: repeat(2, 1fr); }
+
+            /* Model cards slightly narrower (fit 2 visible) */
+            .model-card { flex: 0 0 148px; width: 148px; }
+            .tool-card  { flex: 0 0 140px; width: 140px; }
+
+            /* Show mobile bottom nav */
+            .mobile-bottom-nav { display: flex; }
+
+            /* Slim down the now-bar for mobile */
+            .now-left {
+                width: auto;
+                gap: 6px;
+            }
+            .now-live-pill { display: none; }
+            .now-icon { width: 34px; height: 34px; font-size: 0.95rem; }
+            .now-info .now-title { font-size: 0.6rem; }
+            .now-info .now-sub { display: none; }
+            .now-right { display: none; }
+
+            /* Footer stacks vertically */
+            .page-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+        }
+
+        /* ── SMALL PHONES ≤ 480px ── */
+        @media (max-width: 480px) {
+            .topbar-search-wrap { max-width: 100%; }
+            .topbar-right .topbar-qm-link { display: none; }
+            .hero-actions { gap: 8px; }
+            .hero-btn-primary, .hero-btn-secondary { padding: 9px 16px; font-size: 0.68rem; }
+            .stats-row { gap: 8px; }
+            .stat-box-val { font-size: 1.4rem; }
+            .shelf-title { font-size: 0.88rem; }
+            .model-card { flex: 0 0 136px; width: 136px; }
+            .tool-card  { flex: 0 0 128px; width: 128px; }
+            .browse-grid { gap: 8px; }
+            .browse-card { min-height: 82px; padding: 14px 12px; }
+            .prompt-box { padding: 18px; }
         }
     </style>
 </head>
@@ -1429,41 +1509,64 @@
 </div>
 
 <script>
-    // ── Scroll progress bar ──
+    // ── Detect mobile vs desktop scroll container ──
+    // On mobile (≤900px) the page itself scrolls (window).
+    // On desktop the inner #contentScroll div scrolls.
+    const isMobile = () => window.innerWidth <= 900;
     const cs = document.getElementById('contentScroll');
     const sp = document.getElementById('scrollProgress');
-    if (cs && sp) {
-        cs.addEventListener('scroll', () => {
-            const pct = cs.scrollHeight - cs.clientHeight > 0
-                ? (cs.scrollTop / (cs.scrollHeight - cs.clientHeight)) * 100 : 0;
-            sp.style.width = pct + '%';
-        });
+
+    function getScrollTop() {
+        return isMobile() ? window.scrollY : (cs ? cs.scrollTop : 0);
+    }
+    function getScrollMax() {
+        if (isMobile()) {
+            return document.documentElement.scrollHeight - window.innerHeight;
+        }
+        return cs ? cs.scrollHeight - cs.clientHeight : 0;
     }
 
-    // ── Scroll reveal ──
+    // ── Scroll progress bar ──
+    function updateProgress() {
+        if (!sp) return;
+        const max = getScrollMax();
+        sp.style.width = max > 0 ? (getScrollTop() / max * 100) + '%' : '0%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    if (cs) cs.addEventListener('scroll', updateProgress, { passive: true });
+
+    // ── Scroll reveal (works on both scroll sources) ──
     const revealObs = new IntersectionObserver(entries => {
         entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.05 });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-    // ── Sidebar active state on scroll ──
+    // ── Active nav highlight on scroll ──
     const sectionIds = ['hero','models','tools','news','browse','prompts'];
     const navMap = { hero:'nav-home', models:'nav-models', tools:'nav-tools', news:'nav-news', browse:'nav-browse', prompts:'nav-prompts' };
-    if (cs) {
-        cs.addEventListener('scroll', () => {
-            let current = 'hero';
-            sectionIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el && cs.scrollTop >= el.offsetTop - 80) current = id;
-            });
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            const activeNavId = navMap[current];
-            if (activeNavId) {
-                const activeEl = document.getElementById(activeNavId);
-                if (activeEl) activeEl.classList.add('active');
-            }
+    const mobNavMap = { hero:0, models:0, tools:3, news:2, browse:1, prompts:0 };
+
+    function updateActiveNav() {
+        const scrollPos = getScrollTop();
+        let current = 'hero';
+        sectionIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && scrollPos >= el.offsetTop - 100) current = id;
+        });
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const targetId = navMap[current];
+        if (targetId) {
+            const el = document.getElementById(targetId);
+            if (el) el.classList.add('active');
+        }
+        // Mobile bottom nav active state
+        const mobItems = document.querySelectorAll('.mob-nav-item');
+        mobItems.forEach((n, i) => {
+            n.classList.toggle('active', i === (mobNavMap[current] ?? 0));
         });
     }
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
+    if (cs) cs.addEventListener('scroll', updateActiveNav, { passive: true });
 
     // ── Smooth scroll for nav links ──
     document.querySelectorAll('a[href^="#"]').forEach(link => {
@@ -1471,14 +1574,14 @@
             const id = link.getAttribute('href').slice(1);
             if (!id) return;
             const target = document.getElementById(id);
-            if (target) {
-                e.preventDefault();
-                const scrollEl = cs || window;
-                if (cs) {
-                    cs.scrollTo({ top: target.offsetTop - 16, behavior: 'smooth' });
-                } else {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
+            if (!target) return;
+            e.preventDefault();
+            const topbarH = 64;
+            if (isMobile()) {
+                const y = target.getBoundingClientRect().top + window.scrollY - topbarH;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            } else if (cs) {
+                cs.scrollTo({ top: target.offsetTop - 16, behavior: 'smooth' });
             }
         });
     });
@@ -1496,26 +1599,29 @@
         });
     }
 
-    // ── Card glow on hover ──
-    document.querySelectorAll('.model-card, .news-item').forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const r = card.getBoundingClientRect();
-            const x = ((e.clientX - r.left) / r.width) * 100;
-            const y = ((e.clientY - r.top) / r.height) * 100;
-            card.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(0,245,255,0.045) 0%, transparent 65%), var(--bg-card)`;
-        });
-        card.addEventListener('mouseleave', () => { card.style.background = ''; });
-    });
-
-    // ── Hero parallax ──
-    const heroBg = document.getElementById('heroBg');
-    if (cs && heroBg) {
-        cs.addEventListener('scroll', () => {
-            if (cs.scrollTop < 350) heroBg.style.transform = `translateY(${cs.scrollTop * 0.12}px)`;
+    // ── Card glow on hover (desktop only — touch devices skip) ──
+    if (window.matchMedia('(hover: hover)').matches) {
+        document.querySelectorAll('.model-card, .news-item').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const r = card.getBoundingClientRect();
+                const x = ((e.clientX - r.left) / r.width) * 100;
+                const y = ((e.clientY - r.top) / r.height) * 100;
+                card.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(0,245,255,0.045) 0%, transparent 65%), var(--bg-card)`;
+            });
+            card.addEventListener('mouseleave', () => { card.style.background = ''; });
         });
     }
 
-    // ── Search (placeholder) ──
+    // ── Hero parallax (desktop only) ──
+    const heroBg = document.getElementById('heroBg');
+    if (cs && heroBg) {
+        cs.addEventListener('scroll', () => {
+            if (!isMobile() && cs.scrollTop < 350)
+                heroBg.style.transform = `translateY(${cs.scrollTop * 0.12}px)`;
+        }, { passive: true });
+    }
+
+    // ── Search ──
     const searchInput = document.getElementById('topSearch');
     if (searchInput) {
         searchInput.addEventListener('keydown', e => {
