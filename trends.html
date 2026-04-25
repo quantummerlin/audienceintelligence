@@ -400,6 +400,25 @@
             .bmc-float-text { display: none; }
             .category-grid { grid-template-columns: 1fr; }
         }
+        /* Lead Magnet Popup */
+        .nl-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); z-index: 1100; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        .nl-overlay.open { opacity: 1; pointer-events: all; }
+        .nl-popup { background: var(--bg-secondary); border: 1px solid rgba(99,102,241,0.25); border-radius: 20px; padding: 40px 36px; max-width: 440px; width: 90%; text-align: center; position: relative; transform: translateY(20px) scale(0.97); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+        .nl-overlay.open .nl-popup { transform: translateY(0) scale(1); }
+        .nl-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--text-secondary); font-size: 1.1rem; cursor: pointer; padding: 4px 8px; transition: color .2s; }
+        .nl-close:hover { color: var(--text-primary); }
+        .nl-icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .nl-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; }
+        .nl-sub { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+        .nl-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+        .nl-input { padding: 13px 16px; background: var(--bg-primary); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: var(--text-primary); font-size: 0.92rem; font-family: inherit; text-align: center; }
+        .nl-input:focus { outline: none; border-color: var(--accent); }
+        .nl-input::placeholder { color: var(--text-secondary); }
+        .nl-btn { padding: 13px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; font-size: 0.95rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all .25s; }
+        .nl-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+        .nl-note { font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 14px; }
+        .nl-dismiss { background: none; border: none; color: var(--text-secondary); font-size: 0.78rem; cursor: pointer; font-family: inherit; text-decoration: underline; transition: color .2s; }
+        .nl-dismiss:hover { color: var(--text-primary); }
     </style>
     <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -947,7 +966,44 @@
             let r = 1;
             cards.forEach(c => { c.querySelector('.trend-rank').textContent = '#' + r++; });
         };
+
+        // === LEAD MAGNET POPUP ===
+        (function() {
+            const STORAGE_KEY = 'ai_trends_nl_dismissed';
+            if (sessionStorage.getItem(STORAGE_KEY)) return;
+            function openPopup() { document.getElementById('trendsNlOverlay').classList.add('open'); }
+            window.closeTrendsNl = function(e) { if (e.target === document.getElementById('trendsNlOverlay')) dismissTrendsNl(); };
+            window.dismissTrendsNl = function() {
+                document.getElementById('trendsNlOverlay').classList.remove('open');
+                sessionStorage.setItem(STORAGE_KEY, '1');
+            };
+            window.handleTrendsSignup = function(e) {
+                e.preventDefault();
+                sessionStorage.setItem(STORAGE_KEY, '1');
+                window.location.href = 'thank-you.html?freebie=brief';
+            };
+            setTimeout(openPopup, 22000);
+            document.addEventListener('mouseleave', function handler(e) {
+                if (e.clientY < 10) { openPopup(); document.removeEventListener('mouseleave', handler); }
+            });
+        })();
     })();
     </script>
+
+    <!-- Lead Magnet Popup -->
+    <div class="nl-overlay" id="trendsNlOverlay" onclick="closeTrendsNl(event)">
+        <div class="nl-popup">
+            <button class="nl-close" onclick="dismissTrendsNl()" aria-label="Close">✕</button>
+            <div class="nl-icon">📡</div>
+            <h3 class="nl-title">Get the Weekly Signal Brief</h3>
+            <p class="nl-sub">5 rising signals, every Monday. What's building in real conversations — before mainstream media picks it up. Free.</p>
+            <form class="nl-form" onsubmit="handleTrendsSignup(event)">
+                <input type="email" name="email" class="nl-input" placeholder="your@email.com" required>
+                <button type="submit" class="nl-btn">Send Me the Brief →</button>
+            </form>
+            <p class="nl-note">Join 1,200+ readers · No spam · Unsubscribe any time</p>
+            <button class="nl-dismiss" onclick="dismissTrendsNl()">Not now</button>
+        </div>
+    </div>
 </body>
 </html>

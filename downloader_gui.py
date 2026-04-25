@@ -88,6 +88,7 @@ class DownloaderApp(tk.Tk):
         self.mode_var      = tk.StringVar(value="video")
         self.quality_var   = tk.StringVar(value="best")
         self.filename_var  = tk.StringVar()
+        self.browser_var   = tk.StringVar(value="none")
         self.embed_art_var = tk.BooleanVar(value=False)
         self.subtitles_var = tk.BooleanVar(value=False)
         self.output_dir    = os.path.join(os.path.dirname(os.path.abspath(__file__)), "outputs")
@@ -183,6 +184,21 @@ class DownloaderApp(tk.Tk):
         entry(fn_row, textvariable=self.filename_var, width=32).pack(
             side="left", fill="x", expand=True, ipady=4)
         tk.Label(fn_row, text="  (leave blank for default)", bg=CARD,
+                 fg=MUTED, font=FONT_SM).pack(side="left")
+
+        # Browser cookies
+        browser_row = tk.Frame(opts_inner, bg=CARD)
+        browser_row.pack(fill="x", pady=(0, 8))
+        tk.Label(browser_row, text="Browser cookies", bg=CARD, fg=TEXT,
+                 font=FONT, width=14, anchor="w").pack(side="left")
+        self.browser_cb = ttk.Combobox(
+            browser_row, textvariable=self.browser_var,
+            values=["none", "chrome", "firefox", "edge", "safari"],
+            state="readonly", width=12, font=FONT
+        )
+        self.browser_cb.pack(side="left")
+        self._style_combobox(self.browser_cb)
+        tk.Label(browser_row, text="  (for private/login-required videos)", bg=CARD,
                  fg=MUTED, font=FONT_SM).pack(side="left")
 
         # Checkboxes
@@ -417,6 +433,9 @@ class DownloaderApp(tk.Tk):
         )
         chrome_dir = chrome_dir if os.path.isdir(chrome_dir) else None
 
+        browser_choice = self.browser_var.get()
+        cookies_from_browser = browser_choice if browser_choice != "none" else None
+
         def on_progress(d):
             if d.get("status") == "downloading":
                 total   = d.get("total_bytes") or d.get("total_bytes_estimate") or 0
@@ -444,6 +463,7 @@ class DownloaderApp(tk.Tk):
                 embed_thumbnail=self.embed_art_var.get(),
                 filename_template=fname,
                 chrome_profile_dir=chrome_dir,
+                cookies_from_browser=cookies_from_browser,
                 progress_callback=on_progress,
             )
 

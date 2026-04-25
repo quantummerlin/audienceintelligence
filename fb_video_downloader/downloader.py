@@ -6,9 +6,12 @@ TikTok, Twitter/X, Reddit, Twitch, Vimeo, Dailymotion, and 1000+ other sites.
 Supports quality selection, audio-only (MP3) extraction, and progress reporting.
 """
 
+import glob
 import json
 import os
 import re
+import shutil
+import subprocess
 import tempfile
 from dataclasses import dataclass
 from datetime import datetime
@@ -19,6 +22,28 @@ try:
     YTDLP_AVAILABLE = True
 except ImportError:
     YTDLP_AVAILABLE = False
+
+
+def _find_ytdlp_exe() -> Optional[str]:
+    """
+    Return path to a standalone yt-dlp.exe (not the Python wrapper).
+    Detection strategy: the standalone exe is large (>5 MB) whereas the
+    Python pip-wrapper script is tiny (<1 KB).
+    """
+    exe = shutil.which("yt-dlp")
+    if not exe:
+        return None
+    try:
+        size = os.path.getsize(exe)
+        # Standalone PyInstaller bundle is typically 20-60 MB; pip wrapper is tiny
+        if size > 5 * 1024 * 1024:
+            return exe
+    except Exception:
+        pass
+    return None
+
+
+_YTDLP_EXE: Optional[str] = _find_ytdlp_exe()
 
 
 PLATFORM_PATTERNS = [
@@ -217,6 +242,10 @@ class FacebookVideoDownloader:
                 error="Please provide a full URL starting with http:// or https://",
             )
 
+        # Prefer the standalone exe (newer, Python-version-independent)
+        if _YTDLP_EXE:
+            return self._download_via_exe(url, _YTDLP_EXE)
+
         result = DownloadResult(url=url, audio_only=self.audio_only)
         result.platform = self._detect_platform(url)
         ydl_opts = self._build_ydl_opts(result)
@@ -314,7 +343,8 @@ class FacebookVideoDownloader:
         q = self.quality.lower().strip()
         if q == "best":
             # Accept m4a audio stream too so Instagram/Facebook merges succeed
-            return "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo[ext=mp4]+bestaudio/bestvideo+bestaudio/best"
+            # Final fallback to "best" covers single-stream Facebook formats
+            return "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo[ext=mp4]+bestaudio/bestvideo+bestaudio/best[ext=mp4]/best"
         if q == "worst":
             return "worstvideo[ext=mp4]+worstaudio/worstvideo+worstaudio/worst"
         # numeric height e.g. "720"
@@ -335,6 +365,12 @@ class FacebookVideoDownloader:
             "no_warnings": False,
             "ignoreerrors": False,
             "nocheckcertificate": False,
+            # Skip format availability pre-checks — helps Facebook/Instagram
+            "check_formats": False,
+            # Facebook-specific: disable reels redirect and use mobile API
+            "extractor_args": {
+                "facebook": {"api": ["0"]},
+            },
             "http_headers": {
                 "User-Agent": (
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -428,38 +464,35 @@ class FacebookVideoDownloader:
                 # If audio_only, ffmpeg will rename to .mp3 after this hook fires.
                 # Store a best-guess mp3 path; _resolve_final_filename fixes it later.
                 if self.audio_only and fname:
-                    import os as _os
-                    base = _os.path.splitext(fname)[0]
+                    base = os.path.splitext(fname)[0]
                     result._expected_mp3 = base + ".mp3"
             self.progress_callback(d)
         return hook
 
     def _resolve_final_filename(self, result: DownloadResult):
         """After yt-dlp finishes, find the actual output file on disk."""
-        import os as _os
-        import glob as _glob
         # If we expected an mp3 and it exists, use that
         expected = getattr(result, '_expected_mp3', None)
-        if expected and _os.path.exists(expected):
+        if expected and os.path.exists(expected):
             result.filename = expected
             return
         # For video mode: ffmpeg may have remuxed to .mp4
         if not self.audio_only and result.filename:
-            base = _os.path.splitext(result.filename)[0]
+            base = os.path.splitext(result.filename)[0]
             mp4_path = base + ".mp4"
-            if _os.path.exists(mp4_path):
+            if os.path.exists(mp4_path):
                 result.filename = mp4_path
                 return
         # If stored path exists as-is, keep it
-        if result.filename and _os.path.exists(result.filename):
+        if result.filename and os.path.exists(result.filename):
             return
         # Last resort: find the newest matching file in output_dir
         exts = ('mp4', 'mp3', 'm4a', 'webm', 'mkv', 'jpg', 'jpeg', 'png', 'ogg', 'opus')
         candidates = []
         for ext in exts:
-            candidates.extend(_glob.glob(_os.path.join(self.output_dir, f'*.{ext}')))
+            candidates.extend(glob.glob(os.path.join(self.output_dir, f'*.{ext}')))
         if candidates:
-            result.filename = max(candidates, key=_os.path.getmtime)
+            result.filename = max(candidates, key=os.path.getmtime)
 
     @staticmethod
     def _default_progress(d: dict):
@@ -475,6 +508,104 @@ class FacebookVideoDownloader:
             print(f"\r  Download complete.                                    ")
         elif status == "error":
             print(f"\r  Error during download.                                ")
+
+    def _download_via_exe(self, url: str, exe: str) -> DownloadResult:
+        """Download using the standalone yt-dlp.exe via subprocess."""
+        result = DownloadResult(url=url, audio_only=self.audio_only)
+        result.platform = self._detect_platform(url)
+
+        cmd = [exe, "--no-warnings", "--newline", "--progress"]
+
+        # Format
+        cmd += ["--format", self._format_selector()]
+
+        # Output template
+        cmd += ["--output", self._build_output_template()]
+
+        # Merge to mp4
+        if not self.audio_only and not self.thumbnail_only:
+            cmd += ["--merge-output-format", "mp4"]
+
+        # Audio only
+        if self.audio_only:
+            cmd += ["--extract-audio", "--audio-format", "mp3", "--audio-quality", "192K"]
+
+        # Thumbnail only
+        if self.thumbnail_only:
+            cmd += ["--skip-download", "--write-thumbnail", "--convert-thumbnails", "jpg"]
+
+        # Subtitles
+        if self.subtitles and not self.audio_only and not self.thumbnail_only:
+            cmd += ["--write-subs", "--write-auto-subs", "--sub-format", "srt/vtt/best"]
+
+        # Cookies
+        if self.cookies_file and os.path.isfile(self.cookies_file):
+            if self.cookies_file.lower().endswith(".json"):
+                converted = _json_cookies_to_netscape(self.cookies_file)
+                cmd += ["--cookies", converted]
+            else:
+                cmd += ["--cookies", self.cookies_file]
+        elif self.cookies_from_browser:
+            cmd += ["--cookies-from-browser", self.cookies_from_browser]
+        elif self.chrome_profile_dir and os.path.isdir(self.chrome_profile_dir):
+            cmd += ["--cookies-from-browser", f"chrome:{self.chrome_profile_dir}"]
+
+        # Proxy
+        if self.proxy:
+            cmd += ["--proxy", self.proxy]
+
+        # Facebook extractor args
+        cmd += ["--extractor-args", "facebook:api=0"]
+
+        cmd.append(url)
+
+        try:
+            proc = subprocess.Popen(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                text=True, encoding="utf-8", errors="replace"
+            )
+            last_line = ""
+            for line in proc.stdout:  # type: ignore[union-attr]
+                line = line.rstrip()
+                if not line:
+                    continue
+                last_line = line
+                # Parse progress for callback
+                if "[download]" in line and "%" in line:
+                    pct_match = re.search(r"([\d.]+)%", line)
+                    speed_match = re.search(r"at\s+([\d.]+\s*\S+/s)", line)
+                    eta_match = re.search(r"ETA\s+([\d:]+)", line)
+                    if pct_match:
+                        pct = float(pct_match.group(1))
+                        total_match = re.search(r"of\s+([\d.]+\s*\S+B)", line)
+                        speed_str = speed_match.group(1) if speed_match else ""
+                        eta_str = eta_match.group(1) if eta_match else ""
+                        # Parse speed to bytes/s for callback compat
+                        self.progress_callback({
+                            "status": "downloading",
+                            "_percent_str": f"{pct:.1f}%",
+                            "_speed_str": speed_str,
+                            "_eta_str": eta_str,
+                            "_total_bytes_str": total_match.group(1) if total_match else "",
+                            "downloaded_bytes": pct,
+                            "total_bytes": 100,
+                        })
+                elif "[Merger]" in line or "Deleting original file" in line or "ffmpeg" in line.lower():
+                    self.progress_callback({"status": "finished", "filename": ""})
+
+            proc.wait()
+            if proc.returncode != 0:
+                result.error = last_line or "yt-dlp exited with error"
+                return result
+
+            result.success = True
+            self._resolve_final_filename(result)
+            self._save_history(result)
+
+        except Exception as exc:
+            result.error = str(exc)
+
+        return result
 
     def _save_history(self, result: DownloadResult):
         """Append a successful download record to download_history.json."""

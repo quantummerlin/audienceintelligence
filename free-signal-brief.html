@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Signal Brief — Sample Edition | Aether Intelligence</title>
+    <meta name="description" content="5 rising signals extracted from 200,000+ real conversations. What's building momentum this week — before it hits mainstream.">
+    <meta property="og:title" content="Weekly Signal Brief — Sample Edition">
+    <meta property="og:description" content="5 rising signals, ranked by momentum. Extracted from real conversations this week.">
+    <meta property="og:image" content="https://ai.quantummerlin.com/logo.png">
+    <meta property="og:url" content="https://ai.quantummerlin.com/free-signal-brief.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --accent: #6366f1;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        .bg-gradient {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.06) 0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+        /* Header */
+        header { padding: 20px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo img { width: 30px; height: 30px; border-radius: 6px; object-fit: cover; }
+        .back-link { font-size: 0.85rem; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+        .back-link:hover { color: var(--text-primary); }
+
+        /* Hero */
+        .brief-header {
+            padding: 56px 0 40px;
+            text-align: center;
+        }
+        .brief-tag {
+            display: inline-block;
+            padding: 5px 14px;
+            background: rgba(99,102,241,0.1);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .brief-header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 14px;
+            background: linear-gradient(180deg, #ffffff 0%, #a0a0b0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .brief-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .brief-meta span { margin: 0 8px; }
+        .brief-meta span:first-child { margin-left: 0; }
+
+        /* Signal Cards */
+        .signals { padding: 8px 0 64px; }
+        .signal-number { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: 16px; }
+        .signal-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+        .signal-card:hover { border-color: rgba(99,102,241,0.25); }
+        .signal-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+        .signal-rank {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            min-width: 44px;
+        }
+        .signal-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.04em;
+        }
+        .badge-momentum { background: rgba(99,102,241,0.15); color: #9ca3f7; border: 1px solid rgba(99,102,241,0.2); }
+        .badge-rising  { background: rgba(34,197,94,0.1);  color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+        .badge-steady  { background: rgba(234,179,8,0.1);  color: #fbbf24; border: 1px solid rgba(234,179,8,0.2); }
+        .badge-spiking { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+        .signal-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; line-height: 1.35; }
+        .signal-desc { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.65; }
+        .signal-momentum {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+        }
+        .momentum-label { font-size: 0.75rem; color: var(--text-secondary); min-width: 80px; }
+        .momentum-bar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
+        .momentum-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+        .momentum-score { font-size: 0.78rem; font-weight: 600; color: var(--accent); min-width: 44px; text-align: right; }
+        .signal-quote {
+            border-left: 2px solid rgba(99,102,241,0.3);
+            padding: 10px 16px;
+            background: rgba(99,102,241,0.04);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+        .signal-quote cite { display: block; font-style: normal; font-size: 0.72rem; margin-top: 6px; color: #555566; }
+        .signal-why {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .signal-why strong { color: var(--text-primary); font-weight: 500; }
+
+        /* CTA */
+        .brief-cta {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 20px;
+            padding: 40px 36px;
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .brief-cta h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; }
+        .brief-cta p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+        .nl-form { display: flex; flex-direction: column; gap: 10px; max-width: 360px; margin: 0 auto 12px; }
+        .nl-input {
+            padding: 13px 16px;
+            background: var(--bg-primary);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.92rem;
+            font-family: inherit;
+            text-align: center;
+        }
+        .nl-input:focus { outline: none; border-color: var(--accent); }
+        .nl-input::placeholder { color: var(--text-secondary); }
+        .nl-btn {
+            padding: 13px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .nl-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+        .nl-note { font-size: 0.76rem; color: var(--text-secondary); }
+
+        /* Footer */
+        footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        footer p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; }
+        footer a { color: var(--text-secondary); text-decoration: none; margin: 0 12px; font-size: 0.82rem; transition: color 0.2s; }
+        footer a:hover { color: var(--text-primary); }
+
+        @media (max-width: 600px) {
+            .brief-header h1 { font-size: 1.7rem; }
+            .signal-card { padding: 22px 20px; }
+            .brief-cta { padding: 32px 20px; }
+            .signal-top { flex-direction: column; gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">
+                <img src="logo.png" alt="Aether Intelligence">
+                Aether Intelligence
+            </a>
+            <a class="back-link" href="trends.html">← Back to Trends</a>
+        </header>
+
+        <div class="brief-header">
+            <div class="brief-tag">📡 Free Resource</div>
+            <h1>Weekly Signal Brief<br>— Sample Edition</h1>
+            <p class="brief-meta">
+                <span>April 2026</span>
+                <span>·</span>
+                <span>5 signals</span>
+                <span>·</span>
+                <span>~5 min read</span>
+            </p>
+            <p style="font-size:0.9rem;color:var(--text-secondary);max-width:480px;margin:12px auto 0;">
+                These 5 signals are building momentum in real conversations right now. Extracted from 200,000+ posts this week.
+            </p>
+        </div>
+
+        <div class="signals">
+
+            <!-- Signal 1 -->
+            <div class="signal-number">Signal 01 of 05</div>
+            <div class="signal-card">
+                <div class="signal-top">
+                    <span class="signal-rank">#1 — Top Signal</span>
+                    <div class="signal-badges">
+                        <span class="badge badge-spiking">⚡ Spiking</span>
+                        <span class="badge badge-momentum">Momentum: 94/100</span>
+                    </div>
+                </div>
+                <h2 class="signal-title">AI Job Displacement Anxiety is Reaching a Tipping Point</h2>
+                <p class="signal-desc">Conversation volume around AI replacing knowledge workers has increased 3x in 60 days. The framing is shifting — from abstract fear to concrete personal threat. Workers in content, legal, finance, and admin are comparing notes publicly.</p>
+                <div class="signal-momentum">
+                    <span class="momentum-label">Momentum</span>
+                    <div class="momentum-bar-track"><div class="momentum-bar-fill" style="width:94%"></div></div>
+                    <span class="momentum-score">94/100</span>
+                </div>
+                <div class="signal-quote">
+                    "My entire job is writing reports that an LLM can now do in 4 minutes. My manager knows it. I know it. We just haven't had the conversation yet."
+                    <cite>— r/jobs, 2.4k upvotes</cite>
+                </div>
+                <p class="signal-why"><strong>Why this matters:</strong> Anxiety at this scale creates huge demand for reskilling content, career pivot tools, and "AI-proof your career" frameworks. Marketers and coaches positioned around this are seeing fast audience growth.</p>
+            </div>
+
+            <!-- Signal 2 -->
+            <div class="signal-number">Signal 02 of 05</div>
+            <div class="signal-card">
+                <div class="signal-top">
+                    <span class="signal-rank">#2</span>
+                    <div class="signal-badges">
+                        <span class="badge badge-rising">↑ Rising Fast</span>
+                        <span class="badge badge-momentum">Momentum: 87/100</span>
+                    </div>
+                </div>
+                <h2 class="signal-title">Subscription Fatigue is Crossing Into Active Boycott Behaviour</h2>
+                <p class="signal-desc">Consumers are no longer just complaining about subscription costs — they're organising, sharing cancellation guides, and celebrating "subscription audits" as a life win. The sentiment is militant, not passive.</p>
+                <div class="signal-momentum">
+                    <span class="momentum-label">Momentum</span>
+                    <div class="momentum-bar-track"><div class="momentum-bar-fill" style="width:87%"></div></div>
+                    <span class="momentum-score">87/100</span>
+                </div>
+                <div class="signal-quote">
+                    "I cancelled 9 subscriptions in January. Saved $340/month. Why did I wait 3 years to do this? The companies make it deliberately hard to cancel — that's how I knew."
+                    <cite>— r/personalfinance, 18k upvotes</cite>
+                </div>
+                <p class="signal-why"><strong>Why this matters:</strong> Lifetime deal products, one-time-purchase tools, and "no subscription" positioning are seeing sharp conversion lift. This is a messaging opportunity hiding in plain sight.</p>
+            </div>
+
+            <!-- Signal 3 -->
+            <div class="signal-number">Signal 03 of 05</div>
+            <div class="signal-card">
+                <div class="signal-top">
+                    <span class="signal-rank">#3</span>
+                    <div class="signal-badges">
+                        <span class="badge badge-rising">↑ Rising</span>
+                        <span class="badge badge-momentum">Momentum: 79/100</span>
+                    </div>
+                </div>
+                <h2 class="signal-title">Normalisation of Surveillance is Generating Quiet, Growing Resistance</h2>
+                <p class="signal-desc">Conversations about smart devices, workplace monitoring, and social media data harvesting are shifting from resignation ("that's just how it is") to deliberate counter-behaviour. VPN sales, dumb phone discussions, and digital minimalism content are spiking.</p>
+                <div class="signal-momentum">
+                    <span class="momentum-label">Momentum</span>
+                    <div class="momentum-bar-track"><div class="momentum-bar-fill" style="width:79%"></div></div>
+                    <span class="momentum-score">79/100</span>
+                </div>
+                <div class="signal-quote">
+                    "I put tape over my laptop camera in 2015 and got called paranoid. Now my entire office does it and no one bats an eye."
+                    <cite>— r/privacy, 6.1k upvotes</cite>
+                </div>
+                <p class="signal-why"><strong>Why this matters:</strong> Privacy-first products and "we don't track you" messaging are becoming genuine differentiators, not just compliance checkboxes. Audiences that care deeply about this are highly engaged and shareable.</p>
+            </div>
+
+            <!-- Signal 4 -->
+            <div class="signal-number">Signal 04 of 05</div>
+            <div class="signal-card">
+                <div class="signal-top">
+                    <span class="signal-rank">#4</span>
+                    <div class="signal-badges">
+                        <span class="badge badge-steady">→ Steady Build</span>
+                        <span class="badge badge-momentum">Momentum: 71/100</span>
+                    </div>
+                </div>
+                <h2 class="signal-title">Loneliness Epidemic Conversations are Shifting From Diagnosis to Solutions</h2>
+                <p class="signal-desc">After years of articles diagnosing loneliness as a crisis, communities are now generating their own grassroots solutions — hobby meetups, accountability groups, micro-community apps, and "third place" hunting guides for specific cities.</p>
+                <div class="signal-momentum">
+                    <span class="momentum-label">Momentum</span>
+                    <div class="momentum-bar-track"><div class="momentum-bar-fill" style="width:71%"></div></div>
+                    <span class="momentum-score">71/100</span>
+                </div>
+                <div class="signal-quote">
+                    "Tried 4 different apps to make adult friends. None of them worked. Started a monthly board game night at my local coffee shop — have 11 regulars now. No algorithm needed."
+                    <cite>— r/socialskills, 22k upvotes</cite>
+                </div>
+                <p class="signal-why"><strong>Why this matters:</strong> "IRL community" positioning is outperforming digital-only community products right now. Tools and services that bridge online interest to offline gathering are resonating strongly.</p>
+            </div>
+
+            <!-- Signal 5 -->
+            <div class="signal-number">Signal 05 of 05</div>
+            <div class="signal-card">
+                <div class="signal-top">
+                    <span class="signal-rank">#5</span>
+                    <div class="signal-badges">
+                        <span class="badge badge-rising">↑ Rising</span>
+                        <span class="badge badge-momentum">Momentum: 68/100</span>
+                    </div>
+                </div>
+                <h2 class="signal-title">Anti-Hustle Sentiment is Maturing Into a New Work Identity</h2>
+                <p class="signal-desc">The backlash to hustle culture is moving past memes into serious identity formation. Communities are building shared frameworks around "enough," "rest as resistance," and working-to-live philosophies — with real behaviour change attached.</p>
+                <div class="signal-momentum">
+                    <span class="momentum-label">Momentum</span>
+                    <div class="momentum-bar-track"><div class="momentum-bar-fill" style="width:68%"></div></div>
+                    <span class="momentum-score">68/100</span>
+                </div>
+                <div class="signal-quote">
+                    "I stopped optimising my mornings and started just having mornings. My output is the same. My anxiety is gone. The entire productivity industry sold me a problem I didn't have."
+                    <cite>— r/antiwork, 31k upvotes</cite>
+                </div>
+                <p class="signal-why"><strong>Why this matters:</strong> Products and content that respect people's time and energy — rather than promising to squeeze more out of it — are finding loyal audiences. "Calm company" and "sustainable pace" messaging converts well in this climate.</p>
+            </div>
+
+        </div>
+
+        <!-- CTA to subscribe -->
+        <div class="brief-cta">
+            <h3>This Brief — Every Monday</h3>
+            <p>5 signals like these, every week, in your inbox. What's building in real conversations before it hits mainstream media. Free. No spam.</p>
+            <form class="nl-form" onsubmit="handleSignup(event, 'brief')">
+                <input type="email" class="nl-input" placeholder="your@email.com" required>
+                <button type="submit" class="nl-btn">Subscribe Free →</button>
+            </form>
+            <p class="nl-note">Join 1,200+ readers · Unsubscribe any time</p>
+        </div>
+
+        <footer>
+            <p>Aether Intelligence — Human insight, extracted from real conversations</p>
+            <a href="index.html">Reports</a>
+            <a href="trends.html">Trends</a>
+            <a href="startup-ideas.html">Ideas</a>
+            <a href="patterns.html">Patterns</a>
+            <a href="about.html">About</a>
+        </footer>
+    </div>
+
+    <script>
+    function handleSignup(e, type) {
+        e.preventDefault();
+        const email = e.target.querySelector('input[type="email"]').value;
+        // TODO: replace with real email service submission
+        // e.g. fetch('https://your-api.com/subscribe', { method: 'POST', body: JSON.stringify({ email, list: type }) })
+        window.location.href = 'thank-you.html?freebie=' + encodeURIComponent(type);
+    }
+    </script>
+</body>
+</html>

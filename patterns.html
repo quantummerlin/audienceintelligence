@@ -433,6 +433,25 @@
             .bmc-float { padding: 11px 14px; bottom: 16px; right: 16px; }
             .bmc-float-text { display: none; }
         }
+        /* Lead Magnet Popup */
+        .nl-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); z-index: 1100; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        .nl-overlay.open { opacity: 1; pointer-events: all; }
+        .nl-popup { background: var(--bg-secondary); border: 1px solid rgba(99,102,241,0.25); border-radius: 20px; padding: 40px 36px; max-width: 440px; width: 90%; text-align: center; position: relative; transform: translateY(20px) scale(0.97); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+        .nl-overlay.open .nl-popup { transform: translateY(0) scale(1); }
+        .nl-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--text-secondary); font-size: 1.1rem; cursor: pointer; padding: 4px 8px; transition: color .2s; }
+        .nl-close:hover { color: var(--text-primary); }
+        .nl-icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .nl-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; }
+        .nl-sub { font-size: 0.9rem; color: var(--bg-tertiary); color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+        .nl-popup-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+        .nl-input { padding: 13px 16px; background: var(--bg-primary); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: var(--text-primary); font-size: 0.92rem; font-family: inherit; text-align: center; }
+        .nl-input:focus { outline: none; border-color: var(--accent); }
+        .nl-input::placeholder { color: var(--text-secondary); }
+        .nl-btn { padding: 13px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; font-size: 0.95rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all .25s; }
+        .nl-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+        .nl-note { font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 14px; }
+        .nl-dismiss { background: none; border: none; color: var(--text-secondary); font-size: 0.78rem; cursor: pointer; font-family: inherit; text-decoration: underline; transition: color .2s; }
+        .nl-dismiss:hover { color: var(--text-primary); }
     </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -592,5 +611,43 @@
         <span class="bmc-float-icon">&#x2615;</span>
         <span class="bmc-float-text">Buy me a coffee</span>
     </a>
+
+    <!-- Lead Magnet Popup -->
+    <div class="nl-overlay" id="patternsNlOverlay" onclick="closePatternsNl(event)">
+        <div class="nl-popup">
+            <button class="nl-close" onclick="dismissPatternsNl()" aria-label="Close">✕</button>
+            <div class="nl-icon">🧠</div>
+            <h3 class="nl-title">Free: Human Pattern Atlas</h3>
+            <p class="nl-sub">The 7 most powerful recurring patterns from 200,000+ conversations — in a single reference page. Understand your audience at a deeper level.</p>
+            <form class="nl-popup-form" onsubmit="handlePatternsSignup(event)">
+                <input type="email" name="email" class="nl-input" placeholder="your@email.com" required>
+                <button type="submit" class="nl-btn">Get the Free Atlas →</button>
+            </form>
+            <p class="nl-note">No spam · Unsubscribe any time</p>
+            <button class="nl-dismiss" onclick="dismissPatternsNl()">Not now</button>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        const STORAGE_KEY = 'ai_patterns_nl_dismissed';
+        if (sessionStorage.getItem(STORAGE_KEY)) return;
+        function openPopup() { document.getElementById('patternsNlOverlay').classList.add('open'); }
+        window.closePatternsNl = function(e) { if (e.target === document.getElementById('patternsNlOverlay')) dismissPatternsNl(); };
+        window.dismissPatternsNl = function() {
+            document.getElementById('patternsNlOverlay').classList.remove('open');
+            sessionStorage.setItem(STORAGE_KEY, '1');
+        };
+        window.handlePatternsSignup = function(e) {
+            e.preventDefault();
+            sessionStorage.setItem(STORAGE_KEY, '1');
+            window.location.href = 'thank-you.html?freebie=atlas';
+        };
+        setTimeout(openPopup, 25000);
+        document.addEventListener('mouseleave', function handler(e) {
+            if (e.clientY < 10) { openPopup(); document.removeEventListener('mouseleave', handler); }
+        });
+    })();
+    </script>
 </body>
 </html>

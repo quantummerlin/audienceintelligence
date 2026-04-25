@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demand Evidence Scorecard | Aether Intelligence</title>
+    <meta name="description" content="Score any startup idea in 10 minutes using the same 8-point framework used to validate ideas in the Aether Intelligence database.">
+    <meta property="og:title" content="Demand Evidence Scorecard — Free Tool">
+    <meta property="og:description" content="8-point framework for validating startup ideas with real conversation data. Free from Aether Intelligence.">
+    <meta property="og:image" content="https://ai.quantummerlin.com/logo.png">
+    <meta property="og:url" content="https://ai.quantummerlin.com/free-startup-scorecard.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --accent: #6366f1;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary);
+            line-height: 1.7; min-height: 100vh;
+        }
+        .bg-gradient {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.06) 0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+        .container { max-width: 760px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+        header { padding: 20px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo img { width: 30px; height: 30px; border-radius: 6px; object-fit: cover; }
+        .back-link { font-size: 0.85rem; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+        .back-link:hover { color: var(--text-primary); }
+
+        /* Page header */
+        .page-header { padding: 52px 0 36px; text-align: center; }
+        .page-tag {
+            display: inline-block; padding: 5px 14px;
+            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 20px; font-size: 0.75rem; color: var(--accent);
+            margin-bottom: 20px; letter-spacing: 0.06em; text-transform: uppercase;
+        }
+        .page-header h1 {
+            font-size: 2.2rem; font-weight: 600; letter-spacing: -0.03em;
+            line-height: 1.2; margin-bottom: 14px;
+            background: linear-gradient(180deg, #ffffff 0%, #a0a0b0 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .page-header p { font-size: 0.95rem; color: var(--text-secondary); max-width: 520px; margin: 0 auto; line-height: 1.65; }
+
+        /* Idea Input */
+        .idea-input-section {
+            background: var(--bg-card);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 28px;
+        }
+        .idea-input-section label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
+        .idea-input {
+            width: 100%; padding: 14px 16px;
+            background: var(--bg-primary); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px; color: var(--text-primary); font-size: 1rem;
+            font-family: inherit; transition: border-color 0.2s;
+        }
+        .idea-input:focus { outline: none; border-color: var(--accent); }
+        .idea-input::placeholder { color: var(--text-secondary); }
+
+        /* Score Criteria */
+        .criteria-list { margin-bottom: 32px; }
+        .criterion {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 22px 28px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+        .criterion:hover { border-color: rgba(99,102,241,0.2); }
+        .criterion-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+        .criterion-left { flex: 1; }
+        .criterion-num { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 4px; }
+        .criterion-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .criterion-desc { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.55; }
+        .score-selector { display: flex; gap: 6px; flex-shrink: 0; margin-top: 4px; }
+        .score-btn {
+            width: 34px; height: 34px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-primary); color: var(--text-secondary);
+            font-size: 0.82rem; font-weight: 600; font-family: inherit;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .score-btn:hover { border-color: var(--accent); color: var(--text-primary); }
+        .score-btn.selected { background: var(--accent); border-color: var(--accent); color: white; }
+        .criterion-hint { font-size: 0.78rem; color: #555568; margin-top: 10px; line-height: 1.5; }
+
+        /* Score Summary */
+        .score-summary {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            display: none;
+        }
+        .score-summary.visible { display: block; }
+        .score-summary h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; }
+        .score-display { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .score-number {
+            font-size: 3.5rem; font-weight: 700; letter-spacing: -0.04em;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            min-width: 90px;
+        }
+        .score-out-of { font-size: 1.1rem; color: var(--text-secondary); }
+        .score-verdict {
+            font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary);
+        }
+        .score-bar-track { width: 100%; height: 6px; background: rgba(255,255,255,0.07); border-radius: 6px; overflow: hidden; margin-bottom: 20px; }
+        .score-bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+        .verdict-badge {
+            display: inline-block; padding: 6px 16px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 600; margin-bottom: 16px;
+        }
+        .verdict-strong { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+        .verdict-moderate { background: rgba(234,179,8,0.12); color: #fbbf24; border: 1px solid rgba(234,179,8,0.25); }
+        .verdict-weak { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-block; padding: 13px 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white; border: none; border-radius: 10px;
+            font-size: 0.95rem; font-weight: 600; font-family: inherit;
+            cursor: pointer; transition: all 0.22s;
+            box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+            text-decoration: none;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(99,102,241,0.45); }
+        .btn-secondary {
+            display: inline-block; padding: 13px 28px;
+            background: rgba(255,255,255,0.05); color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+            font-size: 0.95rem; font-weight: 500; font-family: inherit;
+            cursor: pointer; transition: all 0.22s; text-decoration: none;
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
+        .score-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        /* CTA */
+        .brief-cta {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 20px; padding: 40px 36px;
+            text-align: center; margin-bottom: 56px;
+        }
+        .brief-cta h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; }
+        .brief-cta p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+        .nl-form { display: flex; flex-direction: column; gap: 10px; max-width: 360px; margin: 0 auto 12px; }
+        .nl-input { padding: 13px 16px; background: var(--bg-primary); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: var(--text-primary); font-size: 0.92rem; font-family: inherit; text-align: center; }
+        .nl-input:focus { outline: none; border-color: var(--accent); }
+        .nl-input::placeholder { color: var(--text-secondary); }
+        .nl-btn { padding: 13px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; font-size: 0.95rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all .25s; }
+        .nl-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+        .nl-note { font-size: 0.76rem; color: var(--text-secondary); }
+
+        footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        footer p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; }
+        footer a { color: var(--text-secondary); text-decoration: none; margin: 0 12px; font-size: 0.82rem; transition: color 0.2s; }
+        footer a:hover { color: var(--text-primary); }
+
+        @media (max-width: 600px) {
+            .page-header h1 { font-size: 1.7rem; }
+            .criterion { padding: 18px 18px; }
+            .criterion-header { flex-direction: column; }
+            .score-btn { width: 30px; height: 30px; font-size: 0.78rem; }
+            .brief-cta { padding: 32px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">
+                <img src="logo.png" alt="Aether Intelligence">
+                Aether Intelligence
+            </a>
+            <a class="back-link" href="startup-ideas.html">← Back to Startup Ideas</a>
+        </header>
+
+        <div class="page-header">
+            <div class="page-tag">⚡ Free Tool</div>
+            <h1>Demand Evidence Scorecard</h1>
+            <p>Score any startup idea against the 8 criteria used to validate every idea in the Aether database. Takes 10 minutes. Tells you if the demand is real.</p>
+        </div>
+
+        <!-- Idea input -->
+        <div class="idea-input-section">
+            <label for="ideaInput">Your Startup Idea</label>
+            <input type="text" id="ideaInput" class="idea-input" placeholder="e.g. A browser extension that blocks dark patterns on e-commerce sites" />
+        </div>
+
+        <!-- 8 criteria -->
+        <div class="criteria-list" id="criteriaList">
+
+            <div class="criterion" data-criterion="1">
+                <div class="criterion-header">
+                    <div class="criterion-left">
+                        <div class="criterion-num">Criterion 01 — Community Evidence</div>
+                        <div class="criterion-title">Are people actively complaining about this problem in public forums?</div>
+                        <div class="criterion-desc">The strongest demand signal is unsolicited public frustration. Score high if you can find Reddit threads, Quora questions, or Twitter/X rants with 100+ upvotes about this exact problem.</div>
+                    </div>
+                    <div class="score-selector" data-id="1">
+                        <button class="score-btn" data-val="1">1</button>
+                        <button class="score-btn" data-val="2">2</button>
+                        <button class="score-btn" data-val="3">3</button>
+                    </div>
+                </div>
+                <div class="criterion-hint">1 = Can't find anyone complaining · 2 = Some complaints, scattered · 3 = Active, recurring threads with high engagement</div>
+            </div>
+
+            <div class="criterion" data-criterion="2">
+                <div class="criterion-header">
+                    <div class="criterion-left">
+                        <div class="criterion-num">Criterion 02 — Solution Gap</div>
+                        <div class="criterion-title">Are current solutions clearly inadequate in the eyes of the community?</div>
+                        <div class="criterion-desc">People work around bad solutions constantly. Score high if you see workarounds, "I just do X manually" posts, or complaints specifically about existing tools/services failing them.</div>
+                    </div>
+                    <div class="score-selector" data-id="2">
+                        <button class="score-btn" data-val="1">1</button>
+                        <button class="score-btn" data-val="2">2</button>
+                        <button class="score-btn" data-val="3">3</button>
+                    </div>
+                </div>
+                <div class="criterion-hint">1 = Good solutions exist · 2 = Solutions exist but imperfect · 3 = Workarounds everywhere, clear frustration with current tools</div>
+            </div>
+
+            <div class="criterion" data-criterion="3">
+                <div class="criterion-header">
+                    <div class="criterion-left">
+                        <div class="criterion-num">Criterion 03 — Willingness to Pay</div>
+                        <div class="criterion-title">Is the community already paying for adjacent or inferior solutions?</div>
+                        <div class="criterion-desc">Proof of payment is the ultimate demand signal. Score high if people are already spending money in this space — even on bad alternatives — or explicitly asking "is there a paid tool for this?"</div>
+                    </div>
+                    <div class="score-selector" data-id="3">
+                        <button class="score-btn" data-val="1">1</button>
+                        <button class="score-btn" data-val="2">2</button>
+                        <button class="score-btn" data-val="3">3</button>
+                    </div>
+                </div>
+                <div class="criterion-hint">1 = No evidence of spending · 2 = Indirect spending in adjacent areas · 3 = Explicit "I'd pay for this" or active spending on worse alternatives</div>
+            </div>
+
+            <div class="criterion" data-criterion="4">
+                <div class="criterion-header">
+                    <div class="criterion-left">
+                        <div class="criterion-num">Criterion 04 — Audience Specificity</div>
+                        <div class="criterion-title">Can you identify a specific, reachable audience for this solution?</div>
+                        <div class="criterion-desc">Niche beats broad. Score high if you can describe exactly who this is for — not "everyone" but a real subset with shared characteristics you can find and target online.</div>
+                    </div>
+                    <div class="score-selector" data-id="4">
+                        <button class="score-btn" data-val="1">1</button>
+                        <button class="score-btn" data-val="2">2</button>
+                        <button class="score-btn" data-val="3">3</button>
+                    </div>
+                </div>
+                <div class="criterion-hint">1 = Vague "everyone" audience · 2 = Identifiable but broad · 3 = Very specific persona with a clear community you can find</div>
+            </div>
+
+            <div class="criterion" data-criterion="5">
+                <div class="criterion-header">
+                    <div class="criterion-left">
+                        <div class="criterion-num">Criterion 05 — Frequency of Pain</div>
+                        <div class="criterion-title">How often does this person encounter this problem?</div>
+                        <div class="criterion-desc">Daily or weekly pain beats annual pain every time. Recurring frustration creates recurring revenue opportunity. Score high if the problem occurs frequently in people's lives or workflows.</div>
+                    </div>
+                    <div class="score-selector" data-id="5">
+                        <button class="score-btn" data-val="1">1</button>
+                        <button class="score-btn" data-val="2">2</button>
+                        <button class="score-btn" data-val="3">3</button>
+                    </div>
+                </div>
+                <div class="criterion-hint">1 = Rare / one-time problem · 2 = Monthly or situational · 3 = Daily or weekly pain point</div>
+            </div>
+
+            <div class="criterion" data-criterion="6">
+                <div class="criterion-header">
+                    <div class="criterion-left">
+                        <div class="criterion-num">Criterion 06 — Competitive Clarity</div>
+                        <div class="criterion-title">Is your angle meaningfully different from what exists?</div>
+                        <div class="criterion-desc">Not "no competition" (that's a red flag) but rather a clear, defensible angle. Score high if you can articulate in one sentence exactly how your approach is different in a way that resonates with the frustrated community.</div>
+                    </div>
+                    <div class="score-selector" data-id="6">
+                        <button class="score-btn" data-val="1">1</button>
+                        <button class="score-btn" data-val="2">2</button>
+                        <button class="score-btn" data-val="3">3</button>
+                    </div>
+                </div>
+                <div class="criterion-hint">1 = No clear differentiation · 2 = Some distinction but vague · 3 = Sharp, one-sentence angle that would resonate instantly with the audience</div>
+            </div>
+
+            <div class="criterion" data-criterion="7">
+                <div class="criterion-header">
+                    <div class="criterion-left">
+                        <div class="criterion-num">Criterion 07 — Distribution Path</div>
+                        <div class="criterion-title">Is there a clear, low-cost way to reach the first 100 customers?</div>
+                        <div class="criterion-desc">Ideas die from distribution failure more than product failure. Score high if you can identify specific communities, influencers, channels, or events where your exact audience already congregates.</div>
+                    </div>
+                    <div class="score-selector" data-id="7">
+                        <button class="score-btn" data-val="1">1</button>
+                        <button class="score-btn" data-val="2">2</button>
+                        <button class="score-btn" data-val="3">3</button>
+                    </div>
+                </div>
+                <div class="criterion-hint">1 = No clear path · 2 = Some ideas but uncertain · 3 = Specific communities/channels you can post to this week</div>
+            </div>
+
+            <div class="criterion" data-criterion="8">
+                <div class="criterion-header">
+                    <div class="criterion-left">
+                        <div class="criterion-num">Criterion 08 — Founder Edge</div>
+                        <div class="criterion-title">Do you have personal insight, access, or credibility that gives you an advantage here?</div>
+                        <div class="criterion-desc">The best founders are often former frustrated customers. Score high if you've personally experienced this problem, have domain-specific knowledge, or have existing relationships in this community.</div>
+                    </div>
+                    <div class="score-selector" data-id="8">
+                        <button class="score-btn" data-val="1">1</button>
+                        <button class="score-btn" data-val="2">2</button>
+                        <button class="score-btn" data-val="3">3</button>
+                    </div>
+                </div>
+                <div class="criterion-hint">1 = Starting from scratch, no advantage · 2 = Some relevant experience · 3 = Deep personal insight, lived experience, or existing community trust</div>
+            </div>
+
+        </div>
+
+        <div style="text-align:center;margin-bottom:28px;">
+            <button class="btn-primary" onclick="calculateScore()">Calculate My Score →</button>
+        </div>
+
+        <!-- Score Result -->
+        <div class="score-summary" id="scoreSummary">
+            <h3 id="ideaResultTitle">Your Score</h3>
+            <div class="score-bar-track">
+                <div class="score-bar-fill" id="scoreBarFill" style="width:0%"></div>
+            </div>
+            <div class="score-display">
+                <div class="score-number" id="scoreNumber">0</div>
+                <div>
+                    <div class="score-out-of">out of 24</div>
+                    <div id="verdictBadge"></div>
+                </div>
+            </div>
+            <p class="score-verdict" id="scoreVerdict"></p>
+            <div style="margin-top:24px;" class="score-actions">
+                <a href="startup-ideas.html" class="btn-primary">See 28 Validated Ideas →</a>
+                <button class="btn-secondary" onclick="resetScorecard()">Score Another Idea</button>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="brief-cta">
+            <h3>Get the Full Idea Database</h3>
+            <p>28 startup ideas validated against this same framework, with demand evidence, revenue estimates, and build complexity ratings. Plus new ideas every week in your inbox.</p>
+            <form class="nl-form" onsubmit="handleSignup(event, 'scorecard')">
+                <input type="email" class="nl-input" placeholder="your@email.com" required>
+                <button type="submit" class="nl-btn">Subscribe Free →</button>
+            </form>
+            <p class="nl-note">No spam · Unsubscribe any time</p>
+        </div>
+
+        <footer>
+            <p>Aether Intelligence — Human insight, extracted from real conversations</p>
+            <a href="index.html">Reports</a>
+            <a href="trends.html">Trends</a>
+            <a href="startup-ideas.html">Ideas</a>
+            <a href="patterns.html">Patterns</a>
+            <a href="about.html">About</a>
+        </footer>
+    </div>
+
+    <script>
+    const scores = {};
+
+    document.querySelectorAll('.score-selector').forEach(selector => {
+        selector.querySelectorAll('.score-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = selector.dataset.id;
+                const val = parseInt(btn.dataset.val);
+                scores[id] = val;
+                selector.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+    });
+
+    function calculateScore() {
+        const total = Object.values(scores).reduce((a, b) => a + b, 0);
+        const answered = Object.keys(scores).length;
+
+        if (answered < 8) {
+            const unanswered = [];
+            for (let i = 1; i <= 8; i++) {
+                if (!scores[i]) unanswered.push(i);
+            }
+            alert(`Please score all 8 criteria first. Missing: ${unanswered.map(n => '#' + n).join(', ')}`);
+            return;
+        }
+
+        const idea = document.getElementById('ideaInput').value.trim() || 'Your Idea';
+        const pct = Math.round((total / 24) * 100);
+
+        document.getElementById('ideaResultTitle').textContent = `Score for: "${idea}"`;
+        document.getElementById('scoreNumber').textContent = total;
+        document.getElementById('scoreBarFill').style.width = pct + '%';
+
+        let badge = '', verdict = '';
+        if (total >= 20) {
+            badge = '<span class="verdict-badge verdict-strong">Strong Signal — Pursue This</span>';
+            verdict = `A score of ${total}/24 indicates strong market demand evidence. You have real community pain, a reachable audience, and a clear path forward. The key risk is execution speed — someone else may be close. Start with a landing page and direct outreach to the community this week.`;
+        } else if (total >= 14) {
+            badge = '<span class="verdict-badge verdict-moderate">Moderate Signal — Validate Further</span>';
+            verdict = `A score of ${total}/24 shows promise but gaps remain. Review any criterion you scored 1 on — those are the weakest links. Before building, run 5-10 direct conversations with your target audience to close the uncertainty. Look for the questions you can't answer yet.`;
+        } else {
+            badge = '<span class="verdict-badge verdict-weak">Weak Signal — Rethink First</span>';
+            verdict = `A score of ${total}/24 suggests this idea needs more validation before you invest significant time. The gap is either in community demand, solution differentiation, or your path to customers. Go back to the communities where this problem supposedly exists and spend 2-3 hours reading — does the frustration look real and unsolicited?`;
+        }
+
+        document.getElementById('verdictBadge').innerHTML = badge;
+        document.getElementById('scoreVerdict').textContent = verdict.replace(/<[^>]+>/g, '');
+        document.getElementById('scoreVerdict').innerHTML = verdict;
+
+        const summary = document.getElementById('scoreSummary');
+        summary.classList.add('visible');
+        summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetScorecard() {
+        Object.keys(scores).forEach(k => delete scores[k]);
+        document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('scoreSummary').classList.remove('visible');
+        document.getElementById('ideaInput').value = '';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleSignup(e, type) {
+        e.preventDefault();
+        // TODO: replace with real email service
+        window.location.href = 'thank-you.html?freebie=' + encodeURIComponent(type);
+    }
+    </script>
+</body>
+</html>
