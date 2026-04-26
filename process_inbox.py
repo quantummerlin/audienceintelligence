@@ -1,7 +1,7 @@
 """
 process_inbox.py
 ================
-Drop any JSON dataset into inbox/ and run this script.
+Drop any JSON dataset OR FOLDER into inbox/ and run this script.
 
 Generates 3 content outputs per file:
   1.  reports/[slug].html                       — Full QM intelligence report
@@ -13,8 +13,12 @@ Then moves the source JSON to inbox/processed/.
 AI NEWS FOCUS: Content angles lean toward AI, tech, and digital culture.
 
 Usage:
-    python process_inbox.py                    # process all unprocessed JSON in inbox/
+    python process_inbox.py                    # recursively process all JSON in inbox/
     python process_inbox.py inbox/myfile.json  # process one specific file
+    python process_inbox.py inbox/myfolder/    # process all JSON in a specific folder
+
+Folders dropped into inbox/ are scanned recursively.
+The processed/ subfolder is always skipped.
 
 No external dependencies — stdlib only.
 """
@@ -1162,30 +1166,67 @@ def process_file(json_path: Path):
     return True
 
 
+def collect_json_files(root: Path) -> list:
+    """
+    Recursively find all .json files under root,
+    skipping the processed/ directory at any depth.
+    """
+    files = []
+    for p in sorted(root.rglob("*.json")):
+        # Skip anything inside a 'processed' folder
+        if "processed" in [part.lower() for part in p.parts]:
+            continue
+        files.append(p)
+    return files
+
+
 def main():
     INBOX_DIR.mkdir(exist_ok=True)
     PROCESSED_DIR.mkdir(exist_ok=True)
 
-    # Specific file passed as argument?
+    # Specific path passed as argument?
     if len(sys.argv) > 1:
         target = Path(sys.argv[1])
         if not target.exists():
             print(f"Error: {target} not found.")
             sys.exit(1)
-        process_file(target)
-        return
 
-    # Otherwise process all JSON in inbox/
-    files = [f for f in INBOX_DIR.glob("*.json")]
-    if not files:
-        print("📭 inbox/ is empty. Drop a .json dataset in there and run again.")
-        return
+        if target.is_dir():
+            # Folder argument — collect all JSON inside it
+            files = collect_json_files(target)
+            if not files:
+                print(f"📭 No JSON files found in {target}")
+                return
+            print(f"📂 Scanning folder: {target}")
+            print(f"📬 Found {len(files)} file(s)\n")
+            success = 0
+            for f in files:
+                if process_file(f):
+                    success += 1
+        else:
+            # Single file argument
+            success = 1 if process_file(target) else 0
+            files = [target]
+    else:
+        # No argument — scan inbox/ recursively
+        files = collect_json_files(INBOX_DIR)
+        if not files:
+            print("📭 Nothing to process.")
+            print("   Drop .json files or folders into inbox/ and run again.")
+            print(f"   inbox/ → {INBOX_DIR.resolve()}")
+            return
 
-    print(f"📬 Found {len(files)} file(s) in inbox/")
-    success = 0
-    for f in files:
-        if process_file(f):
-            success += 1
+        # Show what was found
+        print(f"📬 Found {len(files)} file(s) in inbox/ (recursive scan)")
+        for f in files:
+            rel = f.relative_to(INBOX_DIR)
+            print(f"   📄 {rel}")
+        print()
+
+        success = 0
+        for f in files:
+            if process_file(f):
+                success += 1
 
     print(f"\n{'='*60}")
     print(f"  Done. {success}/{len(files)} files processed.")
