@@ -20,6 +20,9 @@ Usage:
 Folders dropped into inbox/ are scanned recursively.
 The processed/ subfolder is always skipped.
 
+Files are processed in chunks of CHUNK_SIZE (default 3) with gc.collect()
+between chunks to prevent memory buildup on large batches.
+
 No external dependencies — stdlib only.
 """
 
@@ -1166,6 +1169,9 @@ def process_file(json_path: Path):
     return True
 
 
+CHUNK_SIZE = 3  # files processed per chunk before a pause/GC cycle
+
+
 def collect_json_files(root: Path) -> list:
     """
     Recursively find all .json files under root,
@@ -1180,6 +1186,38 @@ def collect_json_files(root: Path) -> list:
     return files
 
 
+def process_chunk(files: list, chunk_num: int, total_chunks: int) -> int:
+    """Process a single chunk of files. Returns count of successes."""
+    import gc
+    print(f"\n  ── Chunk {chunk_num}/{total_chunks} ({len(files)} file(s)) ──")
+    success = 0
+    for f in files:
+        try:
+            if process_file(f):
+                success += 1
+        except MemoryError:
+            print(f"  ⚠ MemoryError on {f.name} — skipping. Try a smaller file.")
+        except Exception as e:
+            print(f"  ⚠ Error on {f.name}: {e} — skipping.")
+    gc.collect()  # free memory between chunks
+    return success
+
+
+def run_all(files: list):
+    """Split files into chunks and process sequentially."""
+    total   = len(files)
+    chunks  = [files[i:i+CHUNK_SIZE] for i in range(0, total, CHUNK_SIZE)]
+    n_chunks = len(chunks)
+
+    print(f"\n  Processing {total} file(s) in {n_chunks} chunk(s) of {CHUNK_SIZE}.")
+
+    success = 0
+    for i, chunk in enumerate(chunks, 1):
+        success += process_chunk(chunk, i, n_chunks)
+
+    return success, total
+
+
 def main():
     INBOX_DIR.mkdir(exist_ok=True)
     PROCESSED_DIR.mkdir(exist_ok=True)
@@ -1192,21 +1230,17 @@ def main():
             sys.exit(1)
 
         if target.is_dir():
-            # Folder argument — collect all JSON inside it
             files = collect_json_files(target)
             if not files:
                 print(f"📭 No JSON files found in {target}")
                 return
             print(f"📂 Scanning folder: {target}")
-            print(f"📬 Found {len(files)} file(s)\n")
-            success = 0
-            for f in files:
-                if process_file(f):
-                    success += 1
+            print(f"📬 Found {len(files)} file(s)")
+            success, total = run_all(files)
         else:
-            # Single file argument
+            # Single file — no chunking needed
             success = 1 if process_file(target) else 0
-            files = [target]
+            total   = 1
     else:
         # No argument — scan inbox/ recursively
         files = collect_json_files(INBOX_DIR)
@@ -1216,20 +1250,15 @@ def main():
             print(f"   inbox/ → {INBOX_DIR.resolve()}")
             return
 
-        # Show what was found
         print(f"📬 Found {len(files)} file(s) in inbox/ (recursive scan)")
         for f in files:
             rel = f.relative_to(INBOX_DIR)
             print(f"   📄 {rel}")
-        print()
 
-        success = 0
-        for f in files:
-            if process_file(f):
-                success += 1
+        success, total = run_all(files)
 
     print(f"\n{'='*60}")
-    print(f"  Done. {success}/{len(files)} files processed.")
+    print(f"  Done. {success}/{total} files processed successfully.")
     print(f"  Reports  → reports/")
     print(f"  Articles → articles/")
     print(f"  Social   → inbox/processed/")
