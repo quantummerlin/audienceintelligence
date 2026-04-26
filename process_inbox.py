@@ -158,17 +158,59 @@ def generate_hooks(top_sentences, topic_name, is_ai):
 # JSON FORMAT DETECTION & NORMALISATION
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _parse_yt_views(views_str: str) -> int:
+    """Convert '20,012 views' or '1.2M views' to int."""
+    if not views_str:
+        return 0
+    s = str(views_str).lower().replace(",","").replace(" views","").strip()
+    try:
+        if s.endswith("m"):
+            return int(float(s[:-1]) * 1_000_000)
+        if s.endswith("k"):
+            return int(float(s[:-1]) * 1_000)
+        return int(float(re.sub(r"[^0-9.]","",s)) if s else 0)
+    except (ValueError, TypeError):
+        return 0
+
+
 def normalise(raw) -> dict:
     """
     Accept any of:
-      A) Reddit API Listing  {"kind":"Listing","data":{"children":[{"kind":"t3","data":{...}}]}}
-      B) Array of post dicts  [{...}, ...]
-      C) Array of comment strings ["text","text"]
-      D) Aether flat export  [{"post_id":..., "title":..., "comments":[...]}]
+      A) YouTube search export  {"query":"...", "videos":[{...}]}
+      B) Reddit API Listing     {"kind":"Listing","data":{"children":[{"kind":"t3","data":{...}}]}}
+      C) Array of post dicts    [{...}, ...]
+      D) Array of comment strings ["text","text"]
+      E) Aether flat export     [{"post_id":..., "title":..., "comments":[...]}]
     Returns: {"posts": [...], "source": str}
     """
     if isinstance(raw, dict):
-        # Reddit API listing
+        # ── YouTube search export ──────────────────────────────────────
+        if "videos" in raw and isinstance(raw.get("videos"), list):
+            query = raw.get("query","")
+            posts = []
+            for v in raw["videos"]:
+                # Pull transcript text if available (string) or skip if error object
+                transcript = v.get("transcript","")
+                if isinstance(transcript, dict):
+                    transcript = ""  # {"error":"..."} — no usable text
+                body_parts = [
+                    v.get("description",""),
+                    transcript or "",
+                ]
+                body = " ".join(p for p in body_parts if p).strip()
+                posts.append({
+                    "id":        v.get("videoId",""),
+                    "title":     v.get("title",""),
+                    "body":      body,
+                    "score":     _parse_yt_views(v.get("views","")),
+                    "url":       v.get("url",""),
+                    "author":    v.get("channel",""),
+                    "subreddit": query,   # use query as the "community" label
+                    "comments":  [],
+                })
+            return {"posts": posts, "source": "youtube_search"}
+
+        # ── Reddit API listing ─────────────────────────────────────────
         children = raw.get("data", {}).get("children", [])
         posts = []
         for c in children:
@@ -249,19 +291,29 @@ def normalise(raw) -> dict:
 def analyse(data: dict, filename: str) -> dict:
     posts    = data["posts"]
     source   = data["source"]
+    is_yt    = (source == "youtube_search")
 
     all_titles   = [p["title"] for p in posts if p["title"]]
     all_bodies   = [p["body"]  for p in posts if p["body"]]
     all_comments = [c["body"]  for p in posts for c in p.get("comments",[]) if c.get("body")]
 
-    all_texts = all_bodies + all_comments
+    # For YT: titles are the richest signal — include them in body analysis
+    if is_yt:
+        all_texts = all_titles + all_bodies
+    else:
+        all_texts = all_bodies + all_comments
 
     subreddits = Counter(p["subreddit"] for p in posts if p["subreddit"])
     top_sub    = subreddits.most_common(1)[0][0] if subreddits else "community"
 
-    # Guess topic name from filename or subreddit
+    # Guess topic name
     stem = Path(filename).stem
-    stem = re.sub(r"^(reddit|outputs?[-_]?)", "", stem, flags=re.I)
+    if is_yt:
+        # Strip yt_ prefix and timestamp suffix from filename
+        stem = re.sub(r"^yt_", "", stem, flags=re.I)
+        stem = re.sub(r"_\d{10,}$", "", stem)
+    else:
+        stem = re.sub(r"^(reddit|outputs?[-_]?)", "", stem, flags=re.I)
     topic_name = (top_sub or stem or "this community").replace("-"," ").replace("_"," ").strip()
 
     # Stats
@@ -272,12 +324,15 @@ def analyse(data: dict, filename: str) -> dict:
     avg_score      = int(total_score / max(total_posts,1))
     top_posts      = sorted(posts, key=lambda x: x["score"], reverse=True)[:8]
 
-    # Top comments by score
-    scored_comments = sorted(
-        [c for p in posts for c in p.get("comments",[]) if c.get("body")],
-        key=lambda x: x.get("score",0),
-        reverse=True
-    )[:20]
+    # Top comments by score (for YT, use top posts as verbatims since no comments)
+    if is_yt:
+        scored_comments = [{"body": p["title"], "score": p["score"]} for p in top_posts]
+    else:
+        scored_comments = sorted(
+            [c for p in posts for c in p.get("comments",[]) if c.get("body")],
+            key=lambda x: x.get("score",0),
+            reverse=True
+        )[:20]
 
     # Interesting sentences
     top_sentences = extract_top_sentences(all_texts, n=16)
@@ -289,16 +344,17 @@ def analyse(data: dict, filename: str) -> dict:
     is_ai   = detect_ai_topic(" ".join(all_texts[:50]))
     hooks   = generate_hooks(top_sentences, topic_name, is_ai)
 
-    # Derive 5 key patterns from top bigrams
+    # Derive key patterns from top bigrams
     patterns = []
     for phrase, count in bigrams[:10]:
-        if count >= 3:
+        if count >= 2:
             patterns.append({"phrase": phrase, "count": count})
 
     return {
         "filename":       filename,
         "stem":           stem,
         "source":         source,
+        "is_yt":          is_yt,
         "topic_name":     topic_name,
         "top_sub":        top_sub,
         "subreddits":     dict(subreddits.most_common(6)),
@@ -604,13 +660,16 @@ def build_report(a: dict) -> str:
     for s in a["top_sentences"][:8]:
         sentences_html += f"<div class='quote'>{s.replace('<','&lt;').replace('>','&gt;')}</div>"
 
-    # Stats
+    # Stats — labels differ for YT vs Reddit
+    _lbl_posts    = "Videos"        if a.get("is_yt") else "Posts"
+    _lbl_comments = "Channels"      if a.get("is_yt") else "Comments"
+    _lbl_score    = "Total Views"   if a.get("is_yt") else "Total Upvotes"
     stats_html = f"""
     <div class="stats-grid">
       <div class="stat stat-cyan"><span class="stat-val">{fmt_num(a['total_words'])}</span><span class="stat-lbl">Words Analysed</span></div>
-      <div class="stat stat-gold"><span class="stat-val">{fmt_num(a['total_posts'])}</span><span class="stat-lbl">Posts</span></div>
-      <div class="stat stat-pink"><span class="stat-val">{fmt_num(a['total_comments'])}</span><span class="stat-lbl">Comments</span></div>
-      <div class="stat stat-cyan"><span class="stat-val">{fmt_num(a['total_score'])}</span><span class="stat-lbl">Total Upvotes</span></div>
+      <div class="stat stat-gold"><span class="stat-val">{fmt_num(a['total_posts'])}</span><span class="stat-lbl">{_lbl_posts}</span></div>
+      <div class="stat stat-pink"><span class="stat-val">{fmt_num(a['total_comments']) if not a.get('is_yt') else fmt_num(len(set(p['author'] for p in a.get('top_posts',[]))))}</span><span class="stat-lbl">{_lbl_comments}</span></div>
+      <div class="stat stat-cyan"><span class="stat-val">{fmt_num(a['total_score'])}</span><span class="stat-lbl">{_lbl_score}</span></div>
     </div>"""
 
     # Hooks for report CTA
