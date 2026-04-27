@@ -3,10 +3,9 @@ process_inbox.py
 ================
 Drop any JSON dataset OR FOLDER into inbox/ and run this script.
 
-Generates 3 content outputs per file:
+Generates 2 content outputs per file:
   1.  reports/[slug].html                       — Full QM intelligence report
-  2.  articles/[slug]-article.html              — Long-form narrative article
-  3.  inbox/processed/[slug]-social.html        — Social content pack (hooks, threads, scripts)
+  2.  inbox/processed/[slug]-social.html        — Social content pack (hooks, threads, scripts)
 
 Then moves the source JSON to inbox/processed/.
 
@@ -19,6 +18,7 @@ Usage:
 
 Folders dropped into inbox/ are scanned recursively.
 The processed/ subfolder is always skipped.
+Articles are NOT generated (use the report + social pack instead).
 
 Files are processed in chunks of CHUNK_SIZE (default 3) with gc.collect()
 between chunks to prevent memory buildup on large batches.
@@ -37,7 +37,6 @@ from pathlib import Path
 INBOX_DIR     = Path("inbox")
 PROCESSED_DIR = INBOX_DIR / "processed"
 REPORTS_DIR   = Path("reports")
-ARTICLES_DIR  = Path("articles")
 
 SITE_NAME   = "AI.quantummerlin"
 SITE_URL    = "https://ai.quantummerlin.com"
@@ -1111,7 +1110,6 @@ The full intelligence report is live → {SITE_URL}/reports/{slug}.html
     </p>
     <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
       <a href="../reports/{slug}.html" style="padding:8px 16px;background:rgba(0,245,255,.08);border:1px solid rgba(0,245,255,.22);border-radius:20px;font-family:var(--ff-display);font-size:.65rem;font-weight:700;color:var(--cyan);letter-spacing:.06em">📊 Full Report</a>
-      <a href="../articles/{slug}-article.html" style="padding:8px 16px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.22);border-radius:20px;font-family:var(--ff-display);font-size:.65rem;font-weight:700;color:var(--gold);letter-spacing:.06em">📄 Long-form Article</a>
     </div>
   </div>
 
@@ -1198,26 +1196,21 @@ def process_file(json_path: Path):
     slug = slugify(a["topic_name"])
 
     # Build outputs
-    report_html  = build_report(a)
-    article_html = build_article(a)
-    social_html  = build_social_pack(a)
+    report_html = build_report(a)
+    social_html = build_social_pack(a)
 
     # Ensure output dirs exist
     REPORTS_DIR.mkdir(exist_ok=True)
-    ARTICLES_DIR.mkdir(exist_ok=True)
     PROCESSED_DIR.mkdir(exist_ok=True)
 
     # Write files
-    report_path  = REPORTS_DIR  / f"{slug}.html"
-    article_path = ARTICLES_DIR / f"{slug}-article.html"
-    social_path  = PROCESSED_DIR / f"{slug}-social.html"
+    report_path = REPORTS_DIR   / f"{slug}.html"
+    social_path = PROCESSED_DIR / f"{slug}-social.html"
 
-    report_path.write_text(report_html,  encoding="utf-8")
-    article_path.write_text(article_html, encoding="utf-8")
-    social_path.write_text(social_html,  encoding="utf-8")
+    report_path.write_text(report_html, encoding="utf-8")
+    social_path.write_text(social_html, encoding="utf-8")
 
     print(f"\n  ✅ Report  → {report_path}")
-    print(f"  ✅ Article → {article_path}")
     print(f"  ✅ Social  → {social_path}")
 
     # Move source JSON to processed
@@ -1319,7 +1312,6 @@ def main():
     print(f"\n{'='*60}")
     print(f"  Done. {success}/{total} files processed successfully.")
     print(f"  Reports  → reports/")
-    print(f"  Articles → articles/")
     print(f"  Social   → inbox/processed/")
     print(f"{'='*60}\n")
 
