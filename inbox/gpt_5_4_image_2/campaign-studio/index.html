@@ -1,0 +1,2702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campaign Studio — GPT Image 2 Prompt Engine</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3a;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e97b;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+    --danger: #ff4757;
+    --warning: #ffa502;
+    --radius: 12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; }
+  
+  /* ─── LAYOUT ─── */
+  .app { display: grid; grid-template-columns: 280px 1fr; grid-template-rows: 60px 1fr; min-height: 100vh; }
+  .topbar { grid-column: 1 / -1; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 16px; z-index: 100; position: sticky; top: 0; }
+  .topbar-logo { font-weight: 800; font-size: 18px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .topbar-badge { font-size: 11px; background: var(--accent); color: white; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .api-status { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+  .api-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); transition: background 0.3s; }
+  .api-dot.connected { background: var(--accent3); }
+  
+  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 16px; overflow-y: auto; }
+  .main { overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+  
+  /* ─── SIDEBAR NAV ─── */
+  .nav-section { margin-bottom: 24px; }
+  .nav-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; padding: 0 8px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 8px; border-radius: 8px; cursor: pointer; font-size: 14px; color: var(--muted); transition: all 0.15s; margin-bottom: 2px; }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: rgba(108,99,255,0.15); color: var(--accent); }
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+  
+  /* ─── PANELS ─── */
+  .panel { display: none; flex-direction: column; gap: 20px; }
+  .panel.active { display: flex; }
+  
+  /* ─── CARDS ─── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .card-title .icon { font-size: 18px; }
+  
+  /* ─── FORMS ─── */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  input, select, textarea { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 14px; font-family: inherit; outline: none; transition: border 0.15s; width: 100%; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 80px; }
+  select option { background: var(--surface2); }
+  
+  /* ─── BUTTONS ─── */
+  .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #5851e6; transform: translateY(-1px); }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: rgba(255,71,87,0.15); color: var(--danger); border: 1px solid rgba(255,71,87,0.3); }
+  .btn-success { background: rgba(67,233,123,0.15); color: var(--accent3); border: 1px solid rgba(67,233,123,0.3); }
+  .btn-lg { padding: 14px 28px; font-size: 15px; border-radius: 10px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+  
+  /* ─── TAGS / PILLS ─── */
+  .tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
+  .tag-outline { border-color: var(--border); color: var(--muted); }
+  .tag-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .tag-active { background: rgba(108,99,255,0.2); border-color: var(--accent); color: var(--accent); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  
+  /* ─── PROMPT OUTPUT ─── */
+  .prompt-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; font-size: 13px; line-height: 1.7; color: var(--text); min-height: 80px; white-space: pre-wrap; word-break: break-word; position: relative; }
+  .prompt-box .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--surface); border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; color: var(--muted); transition: all 0.15s; }
+  .prompt-box .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+  
+  /* ─── OUTPUT CARDS ─── */
+  .output-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .output-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .output-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .output-card-body { padding: 10px 12px; }
+  .output-card-label { font-size: 11px; font-weight: 600; color: var(--muted); }
+  .output-card-actions { display: flex; gap: 6px; margin-top: 8px; }
+  .output-card-actions button { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 11px; cursor: pointer; transition: all 0.15s; }
+  .output-card-actions button:hover { color: var(--text); border-color: var(--accent); }
+  
+  /* ─── LOADING SPINNER ─── */
+  .spinner { width: 20px; height: 20px; border: 2px solid rgba(108,99,255,0.3); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-overlay { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 40px; }
+  .loading-text { color: var(--muted); font-size: 14px; }
+  
+  /* ─── PROGRESS ─── */
+  .progress-bar { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.3s ease; }
+  
+  /* ─── API KEY SECTION ─── */
+  .api-key-container { background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(255,101,132,0.1)); border: 1px solid rgba(108,99,255,0.3); border-radius: var(--radius); padding: 20px; }
+  .byok-warning { background: rgba(255,165,2,0.1); border: 1px solid rgba(255,165,2,0.3); border-radius: 8px; padding: 12px; font-size: 13px; color: var(--warning); margin-bottom: 16px; display: flex; align-items: flex-start; gap: 8px; }
+  
+  /* ─── KNOWLEDGE TILES ─── */
+  .knowledge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .knowledge-tile { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; }
+  .knowledge-tile:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .knowledge-tile.selected { border-color: var(--accent); background: rgba(108,99,255,0.1); }
+  .kt-icon { font-size: 24px; margin-bottom: 8px; }
+  .kt-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .kt-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  
+  /* ─── FILE DROP ─── */
+  .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; transition: all 0.15s; }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: rgba(108,99,255,0.05); }
+  .drop-zone-icon { font-size: 40px; margin-bottom: 12px; }
+  .drop-zone-text { font-size: 14px; color: var(--muted); }
+  .drop-zone-text strong { color: var(--text); }
+  
+  /* ─── FILE LIST ─── */
+  .file-list { display: flex; flex-direction: column; gap: 8px; }
+  .file-item { display: flex; align-items: center; gap: 10px; background: var(--surface2); padding: 10px 14px; border-radius: 8px; font-size: 13px; }
+  .file-item-icon { font-size: 18px; }
+  .file-item-name { flex: 1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-item-size { color: var(--muted); font-size: 11px; }
+  .file-item-remove { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 16px; padding: 0 4px; }
+  
+  /* ─── ALERTS ─── */
+  .alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
+  .alert-info { background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.3); color: var(--accent); }
+  .alert-success { background: rgba(67,233,123,0.1); border: 1px solid rgba(67,233,123,0.3); color: var(--accent3); }
+  .alert-error { background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.3); color: var(--danger); }
+  
+  /* ─── CAMPAIGN BOARD ─── */
+  .campaign-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .campaign-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .cc-platform { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .cc-platform-badge { font-size: 18px; }
+  .cc-items { display: flex; flex-direction: column; gap: 6px; }
+  .cc-item { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 8px 10px; border-radius: 6px; font-size: 12px; }
+  .cc-item-type { color: var(--muted); }
+  .cc-item-status { font-size: 10px; padding: 2px 8px; border-radius: 999px; }
+  .st-ready { background: rgba(67,233,123,0.15); color: var(--accent3); }
+  .st-pending { background: rgba(255,165,2,0.15); color: var(--warning); }
+  .st-draft { background: rgba(107,107,138,0.15); color: var(--muted); }
+  
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  
+  /* ─── DIVIDER ─── */
+  .divider { height: 1px; background: var(--border); margin: 8px 0; }
+  
+  /* ─── TOOLTIP ─── */
+  [data-tip] { position: relative; }
+  [data-tip]:hover::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 11px; padding: 4px 8px; border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 999; }
+  
+  /* ─── GRID SELECTOR ─── */
+  .grid-selector { display: flex; gap: 8px; }
+  .gs-opt { width: 48px; height: 48px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--muted); transition: all 0.15s; flex-direction: column; gap: 2px; }
+  .gs-opt:hover { border-color: var(--accent); color: var(--accent); }
+  .gs-opt.selected { border-color: var(--accent); background: rgba(108,99,255,0.2); color: var(--accent); }
+  
+  /* ─── MOBILE ─── */
+  @media (max-width: 768px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .form-row, .form-row.three { grid-template-columns: 1fr; }
+  }
+  
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .fadeIn { animation: fadeIn 0.25s ease; }
+  
+  /* Image result placeholder */
+  .img-placeholder { width: 100%; aspect-ratio: 1; background: var(--surface); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; border: 1px dashed var(--border); }
+  
+  /* Thinking indicator */
+  .thinking-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.2); border-radius: 8px; font-size: 13px; color: var(--accent); }
+  .dot-anim span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; margin: 0 2px; animation: bounce 1.2s infinite; }
+  .dot-anim span:nth-child(2) { animation-delay: 0.2s; }
+  .dot-anim span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
+  
+  /* Tab strip */
+  .tab-strip { display: flex; gap: 4px; background: var(--surface2); padding: 4px; border-radius: 10px; margin-bottom: 16px; }
+  .tab { flex: 1; padding: 8px; border-radius: 7px; border: none; background: none; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .tab.active { background: var(--surface); color: var(--text); }
+  
+  /* Model badge */
+  .model-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+  .mb-image { background: rgba(108,99,255,0.15); color: var(--accent); border: 1px solid rgba(108,99,255,0.3); }
+  .mb-text { background: rgba(67,233,123,0.15); color: var(--accent3); border: 1px solid rgba(67,233,123,0.3); }
+  
+  /* Range input */
+  input[type="range"] { -webkit-appearance: none; height: 4px; background: var(--border); border-radius: 2px; padding: 0; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+  
+  /* Number display */
+  .num-display { font-size: 24px; font-weight: 800; color: var(--accent); }
+  
+  /* Section heading */
+  .section-heading { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .section-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+  /* ─── MASTER PLAN OUTPUT ─── */
+  .plan-section { margin-bottom: 20px; }
+  .plan-section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .plan-idea-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+  .plan-idea-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .plan-idea-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .plan-idea-prompt { font-size: 12px; line-height: 1.6; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; margin-top: 8px; white-space: pre-wrap; word-break: break-word; }
+  .plan-action-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .plan-identity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .plan-identity-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+  .plan-identity-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 6px; }
+  .plan-identity-item input, .plan-identity-item textarea { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px 9px; color: var(--text); font-size: 13px; font-family: inherit; width: 100%; outline: none; transition: border 0.15s; font-weight: 600; }
+  .plan-identity-item input:focus, .plan-identity-item textarea:focus { border-color: var(--accent); }
+  .plan-identity-item textarea { resize: vertical; min-height: 56px; font-weight: 400; }
+
+  /* ─── MODE TABS ─── */
+  .mode-tabs { display: flex; background: var(--surface2); border-radius: 10px; padding: 4px; gap: 4px; max-width: 460px; margin-bottom: 20px; }
+  .mode-tab { flex: 1; padding: 8px 14px; border-radius: 7px; border: none; background: none; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; text-align: center; }
+  .mode-tab.active { background: var(--accent); color: white; }
+  .mode-tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.06); }
+
+  /* ─── WEBSITE PHOTO CARDS ─── */
+  .photo-plan-grid { display: flex; flex-direction: column; gap: 14px; }
+  .photo-cat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .photo-cat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .photo-cat-title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .photo-cat-count { font-size: 11px; background: rgba(108,99,255,0.2); color: var(--accent); padding: 2px 8px; border-radius: 999px; font-weight: 700; }
+  .photo-shot-row { background: var(--surface); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; border: 1px solid var(--border); }
+  .photo-shot-label { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .photo-shot-desc { font-size: 12px; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+  .photo-shot-prompt { font-size: 12px; line-height: 1.6; margin-bottom: 8px; background: var(--surface2); padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); white-space: pre-wrap; word-break: break-word; }
+
+  /* ─── BATCH IMAGE GRID ─── */
+  .batch-grid { display: grid; gap: 8px; margin-top: 10px; }
+  .batch-grid.n1 { grid-template-columns: 1fr; }
+  .batch-grid.n2 { grid-template-columns: 1fr 1fr; }
+  .batch-grid.n4 { grid-template-columns: 1fr 1fr; }
+  .batch-img-wrap { border-radius: 8px; overflow: hidden; background: var(--surface2); }
+  .batch-img-wrap img { width: 100%; display: block; border-radius: 8px; }
+  .batch-img-actions { display: flex; gap: 6px; margin-top: 6px; }
+  .batch-img-actions button { flex: 1; font-size: 11px; padding: 5px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; }
+  .batch-img-actions button:hover { color: var(--text); border-color: var(--accent); }
+
+  /* ─── PRODUCT CONFIGURATOR ─── */
+  .product-row { display: grid; grid-template-columns: 28px 1fr 1fr 1fr 36px; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .product-row-swatch { width: 28px; height: 28px; border-radius: 6px; border: 2px solid var(--border); cursor: pointer; flex-shrink: 0; }
+  .product-row input { background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 7px 10px; color: var(--text); font-size: 13px; font-family: inherit; width: 100%; outline: none; transition: border 0.15s; }
+  .product-row input:focus { border-color: var(--accent); }
+  .product-row select { background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 7px 10px; color: var(--text); font-size: 12px; font-family: inherit; width: 100%; outline: none; }
+  .product-row-del { background: none; border: none; color: var(--danger); font-size: 18px; cursor: pointer; padding: 0; line-height: 1; }
+  .product-row-del:hover { opacity: 0.7; }
+  .product-col-labels { display: grid; grid-template-columns: 28px 1fr 1fr 1fr 36px; gap: 8px; margin-bottom: 6px; }
+  .product-col-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
+
+  /* ─── SIZE GUIDE ─── */
+  .size-guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+  .size-cat { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .size-cat-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .size-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+  .size-chip { font-size: 11px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; color: var(--muted); font-family: monospace; white-space: nowrap; }
+  .size-chip.primary { border-color: var(--accent); color: var(--accent); background: rgba(108,99,255,0.08); font-weight: 700; }
+  .size-chip.pwa { border-color: var(--accent2); color: var(--accent2); background: rgba(255,101,132,0.08); }
+  .size-chip.og { border-color: var(--accent3); color: var(--accent3); background: rgba(67,233,123,0.08); }
+  .size-gen-note { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+  .manifest-box { background: #0d1117; border: 1px solid var(--border); border-radius: 10px; padding: 16px; font-family: 'Courier New', monospace; font-size: 11px; white-space: pre; overflow-x: auto; line-height: 1.7; color: var(--accent3); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ─────────── TOP BAR ─────────── -->
+  <header class="topbar">
+    <span class="topbar-logo">🎯 Campaign Studio</span>
+    <span class="topbar-badge">GPT Image 2</span>
+    <div class="topbar-right">
+      <div class="api-status">
+        <div class="api-dot" id="apiDot"></div>
+        <span id="apiStatusText">No key set</span>
+      </div>
+      <button class="btn btn-secondary" onclick="showPanel('settings')" style="padding: 6px 12px; font-size: 13px;">⚙️ Settings</button>
+    </div>
+  </header>
+  
+  <!-- ─────────── SIDEBAR ─────────── -->
+  <nav class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Workflow</div>
+      <div class="nav-item active" onclick="showPanel('setup')" id="nav-setup">
+        <span class="nav-icon">🔑</span> API Setup
+      </div>
+      <div class="nav-item" onclick="showPanel('upload')" id="nav-upload">
+        <span class="nav-icon">📦</span> Upload Data
+      </div>
+      <div class="nav-item" onclick="showPanel('prompt')" id="nav-prompt">
+        <span class="nav-icon">✨</span> Prompt Builder
+      </div>
+      <div class="nav-item" onclick="showPanel('generate')" id="nav-generate">
+        <span class="nav-icon">🖼️</span> Generate Images
+      </div>
+      <div class="nav-item" onclick="showPanel('campaign')" id="nav-campaign">
+        <span class="nav-icon">🚀</span> Campaign Planner
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Reference</div>
+      <div class="nav-item" onclick="showPanel('knowledge')" id="nav-knowledge">
+        <span class="nav-icon">🧠</span> Model Knowledge
+      </div>
+      <div class="nav-item" onclick="showPanel('gallery')" id="nav-gallery">
+        <span class="nav-icon">🗂️</span> Session Gallery
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="padding: 8px;">
+      <div class="nav-label" style="margin-bottom:8px;">Images per Generate</div>
+      <div style="display:flex;gap:4px;">
+        <button id="batch1" class="btn btn-secondary" style="flex:1;padding:6px 4px;font-size:13px;font-weight:800;background:var(--accent);color:white;border-color:var(--accent);" onclick="setBatch(1)">&times;1</button>
+        <button id="batch2" class="btn btn-secondary" style="flex:1;padding:6px 4px;font-size:13px;font-weight:800;" onclick="setBatch(2)">&times;2</button>
+        <button id="batch4" class="btn btn-secondary" style="flex:1;padding:6px 4px;font-size:13px;font-weight:800;" onclick="setBatch(4)">&times;4</button>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.5;">Get multiple variations<br>from one prompt at once</div>
+    </div>
+    <div class="divider"></div>
+    <div style="padding: 8px; font-size: 11px; color: var(--muted); line-height: 1.6;">
+      Built from dataset:<br>
+      <strong style="color: var(--text);">GPT 5.4 Image 2</strong><br>
+      YouTube Knowledge Base<br>
+      14 videos · Apr 2026
+    </div>
+  </nav>
+
+  <!-- ─────────── MAIN CONTENT ─────────── -->
+  <main class="main">
+
+    <!-- ══════════ SETTINGS PANEL ══════════ -->
+    <div class="panel" id="panel-settings">
+      <div class="section-heading">Settings</div>
+      <div class="section-sub">Configure your API keys and preferences</div>
+      <div class="api-key-container">
+        <div class="byok-warning">
+          ⚠️ <span>Your API keys are stored <strong>only in your browser's localStorage</strong> — never sent to any server other than OpenRouter directly. Clear browser data to remove.</span>
+        </div>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label>OpenRouter API Key (BYOK)</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="password" id="apiKeyInput" placeholder="sk-or-v1-..." style="font-family: monospace;">
+            <button class="btn btn-primary" onclick="saveApiKey()">Save</button>
+          </div>
+          <span style="font-size: 11px; color: var(--muted);">Get your key at <a href="https://openrouter.ai/keys" target="_blank" style="color: var(--accent);">openrouter.ai/keys</a></span>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Image Model</label>
+            <select id="imageModelSelect">
+              <option value="openai/gpt-5.4-image-2">openai/gpt-5.4-image-2</option>
+              <option value="openai/gpt-5.4-image-2:thinking">openai/gpt-5.4-image-2 (Thinking)</option>
+              <option value="openai/gpt-image-2">openai/gpt-image-2</option>
+              <option value="google/gemini-flash-2.0-image">google/gemini-flash-2.0-image</option>
+            </select>
+            <span id="imageModelStatus" style="font-size:11px;color:var(--muted);margin-top:4px;display:block;">Loading live models from OpenRouter...</span>
+          </div>
+          <div class="form-group">
+            <label>Reasoning / Text Model</label>
+            <select id="textModelSelect">
+              <option value="qwen/qwen3.5-plus-20260420">qwen/qwen3.5-plus-20260420</option>
+              <option value="openai/gpt-5.4">openai/gpt-5.4</option>
+              <option value="anthropic/claude-sonnet-4-6">anthropic/claude-sonnet-4-6</option>
+              <option value="google/gemini-pro-3-1">google/gemini-pro-3-1</option>
+              <option value="moonshotai/kimi-k2">moonshotai/kimi-k2</option>
+            </select>
+            <span id="textModelStatus" style="font-size:11px;color:var(--muted);margin-top:4px;display:block;">Loading live models from OpenRouter...</span>
+          </div>
+        </div>
+        <div id="settingsSaveMsg" class="alert alert-success" style="margin-top: 12px; display: none;">✅ API key saved securely in localStorage</div>
+      </div>
+    </div>
+
+    <!-- ══════════ API SETUP PANEL ══════════ -->
+    <div class="panel active" id="panel-setup">
+      <div class="section-heading">👋 Welcome to Campaign Studio</div>
+      <div class="section-sub">Your AI-powered social media campaign engine, built on GPT Image 2 knowledge</div>
+      
+      <div class="api-key-container">
+        <div class="byok-warning">
+          🔒 <span>BYOK (Bring Your Own Key) — your key stays in <strong>your browser only</strong>. This app makes API calls directly from your browser to OpenRouter. No backend, no data collection.</span>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>OpenRouter API Key</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="password" id="apiKeyInput2" placeholder="sk-or-v1-..." style="font-family: monospace;">
+            <button class="btn btn-primary" onclick="saveApiKey2()">Connect</button>
+          </div>
+          <span style="font-size: 11px; color: var(--muted); margin-top: 4px; display: block;">
+            Get free key at <a href="https://openrouter.ai/keys" target="_blank" style="color: var(--accent);">openrouter.ai/keys</a> · Supports GPT Image 2, GPT-5.4, Claude Opus, Kimi K2 and more
+          </span>
+        </div>
+        <div id="setupMsg" class="alert alert-success" style="display: none;">✅ Connected! Head to <strong>Prompt Builder</strong> to start creating.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🎓</span> What this tool does</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="background: var(--surface2); padding: 14px; border-radius: 10px;">
+            <div style="font-size: 18px; margin-bottom: 8px;">📁</div>
+            <div style="font-weight: 700; font-size: 14px; margin-bottom: 4px;">Upload Your Data</div>
+            <div style="font-size: 12px; color: var(--muted);">Drop a ZIP of your brand assets, products, copy, logos — the AI analyses everything</div>
+          </div>
+          <div style="background: var(--surface2); padding: 14px; border-radius: 10px;">
+            <div style="font-size: 18px; margin-bottom: 8px;">✨</div>
+            <div style="font-weight: 700; font-size: 14px; margin-bottom: 4px;">Build Perfect Prompts</div>
+            <div style="font-size: 12px; color: var(--muted);">Use GPT 5.4 to craft optimised one-shot prompts tuned to GPT Image 2's superpowers</div>
+          </div>
+          <div style="background: var(--surface2); padding: 14px; border-radius: 10px;">
+            <div style="font-size: 18px; margin-bottom: 8px;">🖼️</div>
+            <div style="font-weight: 700; font-size: 14px; margin-bottom: 4px;">Generate Campaigns</div>
+            <div style="font-size: 12px; color: var(--muted);">Create posters, infographics, carousels, stories — all with consistent branding</div>
+          </div>
+          <div style="background: var(--surface2); padding: 14px; border-radius: 10px;">
+            <div style="font-size: 18px; margin-bottom: 8px;">🚀</div>
+            <div style="font-weight: 700; font-size: 14px; margin-bottom: 4px;">Plan Your Campaign</div>
+            <div style="font-size: 12px; color: var(--muted);">Platform-specific content plans across Instagram, TikTok, LinkedIn, Twitter and more</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ UPLOAD PANEL ══════════ -->
+    <div class="panel" id="panel-upload">
+      <div class="section-heading">📦 Upload Your Data</div>
+      <div class="section-sub">Upload your brand ZIP — AI will read every file and build a complete master plan with website shots, carousels, social images, and ready-to-generate prompts</div>
+      
+      <div class="card">
+        <div class="card-title"><span class="icon">📂</span> Data Upload</div>
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+          <div class="drop-zone-icon">📦</div>
+          <div class="drop-zone-text">
+            <strong>Drop your ZIP file here</strong> or click to browse<br>
+            <span style="font-size: 12px; margin-top: 4px; display: block;">Supports: .zip, .jpg, .png, .pdf, .txt, .csv, .json — max 50MB</span>
+          </div>
+        </div>
+        <input type="file" id="fileInput" style="display:none" multiple accept=".zip,.jpg,.jpeg,.png,.gif,.pdf,.txt,.csv,.json,.md" onchange="handleFiles(this.files)">
+        
+        <div id="fileList" class="file-list" style="margin-top: 12px;"></div>
+        
+        <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <button class="btn btn-primary" onclick="analyseData()" id="analyseBtn" disabled>🧠 Build Master Plan with AI</button>
+          <button class="btn btn-secondary" onclick="clearFiles()">🗑️ Clear All</button>
+        </div>
+        <div id="analyseResult" style="margin-top: 16px; display: none;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">📝</span> Or Describe Your Brand Manually</div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>Brand Name</label>
+          <input type="text" id="brandName" placeholder="e.g. Solaris Skincare">
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>Brand Description / What You Sell</label>
+          <textarea id="brandDesc" rows="3" placeholder="e.g. Natural, science-backed skincare for sensitive skin. Hero product: Glow Serum with Vitamin C + Hyaluronic Acid. Target: women 25-45."></textarea>
+        </div>
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Brand Colors (hex)</label>
+            <input type="text" id="brandColors" placeholder="#F4A261, #FFFFFF, #264653">
+          </div>
+          <div class="form-group">
+            <label>Brand Tone</label>
+            <select id="brandTone">
+              <option>Clean & Minimal</option>
+              <option>Bold & Vibrant</option>
+              <option>Luxury & Premium</option>
+              <option>Playful & Fun</option>
+              <option>Editorial & Fashion</option>
+              <option>Tech & Modern</option>
+              <option>Natural & Organic</option>
+              <option>Corporate & Professional</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>Target Platforms</label>
+          <div class="tags" id="platformTags">
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="Instagram">📷 Instagram</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="TikTok">🎵 TikTok</div>
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="LinkedIn">💼 LinkedIn</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Twitter/X">🐦 Twitter/X</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Facebook">👥 Facebook</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Pinterest">📌 Pinterest</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="YouTube">▶️ YouTube</div>
+          </div>
+        </div>
+        <button class="btn btn-success" onclick="saveBrandData()">💾 Save Brand Profile</button>
+        <div id="brandSaveMsg" style="display:none; margin-top:8px;" class="alert alert-success">✅ Brand profile saved!</div>
+      </div>
+    </div>
+
+    <!-- ══════════ PROMPT BUILDER PANEL ══════════ -->
+    <div class="panel" id="panel-prompt">
+      <div class="section-heading">✨ Prompt Builder</div>
+      <div class="section-sub">Build optimised one-shot prompts for GPT Image 2 based on dataset knowledge</div>
+      
+      <div class="card">
+        <div class="card-title"><span class="icon">🎨</span> Output Type</div>
+        <div class="knowledge-grid" id="outputTypeGrid">
+          <div class="knowledge-tile selected" onclick="selectOutputType(this, 'Social Media Post')" data-type="Social Media Post">
+            <div class="kt-icon">📱</div>
+            <div class="kt-title">Social Media Post</div>
+            <div class="kt-desc">Single striking image for feed posts</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Infographic')" data-type="Infographic">
+            <div class="kt-icon">📊</div>
+            <div class="kt-title">Infographic</div>
+            <div class="kt-desc">Data-rich visual with text — GPT Image 2 excels at text rendering</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Poster')" data-type="Poster">
+            <div class="kt-icon">🖼️</div>
+            <div class="kt-title">Poster / Banner</div>
+            <div class="kt-desc">Campaign poster with typography and imagery</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Carousel')" data-type="Carousel">
+            <div class="kt-icon">📑</div>
+            <div class="kt-title">Carousel (Multi-image)</div>
+            <div class="kt-desc">GPT Image 2 can generate multiple consistent images in one prompt</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Story')" data-type="Story">
+            <div class="kt-icon">📸</div>
+            <div class="kt-title">Story / Reel Cover</div>
+            <div class="kt-desc">9:16 vertical format for Stories</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Product Shot')" data-type="Product Shot">
+            <div class="kt-icon">🛍️</div>
+            <div class="kt-title">Product Shot</div>
+            <div class="kt-desc">Commercial product photography with brand context</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Brand Kit')" data-type="Brand Kit">
+            <div class="kt-icon">🎨</div>
+            <div class="kt-title">Brand Kit</div>
+            <div class="kt-desc">Color palette, typography, style guide visual</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Storyboard')" data-type="Storyboard">
+            <div class="kt-icon">🎬</div>
+            <div class="kt-title">Ad Storyboard</div>
+            <div class="kt-desc">Multi-frame narrative for video ad production</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Mood Board')" data-type="Mood Board">
+            <div class="kt-icon">🌈</div>
+            <div class="kt-title">Mood Board</div>
+            <div class="kt-desc">Creative direction reference with sticky notes & photos</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Magazine Cover')" data-type="Magazine Cover">
+            <div class="kt-icon">📖</div>
+            <div class="kt-title">Magazine Cover</div>
+            <div class="kt-desc">Glossy editorial cover with pricing, date, text</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, 'Thumbnail')" data-type="Thumbnail">
+            <div class="kt-icon">▶️</div>
+            <div class="kt-title">YouTube Thumbnail</div>
+            <div class="kt-desc">16:9 eye-catching thumbnail with text</div>
+          </div>
+          <div class="knowledge-tile" onclick="selectOutputType(this, '360 Scene')" data-type="360 Scene">
+            <div class="kt-icon">🌍</div>
+            <div class="kt-title">360° Scene</div>
+            <div class="kt-desc">Equirectangular immersive scene (unique to GPT Image 2)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">⚙️</span> Prompt Parameters</div>
+        
+        <div class="form-row" style="margin-bottom: 14px;">
+          <div class="form-group">
+            <label>Subject / Topic</label>
+            <input type="text" id="promptSubject" placeholder="e.g. Glow Serum product launch, summer campaign">
+          </div>
+          <div class="form-group">
+            <label>Visual Style</label>
+            <select id="promptStyle">
+              <option>Photorealistic editorial</option>
+              <option>High fashion cinematic</option>
+              <option>Clean minimal product</option>
+              <option>Bold graphic design</option>
+              <option>Lifestyle documentary</option>
+              <option>Flat design illustration</option>
+              <option>Dark moody luxury</option>
+              <option>Bright & airy natural light</option>
+              <option>Vintage / retro film</option>
+              <option>Futuristic tech</option>
+              <option>Hand-illustrated artisan</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom: 14px;">
+          <div class="form-group">
+            <label>Aspect Ratio</label>
+            <select id="promptAR">
+              <option value="1:1">1:1 Square (Instagram Feed)</option>
+              <option value="4:5">4:5 Portrait (Instagram Optimal)</option>
+              <option value="9:16">9:16 Vertical (Stories / TikTok)</option>
+              <option value="16:9">16:9 Landscape (YouTube / LinkedIn)</option>
+              <option value="3:2">3:2 Wide (Twitter / Facebook)</option>
+              <option value="2:3">2:3 Portrait (Pinterest)</option>
+              <option value="1:2">1:2 Ultra Portrait (Poster)</option>
+              <option value="custom">Custom AR (type below)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Custom AR (e.g. AR 7:4)</label>
+            <input type="text" id="promptARCustom" placeholder="AR 7:4 (GPT Image 2 supports 8000+ ratios)">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">Image Count (GPT Image 2 multi-image superpower)</label>
+          <div class="grid-selector">
+            <div class="gs-opt selected" onclick="selectCount(this, 1)" data-count="1"><span style="font-size:18px;">1</span>Single</div>
+            <div class="gs-opt" onclick="selectCount(this, 2)" data-count="2"><span style="font-size:18px;">2</span>Pair</div>
+            <div class="gs-opt" onclick="selectCount(this, 4)" data-count="4"><span style="font-size:18px;">4</span>2×2</div>
+            <div class="gs-opt" onclick="selectCount(this, 6)" data-count="6"><span style="font-size:18px;">6</span>6-set</div>
+            <div class="gs-opt" onclick="selectCount(this, 9)" data-count="9"><span style="font-size:18px;">9</span>3×3</div>
+          </div>
+          <div id="multiImageNote" style="margin-top: 8px; font-size: 12px; color: var(--muted);">Single image — standard generation</div>
+          <div id="panelDescriptions" style="margin-top: 10px; display: none;"></div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">GPT Image 2 Power Features</label>
+          <div class="tags" id="featureTags">
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="character_consistency">🧍 Character Consistency</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="text_rendering">📝 Text Rendering</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="web_browsing">🌐 Real-time Web Browsing</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="hex_colors">🎨 Exact Hex Colors</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="custom_font">🔤 Custom Font (specify)</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="multiple_perspectives">📷 Multiple Camera Angles</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="product_consistency">🛍️ Product/Brand Consistency</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="thinking_mode">🧠 Thinking Mode (High Quality)</div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Additional Context / Instructions</label>
+          <textarea id="promptContext" rows="3" placeholder="e.g. Include brand colors #F4A261 and #264653. Use Montserrat font for headings. Feature 'Summer Glow' tagline prominently."></textarea>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Brand Profile (auto-filled if saved)</label>
+          <textarea id="promptBrand" rows="2" placeholder="Your brand context will appear here..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-lg" onclick="buildPrompt()">✨ Build Optimised Prompt</button>
+          <button class="btn btn-secondary" onclick="clearPromptBuilder()">🔄 Reset</button>
+        </div>
+      </div>
+
+      <div class="card" id="promptResultCard" style="display: none;">
+        <div class="card-title"><span class="icon">📋</span> Generated Prompt</div>
+        <div id="thinkingBar" class="thinking-bar" style="margin-bottom: 12px; display: none;">
+          <div class="dot-anim"><span></span><span></span><span></span></div>
+          <span>GPT-5.4 is crafting your optimised prompt...</span>
+        </div>
+        
+        <div class="tab-strip">
+          <button class="tab active" onclick="switchPromptTab(this, 'main')">Main Prompt</button>
+          <button class="tab" onclick="switchPromptTab(this, 'system')">System Context</button>
+          <button class="tab" onclick="switchPromptTab(this, 'tips')">Tips</button>
+        </div>
+        
+        <div id="promptTabMain">
+          <div class="prompt-box" id="promptOutput">Your optimised prompt will appear here...
+          <button class="copy-btn" onclick="copyPrompt('promptOutput')">📋 Copy</button>
+          </div>
+        </div>
+        <div id="promptTabSystem" style="display:none;">
+          <div class="prompt-box" id="systemOutput">System context will appear here...
+          <button class="copy-btn" onclick="copyPrompt('systemOutput')">📋 Copy</button>
+          </div>
+        </div>
+        <div id="promptTabTips" style="display:none;">
+          <div id="tipsOutput" style="background: var(--surface2); border-radius: 10px; padding: 16px; font-size: 13px; line-height: 1.7; color: var(--muted);"></div>
+        </div>
+        
+        <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="sendToGenerate()">🖼️ Generate with this Prompt</button>
+          <button class="btn btn-secondary" onclick="copyPrompt('promptOutput')">📋 Copy Prompt</button>
+          <button class="btn btn-secondary" onclick="savePromptToLibrary()">💾 Save to Library</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ GENERATE IMAGES PANEL ══════════ -->
+    <div class="panel" id="panel-generate">
+      <div class="section-heading">🖼️ Generate Images</div>
+      <div class="section-sub">Send prompts to GPT Image 2 via OpenRouter and manage your outputs</div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">📤</span> Image Generation</div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>Prompt</label>
+          <textarea id="genPrompt" rows="5" placeholder="Your prompt here — or build one in Prompt Builder and click 'Generate with this Prompt'"></textarea>
+        </div>
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Model</label>
+            <select id="genModel">
+              <option value="openai/gpt-5.4-image-2">openai/gpt-5.4-image-2</option>
+              <option value="openai/gpt-5.4-image-2:thinking">openai/gpt-5.4-image-2 (Thinking — best quality)</option>
+              <option value="openai/gpt-image-2">openai/gpt-image-2</option>
+              <option value="google/gemini-flash-2.0-image">google/gemini-flash-2.0-image</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Size</label>
+            <select id="genSize">
+              <option value="1024x1024">1024×1024 (Square)</option>
+              <option value="1024x1792">1024×1792 (Portrait)</option>
+              <option value="1792x1024">1792×1024 (Landscape)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Quality</label>
+            <select id="genQuality">
+              <option value="hd">HD (Best)</option>
+              <option value="standard">Standard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Number of Images</label>
+            <select id="genN">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-lg" id="generateBtn" onclick="generateImage()">🖼️ Generate Image</button>
+          <div id="genSpinner" style="display:none;" class="spinner"></div>
+          <span id="genStatus" style="font-size: 13px; color: var(--muted);"></span>
+        </div>
+        <div id="genError" class="alert alert-error" style="margin-top: 12px; display: none;"></div>
+      </div>
+
+      <div class="card" id="genResultCard" style="display: none;">
+        <div class="card-title"><span class="icon">✅</span> Generated Images</div>
+        <div class="output-grid" id="outputGrid"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ CAMPAIGN PLANNER PANEL ══════════ -->
+    <div class="panel" id="panel-campaign">
+      <div class="section-heading">🚀 Campaign Planner</div>
+
+      <!-- Mode switcher -->
+      <div class="mode-tabs">
+        <button class="mode-tab active" id="tab-social" onclick="switchCampaignMode('social')">📱 Social Campaign</button>
+        <button class="mode-tab" id="tab-website" onclick="switchCampaignMode('website')">🌐 Website Photo Shoot</button>
+      </div>
+
+      <!-- ── SOCIAL CAMPAIGN MODE ── -->
+      <div id="mode-social">
+      <div class="section-sub" style="margin-top:-8px;">Plan and generate a complete social media campaign quickly and effectively</div>
+      <div class="card">
+        <div class="card-title"><span class="icon">🎯</span> Campaign Brief</div>
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Campaign Name</label>
+            <input type="text" id="campaignName" placeholder="e.g. Summer Glow 2026 Launch">
+          </div>
+          <div class="form-group">
+            <label>Campaign Goal</label>
+            <select id="campaignGoal">
+              <option>Product Launch</option>
+              <option>Brand Awareness</option>
+              <option>Seasonal Sale / Promo</option>
+              <option>Education / How-To</option>
+              <option>Event Promotion</option>
+              <option>Community Engagement</option>
+              <option>Lead Generation</option>
+              <option>Thought Leadership</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Campaign Duration</label>
+            <select id="campaignDuration">
+              <option>1 week</option>
+              <option>2 weeks</option>
+              <option>1 month</option>
+              <option>3 months</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Content Volume</label>
+            <select id="campaignVolume">
+              <option>Lite (5-10 assets)</option>
+              <option>Standard (15-25 assets)</option>
+              <option>Full (30-50 assets)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Key Messages / Talking Points</label>
+          <textarea id="campaignMessages" rows="3" placeholder="e.g. &#10;• New formula with 3x more Vitamin C&#10;• Limited edition summer packaging&#10;• Free shipping on orders over £50"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>✏️ Your Custom Ideas</label>
+          <textarea id="campaignCustomIdeas" rows="4" placeholder="Describe any specific carousel slides, images or concepts you want included. Be as detailed or rough as you like — the AI will work with it. e.g.&#10;• A 5-slide carousel showing how beetroot juice boosts energy step by step&#10;• A before/after split image of someone looking tired vs energised&#10;• Bold product flat-lay with ingredients scattered around it on a black surface&#10;• Quote card: 'Fuel your body the natural way' in white text"></textarea>
+        </div>
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">Content Types</label>
+          <div class="tags" id="contentTypeTags">
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="Carousel Posts">📑 Carousel Posts</div>
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="Single Posts">📷 Single Posts</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Stories">📸 Stories</div>
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="Posters">🖼️ Posters</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Infographics">📊 Infographics</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Product Shots">🛍️ Product Shots</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Video Thumbnails">▶️ Video Thumbnails</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Ad Storyboards">🎬 Ad Storyboards</div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="planCampaign()">🧠 Generate Campaign Plan with AI</button>
+        <div id="campaignSpinner" style="display:none; margin-top: 12px;" class="thinking-bar">
+          <div class="dot-anim"><span></span><span></span><span></span></div>
+          <span id="campaignStatusText">AI is planning your campaign...</span>
+        </div>
+      </div>
+
+      <div class="card" id="campaignResultCard" style="display: none;">
+        <div class="card-title"><span class="icon">📅</span> Campaign Plan</div>
+        <div id="campaignPlanOutput"></div>
+      </div>
+
+      <div class="card" id="campaignPromptsCard" style="display: none;">
+        <div class="card-title"><span class="icon">✨</span> Generated Prompts for Campaign</div>
+        <div id="campaignPromptsOutput"></div>
+        <button class="btn btn-primary" style="margin-top: 14px;" onclick="generateAllCampaignImages()">🖼️ Generate All Campaign Images</button>
+      </div>
+      </div><!-- /mode-social -->
+
+      <!-- ── WEBSITE PHOTO SHOOT MODE ── -->
+      <div id="mode-website" style="display:none;">
+      <div class="section-sub" style="margin-top:-8px;">AI analyses your brand files and plans every photo your website needs — with prompts and export size guide</div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🌐</span> Website Brief</div>
+        <div class="form-row" style="margin-bottom:12px;">
+          <div class="form-group">
+            <label>Site Name / Brand</label>
+            <input type="text" id="webSiteName" placeholder="e.g. BEETROID Juices">
+          </div>
+          <div class="form-group">
+            <label>Site Type</label>
+            <select id="webSiteType">
+              <option>Juice &amp; Beverage Brand</option>
+              <option>Health &amp; Wellness Store</option>
+              <option>Ecommerce Product Store</option>
+              <option>Food &amp; Drink Brand</option>
+              <option>Restaurant / Cafe</option>
+              <option>Portfolio / Creative</option>
+              <option>Service Business</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px;">Page Sections Needed</label>
+          <div class="tags" id="webSectionTags">
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="Hero / Banner">🏠 Hero / Banner</div>
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="Product Range">🛍️ Product Range</div>
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="Ingredient Story">🌿 Ingredient Story</div>
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="Lifestyle">☀️ Lifestyle</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="About Us">💚 About Us</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Process / How It's Made">⚗️ Process</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Testimonials">⭐ Testimonials</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Blog / Articles">📝 Blog</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Team">👥 Team</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Contact / CTA">📩 Contact CTA</div>
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="OG / Social Sharing">🔗 OG / Sharing</div>
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="PWA Icons &amp; Favicon">📱 PWA Icons</div>
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px;">Photography Style</label>
+          <div class="tags" id="webStyleTags">
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Clean &amp; Minimal">⬜ Clean &amp; Minimal</div>
+            <div class="tag tag-active" onclick="toggleTag(this)" data-val="Bold &amp; Vibrant">🌈 Bold &amp; Vibrant</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Earthy &amp; Natural">🌱 Earthy &amp; Natural</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Moody &amp; Dark">🌑 Moody &amp; Dark</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Bright &amp; Airy">☁️ Bright &amp; Airy</div>
+            <div class="tag tag-outline" onclick="toggleTag(this)" data-val="Cinematic">🎬 Cinematic</div>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:14px;">
+          <label>Extra Notes (optional)</label>
+          <textarea id="webShootNotes" rows="2" placeholder="e.g. Focus on the beetroot and ginger products first, dark background preferred for hero"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:14px;">
+          <label>✏️ Your Custom Image Ideas</label>
+          <textarea id="webCustomIdeas" rows="5" placeholder="Describe specific shots, scenes or concepts you definitely want on the site. e.g.&#10;• Hero: sweating glass bottle of beetroot juice on a black marble surface, dramatic side lighting, deep red glow&#10;• Ingredient grid: top-down flat-lay of beetroot, ginger, lemon, turmeric, celery arranged in a circle on dark slate&#10;• Lifestyle: person in workout gear mid-run holding a bottle, golden hour park, energetic mood&#10;• Product carousel: 6 bottles in a row each a different colour representing each flavour, white studio background&#10;• Process shot: hands slicing fresh beetroot, vibrant red juice dripping, macro close-up"></textarea>
+        </div>
+      </div><!-- /brief card -->
+
+      <!-- ── PRODUCT LINEUP ── -->
+      <div class="card">
+        <div class="card-title"><span class="icon">🛍️</span> Your Products <span style="font-size:12px;font-weight:400;color:var(--muted);margin-left:8px;">Define each product once — every generated prompt will reference them correctly</span></div>
+        <div class="product-col-labels">
+          <div></div>
+          <div class="product-col-label">Product Name</div>
+          <div class="product-col-label">Juice / Label Colour</div>
+          <div class="product-col-label">Best Background</div>
+          <div></div>
+        </div>
+        <div id="productLineupRows">
+          <div class="product-row">
+            <input type="color" class="product-row-swatch" value="#8B1A4A" title="Pick colour">
+            <input type="text" placeholder="e.g. Beetroid" value="Beetroid">
+            <input type="text" placeholder="e.g. deep red-purple" value="deep red-purple">
+            <input type="text" placeholder="e.g. white marble" value="white marble">
+            <button class="product-row-del" onclick="removeProductRow(this)">×</button>
+          </div>
+          <div class="product-row">
+            <input type="color" class="product-row-swatch" value="#D4A017" title="Pick colour">
+            <input type="text" placeholder="e.g. Immuni-Tea" value="Immuni-Tea">
+            <input type="text" placeholder="e.g. golden yellow" value="golden yellow">
+            <input type="text" placeholder="e.g. soft pastel blue" value="soft pastel blue">
+            <button class="product-row-del" onclick="removeProductRow(this)">×</button>
+          </div>
+          <div class="product-row">
+            <input type="color" class="product-row-swatch" value="#E07B39" value="#C85A00">
+            <input type="text" placeholder="Product name" value="Immuni-Fire">
+            <input type="text" placeholder="Juice colour" value="golden orange">
+            <input type="text" placeholder="Best background" value="warm red wood">
+            <button class="product-row-del" onclick="removeProductRow(this)">×</button>
+          </div>
+          <div class="product-row">
+            <input type="color" class="product-row-swatch" value="#F4A261">
+            <input type="text" placeholder="Product name" value="Golden Fire">
+            <input type="text" placeholder="Juice colour" value="bright orange">
+            <input type="text" placeholder="Best background" value="teal or dark contrast">
+            <button class="product-row-del" onclick="removeProductRow(this)">×</button>
+          </div>
+          <div class="product-row">
+            <input type="color" class="product-row-swatch" value="#4CAF50">
+            <input type="text" placeholder="Product name" value="Celery Juice">
+            <input type="text" placeholder="Juice colour" value="bright green">
+            <input type="text" placeholder="Best background" value="natural wood or white">
+            <button class="product-row-del" onclick="removeProductRow(this)">×</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px;" onclick="addProductRow()">+ Add Product</button>
+          <span style="font-size:11px;color:var(--muted);">Bottle type: <strong style="color:var(--text);" id="bottleTypeNote">clear plastic, black screw-top lid</strong> &nbsp;<button class="btn btn-secondary" style="font-size:11px;padding:3px 8px;" onclick="document.getElementById('bottleTypeInput').style.display=document.getElementById('bottleTypeInput').style.display==='none'?'inline-block':'none'">edit</button></span>
+          <input type="text" id="bottleTypeInput" style="display:none;width:240px;font-size:12px;padding:5px 9px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);" value="clear plastic, black screw-top lid" oninput="document.getElementById('bottleTypeNote').textContent=this.value">
+        </div>
+      </div>
+
+      <!-- ── GENERATE (re-opened card wrapper) ── -->
+      <div class="card">
+        <div class="alert alert-info" style="margin-bottom:14px;">
+          💡 Upload your brand ZIP in <strong>Upload Data</strong> first for AI to personalise every prompt to your actual products, colours and tone.
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="planWebsiteShoot()">📸 Generate Website Photo Plan</button>
+        <div id="webShootSpinner" style="display:none; margin-top:12px;" class="thinking-bar">
+          <div class="dot-anim"><span></span><span></span><span></span></div>
+          <span id="webShootStatusText">Analysing your brand and planning the shoot...</span>
+        </div>
+      </div><!-- /generate card -->
+
+      <div class="card" id="webShootResultCard" style="display:none;">
+        <div class="card-title"><span class="icon">📸</span> Website Photo Plan</div>
+        <div id="webShootPlanOutput" class="photo-plan-grid"></div>
+        <button class="btn btn-secondary" style="margin-top:14px;" onclick="document.getElementById('webSizeGuideCard').scrollIntoView({behavior:'smooth'})">📐 Jump to Export Size Guide ↓</button>
+      </div>
+
+      <div class="card" id="webSizeGuideCard" style="display:none;">
+        <div class="card-title"><span class="icon">📐</span> Web &amp; PWA Export Size Guide</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">For each asset type: generate at the <span style="color:var(--accent);font-weight:700;">primary size</span> in GPT Image 2, then resize/crop to the smaller variants in your image editor or a tool like <a href="https://squoosh.app" target="_blank" style="color:var(--accent);">Squoosh</a> or <a href="https://sharp.pixelplumbing.com" target="_blank" style="color:var(--accent);">Sharp</a>.</p>
+        <div id="webSizeGuideContent" class="size-guide-grid"></div>
+        <div style="margin-top:20px;">
+          <div class="card-title" style="margin-bottom:12px;"><span class="icon">📋</span> PWA Manifest Snippet</div>
+          <div class="manifest-box" id="manifestSnippet"></div>
+          <button class="btn btn-secondary" style="margin-top:10px;font-size:12px;" onclick="copyManifest()">📋 Copy manifest.json icons array</button>
+        </div>
+      </div>
+      </div><!-- /mode-website -->
+    </div>
+
+    <!-- ══════════ KNOWLEDGE PANEL ══════════ -->
+    <div class="panel" id="panel-knowledge">
+      <div class="section-heading">🧠 GPT Image 2 Knowledge Base</div>
+      <div class="section-sub">Extracted from 14 YouTube videos — use this to craft better prompts</div>
+      
+      <div class="card">
+        <div class="card-title"><span class="icon">⚡</span> Key Superpowers</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent);">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">🧍 Character Consistency</div>
+            <div style="font-size: 12px; color: var(--muted);">Maintains consistent characters across multiple images including tattoos, piercings, hairstyle — far better than competitors</div>
+          </div>
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent2);">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">📝 Perfect Text Rendering</div>
+            <div style="font-size: 12px; color: var(--muted);">Renders text down to small details. Passes newspaper test. Can write on a single grain of rice. 200+ ELO points above competitors on rendering</div>
+          </div>
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent3);">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">🖼️ Multi-Image Generation</div>
+            <div style="font-size: 12px; color: var(--muted);">Generate 3×3 grids, carousels, manga pages, story sequences in a single prompt. Absolute superpower for campaigns</div>
+          </div>
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px; border-left: 3px solid var(--warning);">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">🌐 Real-time Web Browsing</div>
+            <div style="font-size: 12px; color: var(--muted);">Can browse internet to find specific fonts, current events, stats, and create topical content. Use specific font names + hex colors</div>
+          </div>
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent);">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">🧠 Self-Correcting Thinking Mode</div>
+            <div style="font-size: 12px; color: var(--muted);">Generates multiple options internally, picks best. Thinking mode = higher quality. API supports 4K resolution</div>
+          </div>
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent2);">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">📐 Any Aspect Ratio</div>
+            <div style="font-size: 12px; color: var(--muted);">8,000+ aspect ratios supported. Use "AR 9:16" syntax in prompt. Previous models only had 3 fixed ratios</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🎯</span> Prompt Techniques (from dataset)</div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px;">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--accent);">Grid / Multi-image Prompts</div>
+            <div class="prompt-box" style="font-size: 12px; padding: 10px;">Generate a 3×3 grid of [subject]. Each panel shows a different [camera angle/scene/step]. Maintain consistent [character/product] throughout. Number the panels 1-9 and show evolving narrative.</div>
+          </div>
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px;">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--accent2);">Character Consistency Prompt</div>
+            <div class="prompt-box" style="font-size: 12px; padding: 10px;">[Use uploaded reference image]. Cinematic editorial photo. Character should maintain exact appearance including [specific details like hair, tattoos, clothing]. AR 4:5. Photorealistic.</div>
+          </div>
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px;">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--accent3);">Product Commercial Prompt</div>
+            <div class="prompt-box" style="font-size: 12px; padding: 10px;">High-end commercial marketing campaign for [product]. 3×3 grid. Nine frames showing different use contexts: morning routine, outdoor lifestyle, gifting, close-up detail, before/after, hero shot with tagline "[tagline]". Use brand colors #[hex1] and #[hex2]. Font: [FontName] for all text.</div>
+          </div>
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px;">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--warning);">Infographic Prompt</div>
+            <div class="prompt-box" style="font-size: 12px; padding: 10px;">Professional infographic titled "[Title]". Include [5-7 key stats/facts]. Clean layout with brand colors #[hex1], #[hex2]. Use [Font] for headings. All text must be perfectly rendered and factually accurate. AR 9:16 tall format. Print-ready quality.</div>
+          </div>
+          <div style="background: var(--surface2); padding: 12px; border-radius: 8px;">
+            <div style="font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--accent);">Web Browse + Create</div>
+            <div class="prompt-box" style="font-size: 12px; padding: 10px;">Browse the internet for the latest [topic/event/stats]. Use exact, current data. Create a highlight card / social post with this information. Include source attribution in small text. Use [brand colors]. AR 1:1.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">📊</span> Best Use Cases by Content Type</div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+            <thead>
+              <tr style="background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase;">
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid var(--border);">Content Type</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid var(--border);">GPT Image 2 Rating</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid var(--border);">Key Strengths</th>
+              </tr>
+            </thead>
+            <tbody id="knowledgeTable">
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 10px;">Infographics</td>
+                <td style="padding: 10px;"><span style="color: var(--accent3);">⭐⭐⭐⭐⭐ Excellent</span></td>
+                <td style="padding: 10px; color: var(--muted);">Dense text rendering, data accuracy, clean layout</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 10px;">Product Commercial Shots</td>
+                <td style="padding: 10px;"><span style="color: var(--accent3);">⭐⭐⭐⭐⭐ Excellent</span></td>
+                <td style="padding: 10px; color: var(--muted);">Brand label visible, contextual placement, multiple angles</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 10px;">Magazine Covers / Posters</td>
+                <td style="padding: 10px;"><span style="color: var(--accent3);">⭐⭐⭐⭐⭐ Excellent</span></td>
+                <td style="padding: 10px; color: var(--muted);">Perfect typography, date/price text, editorial quality</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 10px;">Carousels (Multi-image)</td>
+                <td style="padding: 10px;"><span style="color: var(--accent3);">⭐⭐⭐⭐⭐ Excellent</span></td>
+                <td style="padding: 10px; color: var(--muted);">Consistent style across all panels from single prompt</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 10px;">Thumbnails</td>
+                <td style="padding: 10px;"><span style="color: var(--accent3);">⭐⭐⭐⭐⭐ Excellent</span></td>
+                <td style="padding: 10px; color: var(--muted);">Aesthetics, logo integration, 16:9 aspect ratio natively</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 10px;">Mood Boards</td>
+                <td style="padding: 10px;"><span style="color: var(--accent3);">⭐⭐⭐⭐⭐ Excellent</span></td>
+                <td style="padding: 10px; color: var(--muted);">Small text rendered, sticky notes, layered compositions</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 10px;">Photorealistic Portraits</td>
+                <td style="padding: 10px;"><span style="color: var(--accent);">⭐⭐⭐⭐ Very Good</span></td>
+                <td style="padding: 10px; color: var(--muted);">Stunning but can be "too perfect" — prompt for natural imperfections</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 10px;">Brand Kit</td>
+                <td style="padding: 10px;"><span style="color: var(--accent3);">⭐⭐⭐⭐⭐ Excellent</span></td>
+                <td style="padding: 10px; color: var(--muted);">Hex color accuracy, font display, consistent across assets</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px;">Simple Logos</td>
+                <td style="padding: 10px;"><span style="color: var(--warning);">⭐⭐⭐ Good</span></td>
+                <td style="padding: 10px; color: var(--muted);">Tends to add too many elements — specify "minimal, clean logo"</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">💡</span> Pro Tips from Dataset</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.7;">
+          <div style="padding: 10px; background: var(--surface2); border-radius: 8px; border-left: 3px solid var(--accent);">
+            <strong>Use full font name + hex colors:</strong> Instead of "blue text", write "Use Pacifico font for the headline. Text color: #1A73E8". GPT Image 2 will browse and apply the exact font.
+          </div>
+          <div style="padding: 10px; background: var(--surface2); border-radius: 8px; border-left: 3px solid var(--accent2);">
+            <strong>Thinking mode = quality:</strong> Adding "thinking mode" or using the API with higher reasoning effort gives significantly better outputs — worth the extra cost for hero images.
+          </div>
+          <div style="padding: 10px; background: var(--surface2); border-radius: 8px; border-left: 3px solid var(--accent3);">
+            <strong>Grid then extract:</strong> Prompt it to "generate a 3×3 grid" then follow up: "extract, enhance and upscale all 9 frames individually". Gets you 9 hero images efficiently.
+          </div>
+          <div style="padding: 10px; background: var(--surface2); border-radius: 8px; border-left: 3px solid var(--warning);">
+            <strong>Specify AR with "AR" prefix:</strong> Write "AR 9:16" or "AR 3:2" in your prompt. Supports any ratio. Default tends toward square if unspecified.
+          </div>
+          <div style="padding: 10px; background: var(--surface2); border-radius: 8px; border-left: 3px solid var(--accent);">
+            <strong>Production sheets beat single prompts:</strong> Create a storyboard/production sheet image first (showing scenes, notes, angles), then feed it to the model to generate all assets — like a professional pre-production workflow.
+          </div>
+          <div style="padding: 10px; background: var(--surface2); border-radius: 8px; border-left: 3px solid var(--accent2);">
+            <strong>For realism — prompt for imperfections:</strong> "Add subtle natural imperfections, slight grain, real-world lighting inconsistencies" makes images feel photographed not generated.
+          </div>
+          <div style="padding: 10px; background: var(--surface2); border-radius: 8px; border-left: 3px solid var(--accent3);">
+            <strong>API model names on OpenRouter:</strong> Use <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">openai/gpt-5.4-image-2</code> for image generation. For reasoning/text use <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">qwen/qwen3.5-plus-20260420</code> or <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">openai/gpt-5.4</code>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ GALLERY PANEL ══════════ -->
+    <div class="panel" id="panel-gallery">
+      <div class="section-heading">🗂️ Session Gallery</div>
+      <div class="section-sub">All images generated this session</div>
+      <div class="output-grid" id="galleryGrid">
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">
+          No images generated yet this session. Head to <strong style="color: var(--text);">Generate Images</strong> to get started.
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// LOCALSTORAGE VERSION GUARD (runs before anything else)
+// Bump CS_VERSION whenever model defaults change — wipes stale model keys automatically
+// ─────────────────────────────────────────────
+;(function() {
+  const CS_VERSION = '3';
+  if (localStorage.getItem('cs_version') !== CS_VERSION) {
+    // Version mismatch — clear all model prefs (keep API key)
+    ['cs_text_model', 'cs_image_model'].forEach(k => localStorage.removeItem(k));
+    localStorage.setItem('cs_version', CS_VERSION);
+  }
+  // Extra safety: nuke any known bad model IDs regardless of version
+  const bad = new Set(['openai/gpt-4.5', 'openai/gpt-4.5-preview', 'openai/gpt-4.5-turbo']);
+  ['cs_text_model', 'cs_image_model'].forEach(k => {
+    if (bad.has(localStorage.getItem(k))) localStorage.removeItem(k);
+  });
+})();
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const state = {
+  apiKey: '',
+  imageModel: 'openai/gpt-5.4-image-2',
+  textModel: 'qwen/qwen3.5-plus-20260420',
+  batchSize: 1,
+  brandProfile: null,
+  uploadedFiles: [],
+  activePanel: 'setup',
+  selectedOutputType: 'Social Media Post',
+  selectedCount: 1,
+  gallery: [],
+  savedPrompts: []
+};
+
+// ─────────────────────────────────────────────
+// LIVE MODEL LOADER (OpenRouter public API)
+// ─────────────────────────────────────────────
+const PREFERRED_IMAGE_MODELS = [
+  'openai/gpt-5.4-image-2',
+  'openai/gpt-5.4-image-2:thinking',
+  'openai/gpt-image-2',
+  'google/gemini-flash-2.0-image'
+];
+const PREFERRED_TEXT_MODELS = [
+  'qwen/qwen3.5-plus-20260420',
+  'openai/gpt-5.4',
+  'anthropic/claude-sonnet-4-6',
+  'google/gemini-pro-3-1',
+  'moonshotai/kimi-k2'
+];
+
+async function loadOpenRouterModels() {
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/models');
+    if (!res.ok) throw new Error('models endpoint error');
+    const data = await res.json();
+    const all = data.data || [];
+
+    // Detect image-output models
+    const imageModels = all.filter(m => {
+      const mod = (m.architecture?.modality || '').toLowerCase();
+      const out = (m.architecture?.output_modalities || []);
+      return mod.includes('->image') || out.includes('image');
+    });
+
+    // Text-output models (exclude image-output)
+    const textModels = all.filter(m => {
+      const mod = (m.architecture?.modality || '').toLowerCase();
+      const out = (m.architecture?.output_modalities || []);
+      const isImageOut = mod.includes('->image') || out.includes('image');
+      const isTextOut  = mod.includes('->text')  || out.includes('text');
+      return isTextOut && !isImageOut;
+    });
+
+    function fmtImagePrice(m) {
+      const img = parseFloat(m.pricing?.image || 0);
+      if (img > 0) return ` · $${img.toFixed(4)}/img`;
+      const prompt = parseFloat(m.pricing?.prompt || 0);
+      if (prompt > 0) return ` · $${(prompt * 1e6).toFixed(2)}/M`;
+      return '';
+    }
+
+    function fmtTextPrice(m) {
+      const inP  = parseFloat(m.pricing?.prompt     || 0) * 1e6;
+      const outP = parseFloat(m.pricing?.completion || 0) * 1e6;
+      if (inP > 0 || outP > 0) return ` · $${inP.toFixed(2)}/$${outP.toFixed(2)} /M`;
+      return '';
+    }
+
+    function buildOptions(list, preferred, fmtFn) {
+      const prefSet = new Set(preferred);
+      const pinned  = preferred.map(id => list.find(m => m.id === id)).filter(Boolean);
+      const rest    = list.filter(m => !prefSet.has(m.id) && m.id)
+                         .sort((a, b) => a.id.localeCompare(b.id));
+      let html = '';
+      if (pinned.length) {
+        html += '<optgroup label="⭐ Recommended">';
+        pinned.forEach(m => { html += `<option value="${m.id}">${m.id}${fmtFn(m)}</option>`; });
+        html += '</optgroup><optgroup label="All Models">';
+        rest.forEach(m => { html += `<option value="${m.id}">${m.id}${fmtFn(m)}</option>`; });
+        html += '</optgroup>';
+      } else {
+        rest.forEach(m => { html += `<option value="${m.id}">${m.id}${fmtFn(m)}</option>`; });
+      }
+      return html;
+    }
+
+    const imageHTML = buildOptions(imageModels, PREFERRED_IMAGE_MODELS, fmtImagePrice);
+    const textHTML  = buildOptions(textModels,  PREFERRED_TEXT_MODELS,  fmtTextPrice);
+
+    const imageSels = ['imageModelSelect', 'genModel'];
+    const textSels  = ['textModelSelect'];
+
+    imageSels.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.innerHTML = imageHTML;
+        const saved = DEFUNCT_MODELS.has(localStorage.getItem('cs_image_model')) ? null : (localStorage.getItem('cs_image_model') || state.imageModel);
+        if (saved) el.value = saved;
+        if (!el.value && el.options.length) el.selectedIndex = 0;
+        // Sync state to whatever ended up selected
+        state.imageModel = el.value;
+        localStorage.setItem('cs_image_model', el.value);
+      }
+    });
+    textSels.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.innerHTML = textHTML;
+        const saved = DEFUNCT_MODELS.has(localStorage.getItem('cs_text_model')) ? null : (localStorage.getItem('cs_text_model') || state.textModel);
+        if (saved) el.value = saved;
+        if (!el.value && el.options.length) el.selectedIndex = 0;
+        // Sync state to whatever ended up selected
+        state.textModel = el.value;
+        localStorage.setItem('cs_text_model', el.value);
+      }
+    });
+
+    const count = imageModels.length + textModels.length;
+    const imgStatus  = document.getElementById('imageModelStatus');
+    const textStatus = document.getElementById('textModelStatus');
+    if (imgStatus)  imgStatus.textContent  = `${imageModels.length} image models loaded · prices live`;
+    if (textStatus) textStatus.textContent = `${textModels.length} text models loaded · prices live`;
+
+  } catch(e) {
+    // Silent fallback — static options already in HTML remain
+    const imgStatus  = document.getElementById('imageModelStatus');
+    const textStatus = document.getElementById('textModelStatus');
+    if (imgStatus)  imgStatus.textContent  = 'Could not load live models — using defaults';
+    if (textStatus) textStatus.textContent = 'Could not load live models — using defaults';
+  }
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+
+// Stale/invalid model IDs that should never be used
+const DEFUNCT_MODELS = new Set(['openai/gpt-4.5', 'openai/gpt-4.5-preview']);
+
+function syncModelState() {
+  const imgEl  = document.getElementById('imageModelSelect');
+  const txtEl  = document.getElementById('textModelSelect');
+  const genEl  = document.getElementById('genModel');
+  if (imgEl && imgEl.value)  { state.imageModel = imgEl.value;  localStorage.setItem('cs_image_model', imgEl.value); }
+  if (txtEl && txtEl.value)  { state.textModel  = txtEl.value;  localStorage.setItem('cs_text_model',  txtEl.value); }
+  if (genEl && genEl.value)  state.imageModel = genEl.value;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Load saved API key
+  const savedKey = localStorage.getItem('cs_api_key');
+  if (savedKey) {
+    state.apiKey = savedKey;
+    document.getElementById('apiKeyInput').value = savedKey;
+    document.getElementById('apiKeyInput2').value = savedKey;
+    updateApiStatus(true);
+  }
+
+  // Load saved models — discard stale/defunct IDs
+  let savedImageModel = localStorage.getItem('cs_image_model');
+  let savedTextModel  = localStorage.getItem('cs_text_model');
+  if (DEFUNCT_MODELS.has(savedImageModel)) { localStorage.removeItem('cs_image_model'); savedImageModel = null; }
+  if (DEFUNCT_MODELS.has(savedTextModel))  { localStorage.removeItem('cs_text_model');  savedTextModel  = null; }
+  if (savedImageModel) { state.imageModel = savedImageModel; }
+  if (savedTextModel)  { state.textModel  = savedTextModel;  }
+
+  // Wire up select onchange → immediately syncs state + localStorage
+  ['imageModelSelect', 'genModel'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', () => {
+      state.imageModel = el.value;
+      localStorage.setItem('cs_image_model', el.value);
+      // Keep both image selects in sync
+      ['imageModelSelect', 'genModel'].forEach(sid => {
+        const sel = document.getElementById(sid);
+        if (sel && sid !== id) sel.value = el.value;
+      });
+    });
+  });
+  const txtEl = document.getElementById('textModelSelect');
+  if (txtEl) txtEl.addEventListener('change', () => {
+    state.textModel = txtEl.value;
+    localStorage.setItem('cs_text_model', txtEl.value);
+  });
+
+  // Load brand profile
+  const saved = localStorage.getItem('cs_brand');
+  if (saved) {
+    state.brandProfile = JSON.parse(saved);
+    fillBrandForm();
+  }
+
+  // Setup drag-drop
+  setupDragDrop();
+
+  // Fetch live model list + prices from OpenRouter (no auth required)
+  loadOpenRouterModels();
+});
+
+// ─────────────────────────────────────────────
+// API KEY
+// ─────────────────────────────────────────────
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key) return alert('Please enter an API key');
+  state.apiKey = key;
+  localStorage.setItem('cs_api_key', key);
+  localStorage.setItem('cs_image_model', document.getElementById('imageModelSelect').value);
+  localStorage.setItem('cs_text_model', document.getElementById('textModelSelect').value);
+  updateApiStatus(true);
+  const msg = document.getElementById('settingsSaveMsg');
+  msg.style.display = 'flex';
+  setTimeout(() => msg.style.display = 'none', 3000);
+}
+
+function saveApiKey2() {
+  const key = document.getElementById('apiKeyInput2').value.trim();
+  if (!key) return alert('Please enter an API key');
+  state.apiKey = key;
+  document.getElementById('apiKeyInput').value = key;
+  localStorage.setItem('cs_api_key', key);
+  updateApiStatus(true);
+  const msg = document.getElementById('setupMsg');
+  msg.style.display = 'flex';
+}
+
+function updateApiStatus(connected) {
+  const dot = document.getElementById('apiDot');
+  const txt = document.getElementById('apiStatusText');
+  dot.className = 'api-dot' + (connected ? ' connected' : '');
+  txt.textContent = connected ? 'OpenRouter Connected' : 'No key set';
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function showPanel(name) {
+  // Hide all panels
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  
+  const panel = document.getElementById('panel-' + name);
+  const nav = document.getElementById('nav-' + name);
+  if (panel) panel.classList.add('active');
+  if (nav) nav.classList.add('active');
+  state.activePanel = name;
+}
+
+// ─────────────────────────────────────────────
+// FILE UPLOAD
+// ─────────────────────────────────────────────
+function setupDragDrop() {
+  const dz = document.getElementById('dropZone');
+  if (!dz) return;
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault();
+    dz.classList.remove('drag-over');
+    handleFiles(e.dataTransfer.files);
+  });
+}
+
+function handleFiles(files) {
+  for (const f of files) {
+    if (state.uploadedFiles.find(x => x.name === f.name)) continue;
+    state.uploadedFiles.push(f);
+  }
+  renderFileList();
+  document.getElementById('analyseBtn').disabled = state.uploadedFiles.length === 0;
+}
+
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  if (!list) return;
+  list.innerHTML = '';
+  state.uploadedFiles.forEach((f, i) => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    const icon = ext === 'zip' ? '📦' : ['jpg','jpeg','png','gif','webp'].includes(ext) ? '🖼️' : ext === 'pdf' ? '📄' : ext === 'csv' ? '📊' : '📝';
+    const size = f.size > 1e6 ? (f.size/1e6).toFixed(1)+'MB' : (f.size/1e3).toFixed(0)+'KB';
+    list.innerHTML += `<div class="file-item"><span class="file-item-icon">${icon}</span><span class="file-item-name">${f.name}</span><span class="file-item-size">${size}</span><button class="file-item-remove" onclick="removeFile(${i})">✕</button></div>`;
+  });
+}
+
+function removeFile(i) {
+  state.uploadedFiles.splice(i, 1);
+  renderFileList();
+  document.getElementById('analyseBtn').disabled = state.uploadedFiles.length === 0;
+}
+
+function clearFiles() {
+  state.uploadedFiles = [];
+  renderFileList();
+  document.getElementById('analyseBtn').disabled = true;
+  const r = document.getElementById('analyseResult');
+  if (r) { r.style.display = 'none'; r.innerHTML = ''; }
+}
+
+async function extractFilesContext(files) {
+  const TEXT_EXTS = new Set(['txt','csv','json','md','html','xml','yaml','yml']);
+  const IMAGE_EXTS = new Set(['jpg','jpeg','png','gif','webp','svg']);
+  let context = '';
+  let imageContext = '';
+  let totalChars = 0;
+  const MAX_CHARS = 12000; // stay well under context limits
+
+  async function processEntry(name, getText) {
+    const ext = name.split('.').pop().toLowerCase();
+    // skip system/hidden files
+    if (name.startsWith('__MACOSX') || name.startsWith('.')) return;
+    if (TEXT_EXTS.has(ext) && totalChars < MAX_CHARS) {
+      try {
+        const text = await getText();
+        const snippet = text.substring(0, Math.min(3000, MAX_CHARS - totalChars));
+        context += `\n\n--- ${name} ---\n${snippet}`;
+        totalChars += snippet.length;
+      } catch(e) {}
+    } else if (IMAGE_EXTS.has(ext)) {
+      imageContext += `\n• Image: ${name}`;
+    }
+  }
+
+  for (const f of files) {
+    const ext = f.name.split('.').pop().toLowerCase();
+    if (ext === 'zip') {
+      // Unpack ZIP and read contents
+      try {
+        const zip = await JSZip.loadAsync(f);
+        const entries = Object.values(zip.files).filter(e => !e.dir);
+        for (const entry of entries) {
+          await processEntry(entry.name, () => entry.async('text'));
+        }
+      } catch(e) {
+        context += `\n\n[ZIP ${f.name} could not be extracted: ${e.message}]`;
+      }
+    } else {
+      await processEntry(f.name, () => f.text());
+    }
+  }
+  return { context, imageContext };
+}
+
+async function analyseData() {
+  if (!state.apiKey) { alert('Please set your OpenRouter API key first'); showPanel('setup'); return; }
+  const btn    = document.getElementById('analyseBtn');
+  const result = document.getElementById('analyseResult');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border-width:2px;"></div> Extracting files...';
+  result.style.display = 'none';
+
+  const { context, imageContext } = await extractFilesContext(state.uploadedFiles);
+  btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border-width:2px;"></div> Building your master plan...';
+
+  const fileList = state.uploadedFiles.map(f => `${f.name} (${(f.size/1e3).toFixed(0)}KB)`).join(', ');
+
+  const prompt = `You are a brand strategist, website image director, and GPT Image 2 expert.
+
+The user has uploaded brand files: ${fileList}
+${context ? `\nFILE CONTENTS:\n${context}` : ''}
+${imageContext ? `\nIMAGES IN UPLOAD:${imageContext}` : ''}
+
+Analyse everything above and produce a FULL MASTER CONTENT PLAN in this exact structure:
+
+## BRAND IDENTITY
+Extract these fields — be specific, use exact values from the files:
+- Brand Name:
+- Products / Product Line:
+- Brand Colours (provide hex codes if inferrable, or describe):
+- Visual Style / Tone:
+- Target Audience:
+- Key Benefits / USPs:
+- Tagline / Voice:
+
+## WEBSITE IMAGE PLAN
+For EACH of these website sections, describe exactly what images are needed and write a ready-to-generate GPT Image 2 prompt for the hero shot:
+
+### Hero Banner
+- What to show:
+- GPT Prompt:
+
+### Product Range
+- What to show:
+- GPT Prompt:
+
+### Ingredient Story
+- What to show:
+- GPT Prompt:
+
+### Lifestyle
+- What to show:
+- GPT Prompt:
+
+### OG / Social Share Image
+- What to show:
+- GPT Prompt:
+
+## CAROUSEL IDEAS
+List 6 carousel post concepts — each with a title, platform, number of slides, and slide-by-slide breakdown:
+
+### Carousel 1 — [Title]
+Platform: [Instagram/LinkedIn/etc]
+Slides:
+1. [slide description]
+2. [slide description]
+...
+GPT Prompt for cover slide:
+
+### Carousel 2 — [Title]
+...
+(continue for all 6)
+
+## SOCIAL SINGLE IMAGE IDEAS
+List 6 standalone social images, each with a title and full GPT Image 2 prompt.
+
+## PROMPT TOOLKIT
+List the 5 most important GPT Image 2 techniques to use for this specific brand, with an example prompt snippet for each.
+
+Be specific to THIS brand's actual products, colours, and audience throughout. Do not use generic examples.`;
+
+  try {
+    const res = await callOpenRouter(prompt, state.textModel, 3500);
+
+    // Auto-extract brand identity from the response and save to state
+    const nameMatch     = res.match(/Brand Name:\s*([^\n]+)/);
+    const colorsMatch   = res.match(/Brand Colours[^:]*:\s*([^\n]+)/);
+    const styleMatch    = res.match(/Visual Style[^:]*:\s*([^\n]+)/);
+    const productsMatch = res.match(/Products[^:]*:\s*([^\n]+)/);
+    const audienceMatch = res.match(/Target Audience:\s*([^\n]+)/);
+    const uspsMatch     = res.match(/Key Benefits[^:]*:\s*([^\n]+)/i);
+    const taglineMatch  = res.match(/Tagline[^:]*:\s*([^\n]+)/i);
+
+    const extractedName     = nameMatch     ? nameMatch[1].trim()     : (document.getElementById('brandName').value || 'My Brand');
+    const extractedColors   = colorsMatch   ? colorsMatch[1].trim()   : '';
+    const extractedStyle    = styleMatch    ? styleMatch[1].trim()    : 'Bold & Vibrant';
+    const extractedProducts = productsMatch ? productsMatch[1].trim() : '';
+    const extractedAudience = audienceMatch ? audienceMatch[1].trim() : '';
+    const extractedUsps     = uspsMatch     ? uspsMatch[1].trim()     : '';
+    const extractedTagline  = taglineMatch  ? taglineMatch[1].trim()  : '';
+
+    state.brandProfile = {
+      name:        extractedName,
+      brandName:   extractedName,
+      products:    extractedProducts,
+      desc:        [extractedProducts, extractedAudience ? 'Target: ' + extractedAudience : ''].filter(Boolean).join('. '),
+      colors:      extractedColors,
+      tone:        extractedStyle,
+      audience:    extractedAudience,
+      usps:        extractedUsps,
+      tagline:     extractedTagline,
+      platforms:   state.brandProfile?.platforms || ['Instagram', 'LinkedIn'],
+      masterPlan:  res
+    };
+    localStorage.setItem('cs_brand', JSON.stringify(state.brandProfile));
+
+    // Auto-fill brand form fields
+    if (extractedName)   document.getElementById('brandName').value   = extractedName;
+    if (extractedColors) document.getElementById('brandColors').value = extractedColors;
+    if (document.getElementById('promptBrand')) document.getElementById('promptBrand').value = buildBrandContext();
+    if (document.getElementById('webSiteName')) document.getElementById('webSiteName').value = extractedName;
+
+    // Render the plan
+    result.style.display = 'block';
+    result.classList.add('fadeIn');
+    result.innerHTML = renderMasterPlan(res, context.length, state.uploadedFiles.length);
+
+  } catch(e) {
+    result.style.display = 'block';
+    result.innerHTML = `<div class="alert alert-error">❌ Error: ${e.message}. Check your API key and try again.</div>`;
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '🔍 Analyse with AI';
+}
+
+function renderMasterPlan(markdown, charCount, fileCount) {
+  // Split into top-level ## sections
+  const sections = markdown.split(/\n(?=## )/g).filter(s => s.trim());
+  let html = `<div class="alert alert-success" style="margin-bottom:16px;">✅ Master plan built — ${charCount.toLocaleString()} chars read from ${fileCount} file(s). Brand profile auto-saved.</div>`;
+
+  const icons = { 'BRAND IDENTITY': '🎨', 'WEBSITE IMAGE PLAN': '🌐', 'CAROUSEL IDEAS': '📑', 'SOCIAL SINGLE': '📷', 'PROMPT TOOLKIT': '🛠️' };
+
+  sections.forEach(sec => {
+    const lines    = sec.split('\n');
+    const heading  = lines[0].replace(/^##\s*/, '').trim();
+    const body     = lines.slice(1).join('\n').trim();
+    const icon     = Object.entries(icons).find(([k]) => heading.toUpperCase().includes(k))?.[1] || '📌';
+
+    html += `<div class="plan-section"><div class="plan-section-title">${icon} ${heading}</div>`;
+
+    // Brand identity — render as editable field grid
+    if (heading.toUpperCase().includes('BRAND IDENTITY')) {
+      const fields = body.match(/^- .+/gm) || [];
+      // Map field labels to stable IDs
+      const fieldIdMap = {
+        'brand name':    'pf_name',
+        'products':      'pf_products',
+        'brand colour':  'pf_colors',
+        'visual style':  'pf_style',
+        'target audience': 'pf_audience',
+        'key benefit':   'pf_usps',
+        'tagline':       'pf_tagline',
+      };
+      const getFieldId = label => {
+        const low = label.toLowerCase();
+        return Object.entries(fieldIdMap).find(([k]) => low.includes(k))?.[1] || ('pf_'+low.replace(/[^a-z0-9]/g,'_'));
+      };
+      if (fields.length) {
+        html += `<div class="plan-identity-grid">`;
+        fields.forEach(f => {
+          const [label, ...rest] = f.replace(/^- /, '').split(':');
+          const val   = rest.join(':').trim();
+          const fid   = getFieldId(label);
+          const isLong = val.length > 60 || label.toLowerCase().includes('benefit') || label.toLowerCase().includes('product');
+          html += `<div class="plan-identity-item">
+            <div class="plan-identity-label">${label.trim()}</div>
+            ${isLong
+              ? `<textarea id="${fid}" rows="3">${val || ''}</textarea>`
+              : `<input id="${fid}" type="text" value="${val.replace(/"/g,'&quot;')}">`}
+          </div>`;
+        });
+        html += `</div>`;
+        html += `<div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
+          <button class="btn btn-success" style="font-size:12px;padding:7px 16px;" onclick="saveBrandCorrections()">💾 Save Corrections to Brand Profile</button>
+          <span id="brandCorrectionMsg" style="display:none;font-size:12px;color:var(--accent3);">&#10003; Saved — all future prompts now use your corrections</span>
+        </div>`;
+      } else {
+        html += `<div style="font-size:13px;line-height:1.8;white-space:pre-wrap;">${body}</div>`;
+      }
+
+    // Website / Carousel / Social — render as idea cards with prompts
+    } else if (heading.toUpperCase().includes('WEBSITE') || heading.toUpperCase().includes('CAROUSEL') || heading.toUpperCase().includes('SOCIAL SINGLE')) {
+      const subSecs = body.split(/\n(?=###\s)/g).filter(s => s.trim());
+      subSecs.forEach(sub => {
+        const subLines = sub.split('\n');
+        const subTitle = subLines[0].replace(/^###\s*/, '').trim();
+        const subBody  = subLines.slice(1).join('\n').trim();
+        const promptMatch = subBody.match(/GPT Prompt[^:]*:\s*([\s\S]+?)(?=\n- |\n###|$)/i);
+        const prompt  = promptMatch ? promptMatch[1].trim() : '';
+        const descPart = subBody.replace(/GPT Prompt[\s\S]*/i, '').trim()
+                                 .replace(/- What to show:/i, '').trim();
+        html += `<div class="plan-idea-card">
+          <div class="plan-idea-title">${subTitle}</div>
+          ${descPart ? `<div class="plan-idea-desc">${descPart}</div>` : ''}
+          ${prompt ? `<div class="plan-idea-prompt">${prompt}</div>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+            <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="copyText(${JSON.stringify(prompt).replace(/'/g,'&apos;')})">&#128203; Copy Prompt</button>
+            <button class="btn btn-primary" style="font-size:11px;padding:4px 10px;" onclick="quickGenerate(this,${JSON.stringify(prompt).replace(/'/g,'&apos;')})">&#128444;&#65039; Generate</button>
+          </div>` : ''}
+        </div>`;
+      });
+
+    // Prompt toolkit and everything else — preformatted
+    } else {
+      html += `<div style="font-size:13px;line-height:1.8;white-space:pre-wrap;background:var(--surface2);border-radius:8px;padding:14px;">${body}</div>`;
+    }
+
+    html += `</div>`;  // close plan-section
+  });
+
+  html += `<div class="plan-action-bar">
+    <button class="btn btn-primary" onclick="switchCampaignMode('social');showPanel('campaign')">📱 Go to Social Campaign Planner</button>
+    <button class="btn btn-primary" onclick="switchCampaignMode('website');showPanel('campaign')">🌐 Go to Website Photo Shoot</button>
+    <button class="btn btn-secondary" onclick="showPanel('prompt')">✨ Open Prompt Builder</button>
+  </div>`;
+
+  return html;
+}
+
+// ─────────────────────────────────────────────
+// BRAND FORM
+// ─────────────────────────────────────────────
+function saveBrandData() {
+  const name = document.getElementById('brandName').value;
+  const desc = document.getElementById('brandDesc').value;
+  const colors = document.getElementById('brandColors').value;
+  const tone = document.getElementById('brandTone').value;
+  const platforms = getActiveTags('platformTags');
+  
+  state.brandProfile = { name, desc, colors, tone, platforms };
+  localStorage.setItem('cs_brand', JSON.stringify(state.brandProfile));
+  
+  // Update prompt brand field
+  document.getElementById('promptBrand').value = buildBrandContext();
+  
+  const msg = document.getElementById('brandSaveMsg');
+  msg.style.display = 'flex';
+  setTimeout(() => msg.style.display = 'none', 3000);
+}
+
+function fillBrandForm() {
+  if (!state.brandProfile) return;
+  const { name, desc, colors, tone, platforms } = state.brandProfile;
+  if (name) document.getElementById('brandName').value = name;
+  if (desc) document.getElementById('brandDesc').value = desc;
+  if (colors) document.getElementById('brandColors').value = colors;
+  if (tone) document.getElementById('brandTone').value = tone;
+  document.getElementById('promptBrand').value = buildBrandContext();
+}
+
+function buildBrandContext() {
+  if (!state.brandProfile) return '';
+  const { name, desc, colors, tone, audience, usps, tagline, products } = state.brandProfile;
+  let ctx = '';
+  if (name)     ctx += `Brand: ${name}. `;
+  if (products) ctx += `Products: ${products}. `;
+  if (desc)     ctx += `${desc} `;
+  if (audience) ctx += `Audience: ${audience}. `;
+  if (usps)     ctx += `Key benefits: ${usps}. `;
+  if (tagline)  ctx += `Tagline/voice: ${tagline}. `;
+  if (tone)     ctx += `Visual tone: ${tone}. `;
+  if (colors)   ctx += `Brand colors: ${colors}.`;
+  return ctx.trim();
+}
+
+function saveBrandCorrections() {
+  // Read all editable plan identity fields
+  const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const name     = g('pf_name')     || state.brandProfile?.name     || '';
+  const products = g('pf_products') || state.brandProfile?.products || '';
+  const colors   = g('pf_colors')   || state.brandProfile?.colors   || '';
+  const tone     = g('pf_style')    || state.brandProfile?.tone     || '';
+  const audience = g('pf_audience') || state.brandProfile?.audience || '';
+  const usps     = g('pf_usps')     || state.brandProfile?.usps     || '';
+  const tagline  = g('pf_tagline')  || state.brandProfile?.tagline  || '';
+
+  state.brandProfile = {
+    ...state.brandProfile,
+    name, brandName: name, products, colors, tone, audience, usps, tagline,
+    desc: [products, audience ? 'Target: ' + audience : ''].filter(Boolean).join('. ')
+  };
+  localStorage.setItem('cs_brand', JSON.stringify(state.brandProfile));
+
+  // Propagate to other form fields
+  if (document.getElementById('brandName'))   document.getElementById('brandName').value   = name;
+  if (document.getElementById('brandColors')) document.getElementById('brandColors').value = colors;
+  if (document.getElementById('webSiteName')) document.getElementById('webSiteName').value = name;
+  if (document.getElementById('promptBrand')) document.getElementById('promptBrand').value = buildBrandContext();
+
+  const msg = document.getElementById('brandCorrectionMsg');
+  if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 4000); }
+}
+
+// ─────────────────────────────────────────────
+// TAGS
+// ─────────────────────────────────────────────
+function toggleTag(el) {
+  el.classList.toggle('tag-active');
+  el.classList.toggle('tag-outline');
+}
+
+function getActiveTags(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} .tag-active`)).map(t => t.dataset.val);
+}
+
+// ─────────────────────────────────────────────
+// OUTPUT TYPE
+// ─────────────────────────────────────────────
+function selectOutputType(el, type) {
+  document.querySelectorAll('#outputTypeGrid .knowledge-tile').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedOutputType = type;
+}
+
+function selectCount(el, count) {
+  document.querySelectorAll('.gs-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedCount = count;
+  
+  const notes = {
+    1: 'Single image — standard generation',
+    2: 'Pair — GPT Image 2 renders ONE image containing both panels',
+    4: '2×2 grid — ONE image containing 4 panels, perfect for carousels',
+    6: '2×3 grid — ONE image containing 6 panels, story arc or product range',
+    9: '3×3 grid — ONE image containing 9 panels, GPT Image 2\'s signature superpower'
+  };
+  document.getElementById('multiImageNote').textContent = notes[count] || '';
+  renderPanelInputs(count);
+}
+
+function renderPanelInputs(count) {
+  const container = document.getElementById('panelDescriptions');
+  if (count <= 1) { container.style.display = 'none'; container.innerHTML = ''; return; }
+
+  const layout = { 2: 'side-by-side pair', 4: '2×2 grid', 6: '2×3 grid', 9: '3×3 grid' };
+  let html = `<div style="background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.3); border-radius: 10px; padding: 14px;">
+    <div style="font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px;">📐 ${layout[count] || count + ' panels'} — describe each panel</div>
+    <div style="font-size: 11px; color: var(--muted); margin-bottom: 12px; line-height: 1.5;">GPT Image 2 outputs <strong>ONE image</strong> containing all ${count} panels. Describe what each panel should show for precise results — or leave blank to let the AI decide.</div>`;
+
+  for (let i = 1; i <= count; i++) {
+    html += `<div style="margin-bottom: 8px;">
+      <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px; font-weight: 600;">Panel ${i}</label>
+      <input type="text" id="panel_desc_${i}" placeholder="e.g. Beetroid bottle on white marble, dramatic side-light, deep red label" style="width:100%; box-sizing: border-box; background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 7px 10px; color: var(--fg); font-size: 12px;">
+    </div>`;
+  }
+  html += '</div>';
+  container.innerHTML = html;
+  container.style.display = 'block';
+}
+
+// ─────────────────────────────────────────────
+// PROMPT BUILDER
+// ─────────────────────────────────────────────
+async function buildPrompt() {
+  if (!state.apiKey) { alert('Please set your OpenRouter API key first'); showPanel('setup'); return; }
+  
+  const subject = document.getElementById('promptSubject').value;
+  const style = document.getElementById('promptStyle').value;
+  const ar = document.getElementById('promptAR').value;
+  const arCustom = document.getElementById('promptARCustom').value;
+  const context = document.getElementById('promptContext').value;
+  const brand = document.getElementById('promptBrand').value;
+  const features = getActiveTags('featureTags');
+  const count = state.selectedCount;
+  const type = state.selectedOutputType;
+  
+  const promptCard = document.getElementById('promptResultCard');
+  const thinkingBar = document.getElementById('thinkingBar');
+  
+  promptCard.style.display = 'block';
+  thinkingBar.style.display = 'flex';
+  document.getElementById('promptOutput').textContent = 'Building your prompt...';
+  
+  const aspectRatio = arCustom || ar;
+
+  // Collect per-panel descriptions (used when count > 1)
+  const panelDescLines = [];
+  if (count > 1) {
+    for (let i = 1; i <= count; i++) {
+      const el = document.getElementById(`panel_desc_${i}`);
+      if (el && el.value.trim()) panelDescLines.push(`  Panel ${i}: ${el.value.trim()}`);
+    }
+  }
+  const gridLayout = { 2: 'side-by-side pair', 4: '2×2 grid', 6: '2×3 grid', 9: '3×3 grid' };
+  const panelBlock = count > 1
+    ? `\nCOMPOSITE GRID: ${count} panels in a single image (${gridLayout[count] || count + '-panel grid'})\nIMPORTANT: This is ONE image that visually contains ${count} distinct panels/scenes — NOT separate images.\n${panelDescLines.length ? 'PER-PANEL DESCRIPTIONS:\n' + panelDescLines.join('\n') : '(No per-panel descriptions — craft ' + count + ' visually distinct scenes that complement each other)'}`
+    : '';
+  
+  const systemPrompt = `You are a world-class AI image prompt engineer, specialising in GPT Image 2 (also known as GPT 5.4 Image 2). 
+
+You have deep knowledge of GPT Image 2's unique capabilities:
+- Character and product consistency across multiple images
+- Perfect text rendering down to small details — specify exactly what text to render
+- Multi-image generation in a single prompt: use "generate [N] images as a [X×X grid]" or "generate [N] consecutive images"
+- Real-time internet browsing: specify "search the web for [X] and include current data"
+- Exact hex color specification: always include specific hex codes when using brand colors
+- Font specification: "Use [FontName] font" — it can browse and find fonts
+- Aspect ratio: use "AR [ratio]" syntax e.g. "AR 9:16" — supports 8000+ ratios
+- Thinking mode produces highest quality — add "high quality, thinking mode" for hero shots  
+- For realism: explicitly request "photorealistic, natural imperfections, subtle grain"
+- For text-heavy content (infographics, posters): specify ALL text to render exactly
+
+Your task: craft the absolute best one-shot prompt for GPT Image 2 to produce the requested output.`;
+
+  const userPrompt = `Create an optimised GPT Image 2 prompt for:
+
+OUTPUT TYPE: ${type}
+SUBJECT: ${subject || 'Not specified — use brand context'}
+VISUAL STYLE: ${style}
+ASPECT RATIO: ${aspectRatio}
+IMAGE COUNT: ${count}${count > 1 ? ` — composite grid (${gridLayout[count] || count + ' panels'})` : ' — single image'}${panelBlock}
+FEATURES TO USE: ${features.length ? features.join(', ') : 'Standard'}
+BRAND CONTEXT: ${brand || 'Not specified'}
+ADDITIONAL INSTRUCTIONS: ${context || 'None'}
+
+Provide:
+1. **MAIN PROMPT** — the exact prompt to paste into ChatGPT or the API. Make it comprehensive, specific, and leverage GPT Image 2's unique strengths. Include the AR specification.
+
+2. **SYSTEM CONTEXT** — a brief system-level instruction to set up the generation context
+
+3. **TIPS** — 3-5 specific tips for getting the best result with this exact prompt, including any follow-up prompts to run after
+
+Format clearly with these three sections.`;
+
+  try {
+    const response = await callOpenRouter(userPrompt, state.textModel, 1200, systemPrompt);
+    thinkingBar.style.display = 'none';
+    
+    // Parse response sections
+    const mainMatch = response.match(/(?:MAIN PROMPT|1\.|Prompt:)([\s\S]*?)(?=SYSTEM CONTEXT|2\.|TIPS|$)/i);
+    const systemMatch = response.match(/(?:SYSTEM CONTEXT|2\.)([\s\S]*?)(?=TIPS|3\.|$)/i);
+    const tipsMatch = response.match(/(?:TIPS|3\.)([\s\S]*?)$/i);
+    
+    const mainPrompt = mainMatch ? mainMatch[1].trim().replace(/^\*\*|\*\*$/g, '').replace(/^"|"$/g, '').trim() : response;
+    const sysPrompt = systemMatch ? systemMatch[1].trim() : 'Generate the highest quality image possible for social media use.';
+    const tips = tipsMatch ? tipsMatch[1].trim() : '';
+    
+    document.getElementById('promptOutput').innerHTML = mainPrompt + '<button class="copy-btn" onclick="copyPrompt(\'promptOutput\')">📋 Copy</button>';
+    document.getElementById('systemOutput').innerHTML = sysPrompt + '<button class="copy-btn" onclick="copyPrompt(\'systemOutput\')">📋 Copy</button>';
+    document.getElementById('tipsOutput').innerHTML = tips.replace(/\n/g, '<br>');
+    
+    // Pre-fill generate panel
+    document.getElementById('genPrompt').value = mainPrompt;
+    
+  } catch(e) {
+    thinkingBar.style.display = 'none';
+    document.getElementById('promptOutput').innerHTML = `<span style="color: var(--danger);">❌ Error: ${e.message}</span><button class="copy-btn" onclick="copyPrompt('promptOutput')">📋 Copy</button>`;
+  }
+}
+
+function sendToGenerate() {
+  const prompt = document.getElementById('promptOutput').textContent.replace('📋 Copy', '').trim();
+  document.getElementById('genPrompt').value = prompt;
+  showPanel('generate');
+}
+
+function copyPrompt(id) {
+  const text = document.getElementById(id).textContent.replace('📋 Copy', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector(`#${id} .copy-btn`);
+    if (btn) { btn.textContent = '✅ Copied!'; setTimeout(() => btn.textContent = '📋 Copy', 2000); }
+  });
+}
+
+function savePromptToLibrary() {
+  const prompt = document.getElementById('promptOutput').textContent.replace('📋 Copy', '').trim();
+  state.savedPrompts.push({ prompt, type: state.selectedOutputType, date: new Date().toISOString() });
+  localStorage.setItem('cs_prompts', JSON.stringify(state.savedPrompts));
+  alert('✅ Prompt saved to library!');
+}
+
+function clearPromptBuilder() {
+  document.getElementById('promptSubject').value = '';
+  document.getElementById('promptContext').value = '';
+  document.getElementById('promptARCustom').value = '';
+  document.querySelectorAll('#featureTags .tag').forEach(t => { t.className = 'tag tag-outline'; });
+  document.getElementById('promptResultCard').style.display = 'none';
+  document.querySelectorAll('.gs-opt').forEach(o => o.classList.remove('selected'));
+  document.querySelector('.gs-opt[data-count="1"]').classList.add('selected');
+  state.selectedCount = 1;
+}
+
+function switchPromptTab(btn, tab) {
+  document.querySelectorAll('.tab-strip .tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('promptTabMain').style.display = tab === 'main' ? 'block' : 'none';
+  document.getElementById('promptTabSystem').style.display = tab === 'system' ? 'block' : 'none';
+  document.getElementById('promptTabTips').style.display = tab === 'tips' ? 'block' : 'none';
+}
+
+// ─────────────────────────────────────────────
+// IMAGE GENERATION
+// ─────────────────────────────────────────────
+async function generateImage() {
+  if (!state.apiKey) { alert('Please set your OpenRouter API key first'); showPanel('setup'); return; }
+  
+  const prompt = document.getElementById('genPrompt').value.trim();
+  if (!prompt) { alert('Please enter a prompt'); return; }
+  
+  const model = document.getElementById('genModel').value;
+  const size = document.getElementById('genSize').value;
+  const quality = document.getElementById('genQuality').value;
+  const n = parseInt(document.getElementById('genN').value);
+  
+  const btn = document.getElementById('generateBtn');
+  const spinner = document.getElementById('genSpinner');
+  const status = document.getElementById('genStatus');
+  const errDiv = document.getElementById('genError');
+  
+  btn.disabled = true;
+  spinner.style.display = 'flex';
+  status.textContent = 'Generating...';
+  errDiv.style.display = 'none';
+  
+  try {
+    // OpenRouter image generation endpoint
+    const [width, height] = size.split('x').map(Number);
+    
+    const res = await fetch('https://openrouter.ai/api/v1/images/generations', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${state.apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': window.location.href,
+        'X-Title': 'Campaign Studio'
+      },
+      body: JSON.stringify({
+        model,
+        prompt,
+        n,
+        size,
+        quality,
+        response_format: 'url'
+      })
+    });
+    
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
+    }
+    
+    const data = await res.json();
+    const images = data.data || [];
+    
+    if (!images.length) throw new Error('No images returned');
+    
+    // Render results
+    const resultCard = document.getElementById('genResultCard');
+    const grid = document.getElementById('outputGrid');
+    resultCard.style.display = 'block';
+    resultCard.classList.add('fadeIn');
+    
+    images.forEach((img, i) => {
+      const url = img.url || img.b64_json;
+      const src = img.b64_json ? `data:image/png;base64,${img.b64_json}` : url;
+      
+      const card = document.createElement('div');
+      card.className = 'output-card fadeIn';
+      card.innerHTML = `
+        <img src="${src}" alt="Generated image ${i+1}" loading="lazy" onerror="this.style.display='none'">
+        <div class="output-card-body">
+          <div class="output-card-label">Image ${i+1} • ${model.split('/')[1]}</div>
+          <div class="output-card-actions">
+            <button onclick="downloadImage('${src}', 'campaign-image-${Date.now()}-${i}.png')">⬇️ Save</button>
+            <button onclick="copyImageUrl('${src}')">🔗 Copy URL</button>
+          </div>
+        </div>`;
+      grid.prepend(card);
+      
+      // Add to gallery
+      state.gallery.push({ src, prompt: prompt.substring(0, 60), date: new Date().toLocaleTimeString() });
+      updateGallery();
+    });
+    
+    status.textContent = `✅ ${images.length} image(s) generated`;
+    
+  } catch(e) {
+    errDiv.style.display = 'flex';
+    errDiv.textContent = `❌ ${e.message}`;
+    status.textContent = '';
+  }
+  
+  btn.disabled = false;
+  spinner.style.display = 'none';
+}
+
+function updateGallery() {
+  const grid = document.getElementById('galleryGrid');
+  if (!grid || !state.gallery.length) return;
+  grid.innerHTML = '';
+  [...state.gallery].reverse().forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'output-card';
+    card.innerHTML = `
+      <img src="${item.src}" alt="Gallery image" loading="lazy">
+      <div class="output-card-body">
+        <div class="output-card-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.prompt}...</div>
+        <div style="font-size: 10px; color: var(--muted); margin-top: 4px;">${item.date}</div>
+        <div class="output-card-actions">
+          <button onclick="downloadImage('${item.src}', 'gallery-${i}.png')">⬇️ Save</button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function downloadImage(src, filename) {
+  const a = document.createElement('a');
+  a.href = src;
+  a.download = filename;
+  a.click();
+}
+
+function copyImageUrl(url) {
+  navigator.clipboard.writeText(url).then(() => alert('URL copied!'));
+}
+
+// ─────────────────────────────────────────────
+// CAMPAIGN PLANNER
+// ─────────────────────────────────────────────
+async function planCampaign() {
+  if (!state.apiKey) { alert('Please set your OpenRouter API key first'); showPanel('setup'); return; }
+  
+  const name = document.getElementById('campaignName').value || 'Untitled Campaign';
+  const goal = document.getElementById('campaignGoal').value;
+  const duration = document.getElementById('campaignDuration').value;
+  const volume = document.getElementById('campaignVolume').value;
+  const messages = document.getElementById('campaignMessages').value;
+  const customIdeas = document.getElementById('campaignCustomIdeas').value;
+  const contentTypes = getActiveTags('contentTypeTags');
+  const platforms = state.brandProfile?.platforms || ['Instagram', 'LinkedIn'];
+  const brand = buildBrandContext();
+  
+  const spinner = document.getElementById('campaignSpinner');
+  const statusText = document.getElementById('campaignStatusText');
+  spinner.style.display = 'flex';
+  
+  statusText.textContent = 'Planning your campaign strategy...';
+  
+  const systemPrompt = `You are an expert social media campaign strategist and GPT Image 2 prompt engineer. 
+You have deep knowledge of creating effective social media campaigns using AI-generated imagery.
+GPT Image 2 specific knowledge: perfect text rendering, character/product consistency, multi-image grids, any aspect ratio (use AR notation), web browsing capability, hex color support, font specification via name.`;
+
+  const planPrompt = `Create a comprehensive ${duration} social media campaign plan:
+
+CAMPAIGN: ${name}  
+GOAL: ${goal}  
+BRAND: ${brand || 'Not specified'}  
+KEY MESSAGES: ${messages || 'Not provided'}  
+PLATFORMS: ${platforms.join(', ')}  
+CONTENT TYPES: ${contentTypes.join(', ')}  
+VOLUME: ${volume}  
+DURATION: ${duration}${customIdeas ? `
+
+CUSTOM IDEAS FROM CLIENT (must be incorporated into the plan and prompts):
+${customIdeas}` : ''}
+
+Provide:
+## CAMPAIGN OVERVIEW
+- Campaign concept and creative direction (2-3 sentences)
+- Primary visual theme and style
+- Key visual elements to maintain consistency
+
+## CONTENT CALENDAR
+Create a week-by-week breakdown showing:
+- Post type (carousel/story/single/poster/infographic)  
+- Platform
+- Topic/subject
+- GPT Image 2 feature to leverage
+
+## TOP 5 HERO ASSET PROMPTS
+For each, write a complete GPT Image 2 prompt that:
+- Specifies AR ratio with "AR X:Y"  
+- Uses exact hex colors if brand provided
+- Leverages multi-image grid where appropriate
+- Includes text rendering instructions for any on-image copy
+- Notes the thinking mode recommendation
+
+## QUICK WINS
+3 fast-to-produce content pieces that can be generated in minutes
+
+Format cleanly with markdown headings.`;
+
+  try {
+    statusText.textContent = 'Generating campaign plan...';
+    const planResult = await callOpenRouter(planPrompt, state.textModel, 2000, systemPrompt);
+    
+    const resultCard = document.getElementById('campaignResultCard');
+    const promptsCard = document.getElementById('campaignPromptsCard');
+    
+    resultCard.style.display = 'block';
+    resultCard.classList.add('fadeIn');
+    document.getElementById('campaignPlanOutput').innerHTML = `<div style="background: var(--surface2); border-radius: 10px; padding: 20px; font-size: 13px; line-height: 1.8; white-space: pre-wrap;">${planResult}</div>`;
+    
+    // Extract and display prompts for quick generation
+    statusText.textContent = 'Extracting image prompts...';
+    
+    const promptsPrompt = `From this campaign plan, extract ONLY the 5 image generation prompts. Format as a numbered list with just the prompts, nothing else:\n\n${planResult}`;
+    
+    try {
+      const promptsResult = await callOpenRouter(promptsPrompt, state.textModel, 800);
+      promptsCard.style.display = 'block';
+      
+      const lines = promptsResult.split('\n').filter(l => l.trim() && l.match(/^\d/));
+      let html = '';
+      lines.forEach((line, i) => {
+        const promptText = line.replace(/^\d+[\.\)]\s*/, '').trim();
+        html += `<div style="background: var(--surface2); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+          <div style="font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-transform: uppercase;">Hero Asset ${i+1}</div>
+          <div style="font-size: 13px; line-height: 1.7; margin-bottom: 8px;">${promptText}</div>
+          <button class="btn btn-primary" style="font-size: 12px; padding: 6px 12px;" onclick="quickGenerate(this, ${JSON.stringify(promptText).replace(/'/g, '&apos;')})">🖼️ Generate</button>
+        </div>`;
+      });
+      
+      document.getElementById('campaignPromptsOutput').innerHTML = html || `<div style="color: var(--muted); font-size: 13px;">See the campaign plan above for prompts.</div>`;
+    } catch(e) {
+      promptsCard.style.display = 'none';
+    }
+    
+  } catch(e) {
+    document.getElementById('campaignResultCard').style.display = 'block';
+    document.getElementById('campaignPlanOutput').innerHTML = `<div class="alert alert-error">❌ ${e.message}</div>`;
+  }
+  
+  spinner.style.display = 'none';
+}
+
+async function quickGenerate(btn, prompt) {
+  if (!state.apiKey) { alert('Please set your API key'); return; }
+  const n = state.batchSize || 1;
+  btn.disabled = true;
+  btn.textContent = n > 1 ? `⏳ Generating ×${n}...` : '⏳ Generating...';
+
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/images/generations', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${state.apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': window.location.href,
+        'X-Title': 'Campaign Studio'
+      },
+      body: JSON.stringify({ model: state.imageModel, prompt, n, size: '1024x1024', quality: 'hd' })
+    });
+
+    if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Generation failed'); }
+    const data = await res.json();
+    const images = data.data;
+    if (!images || images.length === 0) throw new Error('No images returned');
+
+    const grid = document.createElement('div');
+    grid.className = `batch-grid n${images.length}`;
+
+    images.forEach((img, i) => {
+      const src = img.b64_json ? `data:image/png;base64,${img.b64_json}` : img.url;
+      state.gallery.push({ src, prompt: prompt.substring(0, 60), date: new Date().toLocaleTimeString() });
+      const safePrompt = JSON.stringify(prompt);
+      const fname = `gen-${Date.now()}-${i}.png`;
+      const wrap = document.createElement('div');
+      wrap.className = 'batch-img-wrap';
+      wrap.innerHTML = `<img src="${src}" loading="lazy">`;
+      const actions = document.createElement('div');
+      actions.className = 'batch-img-actions';
+      const dlBtn = document.createElement('button');
+      dlBtn.textContent = '⬇️ Download';
+      dlBtn.onclick = () => downloadImage(src, fname);
+      const cpBtn = document.createElement('button');
+      cpBtn.textContent = '📋 Copy Prompt';
+      cpBtn.onclick = () => { navigator.clipboard.writeText(prompt); cpBtn.textContent = '✓ Copied'; };
+      actions.appendChild(dlBtn);
+      actions.appendChild(cpBtn);
+      wrap.appendChild(actions);
+      grid.appendChild(wrap);
+    });
+
+    updateGallery();
+    btn.parentElement.insertBefore(grid, btn.nextSibling);
+    btn.textContent = `✅ ${images.length} image${images.length > 1 ? 's' : ''} generated`;
+
+  } catch(e) {
+    btn.textContent = `❌ ${e.message}`;
+    btn.style.background = 'rgba(255,71,87,0.15)';
+    btn.disabled = false;
+  }
+}
+
+function setBatch(n) {
+  state.batchSize = n;
+  [1, 2, 4].forEach(v => {
+    const el = document.getElementById(`batch${v}`);
+    if (!el) return;
+    const active = v === n;
+    el.style.background  = active ? 'var(--accent)' : '';
+    el.style.color       = active ? 'white'         : '';
+    el.style.borderColor = active ? 'var(--accent)'  : '';
+  });
+}
+
+async function generateAllCampaignImages() {
+  alert('This will generate all campaign prompt images. Each generation uses API credits. Click OK to proceed.');
+  const btns = document.querySelectorAll('#campaignPromptsOutput .btn-primary');
+  for (const btn of btns) {
+    if (btn.textContent.includes('Generate')) {
+      btn.click();
+      await new Promise(r => setTimeout(r, 3000)); // Rate limit spacing
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
+// API HELPER
+// ─────────────────────────────────────────────
+async function callOpenRouter(userMessage, model, maxTokens = 1000, systemMessage = '') {
+  const messages = [];
+  if (systemMessage) messages.push({ role: 'system', content: systemMessage });
+  messages.push({ role: 'user', content: userMessage });
+  
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${state.apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': window.location.href,
+      'X-Title': 'Campaign Studio'
+    },
+    body: JSON.stringify({
+      model,
+      messages,
+      max_tokens: maxTokens,
+      temperature: 0.7
+    })
+  });
+  
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error ${res.status}`);
+  }
+  
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || '';
+}
+
+// ══════════════════════════════════════════════
+// CAMPAIGN MODE SWITCHER
+// ══════════════════════════════════════════════
+function switchCampaignMode(mode) {
+  document.getElementById('mode-social').style.display  = mode === 'social'  ? '' : 'none';
+  document.getElementById('mode-website').style.display = mode === 'website' ? '' : 'none';
+  document.getElementById('tab-social').classList.toggle('active',  mode === 'social');
+  document.getElementById('tab-website').classList.toggle('active', mode === 'website');
+}
+
+// ══════════════════════════════════════════════
+// WEBSITE PHOTO SHOOT PLANNER
+// ══════════════════════════════════════════════
+async function planWebsiteShoot() {
+  if (!state.apiKey) { alert('Please set your OpenRouter API key first'); showPanel('setup'); return; }
+
+  const siteName     = document.getElementById('webSiteName').value || state.brandProfile?.brandName || 'My Brand';
+  const siteType     = document.getElementById('webSiteType').value;
+  const sections     = getActiveTags('webSectionTags');
+  const styles       = getActiveTags('webStyleTags');
+  const notes        = document.getElementById('webShootNotes').value;
+  const customIdeas  = document.getElementById('webCustomIdeas').value;
+  const products     = getProductLineup();
+  const brand        = buildBrandContext();
+
+  const spinner    = document.getElementById('webShootSpinner');
+  const statusText = document.getElementById('webShootStatusText');
+  spinner.style.display = 'flex';
+  document.getElementById('webShootResultCard').style.display = 'none';
+  document.getElementById('webSizeGuideCard').style.display   = 'none';
+
+  statusText.textContent = 'Analysing brand and planning shoot...';
+
+  const sys = `You are an expert brand photographer and GPT Image 2 prompt engineer. 
+You create complete website photo shoot plans that cover every visual a modern web presence needs.
+GPT Image 2 tips: perfect text rendering, specify "AR W:H" for aspect ratio, use exact hex colours, specify lighting and lens, name fonts, use "--style raw" for photorealistic images, describe location/background precisely.`;
+
+  const prompt = `Create a complete website photo shoot plan for:
+
+BRAND: ${siteName}
+SITE TYPE: ${siteType}
+PAGE SECTIONS: ${sections.join(', ')}
+PHOTOGRAPHY STYLE: ${styles.join(', ')}
+NOTES: ${notes || 'None'}
+${products ? `
+PRODUCT LINEUP (use these EXACT product names, colours and backgrounds in every product prompt):
+${products}
+` : ''}${customIdeas ? `
+SPECIFIC SHOTS / IDEAS REQUESTED BY CLIENT (you MUST include these, turning each into a fully detailed GPT Image 2 prompt):
+${customIdeas}
+` : ''}BRAND CONTEXT:
+${brand || 'No brand files uploaded — use juice/beverage brand best practices'}
+
+For EACH page section requested, output:
+
+### [SECTION NAME] | [GPT GENERATE SIZE e.g. 1792×1024]
+**Shots needed:** [number]
+
+**Shot 1 — [short name]**
+Description: [what to show, mood, setting, 1-2 sentences]
+Prompt: [complete GPT Image 2 ready prompt, highly detailed, includes AR, colours, lighting, style, any text to render]
+
+**Shot 2 — [short name]** (if needed)
+...
+
+For PWA Icons & Favicon: provide one icon prompt at AR 1:1 that captures the brand mark.
+For OG/Sharing: provide one prompt at AR 1.91:1 (1200×630).
+
+Be specific. Reference actual brand colours, product names, and ingredients if provided in the brand context.`;
+
+  try {
+    statusText.textContent = 'AI is designing your photo plan...';
+    const result = await callOpenRouter(prompt, state.textModel, 3000, sys);
+
+    statusText.textContent = 'Rendering shoot plan...';
+    renderWebsiteShootCards(result);
+
+    const resultCard = document.getElementById('webShootResultCard');
+    resultCard.style.display = 'block';
+    resultCard.classList.add('fadeIn');
+
+    // Build size guide based on selected sections
+    showWebSizeGuide(sections);
+    document.getElementById('webSizeGuideCard').style.display = 'block';
+
+  } catch(e) {
+    document.getElementById('webShootResultCard').style.display = 'block';
+    document.getElementById('webShootPlanOutput').innerHTML = `<div class="alert alert-error">❌ ${e.message}</div>`;
+  }
+
+  spinner.style.display = 'none';
+}
+
+function renderWebsiteShootCards(markdown) {
+  const output = document.getElementById('webShootPlanOutput');
+  // Split by ### headings
+  const sections = markdown.split(/\n(?=###\s)/g).filter(s => s.trim());
+
+  let html = '';
+  sections.forEach(sec => {
+    const lines      = sec.split('\n');
+    const headLine   = lines[0].replace(/^###\s*/, '');
+    const [secTitle, genSize] = headLine.split('|').map(s => s.trim());
+    const body       = lines.slice(1).join('\n');
+
+    // Count shots
+    const shotMatches = (body.match(/\*\*Shot \d/g) || []).length;
+
+    // Parse individual shots
+    const shotBlocks = body.split(/\n(?=\*\*Shot \d)/g).filter(s => s.trim());
+    let shotsHtml = '';
+    shotBlocks.forEach(block => {
+      const shotLabel   = (block.match(/\*\*(.+?)\*\*/) || ['',''])[1];
+      const descMatch   = block.match(/Description:\s*([^\n]+(?:\n(?!Prompt:)[^\n]+)*)/i);
+      const promptMatch = block.match(/Prompt:\s*([\s\S]+?)(?=\n\*\*Shot|\n\*\*|$)/i);
+      const desc   = descMatch   ? descMatch[1].trim()   : '';
+      const prompt = promptMatch ? promptMatch[1].trim() : '';
+      if (!prompt) return;
+      shotsHtml += `
+        <div class="photo-shot-row">
+          <div class="photo-shot-label">${shotLabel || 'Shot'}</div>
+          ${desc ? `<div class="photo-shot-desc">${desc}</div>` : ''}
+          <div class="photo-shot-prompt">${prompt}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-secondary" style="font-size:12px;padding:5px 12px;" onclick="copyText(${JSON.stringify(prompt).replace(/'/g,'&apos;')})">📋 Copy Prompt</button>
+            <button class="btn btn-primary" style="font-size:12px;padding:5px 12px;" onclick="quickGenerate(this, ${JSON.stringify(prompt).replace(/'/g,'&apos;')})">🖼️ Generate</button>
+          </div>
+        </div>`;
+    });
+
+    html += `
+      <div class="photo-cat-card">
+        <div class="photo-cat-header">
+          <div class="photo-cat-title">📷 ${secTitle}</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            ${genSize ? `<span style="font-size:11px;background:var(--surface);border:1px solid var(--border);padding:2px 8px;border-radius:6px;color:var(--muted);font-family:monospace;">${genSize}</span>` : ''}
+            ${shotMatches ? `<span class="photo-cat-count">${shotMatches} shot${shotMatches>1?'s':''}</span>` : ''}
+          </div>
+        </div>
+        ${shotsHtml || `<div style="font-size:13px;white-space:pre-wrap;line-height:1.7;color:var(--muted);">${body.trim()}</div>`}
+      </div>`;
+  });
+
+  output.innerHTML = html || `<div class="alert alert-info">Plan generated — see raw text above</div><pre style="font-size:12px;white-space:pre-wrap;">${markdown}</pre>`;
+}
+
+// ══════════════════════════════════════════════
+// WEB & PWA EXPORT SIZE GUIDE
+// ══════════════════════════════════════════════
+function showWebSizeGuide(activeSections) {
+  const has = s => activeSections.some(a => a.toLowerCase().includes(s.toLowerCase()));
+
+  const sizeCategories = [
+    {
+      show: has('Hero') || has('Banner'),
+      icon: '🏠', title: 'Hero / Banner',
+      genAt: '1792×1024 (AR 16:9)',
+      note: 'Generate at 1792×1024 then crop/resize for each breakpoint',
+      sizes: [
+        { label:'1920×1080', cls:'primary', note:'Full desktop' },
+        { label:'1440×810',  cls:'', note:'Large laptop' },
+        { label:'1280×720',  cls:'', note:'Standard laptop' },
+        { label:'768×432',   cls:'', note:'Tablet' },
+        { label:'390×680',   cls:'', note:'Mobile portrait (crop)' },
+      ]
+    },
+    {
+      show: has('Product'),
+      icon: '🛍️', title: 'Product Photos',
+      genAt: '1024×1024 (AR 1:1)',
+      note: 'Generate square then scale down for thumbnails',
+      sizes: [
+        { label:'1200×1200', cls:'primary', note:'Full res' },
+        { label:'800×800',   cls:'', note:'Gallery' },
+        { label:'600×600',   cls:'', note:'Listing' },
+        { label:'400×400',   cls:'', note:'Small thumb' },
+        { label:'200×200',   cls:'', note:'Micro / cart' },
+      ]
+    },
+    {
+      show: has('Ingredient') || has('Lifestyle') || has('Process'),
+      icon: '🌿', title: 'Lifestyle / Ingredient',
+      genAt: '1792×1024 (AR 3:2)',
+      note: 'Generate landscape then resize for editorial use',
+      sizes: [
+        { label:'1200×800',  cls:'primary', note:'Section image' },
+        { label:'800×533',   cls:'', note:'Card image' },
+        { label:'600×400',   cls:'', note:'Thumbnail' },
+        { label:'400×267',   cls:'', note:'Mini card' },
+      ]
+    },
+    {
+      show: has('About') || has('Team'),
+      icon: '👥', title: 'About / Team',
+      genAt: '1024×1024 (AR 1:1)',
+      note: 'Square crops work for both circle avatars and rectangular cards',
+      sizes: [
+        { label:'800×800',   cls:'primary', note:'Full portrait' },
+        { label:'400×400',   cls:'', note:'Avatar / card' },
+        { label:'200×200',   cls:'', note:'Micro avatar' },
+      ]
+    },
+    {
+      show: has('Blog'),
+      icon: '📝', title: 'Blog Thumbnails',
+      genAt: '1792×1024 (AR 16:9)',
+      note: 'Same crop as hero tiles',
+      sizes: [
+        { label:'1200×628',  cls:'primary', note:'Cover' },
+        { label:'800×450',   cls:'', note:'Card' },
+        { label:'400×225',   cls:'', note:'Related thumb' },
+      ]
+    },
+    {
+      show: has('OG') || has('Sharing'),
+      icon: '🔗', title: 'OG / Social Sharing',
+      genAt: '1024×536 (AR 1.91:1)',
+      note: 'Used when pages are shared on Facebook, Twitter, LinkedIn, iMessage',
+      sizes: [
+        { label:'1200×630',  cls:'og primary', note:'Standard OG / Twitter card' },
+        { label:'1080×1080', cls:'og', note:'Instagram square share' },
+        { label:'1080×1920', cls:'og', note:'Instagram / TikTok Story' },
+      ]
+    },
+    {
+      show: has('PWA') || has('Favicon') || has('Icon'),
+      icon: '📱', title: 'PWA Icons & Favicon',
+      genAt: '1024×1024 (AR 1:1) — icon/logo mark only',
+      note: 'Single high-res icon, then downscale to all sizes',
+      sizes: [
+        { label:'512×512',   cls:'pwa primary', note:'manifest.json maskable' },
+        { label:'192×192',   cls:'pwa', note:'manifest.json standard' },
+        { label:'180×180',   cls:'pwa', note:'Apple touch icon' },
+        { label:'144×144',   cls:'pwa', note:'MS tile' },
+        { label:'96×96',     cls:'pwa', note:'Chrome' },
+        { label:'72×72',     cls:'pwa', note:'' },
+        { label:'48×48',     cls:'pwa', note:'' },
+        { label:'32×32',     cls:'pwa', note:'Favicon' },
+        { label:'16×16',     cls:'pwa', note:'Favicon small' },
+      ]
+    },
+  ];
+
+  let html = '';
+  sizeCategories.filter(c => c.show).forEach(cat => {
+    const chips = cat.sizes.map(s =>
+      `<span class="size-chip ${s.cls}" title="${s.note}">${s.label}</span>`
+    ).join('');
+    html += `
+      <div class="size-cat">
+        <div class="size-cat-title">${cat.icon} ${cat.title}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-family:monospace;">Generate at: <strong>${cat.genAt}</strong></div>
+        <div class="size-chips">${chips}</div>
+        <div class="size-gen-note">${cat.note}</div>
+      </div>`;
+  });
+
+  document.getElementById('webSizeGuideContent').innerHTML = html;
+
+  // Build manifest snippet
+  const iconSizes = [512, 192, 180, 144, 96, 72, 48, 32, 16];
+  const manifestIcons = iconSizes.map(sz => `  {
+    "src": "/icons/icon-${sz}x${sz}.png",
+    "sizes": "${sz}x${sz}",
+    "type": "image/png",
+    "purpose": "${sz >= 192 ? 'any maskable' : 'any'}"
+  }`).join(',\n');
+  document.getElementById('manifestSnippet').textContent = `"icons": [\n${manifestIcons}\n]`;
+}
+
+function copyManifest() {
+  const text = document.getElementById('manifestSnippet').textContent;
+  navigator.clipboard.writeText(text).then(() => alert('Manifest icons array copied!'));
+}
+
+// ══════════════════════════════════════════════
+// PRODUCT LINEUP HELPERS
+// ══════════════════════════════════════════════
+function getProductLineup() {
+  const rows = document.querySelectorAll('#productLineupRows .product-row');
+  const bottleType = document.getElementById('bottleTypeInput').value || 'clear plastic, black screw-top lid';
+  const lines = [];
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input[type="text"]');
+    const name  = inputs[0]?.value.trim();
+    const color = inputs[1]?.value.trim();
+    const bg    = inputs[2]?.value.trim();
+    if (name) lines.push(`- ${name}: ${color} juice, bottle is ${bottleType}, best background: ${bg}`);
+  });
+  return lines.length ? `Bottle type for ALL products: ${bottleType}\n` + lines.join('\n') : '';
+}
+
+function addProductRow() {
+  const container = document.getElementById('productLineupRows');
+  const row = document.createElement('div');
+  row.className = 'product-row';
+  row.innerHTML = `
+    <input type="color" class="product-row-swatch" value="#6c63ff">
+    <input type="text" placeholder="Product name">
+    <input type="text" placeholder="Juice colour">
+    <input type="text" placeholder="Best background">
+    <button class="product-row-del" onclick="removeProductRow(this)">×</button>`;
+  container.appendChild(row);
+}
+
+function removeProductRow(btn) {
+  const rows = document.querySelectorAll('#productLineupRows .product-row');
+  if (rows.length <= 1) return; // always keep at least one
+  btn.closest('.product-row').remove();
+}
+</script>
+</body>
+</html>

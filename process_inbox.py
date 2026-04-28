@@ -541,10 +541,8 @@ QM_NAV = f"""
     </a>
     <div class="nav-links">
       <a href="{SITE_URL}">Home</a>
-      <a href="{SITE_URL}#models">Models</a>
-      <a href="{SITE_URL}#news">News</a>
-      <a href="{SITE_URL}#tools">Tools</a>
-      <a href="{SITE_URL}/reports/">Reports</a>
+      <a href="{SITE_URL}#models">AI Models</a>
+      <a href="{SITE_URL}/reports/">Articles</a>
     </div>
   </div>
 </nav>
@@ -555,9 +553,9 @@ QM_FOOTER = f"""
   <div class="container">
     <p>
       <strong style="color:rgba(255,255,255,.6);font-family:var(--ff-display);font-size:.7rem">AI.QUANTUMMERLIN.COM</strong><br>
-      Intelligence extracted from real communities.<br>
+      Independent AI analysis — real data, no sponsored content.<br>
       <a href="{SITE_URL}">Home</a> &nbsp;·&nbsp;
-      <a href="{SITE_URL}/methodology.html">Methodology</a> &nbsp;·&nbsp;
+      <a href="{SITE_URL}/reports/">Articles</a> &nbsp;·&nbsp;
       <a href="https://quantummerlin.com" target="_blank" rel="noopener">🔮 quantummerlin.com</a><br>
       &copy; {datetime.now().year} Quantum Merlin
     </p>
@@ -614,44 +612,59 @@ def fmt_num(n):
 def build_report(a: dict) -> str:
     slug       = slugify(a["topic_name"])
     topic      = a["topic_name"].title()
-    is_ai      = a["is_ai"]
-    ai_tag     = "AI · " if is_ai else ""
-    eyebrow    = f"✦ {ai_tag}INTELLIGENCE REPORT · {TODAY}"
-    title_line = f"What {fmt_num(a['total_words'])}+ words on {topic} actually reveal"
+    is_yt      = a.get("is_yt", False)
+    year       = datetime.now().year
 
-    # Top posts HTML
+    # SEO-focused title and intro
+    if is_yt:
+        page_title  = f"{topic} Review {year}: What Creators Are Actually Saying"
+        meta_desc   = (f"We went through {fmt_num(a['total_posts'])} videos about {topic} "
+                       f"so you don't have to. Here's what creators, reviewers, and early adopters "
+                       f"are actually saying — real opinions, no marketing fluff.")
+        intro_p     = (f"There's a lot of hype around {topic}. But what are the people who "
+                       f"actually use it saying? We went through {fmt_num(a['total_posts'])} "
+                       f"videos and pulled out the real reactions — the honest verdict from "
+                       f"creators who've put it through its paces.")
+        posts_h2    = f"What Creators Are Publishing About {topic}"
+        posts_sub   = f"The videos generating the most discussion — where real opinions form."
+        source_note = f"{fmt_num(a['total_posts'])} videos analysed · {TODAY}"
+    else:
+        page_title  = f"{topic}: What People Are Actually Saying in {year}"
+        meta_desc   = (f"We read thousands of real discussions about {topic} to find out what "
+                       f"people actually think. Honest insights, real quotes, key themes — "
+                       f"no sponsored content.")
+        intro_p     = (f"We went through the real conversations people are having about {topic} "
+                       f"— real threads, honest opinions, unfiltered debates. "
+                       f"Here's what the community is actually saying, without the marketing layer.")
+        posts_h2    = f"What People Are Posting About {topic}"
+        posts_sub   = f"The discussions that kept coming up — where the real opinions live."
+        source_note = f"{fmt_num(a['total_posts'])} discussions analysed · {TODAY}"
+
+    # Top posts (no score badges)
     top_posts_html = ""
     for i, p in enumerate(a["top_posts"][:6], 1):
-        title = p["title"] or p["body"][:80]
-        body  = p["body"][:220].replace("<","&lt;").replace(">","&gt;") if p["body"] else ""
-        score = fmt_num(p["score"])
+        title_t = (p["title"] or p["body"][:80]).replace("<","&lt;").replace(">","&gt;")
+        body    = p["body"][:220].replace("<","&lt;").replace(">","&gt;") if p["body"] else ""
         top_posts_html += f"""
         <div class="card card-{'cyan' if i<=2 else 'purple' if i<=4 else 'gold'}">
-          <div class="card-hd">
-            <span class="card-name">#{i} — {title[:90]}</span>
-            <span class="card-tag">▲ {score}</span>
-          </div>
-          <p style="font-size:.84rem;color:var(--txt2)">{body}{'…' if body else ''}</p>
+          <span class="card-name">{title_t[:90]}</span>
+          {"<p style='font-size:.84rem;color:var(--txt2);margin-top:6px'>" + body + "…</p>" if body else ""}
         </div>"""
 
-    # Top verbatims HTML
+    # Verbatims (no upvote scores)
     verbatims_html = ""
-    pill_styles = ["quote","quote-gold","quote-pink","quote","quote-gold","quote-pink"]
+    pill_styles = ["quote","quote-gold","quote-pink","quote","quote-gold","quote-pink","quote","quote-gold"]
     for i, c in enumerate(a["scored_comments"][:10]):
-        body  = c["body"][:320].replace("<","&lt;").replace(">","&gt;")
-        score = c.get("score",0)
-        ps    = pill_styles[i % len(pill_styles)]
+        body = c["body"][:320].replace("<","&lt;").replace(">","&gt;")
+        ps   = pill_styles[i % len(pill_styles)]
         verbatims_html += f"""
-        <div class="{ps}">
-          {body}{'…' if len(c['body'])>320 else ''}
-          {f'<span class="quote-score">▲ {fmt_num(score)} upvotes</span>' if score else ''}
-        </div>"""
+        <div class="{ps}">{body}{'…' if len(c['body'])>320 else ''}</div>"""
 
-    # Patterns HTML
+    # Patterns (no frequency counts shown)
     patterns_html = "<div class='patterns'>"
-    for i, (phrase, cnt) in enumerate(a["bigrams"][:18]):
+    for i, (phrase, _) in enumerate(a["bigrams"][:18]):
         pcls = PILL_CLASSES[i % len(PILL_CLASSES)]
-        patterns_html += f"<span class='pattern-pill {pcls}'>{phrase} ({cnt})</span>"
+        patterns_html += f"<span class='pattern-pill {pcls}'>{phrase}</span>"
     patterns_html += "</div>"
 
     # Key sentences
@@ -659,41 +672,30 @@ def build_report(a: dict) -> str:
     for s in a["top_sentences"][:8]:
         sentences_html += f"<div class='quote'>{s.replace('<','&lt;').replace('>','&gt;')}</div>"
 
-    # Stats — labels differ for YT vs Reddit
-    _lbl_posts    = "Videos"        if a.get("is_yt") else "Posts"
-    _lbl_comments = "Channels"      if a.get("is_yt") else "Comments"
-    _lbl_score    = "Total Views"   if a.get("is_yt") else "Total Upvotes"
-    stats_html = f"""
-    <div class="stats-grid">
-      <div class="stat stat-cyan"><span class="stat-val">{fmt_num(a['total_words'])}</span><span class="stat-lbl">Words Analysed</span></div>
-      <div class="stat stat-gold"><span class="stat-val">{fmt_num(a['total_posts'])}</span><span class="stat-lbl">{_lbl_posts}</span></div>
-      <div class="stat stat-pink"><span class="stat-val">{fmt_num(a['total_comments']) if not a.get('is_yt') else fmt_num(len(set(p['author'] for p in a.get('top_posts',[]))))}</span><span class="stat-lbl">{_lbl_comments}</span></div>
-      <div class="stat stat-cyan"><span class="stat-val">{fmt_num(a['total_score'])}</span><span class="stat-lbl">{_lbl_score}</span></div>
-    </div>"""
-
-    # Hooks for report CTA
-    hooks_preview = "".join(
-        f"<div class='hook-card'><span class='hook-num'>H{i+1}</span><span class='hook-text'>{h}</span><button class='hook-copy-btn'>COPY</button></div>"
-        for i, h in enumerate(a["hooks"][:4])
-    )
-
-    # Trigram signals
+    # Topic signals
     signals_html = "<div class='topic-cloud'>"
-    for i, (phrase, cnt) in enumerate(a["trigrams"][:12]):
+    for i, (phrase, _) in enumerate(a["trigrams"][:12]):
         cls = "hot" if i < 4 else ""
         signals_html += f"<span class='topic-tag {cls}'>{phrase}</span>"
     signals_html += "</div>"
+
+    # Takeaways (hooks reframed as practical advice)
+    takeaways_html = "".join(
+        f"<div class='hook-card'><span class='hook-num'>#{i+1}</span>"
+        f"<span class='hook-text'>{h}</span></div>"
+        for i, h in enumerate(a["hooks"][:5])
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
-<title>{topic} Intelligence Report | {SITE_NAME}</title>
-<meta name="description" content="Deep intelligence extracted from {fmt_num(a['total_words'])}+ words in the {topic} community. Patterns, verbatims, hooks, and opportunities.">
+<title>{page_title} | {SITE_NAME}</title>
+<meta name="description" content="{meta_desc}">
 <link rel="canonical" href="{SITE_URL}/reports/{slug}.html">
-<meta property="og:title" content="{topic} Intelligence Report | {SITE_NAME}">
-<meta property="og:description" content="What {fmt_num(a['total_words'])}+ words on {topic} actually reveal.">
+<meta property="og:title" content="{page_title}">
+<meta property="og:description" content="{meta_desc}">
 <meta property="og:image" content="{LOGO_URL}">
 <meta property="og:url" content="{SITE_URL}/reports/{slug}.html">
 <meta property="og:site_name" content="{SITE_NAME}">
@@ -706,20 +708,10 @@ def build_report(a: dict) -> str:
 
 <section class="report-hero">
   <div class="container">
-    <div class="hero-eyebrow">{eyebrow}</div>
-    <h1 class="hero-title">{title_line}</h1>
-    <p class="hero-sub">
-      Intelligence extracted from {fmt_num(a['total_posts'])} posts and {fmt_num(a['total_comments'])} comments
-      in the <strong style="color:var(--cyan)">{topic}</strong> community.
-      {fmt_num(a['total_words'])}+ words. {fmt_num(a['total_score'])} collective upvotes.
-      The signal buried in the noise — surfaced.
-    </p>
-    <div class="hero-stats">
-      <div class="hs"><span class="hs-val">{fmt_num(a['total_words'])}</span><span class="hs-lbl">Words</span></div>
-      <div class="hs"><span class="hs-val">{fmt_num(a['total_posts'])}</span><span class="hs-lbl">Posts</span></div>
-      <div class="hs"><span class="hs-val">{fmt_num(a['total_comments'])}</span><span class="hs-lbl">Comments</span></div>
-      <div class="hs"><span class="hs-val">{fmt_num(a['total_score'])}</span><span class="hs-lbl">Upvotes</span></div>
-    </div>
+    <div class="hero-eyebrow">✦ {"AI TOOLS" if a["is_ai"] else "COMMUNITY RESEARCH"} · {TODAY}</div>
+    <h1 class="hero-title">{page_title.replace(f" | {SITE_NAME}", "")}</h1>
+    <p class="hero-sub">{intro_p}</p>
+    <p style="font-size:.72rem;color:var(--txt3);margin-top:14px;font-family:var(--ff-display);letter-spacing:.06em">{source_note}</p>
   </div>
 </section>
 
@@ -728,72 +720,55 @@ def build_report(a: dict) -> str:
 <div class="report-body">
 <div class="container">
 
-  <!-- SECTION 1: Overview Stats -->
+  <!-- What people are posting -->
   <div class="section">
-    <p class="sec-label">Section 01</p>
-    <h2 class="sec-title">The Numbers</h2>
-    <p class="sec-sub">What the raw data looks like before the patterns emerge.</p>
-    {stats_html}
-  </div>
-
-  <!-- SECTION 2: Top Posts -->
-  <div class="section">
-    <p class="sec-label">Section 02</p>
-    <h2 class="sec-title">Highest-Signal Posts</h2>
-    <p class="sec-sub">The posts that generated the most engagement — where the real conversations happened.</p>
+    <h2 class="sec-title">{posts_h2}</h2>
+    <p class="sec-sub">{posts_sub}</p>
     {top_posts_html}
   </div>
 
-  <!-- SECTION 3: Community Verbatims -->
+  <!-- What people are saying -->
   <div class="section">
-    <p class="sec-label">Section 03</p>
-    <h2 class="sec-title">What They're Actually Saying</h2>
-    <p class="sec-sub">Real quotes from the community, ranked by upvotes. These are not summaries — these are the exact words.</p>
+    <h2 class="sec-title">What People Are Saying</h2>
+    <p class="sec-sub">Real quotes pulled directly from the discussion — not summaries, not paraphrases.</p>
     {verbatims_html}
   </div>
 
   {ADSENSE_BLOCK}
 
-  <!-- SECTION 4: Patterns -->
+  <!-- Common themes -->
   <div class="section">
-    <p class="sec-label">Section 04</p>
-    <h2 class="sec-title">Recurring Language Patterns</h2>
-    <p class="sec-sub">Phrases that appeared repeatedly across the dataset — these are the mental models and vocabulary this community lives in.</p>
+    <h2 class="sec-title">Themes That Keep Coming Up</h2>
+    <p class="sec-sub">These phrases appeared repeatedly across the data — they represent the language and ideas this community keeps returning to.</p>
     {patterns_html}
   </div>
 
-  <!-- SECTION 5: Key Signals -->
+  <!-- Key insights -->
   <div class="section">
-    <p class="sec-label">Section 05</p>
-    <h2 class="sec-title">Key Sentences Extracted</h2>
-    <p class="sec-sub">The most information-dense statements pulled from the corpus — representing the community's core beliefs and pain points.</p>
+    <h2 class="sec-title">Key Insights</h2>
+    <p class="sec-sub">The most information-rich statements from the discussions — distilled.</p>
     {sentences_html}
   </div>
 
-  <!-- SECTION 6: Topic Signals -->
+  <!-- Topics being discussed -->
   <div class="section">
-    <p class="sec-label">Section 06</p>
-    <h2 class="sec-title">Emerging Topic Signals</h2>
-    <p class="sec-sub">Three-word phrases that appear as distinct topic clusters in the data.</p>
+    <h2 class="sec-title">Topics Being Discussed</h2>
+    <p class="sec-sub">Specific topic clusters that came up repeatedly in these conversations.</p>
     {signals_html}
   </div>
 
-  <!-- SECTION 7: Content Gold (Hooks) -->
+  <!-- Takeaways -->
   <div class="section">
-    <p class="sec-label">Section 07</p>
-    <h2 class="sec-title">Content Gold — Proven Hooks</h2>
-    <p class="sec-sub">Hook angles generated directly from this dataset. Based on what the community cares about most.</p>
-    {hooks_preview}
-    <p style="margin-top:16px;font-size:.82rem;color:var(--txt3)">
-      → Full social content pack: <a href="../inbox/processed/{slug}-social.html">view social pack</a>
-    </p>
+    <h2 class="sec-title">Key Takeaways</h2>
+    <p class="sec-sub">What this discussion data actually tells us — and what to do with it.</p>
+    {takeaways_html}
   </div>
 
   <!-- CTA -->
   <div class="cta-box">
-    <h3>⚡ Need a Custom Dataset Report?</h3>
-    <p>Drop your own community data and we'll extract the patterns, pain points, and content opportunities — formatted and ready to use.</p>
-    <a href="https://quantumtoolsmith.gumroad.com" class="cta-btn" target="_blank" rel="noopener">🔮 Order Custom Report</a>
+    <h3>🔮 More AI Analysis</h3>
+    <p>We publish regular deep-dives on AI tools, models, and what people are actually saying about them. No hype, no sponsored content.</p>
+    <a href="{SITE_URL}/reports/" class="cta-btn">Browse All Articles →</a>
   </div>
 
 </div>
