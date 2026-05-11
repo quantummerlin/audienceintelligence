@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>n8n for Beginners: The Complete Guide to AI Workflow Automation (2025) – Aether Intel</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="n8n is the most powerful free workflow automation tool available — and it's the backbone of most serious AI automation businesses. If you've heard about it b...">
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- HERO -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/articles/10-n8n-workflow-hero.png" alt="n8n for Beginners: The Complete Guide to AI Workflow Automation (2025)" class="article-hero-img" loading="eager" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/articles.html">Articles</a>
+            <span>&#x203a;</span>
+            <span>n8n for Beginners: The Complete Guide to AI Workflow Automation (2025)</span>
+          </nav>
+          <span class="badge badge-automation">Automation</span>
+          <h1 class="article-hero-title">n8n for Beginners: The Complete Guide to AI Workflow Automation (2025)</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 12, 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">8 min read</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="article-layout">
+      <div class="article-body">
+        <p>n8n is the most powerful free workflow automation tool available — and it's the backbone of most serious AI automation businesses. If you've heard about it but found the learning curve intimidating, this guide will get you from zero to running real automations in a single session.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">What Is n8n and Why Does It Matter?</h2>
+        
+        <p>n8n (pronounced "n-eight-n") is an open-source workflow automation platform that connects apps, services, and AI models together. Think of it as a visual programming environment where you connect blocks — each block being an action, a trigger, or a data transformation — to build automated workflows.</p>
+        
+        <p>The difference between n8n and tools like Zapier or Make:</p>
+        
+        <ul>
+          <li><strong>n8n is open-source and self-hostable</strong>: Run it on your own VPS for free, forever. Zapier charges $20-50+/month for equivalent functionality.</li>
+          <li><strong>n8n has no operation limits</strong>: Zapier and Make count every action. n8n self-hosted has unlimited operations.</li>
+          <li><strong>n8n has native AI integration</strong>: Built-in nodes for OpenAI, Anthropic, and any OpenAI-compatible endpoint (including OpenRouter).</li>
+          <li><strong>n8n supports complex logic</strong>: Conditional routing, loops, error handling, sub-workflows — things that require expensive tiers on other tools.</li>
+        </ul>
+        
+        <p>In the AI automation community, n8n consistently ranks as the most-used tool across all income methods. It's not just popular — it's genuinely essential infrastructure for anyone running AI-powered business operations.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Installing n8n: Two Options</h2>
+        
+        <h3 class="article-h3">Option A: Self-Hosted on VPS (Recommended)</h3>
+        
+        <p>The best approach for anyone serious about automation. Free, unlimited, fully controlled.</p>
+        
+        <p><strong>Requirements</strong>: A VPS (Hostinger KVM2 at $8.99/month works well), Ubuntu 20.04+, 1GB+ RAM.</p>
+        
+        <p>Install Node.js and n8n:</p>
+        
+        <pre><code class="language-bash"># Install Node.js 20.x
+        curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+        apt install nodejs -y
+        
+        # Install n8n globally
+        npm install -g n8n
+        
+        # Start n8n
+        n8n start</code></pre>
+        
+        <p>n8n will be available at <code>http://your-server-ip:5678</code></p>
+        
+        <p>For persistent operation, create a systemd service:</p>
+        
+        <pre><code class="language-bash">cat &gt; /etc/systemd/system/n8n.service &lt;&lt; 'EOF'
+        [Unit]
+        Description=n8n
+        After=network.target
+        
+        [Service]
+        Type=simple
+        User=root
+        ExecStart=/usr/bin/n8n start
+        Restart=always
+        RestartSec=10
+        Environment=N8N_PORT=5678
+        
+        [Install]
+        WantedBy=multi-user.target
+        EOF
+        
+        systemctl daemon-reload
+        systemctl enable n8n
+        systemctl start n8n</code></pre>
+        
+        <h3 class="article-h3">Option B: n8n Cloud (Paid, Easier)</h3>
+        
+        <p>If you don't want to manage a server, n8n Cloud starts at $20/month and includes hosting, updates, and support. The interface is identical to self-hosted. Good for beginners who want to test before committing to self-hosting.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Understanding n8n's Core Concepts</h2>
+        
+        <h3 class="article-h3">Workflows</h3>
+        
+        <p>A workflow is a series of connected nodes that execute in sequence. When triggered, n8n runs through each node in order, passing data from one to the next.</p>
+        
+        <p>Example simple workflow:</p>
+        
+        <ol>
+          <li><strong>Trigger</strong>: New email arrives in Gmail</li>
+          <li><strong>AI Node</strong>: Classify the email (urgent/normal/spam)</li>
+          <li><strong>Conditional</strong>: If urgent → send Slack alert; if normal → add to Notion task list</li>
+        </ol>
+        
+        <h3 class="article-h3">Nodes</h3>
+        
+        <p>Every block in n8n is a "node." There are three types:</p>
+        
+        <p><strong>Trigger nodes</strong>: Start the workflow. Examples: Schedule trigger (runs at a specific time), Webhook trigger (runs when an HTTP request arrives), Gmail trigger (runs when new email arrives).</p>
+        
+        <p><strong>Regular nodes</strong>: Do something and pass data forward. Examples: HTTP Request, Gmail, Google Sheets, Slack, AI Agent, OpenAI, etc.</p>
+        
+        <p><strong>Logic nodes</strong>: Control workflow flow. Examples: IF (conditional branching), Switch (multiple branches), Merge (combine data streams), Loop (repeat for each item).</p>
+        
+        <h3 class="article-h3">Data</h3>
+        
+        <p>n8n passes data between nodes as JSON objects. You can reference data from previous nodes using expressions like <code>{{ $json.email }}</code> or <code>{{ $node["NodeName"].json.field }}</code>.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Building Your First Workflow</h2>
+        
+        <p>Let's build a real, useful workflow: a daily AI news briefing delivered to Telegram.</p>
+        
+        <h3 class="article-h3">Step 1: Create a New Workflow</h3>
+        
+        <p>In the n8n interface, click "New Workflow." Give it a name: "Daily AI News Briefing."</p>
+        
+        <h3 class="article-h3">Step 2: Add a Schedule Trigger</h3>
+        
+        <p>Click the "+" button to add a node. Search for "Schedule." Select "Schedule Trigger."</p>
+        
+        <p>Configure:</p>
+        
+        <ul>
+          <li>Trigger interval: Days</li>
+          <li>Days: 1</li>
+          <li>Hour: 8 (8 AM)</li>
+          <li>Minute: 0</li>
+        </ul>
+        
+        <p>This triggers the workflow every morning at 8 AM.</p>
+        
+        <h3 class="article-h3">Step 3: Add an HTTP Request Node</h3>
+        
+        <p>This fetches AI news from a news API. Add an "HTTP Request" node.</p>
+        
+        <p>Configure:</p>
+        
+        <ul>
+          <li>URL: <code>https://newsapi.org/v2/everything?q=artificial+intelligence&amp;amp;sortBy=publishedAt&amp;amp;pageSize=10&amp;amp;apiKey=YOUR_API_KEY</code></li>
+          <li>Method: GET</li>
+        </ul>
+        
+        <p>(Get a free NewsAPI key at newsapi.org — 100 requests/day free.)</p>
+        
+        <h3 class="article-h3">Step 4: Add an OpenAI/AI Node</h3>
+        
+        <p>Add an "OpenAI" node (or if using OpenRouter, an HTTP Request to the OpenRouter API).</p>
+        
+        <p>Configure:</p>
+        
+        <ul>
+          <li>Model: gpt-4o-mini (fast and cheap)</li>
+          <li>Prompt: <code>You are a news analyst. Summarize these AI news headlines into a concise, engaging 5-point briefing for an AI professional. Format as a Telegram message with emoji. Headlines: {{ JSON.stringify($json.articles.map(a =&amp;gt; a.title + ': ' + a.description)) }}</code></li>
+        </ul>
+        
+        <h3 class="article-h3">Step 5: Add a Telegram Node</h3>
+        
+        <p>Add a "Telegram" node.</p>
+        
+        <p>Configure:</p>
+        
+        <ul>
+          <li>Credential: Add your Telegram bot token</li>
+          <li>Chat ID: Your Telegram user ID</li>
+          <li>Text: <code>{{ $json.message.content }}</code></li>
+        </ul>
+        
+        <h3 class="article-h3">Step 6: Test and Activate</h3>
+        
+        <p>Click "Execute Workflow" to test it manually. If it works (you get a Telegram message with the news summary), click "Activate" to turn on the schedule.</p>
+        
+        <p>Congratulations — you have an automated AI news briefing running every morning.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Essential Nodes to Learn</h2>
+        
+        <h3 class="article-h3">AI Agent Node</h3>
+        
+        <p>The most powerful node in n8n. The AI Agent node can:</p>
+        
+        <ul>
+          <li>Have a system prompt defining its role and behavior</li>
+          <li>Access tools (web search, calculators, code execution)</li>
+          <li>Maintain conversation memory within a workflow run</li>
+          <li>Route to different outputs based on AI decisions</li>
+        </ul>
+        
+        <p>Use this for: intelligent email routing, content classification, customer inquiry handling, research automation.</p>
+        
+        <h3 class="article-h3">HTTP Request Node</h3>
+        
+        <p>Connects n8n to any API. If there's no dedicated n8n node for a service, the HTTP Request node handles it. Use for: OpenRouter API calls, custom webhooks, any API not in n8n's native integrations.</p>
+        
+        <h3 class="article-h3">Code Node</h3>
+        
+        <p>Runs JavaScript or Python within your workflow. Use for: complex data transformations, calculations, string manipulation, anything the built-in nodes can't handle.</p>
+        
+        <h3 class="article-h3">Google Sheets Node</h3>
+        
+        <p>Read from and write to Google Sheets. Useful for: logging automation results, reading client data, updating dashboards, maintaining simple databases.</p>
+        
+        <h3 class="article-h3">Gmail/Email Nodes</h3>
+        
+        <p>Send and receive emails. Use for: automated email responses, lead notifications, daily report delivery, client communication automation.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Real Workflows That Make Money</h2>
+        
+        <h3 class="article-h3">Workflow 1: AI Email Assistant</h3>
+        
+        <p><strong>Trigger</strong>: New email in Gmail <strong>Filter</strong>: Ignore newsletters/promotions <strong>AI Node</strong>: Classify email type and draft response <strong>Human Review</strong>: Send draft to Telegram for approval <strong>Send</strong>: On approval, send the drafted email</p>
+        
+        <p><strong>Value</strong>: Saves 1-2 hours/day of email management. Charge clients $500-800/month.</p>
+        
+        <h3 class="article-h3">Workflow 2: Social Media Content Machine</h3>
+        
+        <p><strong>Trigger</strong>: Daily at 9 AM <strong>Research</strong>: Fetch trending topics in niche via news API <strong>AI Writer</strong>: Generate 5 social media posts (Twitter, LinkedIn, Instagram captions) <strong>Review</strong>: Send to Telegram for approval <strong>Schedule</strong>: Approved posts scheduled via Buffer API</p>
+        
+        <p><strong>Value</strong>: Consistent social media presence with minimal daily time investment.</p>
+        
+        <h3 class="article-h3">Workflow 3: Lead Qualification Pipeline</h3>
+        
+        <p><strong>Trigger</strong>: New form submission (webhook) <strong>AI Qualifier</strong>: Analyze lead data against ideal customer profile <strong>Score</strong>: Assign 1-10 qualification score <strong>Route</strong>: High score → immediate Slack notification; Low score → add to nurture sequence in email tool <strong>Log</strong>: All leads logged to Google Sheets with scores</p>
+        
+        <p><strong>Value</strong>: No high-value lead gets missed. Charge clients $800-1,200/month.</p>
+        
+        <h3 class="article-h3">Workflow 4: Competitive Intelligence Monitor</h3>
+        
+        <p><strong>Trigger</strong>: Daily at 7 AM <strong>Scrape</strong>: Fetch competitor website updates (via HTTP Request or Browserless API) <strong>Compare</strong>: AI identifies new content, pricing changes, feature updates <strong>Report</strong>: Format changes as a Telegram message or email digest <strong>Archive</strong>: Log all changes to Google Sheets</p>
+        
+        <p><strong>Value</strong>: Continuous competitive awareness. Sell as $800-2,000/month service.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Connecting n8n to Hermes Agent</h2>
+        
+        <p>n8n and Hermes work powerfully in combination. n8n handles the orchestration and triggering; Hermes handles the AI reasoning with persistent memory.</p>
+        
+        <p>The connection: expose Hermes's API endpoint and call it from n8n's HTTP Request node.</p>
+        
+        <pre><code class="language-json">{
+          "method": "POST",
+          "url": "http://your-hermes-server:8080/api/message",
+          "body": {
+            "message": "{{ $json.task_description }}",
+            "context": "{{ $json.context }}"
+          }
+        }</code></pre>
+        
+        <p>This lets you trigger Hermes from any n8n workflow — when a new email arrives, when a form is submitted, when a scheduled task fires — while Hermes handles the complex AI reasoning with your full memory context.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Common Mistakes to Avoid</h2>
+        
+        <p><strong>Not setting up error handling</strong>: Add error trigger nodes that notify you via Telegram when workflows fail. Silent failures are the enemy of reliable automation.</p>
+        
+        <p><strong>Over-engineering the first workflow</strong>: Build something simple that works. You can always add complexity. Many beginners try to build a 20-node monster workflow before they understand the basics.</p>
+        
+        <p><strong>Ignoring rate limits</strong>: APIs have rate limits. If your workflow calls an API too frequently, it will fail. Add wait nodes or check the API's rate limit documentation.</p>
+        
+        <p><strong>Not using credentials properly</strong>: Store all API keys as n8n credentials, not hardcoded in workflow nodes. Credentials are encrypted; hardcoded values are exposed in workflow exports.</p>
+        
+        <p><strong>Forgetting to test edge cases</strong>: What happens if the AI returns an unexpected format? If the news API returns no results? Build defensive workflows that handle empty or malformed data gracefully.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Resources to Go Deeper</h2>
+        
+        <ul>
+          <li><strong>n8n documentation</strong>: docs.n8n.io — comprehensive, well-maintained</li>
+          <li><strong>n8n community forum</strong>: community.n8n.io — active community, most questions already answered</li>
+          <li><strong>n8n workflow templates</strong>: n8n.io/workflows — hundreds of pre-built workflows to learn from and customize</li>
+          <li><strong>YouTube</strong>: Search "n8n tutorial 2025" for video walkthroughs of specific use cases</li>
+        </ul>
+        
+        <p>The investment in learning n8n pays dividends for years. Every automation skill you build compounds — the same workflow patterns appear across different clients and use cases, and your delivery speed increases dramatically with experience.</p>
+        
+        <hr class="article-divider">
+        
+        <p class="article-attribution">Published on ai.quantummerlin.com — Your source for practical AI agent intelligence</p>
+
+        <!-- Mid-article AdSense -->
+        <div class="article-ad-mid">
+          <ins class="adsbygoogle" style="display:block;text-align:center" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED ARTICLES -->
+    <section class="article-related">
+      <div class="section-header">
+        <h2 class="section-title">Related Articles</h2>
+      </div>
+      <div class="article-grid">
+        
+        <a href="/articles/09-hermes-agent-telegram-setup.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/09-telegram-setup-hero.png" alt="Hermes Agent Telegram Setup: Complete Tutorial (2025)" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-automation">Automation</span>
+            <h3 class="article-card-title">Hermes Agent Telegram Setup: Complete Tutorial (2025)</h3>
+            <p class="article-card-desc">Step-by-step guide to running your Hermes Agent through Telegram.</p>
+          </div>
+        </a>
+        <a href="/articles/04-ai-automation-agency-guide.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/04-ai-automation-agency-hero.png" alt="How to Start an AI Automation Agency in 2025: The Complete AAA Playbook" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-business">Business</span>
+            <h3 class="article-card-title">How to Start an AI Automation Agency in 2025: The Complete AAA Playbook</h3>
+            <p class="article-card-desc">How to build and sell AI automation services to businesses as an agency.</p>
+          </div>
+        </a>
+        <a href="/articles/14-openrouter-guide.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/14-openrouter-guide-hero.png" alt="OpenRouter: The Complete Guide to Accessing Every AI Model From One API (2025)" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Tools</span>
+            <h3 class="article-card-title">OpenRouter: The Complete Guide to Accessing Every AI Model From One API (2025)</h3>
+            <p class="article-card-desc">How to use OpenRouter to access 100+ AI models through a single API.</p>
+          </div>
+        </a>
+      
+      </div>
+    </section>
+
+    <!-- NEWSLETTER CTA -->
+    <section class="article-nl-cta">
+      <div class="nl-home-band">
+        <div class="nl-home-icon">&#x1F4E1;</div>
+        <div class="nl-home-text">
+          <div class="nl-home-title">Get the Weekly AI Brief</div>
+          <div class="nl-home-sub">5 signals. 3 takeaways. 1 deep-dive. Every Sunday.</div>
+        </div>
+        <a href="/newsletter.html" class="btn btn-primary">Subscribe Free &rarr;</a>
+      </div>
+    </section>
+
+  </article>
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
