@@ -281,7 +281,20 @@
       });
     });
 
-    const observer = new IntersectionObserver(function (entries) {
+    // Determine the scroll root.
+    // On desktop, .main-content is the scroll container (overflow-y: auto).
+    // On mobile (≤900px), body/html scroll naturally so root must be null (viewport).
+    // We read computed style rather than hardcoding a breakpoint so it's resize-safe.
+    var mainContent = document.querySelector('.main-content');
+    var scrollRoot = null;
+    if (mainContent) {
+      var cs = window.getComputedStyle(mainContent);
+      if (cs.overflowY === 'auto' || cs.overflowY === 'scroll') {
+        scrollRoot = mainContent;
+      }
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
@@ -290,8 +303,9 @@
         }
       });
     }, {
+      root: scrollRoot,          // null → viewport (mobile); .main-content (desktop)
       threshold: 0.05,
-      rootMargin: '-30px'
+      rootMargin: '-20px 0px'   // slightly less aggressive so top-of-page items fire
     });
 
     revealEls.forEach(function (el) {
