@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw Setup Guide: Install, Configure, and Run Your First Automation (2025) – Aether Intel</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="OpenClaw is one of the most powerful open-source AI agents available, but its setup is less documented than Hermes Agent, and the learning curve is steeper. ...">
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- HERO -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/articles/12-openclaw-setup-hero.png" alt="OpenClaw Setup Guide: Install, Configure, and Run Your First Automation (2025)" class="article-hero-img" loading="eager" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/articles.html">Articles</a>
+            <span>&#x203a;</span>
+            <span>OpenClaw Setup Guide: Install, Configure, and Run Your First Automation (2025)</span>
+          </nav>
+          <span class="badge badge-agents">AI Agents</span>
+          <h1 class="article-hero-title">OpenClaw Setup Guide: Install, Configure, and Run Your First Automation (2025)</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 12, 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">6 min read</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="article-layout">
+      <div class="article-body">
+        <p>OpenClaw is one of the most powerful open-source AI agents available, but its setup is less documented than Hermes Agent, and the learning curve is steeper. This guide walks you through the complete installation, configuration, and first automation — clearly, step by step.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">What You're Installing</h2>
+        
+        <p>OpenClaw is an AI agent with three capabilities that set it apart:</p>
+        
+        <p><strong>Computer and browser control</strong>: OpenClaw can literally see your screen, move the mouse, click buttons, and interact with any application or website. This is the feature most people come to OpenClaw for.</p>
+        
+        <p><strong>MCP (Model Context Protocol) support</strong>: Full integration with the growing MCP ecosystem. Any tool that exposes an MCP interface can be used by OpenClaw as a capability.</p>
+        
+        <p><strong>ACP (Agent Communication Protocol)</strong>: OpenClaw can coordinate with other AI agents, either acting as an orchestrator sending tasks to specialized agents, or as a worker receiving instructions from a higher-level agent.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Prerequisites</h2>
+        
+        <p>Before installing, ensure you have:</p>
+        
+        <ul>
+          <li>A computer or VPS running Ubuntu 20.04+ or macOS (Windows via WSL2)</li>
+          <li>Python 3.11+</li>
+          <li>Node.js 18+ (for MCP server components)</li>
+          <li>An OpenRouter API key OR direct API key for your preferred model</li>
+          <li>A browser (Chromium or Chrome, for browser automation features)</li>
+          <li>2GB+ RAM available</li>
+        </ul>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Installation</h2>
+        
+        <h3 class="article-h3">Step 1: System Dependencies</h3>
+        
+        <p>On Ubuntu:</p>
+        
+        <pre><code class="language-bash">sudo apt update
+        sudo apt install -y python3.11 python3.11-venv python3-pip git curl
+        sudo apt install -y chromium-browser xvfb  # For headless browser automation
+        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        sudo apt install -y nodejs</code></pre>
+        
+        <p>On macOS:</p>
+        
+        <pre><code class="language-bash">brew install python@3.11 node git
+        brew install --cask chromium</code></pre>
+        
+        <h3 class="article-h3">Step 2: Clone OpenClaw</h3>
+        
+        <pre><code class="language-bash">git clone https://github.com/openclaw/openclaw
+        cd openclaw</code></pre>
+        
+        <h3 class="article-h3">Step 3: Python Environment</h3>
+        
+        <pre><code class="language-bash">python3.11 -m venv venv
+        source venv/bin/activate  # Linux/Mac
+        # or: venv\Scripts\activate  # Windows
+        
+        pip install -r requirements.txt</code></pre>
+        
+        <h3 class="article-h3">Step 4: Install MCP Dependencies</h3>
+        
+        <pre><code class="language-bash">cd mcp-servers
+        npm install
+        cd ..</code></pre>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Configuration</h2>
+        
+        <h3 class="article-h3">Step 1: Environment Setup</h3>
+        
+        <pre><code class="language-bash">cp config/config.example.yaml config/config.yaml
+        nano config/config.yaml</code></pre>
+        
+        <p>The main configuration file:</p>
+        
+        <pre><code class="language-yaml"># AI Model Configuration
+        model:
+          provider: openrouter  # or: anthropic, openai, local
+          primary_model: anthropic/claude-3.5-sonnet
+          api_key: ${OPENROUTER_API_KEY}
+          
+        # Browser Configuration
+        browser:
+          headless: true  # false to see the browser
+          browser_type: chromium
+          slow_mo: 0  # milliseconds between actions (increase for debugging)
+          
+        # Computer Control
+        computer_use:
+          enabled: true
+          screenshot_interval: 1.0  # seconds between screenshots
+          
+        # MCP Configuration
+        mcp:
+          enabled: true
+          servers:
+            - name: filesystem
+              command: node
+              args: ["mcp-servers/filesystem/index.js"]
+            - name: web-search
+              command: node
+              args: ["mcp-servers/web-search/index.js"]
+              
+        # ACP Configuration
+        acp:
+          enabled: false  # Enable when using multi-agent setups
+          port: 8765
+          
+        # Logging
+        logging:
+          level: INFO
+          file: logs/openclaw.log</code></pre>
+        
+        <h3 class="article-h3">Step 2: Create .env File</h3>
+        
+        <pre><code class="language-bash">cat &gt; .env &lt;&lt; 'EOF'
+        OPENROUTER_API_KEY=your_openrouter_key_here
+        ANTHROPIC_API_KEY=your_anthropic_key_here  # optional direct access
+        OPENAI_API_KEY=your_openai_key_here  # optional
+        SEARCH_API_KEY=your_search_api_key  # for web search MCP
+        EOF</code></pre>
+        
+        <h3 class="article-h3">Step 3: Virtual Display (VPS Only)</h3>
+        
+        <p>For headless browser operation on a VPS without a display:</p>
+        
+        <pre><code class="language-bash"># Install virtual framebuffer
+        sudo apt install -y xvfb
+        
+        # Add to your startup script
+        export DISPLAY=:99
+        Xvfb :99 -screen 0 1280x1024x24 &amp;</code></pre>
+        
+        <p>Or add to your systemd service file.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Running OpenClaw</h2>
+        
+        <h3 class="article-h3">Interactive Mode</h3>
+        
+        <pre><code class="language-bash">source venv/bin/activate
+        python openclaw.py</code></pre>
+        
+        <p>You'll see the OpenClaw prompt:</p>
+        
+        <pre><code>OpenClaw v0.x.x
+        Type your task or 'help' for commands
+        &gt; </code></pre>
+        
+        <h3 class="article-h3">Your First Task: Web Research</h3>
+        
+        <pre><code>&gt; Research the top 5 AI automation tools in 2025 and create a comparison table</code></pre>
+        
+        <p>OpenClaw will:</p>
+        
+        <ol>
+          <li>Open a browser (headless)</li>
+          <li>Search for information on multiple sites</li>
+          <li>Navigate to relevant pages</li>
+          <li>Extract content</li>
+          <li>Compile and format a comparison table</li>
+          <li>Return results to the terminal</li>
+        </ol>
+        
+        <h3 class="article-h3">Your First Browser Automation Task</h3>
+        
+        <pre><code>&gt; Go to news.ycombinator.com, find the top 3 AI-related stories today, and summarize each one</code></pre>
+        
+        <p>Watch the logs to see OpenClaw navigating the browser in real-time.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Key MCP Integrations</h2>
+        
+        <h3 class="article-h3">Filesystem MCP</h3>
+        
+        <p>Gives OpenClaw access to read and write files on your system. Enable in config.yaml and specify which directories to allow access to:</p>
+        
+        <pre><code class="language-yaml">mcp:
+          servers:
+            - name: filesystem
+              command: node
+              args: ["mcp-servers/filesystem/index.js"]
+              env:
+                ALLOWED_PATHS: "/home/user/workspace,/tmp"</code></pre>
+        
+        <p>Now you can tell OpenClaw: "Read all the CSV files in my workspace folder and summarize the data."</p>
+        
+        <h3 class="article-h3">Web Search MCP</h3>
+        
+        <p>Enables structured web search. Requires a search API key (Serper, Brave Search, or SerpAPI all work):</p>
+        
+        <pre><code class="language-yaml">    - name: web-search
+              command: node
+              args: ["mcp-servers/web-search/index.js"]
+              env:
+                SEARCH_API_KEY: ${SEARCH_API_KEY}
+                SEARCH_PROVIDER: serper</code></pre>
+        
+        <h3 class="article-h3">GitHub MCP</h3>
+        
+        <p>Gives OpenClaw access to GitHub repositories — reading code, creating issues, reviewing PRs:</p>
+        
+        <pre><code class="language-yaml">    - name: github
+              command: node
+              args: ["mcp-servers/github/index.js"]
+              env:
+                GITHUB_TOKEN: ${GITHUB_TOKEN}</code></pre>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Building Your First Real Automation</h2>
+        
+        <p>Let's build a competitor price monitoring automation.</p>
+        
+        <h3 class="article-h3">Task Description</h3>
+        
+        <p>Every morning, check three competitor websites for price changes on their main product tiers, and send a summary report.</p>
+        
+        <h3 class="article-h3">Step 1: Create a Task File</h3>
+        
+        <pre><code class="language-bash">cat &gt; tasks/price_monitor.yaml &lt;&lt; 'EOF'
+        name: Competitor Price Monitor
+        schedule: "0 8 * * *"  # Daily at 8 AM
+        description: Monitor competitor pricing
+        
+        steps:
+          - action: browse
+            url: "https://competitor1.com/pricing"
+            extract: 
+              selector: ".pricing-table"
+              save_as: competitor1_pricing
+              
+          - action: browse
+            url: "https://competitor2.com/pricing"
+            extract:
+              selector: ".price"
+              save_as: competitor2_pricing
+              
+          - action: analyze
+            prompt: |
+              Compare these pricing pages to yesterday's data.
+              Identify any price changes, new plans, or removed plans.
+              Format as a brief executive summary.
+            inputs: [competitor1_pricing, competitor2_pricing]
+            save_as: price_analysis
+            
+          - action: notify
+            method: email
+            to: "you@example.com"
+            subject: "Daily Competitor Price Report"
+            body: "{{ price_analysis }}"
+        EOF</code></pre>
+        
+        <h3 class="article-h3">Step 2: Run the Task</h3>
+        
+        <pre><code class="language-bash">python openclaw.py --task tasks/price_monitor.yaml</code></pre>
+        
+        <h3 class="article-h3">Step 3: Schedule It</h3>
+        
+        <p>Add to crontab:</p>
+        
+        <pre><code class="language-bash">crontab -e
+        # Add:
+        0 8 * * * cd /root/openclaw &amp;&amp; source venv/bin/activate &amp;&amp; python openclaw.py --task tasks/price_monitor.yaml</code></pre>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Multi-Agent Setup with ACP</h2>
+        
+        <p>For advanced use cases, OpenClaw can coordinate multiple agents. Here's a simple two-agent setup:</p>
+        
+        <p><strong>Orchestrator OpenClaw</strong>: Receives high-level tasks, breaks them down, delegates to worker agents.</p>
+        
+        <p><strong>Worker OpenClaw (or other ACP-compatible agents)</strong>: Executes specific subtasks and returns results.</p>
+        
+        <p>Enable ACP in the orchestrator's config:</p>
+        
+        <pre><code class="language-yaml">acp:
+          enabled: true
+          role: orchestrator
+          port: 8765
+          workers:
+            - name: research_agent
+              endpoint: "http://localhost:8766"
+            - name: writing_agent
+              endpoint: "http://localhost:8767"</code></pre>
+        
+        <p>Each worker runs with:</p>
+        
+        <pre><code class="language-yaml">acp:
+          enabled: true
+          role: worker
+          port: 8766  # unique port per worker
+          capabilities: ["web_research", "data_extraction"]</code></pre>
+        
+        <p>This architecture enables high-throughput automation where research, writing, and publishing happen in parallel rather than sequentially.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Troubleshooting Common Issues</h2>
+        
+        <p><strong>Browser won't launch on VPS</strong>:</p>
+        
+        <pre><code class="language-bash">export DISPLAY=:99
+        Xvfb :99 -screen 0 1280x1024x24 &amp;
+        # Then retry</code></pre>
+        
+        <p><strong>MCP server connection errors</strong>:</p>
+        
+        <pre><code class="language-bash">cd mcp-servers
+        npm install  # Reinstall dependencies
+        node filesystem/index.js  # Test server manually</code></pre>
+        
+        <p><strong>Model API errors</strong>:</p>
+        
+        <ul>
+          <li>Verify your API key is correct in .env</li>
+          <li>Check OpenRouter account has credits</li>
+          <li>Try switching to a different model in config.yaml</li>
+        </ul>
+        
+        <p><strong>Slow browser automation</strong>:</p>
+        
+        <ul>
+          <li>Set <code>slow_mo: 0</code> in config.yaml</li>
+          <li>Ensure headless: true for VPS operation</li>
+          <li>Consider reducing screenshot_interval</li>
+        </ul>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Next Steps</h2>
+        
+        <p>Once you have OpenClaw running:</p>
+        
+        <ol>
+          <li><strong>Explore browser automation</strong>: Try automating a daily task you currently do manually in a browser</li>
+          <li><strong>Add MCP servers</strong>: Each MCP integration adds new capabilities</li>
+          <li><strong>Build task files</strong>: Create YAML task definitions for repeatable workflows</li>
+          <li><strong>Connect to n8n</strong>: Use OpenClaw as a component in larger n8n workflows</li>
+          <li><strong>Try ACP</strong>: Experiment with multi-agent coordination for complex tasks</li>
+        </ol>
+        
+        <p>OpenClaw's power compounds as you learn its capabilities. The browser control feature alone justifies the setup time — it unlocks automation scenarios that simply don't exist with API-only agents.</p>
+        
+        <hr class="article-divider">
+        
+        <p class="article-attribution">Published on ai.quantummerlin.com — Your source for practical AI agent intelligence</p>
+
+        <!-- Mid-article AdSense -->
+        <div class="article-ad-mid">
+          <ins class="adsbygoogle" style="display:block;text-align:center" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED ARTICLES -->
+    <section class="article-related">
+      <div class="section-header">
+        <h2 class="section-title">Related Articles</h2>
+      </div>
+      <div class="article-grid">
+        
+        <a href="/articles/06-how-to-make-money-with-openclaw.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/06-openclaw-make-money-hero.png" alt="How to Make Money With OpenClaw in 2025: 8 Proven Methods" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-agents">AI Agents</span>
+            <h3 class="article-card-title">How to Make Money With OpenClaw in 2025: 8 Proven Methods</h3>
+            <p class="article-card-desc">Practical income methods using OpenClaw's browser-automation superpowers.</p>
+          </div>
+        </a>
+        <a href="/articles/03-hermes-vs-openclaw.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/03-hermes-vs-openclaw-hero.png" alt="Hermes Agent vs OpenClaw: Which AI Agent Should You Use in 2025?" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-agents">AI Agents</span>
+            <h3 class="article-card-title">Hermes Agent vs OpenClaw: Which AI Agent Should You Use in 2025?</h3>
+            <p class="article-card-desc">Head-to-head comparison of the two leading open-source AI agents in 2025.</p>
+          </div>
+        </a>
+        <a href="/articles/07-hermes-vs-openclaw-vs-claude-code.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/07-three-way-comparison-hero.png" alt="Hermes Agent vs OpenClaw vs Claude Code: The Ultimate 2025 AI Agent Comparison" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-agents">AI Agents</span>
+            <h3 class="article-card-title">Hermes Agent vs OpenClaw vs Claude Code: The Ultimate 2025 AI Agent Comparison</h3>
+            <p class="article-card-desc">Three-way comparison: memory, coding, cost, and real-world use cases.</p>
+          </div>
+        </a>
+      
+      </div>
+    </section>
+
+    <!-- NEWSLETTER CTA -->
+    <section class="article-nl-cta">
+      <div class="nl-home-band">
+        <div class="nl-home-icon">&#x1F4E1;</div>
+        <div class="nl-home-text">
+          <div class="nl-home-title">Get the Weekly AI Brief</div>
+          <div class="nl-home-sub">5 signals. 3 takeaways. 1 deep-dive. Every Sunday.</div>
+        </div>
+        <a href="/newsletter.html" class="btn btn-primary">Subscribe Free &rarr;</a>
+      </div>
+    </section>
+
+  </article>
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>

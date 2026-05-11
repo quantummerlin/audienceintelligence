@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hermes Agent Skills System: Complete Guide to Building, Using, and Sharing Skills – Aether Intel</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="The skills system is what separates Hermes Agent from every other AI agent. While most agents re-derive how to do everything from scratch on every request, H...">
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- HERO -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/articles/11-hermes-skills-hero.png" alt="Hermes Agent Skills System: Complete Guide to Building, Using, and Sharing Skills" class="article-hero-img" loading="eager" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/articles.html">Articles</a>
+            <span>&#x203a;</span>
+            <span>Hermes Agent Skills System: Complete Guide to Building, Using, and Sharing Skills</span>
+          </nav>
+          <span class="badge badge-agents">AI Agents</span>
+          <h1 class="article-hero-title">Hermes Agent Skills System: Complete Guide to Building, Using, and Sharing Skills</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 12, 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">8 min read</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="article-layout">
+      <div class="article-body">
+        <p>The skills system is what separates Hermes Agent from every other AI agent. While most agents re-derive how to do everything from scratch on every request, Hermes builds a persistent library of reusable code that executes instantly. This guide covers everything you need to know about skills: how they work, the 74+ built-in skills, how to build custom ones, and how to share and profit from your skill library.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">What Are Hermes Skills?</h2>
+        
+        <p>A Hermes skill is a Python file that encapsulates a specific capability. When you ask Hermes to do something new that it doesn't have a skill for, it:</p>
+        
+        <ol>
+          <li>Breaks down the task into executable steps</li>
+          <li>Writes Python code to accomplish those steps</li>
+          <li>Tests the code</li>
+          <li>If successful, saves it as a <code>.py</code> skill file with metadata</li>
+          <li>Registers the skill in the SQLite database</li>
+        </ol>
+        
+        <p>The next time you ask for something similar, Hermes:</p>
+        
+        <ol>
+          <li>Recognizes the task type</li>
+          <li>Looks up the relevant skill in the database</li>
+          <li>Executes the pre-written code directly</li>
+          <li>Returns results significantly faster and cheaper than re-generating</li>
+        </ol>
+        
+        <p>Over weeks and months, your skill library becomes a custom software toolkit perfectly tuned to your workflows. This is the compounding intelligence effect — Hermes in month 6 is dramatically more capable and cost-effective than Hermes in month 1.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">The 74+ Built-In Skills</h2>
+        
+        <p>Hermes ships with a substantial library of pre-built skills organized into categories:</p>
+        
+        <h3 class="article-h3">Research and Information Skills</h3>
+        
+        <p><strong>web_search</strong>: Search the web and return structured results with titles, URLs, and snippets. Parameters: query, num_results, date_filter.</p>
+        
+        <p><strong>youtube_transcript</strong>: Extract the full transcript from any YouTube video URL. Returns timestamped text for analysis, summarization, or content extraction.</p>
+        
+        <p><strong>reddit_search</strong>: Search Reddit threads and comments. Returns post content, comment trees, and metadata. Useful for community sentiment analysis.</p>
+        
+        <p><strong>news_monitor</strong>: Fetch recent news on a topic from multiple sources. Returns headlines, summaries, and source URLs.</p>
+        
+        <p><strong>webpage_extract</strong>: Extract clean text content from any URL, stripping navigation and ads. Returns markdown-formatted content.</p>
+        
+        <p><strong>academic_search</strong>: Search academic papers via Semantic Scholar and similar APIs. Returns titles, abstracts, authors, and citation counts.</p>
+        
+        <h3 class="article-h3">Content Creation Skills</h3>
+        
+        <p><strong>article_writer</strong>: Given a topic and brief, produces a structured long-form article. Parameters: topic, word_count, target_keyword, tone.</p>
+        
+        <p><strong>social_post_generator</strong>: Creates platform-optimized social media posts. Parameters: content_brief, platform (twitter/linkedin/instagram), style.</p>
+        
+        <p><strong>email_composer</strong>: Drafts professional emails given context and intent. Parameters: recipient_role, email_purpose, tone, key_points.</p>
+        
+        <p><strong>script_writer</strong>: Generates video scripts with hooks, main content, and calls to action. Parameters: topic, duration_minutes, style.</p>
+        
+        <p><strong>seo_optimizer</strong>: Analyzes and optimizes content for a target keyword. Returns suggestions for title, meta description, headings, and internal links.</p>
+        
+        <h3 class="article-h3">Data Analysis Skills</h3>
+        
+        <p><strong>csv_analyzer</strong>: Loads and analyzes a CSV file. Returns descriptive statistics, column summaries, and highlighted anomalies.</p>
+        
+        <p><strong>chart_generator</strong>: Creates charts and graphs from data. Supports bar, line, scatter, pie charts using matplotlib. Saves as PNG.</p>
+        
+        <p><strong>data_cleaner</strong>: Standardizes and cleans messy datasets. Handles missing values, duplicate removal, type conversion.</p>
+        
+        <p><strong>market_research</strong>: Compiles competitive intelligence on a topic or product. Aggregates data from multiple sources.</p>
+        
+        <p><strong>sentiment_analyzer</strong>: Analyzes text sentiment at document or sentence level. Returns positive/negative/neutral scores.</p>
+        
+        <h3 class="article-h3">File Management Skills</h3>
+        
+        <p><strong>file_organizer</strong>: Organizes files in a directory by type, date, or custom rules.</p>
+        
+        <p><strong>pdf_extractor</strong>: Extracts text and structure from PDF files. Preserves formatting and page structure.</p>
+        
+        <p><strong>batch_renamer</strong>: Renames multiple files according to a pattern. Supports regex and date-based renaming.</p>
+        
+        <p><strong>file_converter</strong>: Converts between file formats. Supports text, CSV, JSON, Excel, and more.</p>
+        
+        <h3 class="article-h3">Automation Skills</h3>
+        
+        <p><strong>webhook_handler</strong>: Sets up and processes incoming webhooks. Parses payload and triggers actions.</p>
+        
+        <p><strong>api_connector</strong>: Makes authenticated API calls to any REST API. Handles authentication, pagination, and error handling.</p>
+        
+        <p><strong>scheduler</strong>: Sets up scheduled task execution. Supports cron-style scheduling.</p>
+        
+        <p><strong>form_filler</strong>: Fills out web forms programmatically. Requires field mapping configuration.</p>
+        
+        <h3 class="article-h3">Communication Skills</h3>
+        
+        <p><strong>telegram_sender</strong>: Sends messages, files, and images to Telegram chats or channels.</p>
+        
+        <p><strong>email_sender</strong>: Sends emails via SMTP or Gmail API.</p>
+        
+        <p><strong>slack_notifier</strong>: Posts messages to Slack channels or direct messages.</p>
+        
+        <p><strong>discord_poster</strong>: Posts to Discord channels via webhook.</p>
+        
+        <h3 class="article-h3">Code and Development Skills</h3>
+        
+        <p><strong>code_runner</strong>: Executes Python code in a sandboxed environment and returns output.</p>
+        
+        <p><strong>code_reviewer</strong>: Analyzes code for bugs, security issues, and style improvements.</p>
+        
+        <p><strong>api_tester</strong>: Tests API endpoints and returns response analysis.</p>
+        
+        <p><strong>regex_builder</strong>: Constructs and tests regular expressions for pattern matching.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Building Custom Skills</h2>
+        
+        <p>Custom skills are where the real power unlocks. Here's how to build one that Hermes can use:</p>
+        
+        <h3 class="article-h3">Skill File Structure</h3>
+        
+        <p>Every Hermes skill follows this structure:</p>
+        
+        <pre><code class="language-python">"""
+        Skill: [Skill Name]
+        Description: [What this skill does]
+        Parameters:
+          - param1 (str): Description of param1
+          - param2 (int, optional): Description of param2, default: 10
+        Returns:
+          dict with keys: result, status, metadata
+        Tags: [comma, separated, tags]
+        Version: 1.0
+        """
+        
+        def execute(param1: str, param2: int = 10) -&gt; dict:
+            """
+            Main execution function. Hermes calls this function.
+            """
+            try:
+                # Your implementation here
+                result = do_something(param1, param2)
+                
+                return {
+                    "status": "success",
+                    "result": result,
+                    "metadata": {
+                        "param1": param1,
+                        "param2": param2
+                    }
+                }
+            except Exception as e:
+                return {
+                    "status": "error",
+                    "error": str(e),
+                    "result": None
+                }
+        
+        def do_something(param1, param2):
+            # Implementation
+            pass</code></pre>
+        
+        <h3 class="article-h3">Example: Custom Affiliate Link Tracker Skill</h3>
+        
+        <p>Here's a practical custom skill that tracks affiliate link performance:</p>
+        
+        <pre><code class="language-python">"""
+        Skill: affiliate_tracker
+        Description: Fetches affiliate performance data and returns earnings summary
+        Parameters:
+          - platform (str): Affiliate platform name (hostinger, elevenlabs, etc.)
+          - days (int, optional): Number of days to look back, default: 30
+        Returns:
+          dict with earnings summary and top performing links
+        Tags: affiliate, monetization, tracking
+        Version: 1.0
+        """
+        
+        import requests
+        import json
+        from datetime import datetime, timedelta
+        
+        def execute(platform: str, days: int = 30) -&gt; dict:
+            try:
+                # Each platform has its own API
+                if platform == "hostinger":
+                    data = fetch_hostinger_data(days)
+                elif platform == "elevenlabs":
+                    data = fetch_elevenlabs_data(days)
+                else:
+                    return {"status": "error", "error": f"Unknown platform: {platform}"}
+                
+                return {
+                    "status": "success",
+                    "result": {
+                        "platform": platform,
+                        "period_days": days,
+                        "total_earnings": data["earnings"],
+                        "clicks": data["clicks"],
+                        "conversions": data["conversions"],
+                        "top_links": data["top_links"]
+                    }
+                }
+            except Exception as e:
+                return {"status": "error", "error": str(e)}</code></pre>
+        
+        <h3 class="article-h3">Registering Your Skill</h3>
+        
+        <p>After creating the file, register it with Hermes:</p>
+        
+        <pre><code class="language-bash">python manage_skills.py register --file skills/custom/affiliate_tracker.py</code></pre>
+        
+        <p>Or through Hermes itself:</p>
+        
+        <pre><code>Register this new skill from file: skills/custom/affiliate_tracker.py</code></pre>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">The Skill Economy: Sharing and Selling Skills</h2>
+        
+        <p>Here's an underexplored monetization opportunity: skill packs. As your Hermes skill library grows, the individual skills become valuable to other Hermes users.</p>
+        
+        <h3 class="article-h3">What Makes a Skill Pack Valuable</h3>
+        
+        <p><strong>Niche specificity</strong>: Generic skills are already built-in. Skills for specific niches (e-commerce automation, real estate research, crypto monitoring) are scarce and valuable.</p>
+        
+        <p><strong>Proven reliability</strong>: Skills that you've used for months and refined based on real usage are worth more than first-draft code.</p>
+        
+        <p><strong>Documentation quality</strong>: Well-documented skills with clear use cases, example outputs, and troubleshooting guides are premium products.</p>
+        
+        <p><strong>Bundling</strong>: A "Real Estate Automation Pack" with 15 related skills (MLS scraper, market analysis, listing description writer, email templates) is worth more than any individual skill.</p>
+        
+        <h3 class="article-h3">Pricing Strategy</h3>
+        
+        <ul>
+          <li>Single specialty skill: $10-25</li>
+          <li>Small pack (5-10 skills): $27-47</li>
+          <li>Full niche pack (15-30 skills): $67-97</li>
+          <li>Premium pack with documentation and support: $97-197</li>
+        </ul>
+        
+        <h3 class="article-h3">Where to Sell</h3>
+        
+        <ul>
+          <li><strong>Gumroad</strong>: 5% transaction fee, handles payments, instant delivery. Best for independent digital products.</li>
+          <li><strong>Your own website</strong>: Direct relationship with customers, no platform fees. Requires more setup.</li>
+          <li><strong>Hermes Community Discord</strong>: Connect with buyers directly. Good for building reputation.</li>
+          <li><strong>GitHub Sponsors</strong>: If you share some skills publicly and gate the premium ones, GitHub Sponsors works well.</li>
+        </ul>
+        
+        <h3 class="article-h3">Building a Skill Business</h3>
+        
+        <p>The model: publish 5-10 free skills on GitHub (establishes credibility and generates discovery). Offer premium skill packs for $47-97 each. Build a reputation as the go-to resource for skills in your niche.</p>
+        
+        <p>The TAM (total addressable market) grows as Hermes adoption grows. Early skill creators who establish their libraries now will have a strong competitive advantage as the community scales.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Skill Maintenance and Optimization</h2>
+        
+        <p>Skills require occasional maintenance as APIs change and your requirements evolve.</p>
+        
+        <h3 class="article-h3">Version Management</h3>
+        
+        <p>Update skill version numbers when you make changes:</p>
+        
+        <pre><code>Version: 1.0 → 1.1 (bug fix)
+        Version: 1.1 → 2.0 (breaking change in parameters)</code></pre>
+        
+        <h3 class="article-h3">Performance Monitoring</h3>
+        
+        <p>Hermes logs every skill execution in SQLite. Query your skill performance:</p>
+        
+        <pre><code class="language-sql">SELECT skill_name, 
+               COUNT(*) as executions,
+               AVG(execution_time_ms) as avg_time,
+               SUM(CASE WHEN status='error' THEN 1 ELSE 0 END) as errors
+        FROM skill_executions
+        GROUP BY skill_name
+        ORDER BY executions DESC;</code></pre>
+        
+        <p>Skills with high error rates need attention. Skills with high execution time might benefit from caching or optimization.</p>
+        
+        <h3 class="article-h3">The 80/20 of Your Skill Library</h3>
+        
+        <p>After a few months, you'll likely find that 20% of your skills handle 80% of your tasks. Focus optimization efforts on that core 20% — they have the highest impact on your daily productivity.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Advanced: Skill Chaining</h2>
+        
+        <p>Skills can call other skills, enabling complex multi-step automation from a single request:</p>
+        
+        <pre><code class="language-python">"""
+        Skill: content_research_to_draft
+        Description: Complete pipeline from topic to draft article
+        """
+        
+        def execute(topic: str, target_keyword: str) -&gt; dict:
+            from skill_runner import run_skill
+            
+            # Step 1: Research
+            research = run_skill("web_search", query=f"{topic} latest 2025", num_results=10)
+            
+            # Step 2: Fetch top competitor articles
+            for url in research["result"]["urls"][:3]:
+                content = run_skill("webpage_extract", url=url)
+            
+            # Step 3: Write article
+            draft = run_skill("article_writer", 
+                             topic=topic,
+                             research_context=research["result"]["summary"],
+                             target_keyword=target_keyword)
+            
+            return draft</code></pre>
+        
+        <p>This single skill invocation triggers a complete research-to-draft pipeline. Hermes calls one skill; that skill orchestrates four others internally. The result: powerful automation with simple natural language commands.</p>
+        
+        <hr class="article-divider">
+        
+        <p class="article-attribution">Published on ai.quantummerlin.com — Your source for practical AI agent intelligence</p>
+
+        <!-- Mid-article AdSense -->
+        <div class="article-ad-mid">
+          <ins class="adsbygoogle" style="display:block;text-align:center" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED ARTICLES -->
+    <section class="article-related">
+      <div class="section-header">
+        <h2 class="section-title">Related Articles</h2>
+      </div>
+      <div class="article-grid">
+        
+        <a href="/articles/01-hermes-agent-complete-guide.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/01-hermes-agent-complete-guide-hero.png" alt="Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2025" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-agents">AI Agents</span>
+            <h3 class="article-card-title">Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2025</h3>
+            <p class="article-card-desc">Everything you need to set up, configure, and monetise Hermes Agent from scratch.</p>
+          </div>
+        </a>
+        <a href="/articles/17-hermes-agent-cost-guide.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/17-hermes-cost-guide-hero.png" alt="How Much Does Hermes Agent Actually Cost? Real Breakdown for 2025" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-agents">AI Agents</span>
+            <h3 class="article-card-title">How Much Does Hermes Agent Actually Cost? Real Breakdown for 2025</h3>
+            <p class="article-card-desc">Breaking down the real monthly cost of running Hermes at different usage levels.</p>
+          </div>
+        </a>
+        <a href="/articles/09-hermes-agent-telegram-setup.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/09-telegram-setup-hero.png" alt="Hermes Agent Telegram Setup: Complete Tutorial (2025)" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-automation">Automation</span>
+            <h3 class="article-card-title">Hermes Agent Telegram Setup: Complete Tutorial (2025)</h3>
+            <p class="article-card-desc">Step-by-step guide to running your Hermes Agent through Telegram.</p>
+          </div>
+        </a>
+      
+      </div>
+    </section>
+
+    <!-- NEWSLETTER CTA -->
+    <section class="article-nl-cta">
+      <div class="nl-home-band">
+        <div class="nl-home-icon">&#x1F4E1;</div>
+        <div class="nl-home-text">
+          <div class="nl-home-title">Get the Weekly AI Brief</div>
+          <div class="nl-home-sub">5 signals. 3 takeaways. 1 deep-dive. Every Sunday.</div>
+        </div>
+        <a href="/newsletter.html" class="btn btn-primary">Subscribe Free &rarr;</a>
+      </div>
+    </section>
+
+  </article>
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>

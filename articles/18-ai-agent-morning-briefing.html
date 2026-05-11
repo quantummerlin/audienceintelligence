@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Build an AI Morning Briefing System With Hermes Agent – Aether Intel</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="One of the highest-value things you can build with Hermes Agent is a personalized morning briefing — a daily digest that lands in your Telegram every morning...">
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- HERO -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/articles/18-ai-morning-briefing-hero.png" alt="How to Build an AI Morning Briefing System With Hermes Agent" class="article-hero-img" loading="eager" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/articles.html">Articles</a>
+            <span>&#x203a;</span>
+            <span>How to Build an AI Morning Briefing System With Hermes Agent</span>
+          </nav>
+          <span class="badge badge-tools">Tools</span>
+          <h1 class="article-hero-title">How to Build an AI Morning Briefing System With Hermes Agent</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 12, 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">7 min read</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="article-layout">
+      <div class="article-body">
+        <p>One of the highest-value things you can build with Hermes Agent is a personalized morning briefing — a daily digest that lands in your Telegram every morning before you start work, covering exactly the information you need. No scrolling through news feeds, no checking multiple dashboards, no wasted time. Just your agent's curated intelligence, ready before your first coffee.</p>
+        
+        <p>This guide shows you how to build it from scratch.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">What Your Morning Briefing Can Contain</h2>
+        
+        <p>The power of building this yourself rather than using a news app is complete customization. Your briefing can include exactly what matters to your work and nothing that doesn't. Common elements:</p>
+        
+        <p><strong>For content creators and bloggers:</strong></p>
+        
+        <ul>
+          <li>Top trending topics in your niche (what people are searching and discussing)</li>
+          <li>New articles published by competitor/reference sites in your niche</li>
+          <li>Your website's top-performing articles from yesterday</li>
+          <li>Social media performance summary</li>
+        </ul>
+        
+        <p><strong>For AI practitioners and developers:</strong></p>
+        
+        <ul>
+          <li>Major AI model releases and updates</li>
+          <li>New open-source tools and GitHub repositories</li>
+          <li>Hacker News top AI stories</li>
+          <li>OpenRouter pricing or model availability changes</li>
+        </ul>
+        
+        <p><strong>For freelancers and agency owners:</strong></p>
+        
+        <ul>
+          <li>New relevant job postings or project opportunities</li>
+          <li>Client industry news (what's happening in their sectors)</li>
+          <li>Lead generation activity summary</li>
+          <li>Revenue/analytics dashboard snapshot</li>
+        </ul>
+        
+        <p><strong>For traders and investors:</strong></p>
+        
+        <ul>
+          <li>Market overnight summary</li>
+          <li>Crypto price movements</li>
+          <li>Economic calendar events for the day</li>
+          <li>Sentiment from relevant communities</li>
+        </ul>
+        
+        <p><strong>Universal elements almost everyone benefits from:</strong></p>
+        
+        <ul>
+          <li>Weather forecast for your location</li>
+          <li>Your Google Calendar events for the day</li>
+          <li>Priority emails received overnight</li>
+          <li>Tasks you've deferred from yesterday</li>
+        </ul>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Architecture Overview</h2>
+        
+        <p>The morning briefing system has three components:</p>
+        
+        <ol>
+          <li><strong>Data collection</strong>: Hermes fetches information from multiple sources</li>
+          <li><strong>Synthesis</strong>: Hermes processes and summarizes the raw data into readable insights</li>
+          <li><strong>Delivery</strong>: The formatted briefing is sent to your Telegram at a set time</li>
+        </ol>
+        
+        <p>For a simple implementation, Hermes handles all three steps directly. For a more robust system, n8n handles the scheduling and data collection while Hermes handles the synthesis.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Implementation: Simple Version (Hermes Only)</h2>
+        
+        <h3 class="article-h3">Step 1: Create the Briefing Skill</h3>
+        
+        <p>On your VPS, create a new skill file:</p>
+        
+        <pre><code class="language-bash">nano ~/hermes-agent/skills/morning_briefing.py</code></pre>
+        
+        <pre><code class="language-python">"""
+        Skill: morning_briefing
+        Description: Generates a personalized morning briefing from multiple sources
+        Parameters:
+          - topics (list): List of topics to monitor
+          - calendar_check (bool): Whether to fetch calendar events
+        Returns:
+          dict with formatted briefing text
+        Tags: briefing, daily, automation, productivity
+        Version: 1.0
+        """
+        
+        import requests
+        import json
+        from datetime import datetime, date
+        
+        def execute(topics: list = None, calendar_check: bool = False) -&gt; dict:
+            if topics is None:
+                topics = ["AI agents", "automation", "make money online"]
+            
+            sections = []
+            
+            # Header
+            today = date.today().strftime("%A, %B %d, %Y")
+            sections.append(f"🌅 *Morning Briefing — {today}*\n")
+            
+            # News section
+            news = fetch_news(topics)
+            if news:
+                sections.append("📰 *Today's Headlines*")
+                for item in news[:5]:
+                    sections.append(f"• {item['title']}")
+                    if item.get('summary'):
+                        sections.append(f"  _{item['summary'][:100]}..._")
+                sections.append("")
+            
+            # AI-specific updates
+            ai_news = fetch_ai_updates()
+            if ai_news:
+                sections.append("🤖 *AI Updates*")
+                for item in ai_news[:3]:
+                    sections.append(f"• {item}")
+                sections.append("")
+            
+            # Daily quote
+            sections.append("💡 *Today's Focus*")
+            sections.append("Start with your most important task first.")
+            
+            briefing_text = "\n".join(sections)
+            
+            return {
+                "status": "success",
+                "result": briefing_text,
+                "metadata": {
+                    "topics": topics,
+                    "date": today,
+                    "sections": len(sections)
+                }
+            }
+        
+        def fetch_news(topics: list) -&gt; list:
+            """Fetch news for given topics via NewsAPI"""
+            api_key = "your_newsapi_key"  # Add to .env
+            query = " OR ".join(topics)
+            
+            try:
+                response = requests.get(
+                    "https://newsapi.org/v2/everything",
+                    params={
+                        "q": query,
+                        "sortBy": "publishedAt",
+                        "pageSize": 10,
+                        "apiKey": api_key,
+                        "language": "en"
+                    },
+                    timeout=10
+                )
+                data = response.json()
+                
+                articles = []
+                for article in data.get("articles", [])[:5]:
+                    articles.append({
+                        "title": article.get("title", ""),
+                        "summary": article.get("description", ""),
+                        "url": article.get("url", "")
+                    })
+                return articles
+            except Exception:
+                return []
+        
+        def fetch_ai_updates() -&gt; list:
+            """Fetch top AI stories from Hacker News"""
+            try:
+                # Get top stories
+                stories = requests.get(
+                    "https://hacker-news.firebaseio.com/v0/topstories.json",
+                    timeout=10
+                ).json()[:30]
+                
+                ai_stories = []
+                for story_id in stories[:30]:
+                    story = requests.get(
+                        f"https://hacker-news.firebaseio.com/v0/item/{story_id}.json",
+                        timeout=5
+                    ).json()
+                    
+                    title = story.get("title", "").lower()
+                    if any(term in title for term in ["ai", "llm", "gpt", "claude", "agent", "ml", "neural"]):
+                        ai_stories.append(story.get("title", ""))
+                        if len(ai_stories) &gt;= 3:
+                            break
+                
+                return ai_stories
+            except Exception:
+                return []</code></pre>
+        
+        <h3 class="article-h3">Step 2: Register the Skill</h3>
+        
+        <p>In your Telegram chat with Hermes:</p>
+        
+        <pre><code>Register the skill from file: skills/morning_briefing.py</code></pre>
+        
+        <h3 class="article-h3">Step 3: Create the Scheduled Task</h3>
+        
+        <p>Create a cron job on your VPS:</p>
+        
+        <pre><code class="language-bash">crontab -e</code></pre>
+        
+        <p>Add:</p>
+        
+        <pre><code class="language-bash">0 7 * * * cd /root/hermes-agent &amp;&amp; source venv/bin/activate &amp;&amp; python -c "
+        from skill_runner import run_skill
+        from telegram_sender import send_telegram
+        
+        result = run_skill('morning_briefing', topics=['AI agents', 'automation'])
+        if result['status'] == 'success':
+            send_telegram(result['result'])
+        "</code></pre>
+        
+        <p>This runs every morning at 7:00 AM.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Implementation: Advanced Version (n8n + Hermes)</h2>
+        
+        <p>For more data sources and better reliability, use n8n to orchestrate the data collection and call Hermes for synthesis.</p>
+        
+        <h3 class="article-h3">n8n Workflow Structure</h3>
+        
+        <p><strong>Node 1: Schedule Trigger</strong></p>
+        
+        <ul>
+          <li>Time: 6:45 AM daily</li>
+          <li>Purpose: Kick off the morning briefing pipeline</li>
+        </ul>
+        
+        <p><strong>Node 2: HTTP Request — Weather</strong></p>
+        
+        <pre><code class="language-json">{
+          "url": "https://api.openweathermap.org/data/2.5/weather",
+          "params": {
+            "q": "Your City",
+            "appid": "YOUR_OPENWEATHER_KEY",
+            "units": "metric"
+          }
+        }</code></pre>
+        
+        <p><strong>Node 3: HTTP Request — News API</strong></p>
+        
+        <pre><code class="language-json">{
+          "url": "https://newsapi.org/v2/everything",
+          "params": {
+            "q": "artificial intelligence OR AI agents",
+            "sortBy": "publishedAt",
+            "pageSize": 10,
+            "apiKey": "YOUR_NEWSAPI_KEY"
+          }
+        }</code></pre>
+        
+        <p><strong>Node 4: Google Calendar</strong></p>
+        
+        <ul>
+          <li>Fetch today's events</li>
+          <li>Requires Google Calendar OAuth credential in n8n</li>
+        </ul>
+        
+        <p><strong>Node 5: Gmail</strong></p>
+        
+        <ul>
+          <li>Fetch unread emails from last 12 hours</li>
+          <li>Filter: important/starred only</li>
+        </ul>
+        
+        <p><strong>Node 6: HTTP Request — Hermes Synthesis</strong></p>
+        
+        <pre><code class="language-json">{
+          "url": "http://your-hermes-server:8080/api/synthesize",
+          "method": "POST",
+          "body": {
+            "weather": "{{ $node['Weather'].json }}",
+            "news": "{{ $node['News'].json.articles }}",
+            "calendar": "{{ $node['Calendar'].json }}",
+            "emails": "{{ $node['Gmail'].json }}",
+            "instruction": "Create a concise, actionable morning briefing from this data. Use Telegram markdown formatting. Be specific and useful, not generic."
+          }
+        }</code></pre>
+        
+        <p><strong>Node 7: Telegram</strong></p>
+        
+        <ul>
+          <li>Send the synthesized briefing to your Telegram</li>
+          <li>Format: Markdown enabled</li>
+        </ul>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Customizing Your Briefing</h2>
+        
+        <h3 class="article-h3">Adding Your Website Analytics</h3>
+        
+        <p>If you're running a content site, add a Google Analytics node to n8n that fetches yesterday's sessions, top pages, and traffic sources. Include this in the synthesis prompt: "My website had X visitors yesterday. Top page was Y."</p>
+        
+        <h3 class="article-h3">Adding Crypto/Stock Prices</h3>
+        
+        <p>Use the CoinGecko API (free, no key needed) for crypto:</p>
+        
+        <pre><code>https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&amp;vs_currencies=usd&amp;include_24hr_change=true</code></pre>
+        
+        <h3 class="article-h3">Adding Your Tasks (Notion or Todoist)</h3>
+        
+        <p>Pull your top 3 priority tasks for the day from Notion or Todoist. Include in synthesis: "Today's priorities: [list]."</p>
+        
+        <h3 class="article-h3">Personalizing the AI Summary Prompt</h3>
+        
+        <p>The quality of Hermes's synthesis depends heavily on your prompt. A strong synthesis prompt:</p>
+        
+        <pre><code>You are my personal executive assistant. Generate my morning briefing using the following data.
+        
+        Format for Telegram (use bold, italics, emojis appropriately):
+        1. One-sentence weather summary with what to wear
+        2. Top 3 AI/tech news items with a one-line why-it-matters for each
+        3. My calendar: list today's events with times
+        4. Email summary: any emails requiring action today
+        5. Today's focus: one specific goal based on my context
+        
+        My context: I run an AI content website and automation agency. I care about: AI agent news, automation tools, content marketing, passive income strategies.
+        
+        Be concise. Prioritize actionable information over interesting-but-irrelevant information.</code></pre>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Expanding to Evening Briefings</h2>
+        
+        <p>Once your morning briefing is running reliably, consider adding:</p>
+        
+        <p><strong>Noon check-in</strong> (12:00 PM): Progress update on morning tasks, any urgent items that arose.</p>
+        
+        <p><strong>Evening briefing</strong> (6:00 PM):</p>
+        
+        <ul>
+          <li>What you accomplished today</li>
+          <li>Analytics summary (website traffic, social engagement)</li>
+          <li>Tomorrow's calendar preview</li>
+          <li>Three things to do tomorrow</li>
+        </ul>
+        
+        <p>The evening briefing requires Hermes to have context on your day's activities. You can feed this by having Hermes log your major activities throughout the day, or by sending it a brief "today I did X, Y, Z" message at end of day.</p>
+        
+        <hr class="article-divider">
+        
+        <h2 class="article-h2">Troubleshooting</h2>
+        
+        <p><strong>Briefing not arriving:</strong></p>
+        
+        <ul>
+          <li>Check cron job is running: <code>crontab -l</code></li>
+          <li>Check Hermes is running: <code>systemctl status hermes</code></li>
+          <li>Check logs: <code>tail -50 /root/hermes-agent/hermes.log</code></li>
+        </ul>
+        
+        <p><strong>News sections empty:</strong></p>
+        
+        <ul>
+          <li>Verify your NewsAPI key is valid (free key has 100 requests/day)</li>
+          <li>Check your internet connection from the VPS: <code>curl https://newsapi.org</code></li>
+        </ul>
+        
+        <p><strong>Telegram message not delivered:</strong></p>
+        
+        <ul>
+          <li>Verify your bot token is correct</li>
+          <li>Verify you've started a conversation with your bot</li>
+          <li>Check your user ID in TELEGRAM_AUTHORIZED_USERS</li>
+        </ul>
+        
+        <p>Once running reliably, your morning briefing becomes one of those things you can't imagine not having. Starting the day with targeted intelligence rather than a random scroll through social media is one of the clearest productivity gains AI delivers.</p>
+        
+        <hr class="article-divider">
+        
+        <p class="article-attribution">Published on ai.quantummerlin.com — Your source for practical AI agent intelligence</p>
+
+        <!-- Mid-article AdSense -->
+        <div class="article-ad-mid">
+          <ins class="adsbygoogle" style="display:block;text-align:center" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED ARTICLES -->
+    <section class="article-related">
+      <div class="section-header">
+        <h2 class="section-title">Related Articles</h2>
+      </div>
+      <div class="article-grid">
+        
+        <a href="/articles/05-best-free-ai-tools-2025.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/05-best-free-ai-tools-hero.png" alt="The Best Free AI Tools in 2025: What Actually Works (And What's Hype)" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Tools</span>
+            <h3 class="article-card-title">The Best Free AI Tools in 2025: What Actually Works (And What's Hype)</h3>
+            <p class="article-card-desc">The free-tier tools that serious AI builders actually rely on every day.</p>
+          </div>
+        </a>
+        <a href="/articles/16-ai-tools-for-content-creators.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/16-ai-tools-content-creators-hero.png" alt="The Best AI Tools for Content Creators in 2025: A Practical Stack Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Tools</span>
+            <h3 class="article-card-title">The Best AI Tools for Content Creators in 2025: A Practical Stack Guide</h3>
+            <p class="article-card-desc">The AI toolkit that boosts content creator output and reduces production time.</p>
+          </div>
+        </a>
+        <a href="/articles/01-hermes-agent-complete-guide.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/articles/01-hermes-agent-complete-guide-hero.png" alt="Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2025" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-agents">AI Agents</span>
+            <h3 class="article-card-title">Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2025</h3>
+            <p class="article-card-desc">Everything you need to set up, configure, and monetise Hermes Agent from scratch.</p>
+          </div>
+        </a>
+      
+      </div>
+    </section>
+
+    <!-- NEWSLETTER CTA -->
+    <section class="article-nl-cta">
+      <div class="nl-home-band">
+        <div class="nl-home-icon">&#x1F4E1;</div>
+        <div class="nl-home-text">
+          <div class="nl-home-title">Get the Weekly AI Brief</div>
+          <div class="nl-home-sub">5 signals. 3 takeaways. 1 deep-dive. Every Sunday.</div>
+        </div>
+        <a href="/newsletter.html" class="btn btn-primary">Subscribe Free &rarr;</a>
+      </div>
+    </section>
+
+  </article>
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
