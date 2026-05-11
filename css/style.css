@@ -984,15 +984,34 @@ nav.mobile-bottom-nav {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  position: relative;
+  overflow: hidden;
   transition:
     border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
+    box-shadow var(--transition-fast),
+    transform 0.18s ease;
+}
+
+/* Number-driven accent gradient in background */
+.stat-chip::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--neon-indigo), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .stat-chip:hover {
   border-color: var(--border-bright);
   box-shadow: var(--glow-indigo);
+  transform: translateY(-2px);
 }
+
+.stat-chip:hover::before { opacity: 1; }
 
 .stat-chip-num {
   font-family: var(--font-heading);
@@ -1242,16 +1261,42 @@ nav.mobile-bottom-nav {
   color: inherit;
   display: flex;
   flex-direction: column;
+  position: relative;
   transition:
-    transform var(--transition-base),
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
     border-color var(--transition-base),
     box-shadow var(--transition-base);
 }
 
+/* Category accent bar — slides in on hover */
+.article-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 2;
+  background: var(--neon-indigo);
+  transform: scaleX(0);
+  transform-origin: left;
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.article-card:hover::before { transform: scaleX(1); }
+
+/* Per-category accent colours */
+.article-card[data-filter="agents"]::before  { background: var(--neon-indigo); }
+.article-card[data-filter="business"]::before { background: var(--gold); }
+.article-card[data-filter="tools"]::before   { background: var(--neon-cyan); }
+.article-card[data-filter="research"]::before { background: #a78bfa; }
+.article-card[data-filter="news"]::before    { background: #f472b6; }
+.article-card[data-filter="dev"]::before     { background: #34d399; }
+
 .article-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
   border-color: var(--border-bright);
-  box-shadow: var(--glow-indigo);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(129,140,248,0.12), var(--glow-indigo);
 }
 
 .article-card-img {
@@ -1291,6 +1336,14 @@ nav.mobile-bottom-nav {
   color: var(--neon-indigo);
   margin-bottom: 6px;
 }
+
+/* Per-category label colours for visual scanning */
+.cat-agents   { color: var(--neon-indigo); }
+.cat-business { color: var(--gold); }
+.cat-tools    { color: var(--neon-cyan); }
+.cat-research { color: #a78bfa; }
+.cat-news     { color: #f472b6; }
+.cat-dev      { color: #34d399; }
 
 .article-card-title {
   font-family: var(--font-heading);
@@ -1338,6 +1391,23 @@ nav.mobile-bottom-nav {
   opacity: 0.5;
 }
 
+/* "Read →" pill — subtle but directional */
+.article-read-time {
+  color: var(--neon-indigo);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.article-card:hover .article-read-time {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
 
 /* =============================================================================
    17. AETHER SIGNALS
@@ -1378,20 +1448,36 @@ nav.mobile-bottom-nav {
 .signal-card {
   background: rgba(13, 13, 26, 0.8);
   border: 1px solid var(--border);
+  border-left: 3px solid var(--neon-indigo);
   border-radius: 10px;
   padding: 16px;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
   transition:
-    transform var(--transition-base),
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
     border-color var(--transition-base),
     box-shadow var(--transition-base);
 }
 
-.signal-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border-bright);
-  box-shadow: var(--glow-indigo);
+/* Subtle shimmer layer on hover */
+.signal-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(129,140,248,0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
 }
+
+.signal-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--neon-indigo);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35), 0 0 0 1px rgba(129,140,248,0.15);
+}
+
+.signal-card:hover::after { opacity: 1; }
 
 .signal-rank {
   font-family: var(--font-display);
