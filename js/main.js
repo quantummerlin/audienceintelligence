@@ -347,22 +347,21 @@
       return html;
     }
 
-    function loadTicker() {
-      fetch('/data/ticker.json')
-        .then(function (res) {
-          if (!res.ok) throw new Error('ticker.json unavailable');
-          return res.json();
-        })
-        .then(function (data) {
-          var items = (data.items && data.items.length) ? data.items : defaultItems;
-          tickerTrack.innerHTML = buildTickerHTML(items);
-        })
-        .catch(function () {
-          tickerTrack.innerHTML = buildTickerHTML(defaultItems);
-        });
-    }
+    // Paint default items immediately — ticker is never blank
+    tickerTrack.innerHTML = buildTickerHTML(defaultItems);
 
-    loadTicker();
+    // Then try to fetch fresh headlines and swap in if available
+    fetch('/data/ticker.json')
+      .then(function (res) {
+        if (!res.ok) throw new Error('ticker.json unavailable');
+        return res.json();
+      })
+      .then(function (data) {
+        if (data.items && data.items.length) {
+          tickerTrack.innerHTML = buildTickerHTML(data.items);
+        }
+      })
+      .catch(function () { /* default already painted */ });
 
     // Pause / resume button
     if (volBtn) {
