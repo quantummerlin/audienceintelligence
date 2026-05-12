@@ -63,7 +63,7 @@
   /* Text */
   --text-primary:   #f1f5f9;
   --text-secondary: rgba(241, 245, 249, 0.65);
-  --text-muted:     rgba(241, 245, 249, 0.38);
+  --text-muted:     rgba(241, 245, 249, 0.52);
 
   /* Layout dimensions */
   --sidebar-w:  240px;
@@ -166,6 +166,28 @@ textarea {
 
 button {
   cursor: pointer;
+}
+
+/* Focus-visible: accessible keyboard focus ring for all interactive elements.
+   Uses outline: none in the reset above — this restores it ONLY for keyboard nav. */
+:focus-visible {
+  outline: 2px solid var(--neon-indigo);
+  outline-offset: 3px;
+}
+
+.article-card:focus-visible,
+.nav-item:focus-visible,
+.ql-pill:focus-visible,
+.mob-nav-item:focus-visible {
+  outline: 2px solid var(--neon-indigo);
+  outline-offset: 2px;
+  border-radius: var(--radius-card);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--neon-indigo);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.18);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -1399,7 +1421,8 @@ nav.mobile-bottom-nav {
   margin-bottom: 6px;
 }
 
-.article-card-excerpt {
+.article-card-excerpt,
+.article-card-desc {
   font-family: var(--font-body);
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -1874,6 +1897,19 @@ nav.mobile-bottom-nav {
   background: rgba(255, 255, 255, 0.04);
 }
 
+/* Outline — border only, no fill */
+.btn-outline {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-bright);
+}
+
+.btn-outline:hover {
+  color: var(--neon-indigo);
+  border-color: var(--neon-indigo);
+  background: rgba(129, 140, 248, 0.06);
+}
+
 /* Icon-only pill */
 .btn-icon {
   padding: 8px;
@@ -1999,6 +2035,19 @@ nav.mobile-bottom-nav {
 /* Display */
 .hidden {
   display: none !important;
+}
+
+/* Screen-reader only — visually hidden but accessible to AT */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .flex {

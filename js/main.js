@@ -134,6 +134,7 @@
     // Build .scroll-progress bar
     const scrollProgress = document.createElement('div');
     scrollProgress.className = 'scroll-progress';
+    scrollProgress.setAttribute('aria-hidden', 'true');
 
     // Build .app-shell
     const appShell = document.createElement('div');
