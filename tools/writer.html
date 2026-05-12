@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Writer — Aether Intel</title>
-  <meta name="description" content="Generate blog posts, Twitter threads, emails, and more with AI. Uses your own API key — zero tracking, zero data storage.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://ai.quantummerlin.com/tools/writer.html">
-  <meta property="og:title" content="AI Writer — Aether Intel">
-  <meta property="og:description" content="AI-powered writing tool using your own API key. Blog posts, threads, emails and more.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ai.quantummerlin.com/tools/writer.html">
+  <meta name="description" content="Long-form AI writing assistant. Articles, emails, scripts. BYOK with OpenAI or OpenRouter. Your key stays in your browser." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ai.quantummerlin.com/tools/writer.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="AI Writer — Aether Intel" />
+  <meta property="og:description" content="Long-form AI writing assistant. Articles, emails, scripts. BYOK with OpenAI or OpenRouter. Your key stays in your browser." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ai.quantummerlin.com/tools/writer.html" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Writer — Aether Intel" />
+  <meta name="twitter:description" content="Long-form AI writing assistant. Articles, emails, scripts. BYOK with OpenAI or OpenRouter. Your key stays in your browser." />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -21,73 +28,65 @@
   <link rel="stylesheet" href="/css/style.css" />
 
   <style>
-    /* ── Page root ── */
-    .writer-page {
+    /* ── Page Layout ── */
+    .tool-page {
       display: flex;
       flex-direction: column;
-      height: 100%;
-      overflow: hidden;
+      gap: 24px;
+      padding: 28px 32px 60px;
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
     /* ── Header ── */
-    .writer-header {
-      flex-shrink: 0;
-      padding: 24px 28px 20px;
+    .tool-header {
       border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(13,13,26,0.98) 0%, rgba(13,13,26,0.92) 100%);
-      backdrop-filter: blur(12px);
+      padding-bottom: 24px;
     }
-
-    .writer-badge {
+    .tool-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-family: var(--font-display);
-      font-size: 0.6rem;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
       font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--neon-indigo);
-      background: rgba(129, 140, 248, 0.08);
-      border: 1px solid rgba(129, 140, 248, 0.22);
+      color: var(--neon-cyan);
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid rgba(34, 211, 238, 0.2);
       border-radius: 20px;
       padding: 4px 12px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
-
-    .writer-title {
+    .tool-title {
       font-family: var(--font-heading);
-      font-size: var(--text-xl);
+      font-size: var(--text-2xl);
       font-weight: 800;
       color: var(--text-primary);
-      margin: 0 0 6px;
+      margin: 0 0 8px;
       letter-spacing: -0.02em;
-      line-height: 1.2;
+      line-height: 1.15;
     }
-
-    .writer-subtitle {
+    .tool-subtitle {
       font-family: var(--font-body);
-      font-size: var(--text-sm);
+      font-size: var(--text-md);
       color: var(--text-secondary);
       margin: 0 0 16px;
-      max-width: 580px;
+      max-width: 640px;
       line-height: 1.55;
     }
-
-    /* ── Key Status Bar ── */
-    .writer-key-bar {
+    .tool-key-bar {
       display: flex;
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
     }
-
     #keyStatus {
       font-family: var(--font-body);
       font-size: var(--text-sm);
       color: var(--text-muted);
     }
-
     .btn-manage-keys {
       font-family: var(--font-body);
       font-size: var(--text-sm);
@@ -100,1105 +99,691 @@
       cursor: pointer;
       transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
     }
-
     .btn-manage-keys:hover {
       background: rgba(129, 140, 248, 0.18);
       border-color: rgba(129, 140, 248, 0.5);
       color: #c7d2fe;
     }
 
-    /* ── Body: two-column layout ── */
-    .writer-body {
-      flex: 1;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: 40% 60%;
-      overflow: hidden;
-    }
-
-    /* ── Input Panel (left) ── */
-    .writer-input-panel {
+    /* ── Controls Card ── */
+    .tool-controls {
+      background: var(--surface, #0d0d1a);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      padding: 24px 22px 28px;
-      gap: 20px;
+      gap: 18px;
     }
-
-    .writer-input-panel::-webkit-scrollbar { width: 4px; }
-    .writer-input-panel::-webkit-scrollbar-track { background: transparent; }
-    .writer-input-panel::-webkit-scrollbar-thumb {
-      background: rgba(129, 140, 248, 0.2);
-      border-radius: 10px;
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-
-    /* ── Section label ── */
-    .field-label {
-      font-family: var(--font-body);
-      font-size: var(--text-xs);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    /* ── Topic Textarea ── */
-    .field-group { display: flex; flex-direction: column; }
-
-    #topicInput {
-      width: 100%;
-      min-height: 100px;
-      max-height: 180px;
-      resize: vertical;
-      background: rgba(7, 7, 15, 0.7);
-      border: 1px solid rgba(129, 140, 248, 0.18);
-      border-radius: 10px;
-      color: var(--text-primary);
+    .control-row label {
       font-family: var(--font-body);
       font-size: var(--text-sm);
-      line-height: 1.6;
-      padding: 12px 14px;
-      outline: none;
-      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    }
-
-    #topicInput::placeholder { color: var(--text-muted); }
-
-    #topicInput:focus {
-      border-color: rgba(129, 140, 248, 0.45);
-      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.08);
-    }
-
-    /* ── Pill Tab Groups ── */
-    .pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-
-    .pill-tab {
-      font-family: var(--font-body);
-      font-size: var(--text-xs);
-      font-weight: 500;
-      color: var(--text-secondary);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 5px 13px;
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      white-space: nowrap;
-      user-select: none;
-    }
-
-    .pill-tab:hover {
+      font-weight: 600;
       color: var(--text-primary);
-      background: rgba(129, 140, 248, 0.1);
-      border-color: rgba(129, 140, 248, 0.3);
+      letter-spacing: 0.01em;
     }
-
-    .pill-tab.active {
-      color: #fff;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.75), rgba(129, 140, 248, 0.55));
-      border-color: rgba(129, 140, 248, 0.5);
-      box-shadow: 0 0 10px rgba(129, 140, 248, 0.2);
-    }
-
-    /* ── Model Select ── */
-    .model-select-wrap {
-      position: relative;
-    }
-
-    .model-select-wrap::after {
-      content: '▾';
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--neon-indigo);
-      pointer-events: none;
-      font-size: 0.85rem;
-    }
-
-    #modelSelect {
+    .control-row textarea,
+    .control-row input[type="text"],
+    .control-row select {
       width: 100%;
-      appearance: none;
-      -webkit-appearance: none;
-      background: rgba(7, 7, 15, 0.8);
+      background: rgba(7, 7, 15, 0.85);
       border: 1px solid rgba(129, 140, 248, 0.2);
       border-radius: 10px;
       color: var(--text-primary);
       font-family: var(--font-body);
-      font-size: var(--text-sm);
-      padding: 9px 36px 9px 14px;
-      cursor: pointer;
+      font-size: var(--text-md);
+      padding: 12px 14px;
       outline: none;
       transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      resize: vertical;
     }
-
-    #modelSelect:focus {
-      border-color: rgba(129, 140, 248, 0.5);
+    .control-row textarea:focus,
+    .control-row input[type="text"]:focus,
+    .control-row select:focus {
+      border-color: rgba(129, 140, 248, 0.55);
       box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1);
     }
-
-    #modelSelect option {
+    .control-row select {
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      padding-right: 36px;
+      background-image: linear-gradient(45deg, transparent 50%, var(--neon-indigo) 50%), linear-gradient(135deg, var(--neon-indigo) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+    .control-row select option {
       background: #0d0d1a;
       color: var(--text-primary);
     }
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
 
-    /* ── Generate Button ── */
-    .btn-generate {
-      width: 100%;
-      padding: 13px 20px;
-      background: linear-gradient(135deg, #4f52c5 0%, #6366f1 40%, #818cf8 100%);
-      border: 1px solid rgba(129, 140, 248, 0.4);
-      border-radius: 12px;
-      color: #fff;
-      font-family: var(--font-body);
-      font-size: var(--text-base);
+    /* ── Action Bar ── */
+    .tool-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+    .btn-primary {
+      font-family: var(--font-heading);
+      font-size: var(--text-md);
       font-weight: 700;
-      letter-spacing: 0.03em;
+      color: #07070f;
+      background: linear-gradient(135deg, var(--neon-indigo), var(--neon-cyan));
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
       cursor: pointer;
-      transition: all var(--transition-fast);
+      letter-spacing: 0.02em;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+      box-shadow: 0 6px 24px rgba(129, 140, 248, 0.18);
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 30px rgba(129, 140, 248, 0.28);
+    }
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .model-provider-tag {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      white-space: nowrap;
+    }
+
+    /* ── Output Panel ── */
+    .tool-output {
+      background: var(--surface, #0d0d1a);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      min-height: 240px;
+      position: relative;
+    }
+    .tool-output.empty {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      margin-top: 4px;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
     }
-
-    .btn-generate:hover:not(:disabled) {
-      background: linear-gradient(135deg, #5b5fe0 0%, #7578f5 40%, #a5b4fc 100%);
-      box-shadow: var(--glow-indigo);
-      transform: translateY(-1px);
-    }
-
-    .btn-generate:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
-    .btn-generate:disabled {
-      opacity: 0.38;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* ── Output Panel (right) ── */
-    .writer-output-panel {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      padding: 24px 24px 24px;
-    }
-
-    .output-topbar {
-      flex-shrink: 0;
+    .output-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
       gap: 10px;
-      flex-wrap: wrap;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
-
     .output-label {
       font-family: var(--font-body);
       font-size: var(--text-xs);
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: var(--neon-indigo);
     }
-
     .output-actions {
+      margin-left: auto;
       display: flex;
-      align-items: center;
       gap: 8px;
     }
-
-    .btn-copy-output,
-    .btn-regenerate {
+    .output-actions button {
       font-family: var(--font-body);
       font-size: var(--text-xs);
       font-weight: 600;
-      border-radius: 8px;
-      padding: 5px 14px;
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      white-space: nowrap;
-    }
-
-    .btn-copy-output {
-      color: var(--neon-cyan);
-      background: rgba(34, 211, 238, 0.07);
-      border: 1px solid rgba(34, 211, 238, 0.22);
-    }
-
-    .btn-copy-output:hover:not(:disabled) {
-      background: rgba(34, 211, 238, 0.15);
-      border-color: rgba(34, 211, 238, 0.45);
-      box-shadow: 0 0 12px rgba(34, 211, 238, 0.15);
-    }
-
-    .btn-copy-output.copied {
-      color: #86efac;
-      border-color: rgba(134, 239, 172, 0.35);
-      background: rgba(134, 239, 172, 0.08);
-    }
-
-    .btn-copy-output:disabled,
-    .btn-regenerate:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
-    .btn-regenerate {
-      color: var(--text-secondary);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .btn-regenerate:hover:not(:disabled) {
-      color: var(--text-primary);
-      background: rgba(129, 140, 248, 0.1);
-      border-color: rgba(129, 140, 248, 0.3);
-    }
-
-    /* ── Output area wrapper (fills remaining height) ── */
-    .output-area-wrap {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    /* ── Shimmer skeleton ── */
-    .shimmer-lines {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 18px 20px;
-    }
-
-    .shimmer-line {
-      height: 14px;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid var(--border);
       border-radius: 6px;
-      background: linear-gradient(
-        90deg,
-        rgba(129, 140, 248, 0.04) 0%,
-        rgba(129, 140, 248, 0.12) 40%,
-        rgba(129, 140, 248, 0.04) 80%
-      );
-      background-size: 200% 100%;
-      animation: shimmerSlide 1.6s ease-in-out infinite;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
     }
-
-    @keyframes shimmerSlide {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* ── Output content box ── */
-    #outputContent {
-      flex: 1;
-      min-height: 0;
-      width: 100%;
-      overflow-y: auto;
-      background: rgba(7, 7, 15, 0.55);
-      border: 1px solid rgba(129, 140, 248, 0.14);
-      border-radius: 12px;
-      padding: 18px 20px;
+    .output-actions button:hover {
       color: var(--text-primary);
-      font-family: 'Space Grotesk', monospace;
-      font-size: var(--text-sm);
-      line-height: 1.75;
+      border-color: rgba(129, 140, 248, 0.4);
+      background: rgba(129, 140, 248, 0.06);
+    }
+    .output-body {
+      font-family: var(--font-body);
+      font-size: var(--text-md);
+      color: var(--text-primary);
+      line-height: 1.65;
       white-space: pre-wrap;
       word-break: break-word;
-      transition: border-color var(--transition-fast);
-      position: relative;
     }
-
-    #outputContent::-webkit-scrollbar { width: 5px; }
-    #outputContent::-webkit-scrollbar-track { background: transparent; }
-    #outputContent::-webkit-scrollbar-thumb {
-      background: rgba(129, 140, 248, 0.22);
-      border-radius: 10px;
-    }
-
-    #outputContent.is-streaming {
-      border-color: rgba(129, 140, 248, 0.3);
-      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.06);
-    }
-
-    /* Empty state */
-    .output-empty {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      height: 100%;
-      text-align: center;
-      color: var(--text-muted);
-      padding: 40px 20px;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .output-empty-icon {
-      font-size: 2.4rem;
-      opacity: 0.5;
-    }
-
-    .output-empty p {
-      font-family: var(--font-body);
-      font-size: var(--text-sm);
-      line-height: 1.6;
-      max-width: 280px;
-    }
-
-    /* Markdown rendering inside output */
-    #outputContent h1,
-    #outputContent h2,
-    #outputContent h3 {
+    .output-body h1, .output-body h2, .output-body h3 {
       font-family: var(--font-heading);
       color: var(--text-primary);
-      margin: 1.1em 0 0.4em;
-      line-height: 1.3;
+      margin-top: 24px;
+      margin-bottom: 12px;
     }
-
-    #outputContent h1 { font-size: 1.25em; font-weight: 800; }
-    #outputContent h2 { font-size: 1.08em; font-weight: 700; color: #c7d2fe; }
-    #outputContent h3 { font-size: 0.97em; font-weight: 600; color: rgba(199, 210, 254, 0.8); }
-
-    #outputContent strong { color: #e2e8f0; font-weight: 700; }
-    #outputContent em { color: rgba(241, 245, 249, 0.8); font-style: italic; }
-
-    #outputContent code {
-      font-family: 'Courier New', monospace;
-      font-size: 0.88em;
-      background: rgba(129, 140, 248, 0.1);
-      border: 1px solid rgba(129, 140, 248, 0.18);
-      border-radius: 4px;
-      padding: 1px 5px;
-      color: #c7d2fe;
-    }
-
-    #outputContent pre {
-      background: rgba(7, 7, 15, 0.8);
-      border: 1px solid rgba(129, 140, 248, 0.15);
+    .output-body h1 { font-size: 1.6em; }
+    .output-body h2 { font-size: 1.35em; }
+    .output-body h3 { font-size: 1.15em; }
+    .output-body p { margin: 0 0 14px; }
+    .output-body ul, .output-body ol { padding-left: 22px; margin: 0 0 14px; }
+    .output-body li { margin-bottom: 6px; }
+    .output-body pre {
+      background: rgba(7, 7, 15, 0.85);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 12px 14px;
+      padding: 14px 16px;
       overflow-x: auto;
-      margin: 8px 0;
-      white-space: pre;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.9em;
     }
-
-    #outputContent pre code {
-      background: none;
-      border: none;
+    .output-body code {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      background: rgba(129, 140, 248, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+    .output-body pre code {
+      background: transparent;
       padding: 0;
     }
-
-    #outputContent ul,
-    #outputContent ol {
-      margin: 0.5em 0 0.5em 1.4em;
+    .output-body blockquote {
+      border-left: 3px solid var(--neon-indigo);
+      padding: 4px 14px;
+      margin: 12px 0;
+      color: var(--text-secondary);
+      background: rgba(129, 140, 248, 0.05);
+      border-radius: 0 6px 6px 0;
     }
-
-    #outputContent li { margin: 0.25em 0; }
-
-    #outputContent hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 1em 0;
+    .output-body a {
+      color: var(--neon-cyan);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
-
-    /* Stream cursor */
     .stream-cursor {
       display: inline-block;
-      width: 2px;
-      height: 1em;
+      width: 8px;
+      height: 1.2em;
       background: var(--neon-indigo);
-      margin-left: 2px;
       vertical-align: text-bottom;
-      animation: cursorBlink 0.8s step-end infinite;
+      animation: cursor-blink 1s infinite;
+      margin-left: 2px;
+    }
+    @keyframes cursor-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
     }
 
-    @keyframes cursorBlink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
-    /* ── Word count bar ── */
-    .output-meta-bar {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 4px 0;
-      gap: 8px;
-    }
-
-    .word-count-display {
-      font-family: var(--font-body);
-      font-size: var(--text-xs);
-      color: var(--text-muted);
-    }
-
-    .word-count-display span {
-      color: var(--neon-indigo);
-      font-weight: 600;
-    }
-
-    /* ── No-key notice in output ── */
-    .no-key-notice {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      height: 100%;
+    /* ── No-Key Prompt ── */
+    .no-key-prompt {
       text-align: center;
       padding: 40px 20px;
     }
-
-    .no-key-notice-icon { font-size: 2.2rem; opacity: 0.7; }
-
-    .no-key-notice h3 {
+    .no-key-prompt .icon { font-size: 2.4rem; margin-bottom: 10px; }
+    .no-key-prompt h3 {
       font-family: var(--font-heading);
-      font-size: var(--text-md);
-      font-weight: 700;
+      font-size: var(--text-lg);
+      margin: 0 0 8px;
       color: var(--text-primary);
-      margin: 0;
     }
-
-    .no-key-notice p {
+    .no-key-prompt p {
       font-family: var(--font-body);
       font-size: var(--text-sm);
-      color: var(--text-muted);
-      max-width: 320px;
-      line-height: 1.6;
-      margin: 0;
+      color: var(--text-secondary);
+      margin: 0 0 18px;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
     }
-
-    .btn-add-key {
-      font-family: var(--font-body);
+    .no-key-prompt .btn-add-key {
+      font-family: var(--font-heading);
       font-size: var(--text-sm);
-      font-weight: 600;
-      color: #fff;
-      background: linear-gradient(135deg, rgba(99,102,241,0.8), rgba(129,140,248,0.7));
-      border: 1px solid rgba(129,140,248,0.4);
+      font-weight: 700;
+      color: #07070f;
+      background: linear-gradient(135deg, var(--neon-indigo), var(--neon-cyan));
+      border: none;
       border-radius: 10px;
-      padding: 10px 24px;
+      padding: 10px 22px;
       cursor: pointer;
-      transition: background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+      letter-spacing: 0.02em;
     }
 
-    .btn-add-key:hover {
-      background: linear-gradient(135deg, rgba(99,102,241,1), rgba(129,140,248,0.9));
-      box-shadow: var(--glow-indigo);
-      transform: translateY(-1px);
-    }
-
-    /* ── Error state ── */
-    .output-error {
+    /* ── Error State ── */
+    .error-banner {
+      background: rgba(248, 113, 113, 0.08);
+      border: 1px solid rgba(248, 113, 113, 0.3);
       color: #fca5a5;
+      border-radius: 8px;
+      padding: 12px 14px;
       font-family: var(--font-body);
       font-size: var(--text-sm);
-      background: rgba(248, 113, 113, 0.06);
-      border: 1px solid rgba(248, 113, 113, 0.2);
-      border-radius: 10px;
-      padding: 14px 18px;
-      margin: 0;
+      margin-bottom: 14px;
     }
 
-    /* ── Responsive: mobile stacked layout ── */
-    @media (max-width: 900px) {
-      .writer-body {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
-        overflow-y: auto;
-      }
-
-      .writer-input-panel {
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        overflow-y: visible;
-        max-height: none;
-      }
-
-      .writer-output-panel {
-        min-height: 400px;
-      }
-
-      #outputContent {
-        min-height: 320px;
-      }
-
-      .writer-header {
-        padding: 18px 18px 14px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .writer-header { padding: 16px 16px 14px; }
-      .writer-input-panel { padding: 18px 16px 22px; }
-      .writer-output-panel { padding: 18px 16px 18px; }
-      .writer-title { font-size: var(--text-lg); }
-      .pill-tab { font-size: 0.68rem; padding: 4px 11px; }
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .tool-page { padding: 18px 16px 40px; }
+      .tool-controls { padding: 18px; }
+      .tool-output { padding: 18px 18px; }
+      .tool-title { font-size: var(--text-xl); }
     }
   </style>
 </head>
 <body>
 <main>
-  <div class="writer-page">
+  <div class="tool-page">
 
     <!-- ── Header ── -->
-    <div class="writer-header">
-      <div class="writer-badge">&#10022; AI WRITER</div>
-      <h1 class="writer-title">AI Writing Assistant</h1>
-      <p class="writer-subtitle">Generate blog posts, threads, emails, and more with your own API key</p>
-      <div class="writer-key-bar">
+    <header class="tool-header">
+      <div class="tool-badge">🛠 FREE BYOK TOOL</div>
+      <h1 class="tool-title">AI Writer</h1>
+      <p class="tool-subtitle">Articles, emails, scripts, whatever you need. Bring your OpenAI or OpenRouter key. Zero tracking, zero storage.</p>
+      <div class="tool-key-bar">
         <span id="keyStatus"></span>
-        <button class="btn-manage-keys" onclick="openByokModal()">Configure API Key &rarr;</button>
+        <button class="btn-manage-keys" data-byok="open">Manage Keys →</button>
       </div>
-    </div>
+    </header>
 
-    <!-- ── Two-column body ── -->
-    <div class="writer-body">
+    <!-- ── Controls ── -->
+    <section class="tool-controls" aria-label="Tool inputs">
+  <div class="control-row">
+    <label for="ctrl-prompt">What do you want to write?</label>
+    <textarea id="ctrl-prompt" data-ctrl="prompt" rows="6" placeholder="Describe the topic, audience, angle, and any key points to cover." spellcheck="true"></textarea>
+  </div>
+  <div class="control-grid">
+  <div class="control-row">
+    <label for="ctrl-format">Format</label>
+    <select id="ctrl-format" data-ctrl="format">
+      <option value="article" selected>Article</option>
+      <option value="blog post">Blog post</option>
+      <option value="email">Email</option>
+      <option value="LinkedIn post">LinkedIn post</option>
+      <option value="Twitter thread">Twitter thread</option>
+      <option value="video script">Video script</option>
+    </select>
+  </div>
+  <div class="control-row">
+    <label for="ctrl-tone">Tone</label>
+    <select id="ctrl-tone" data-ctrl="tone">
+      <option value="editorial" selected>Editorial</option>
+      <option value="casual">Casual</option>
+      <option value="technical">Technical</option>
+      <option value="persuasive">Persuasive</option>
+      <option value="punchy">Punchy / concise</option>
+    </select>
+  </div>
+  <div class="control-row">
+    <label for="ctrl-length">Length</label>
+    <select id="ctrl-length" data-ctrl="length">
+      <option value="short (250 words)">Short · ~250 words</option>
+      <option value="medium (700 words)">Medium · ~700 words</option>
+      <option value="long (1500 words)">Long · ~1500 words</option>
+      <option value="very long (3000 words)">Very long · ~3000 words</option>
+    </select>
+  </div>
+  </div>
 
-      <!-- ── Left: Input Panel ── -->
-      <div class="writer-input-panel">
+      <div class="control-row">
+        <label for="ctrl-model">AI Model</label>
+        <select id="ctrl-model" data-ctrl="model">
+        <option value="anthropic/claude-sonnet-4.5" selected>Claude Sonnet 4.5 · Best quality</option>
+        <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet · Proven, cheaper</option>
+        <option value="openai/gpt-4o">GPT-4o · Balanced</option>
+        <option value="openai/gpt-4o-mini">GPT-4o mini · Fast &amp; cheap</option>
+        <option value="meta-llama/llama-3.1-70b-instruct:free">Llama 3.1 70B · Free</option>
+        <option value="google/gemini-flash-1.5:free">Gemini Flash · Free</option>
+        </select>
+      </div>
 
-        <!-- Topic / Brief -->
-        <div class="field-group">
-          <div class="field-label">Topic / Brief</div>
-          <textarea
-            id="topicInput"
-            placeholder="What do you want to write about? Give context, audience, key points to cover..."
-            autocomplete="off"
-            spellcheck="true"
-          ></textarea>
-        </div>
+      <div class="tool-actions">
+        <button id="runBtn" class="btn-primary" disabled>Write</button>
+        <span class="model-provider-tag" id="providerTag">via OpenRouter</span>
+      </div>
+    </section>
 
-        <!-- Format -->
-        <div class="field-group">
-          <div class="field-label">Format</div>
-          <div class="pill-group" id="formatGroup" role="group" aria-label="Content format">
-            <button class="pill-tab active" data-value="Blog Post">Blog Post</button>
-            <button class="pill-tab" data-value="Twitter Thread">Twitter Thread</button>
-            <button class="pill-tab" data-value="Email Newsletter">Email Newsletter</button>
-            <button class="pill-tab" data-value="LinkedIn Post">LinkedIn Post</button>
-            <button class="pill-tab" data-value="Product Description">Product Description</button>
-            <button class="pill-tab" data-value="YouTube Script">YouTube Script</button>
-          </div>
-        </div>
+    <!-- ── Output ── -->
+    <section class="tool-output empty" id="outputPanel" aria-live="polite">
+      <span>Your result will appear here.</span>
+    </section>
 
-        <!-- Tone -->
-        <div class="field-group">
-          <div class="field-label">Tone</div>
-          <div class="pill-group" id="toneGroup" role="group" aria-label="Writing tone">
-            <button class="pill-tab active" data-value="Professional">Professional</button>
-            <button class="pill-tab" data-value="Conversational">Conversational</button>
-            <button class="pill-tab" data-value="Technical">Technical</button>
-            <button class="pill-tab" data-value="Persuasive">Persuasive</button>
-            <button class="pill-tab" data-value="Educational">Educational</button>
-          </div>
-        </div>
-
-        <!-- Length -->
-        <div class="field-group">
-          <div class="field-label">Length</div>
-          <div class="pill-group" id="lengthGroup" role="group" aria-label="Output length">
-            <button class="pill-tab" data-value="Short (~300 words)">Short (~300w)</button>
-            <button class="pill-tab active" data-value="Medium (~600 words)">Medium (~600w)</button>
-            <button class="pill-tab" data-value="Long (~1200 words)">Long (~1200w)</button>
-          </div>
-        </div>
-
-        <!-- Model -->
-        <div class="field-group">
-          <div class="field-label">Model</div>
-          <div class="model-select-wrap">
-            <select id="modelSelect" aria-label="Select AI model">
-              <option value="openai/gpt-4o">GPT-4o (OpenAI)</option>
-              <option value="openai/gpt-4o-mini">GPT-4o mini (OpenAI)</option>
-              <option value="anthropic/claude-3-5-sonnet">Claude 3.5 Sonnet (OpenRouter)</option>
-              <option value="meta-llama/llama-3.1-70b-instruct:free">Llama 3.1 70B (Free)</option>
-              <option value="google/gemini-flash-1.5">Gemini Flash (Free)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Generate button -->
-        <button class="btn-generate" id="generateBtn" disabled>
-          Generate Content &#10022;
-        </button>
-
-      </div><!-- /input panel -->
-
-      <!-- ── Right: Output Panel ── -->
-      <div class="writer-output-panel">
-
-        <div class="output-topbar">
-          <div class="output-label">Generated Content</div>
-          <div class="output-actions">
-            <button class="btn-regenerate" id="regenerateBtn" disabled>&#8635; Regenerate</button>
-            <button class="btn-copy-output" id="copyBtn" disabled>Copy</button>
-          </div>
-        </div>
-
-        <div class="output-area-wrap">
-          <div id="outputContent">
-            <div class="output-empty" id="emptyState">
-              <div class="output-empty-icon">&#9998;</div>
-              <p>Fill in your brief, choose your format and tone, then click Generate.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="output-meta-bar">
-          <div class="word-count-display" id="wordCountDisplay"></div>
-        </div>
-
-      </div><!-- /output panel -->
-
-    </div><!-- /writer-body -->
-
-  </div><!-- /writer-page -->
+  </div>
 </main>
 
 <script>
 (function () {
   'use strict';
 
-  /* ─── Constants ─── */
+  // ── Config ──
+  const SYSTEM_PROMPT = `You are an expert long-form writer for Aether Intel. Produce clean, well-structured markdown. Use headings, paragraphs, and lists where they help. Be specific over generic. No filler, no disclaimers, no apologies. Match the requested tone and length precisely.`;
+  const PROMPT_TEMPLATE = `Write a {length} piece in a {tone} tone, formatted as {format}.
+
+Topic / brief:
+{prompt}`;
+  const MAX_TOKENS = 4096;
+  const MODELS = {
+    "anthropic/claude-sonnet-4.5": { label: "Claude Sonnet 4.5 \u00b7 Best quality", provider: "openrouter", via: "via OpenRouter" },
+    "anthropic/claude-3.5-sonnet": { label: "Claude 3.5 Sonnet \u00b7 Proven, cheaper", provider: "openrouter", via: "via OpenRouter" },
+    "openai/gpt-4o": { label: "GPT-4o \u00b7 Balanced", provider: "openai", via: "via OpenAI" },
+    "openai/gpt-4o-mini": { label: "GPT-4o mini \u00b7 Fast & cheap", provider: "openai", via: "via OpenAI" },
+    "meta-llama/llama-3.1-70b-instruct:free": { label: "Llama 3.1 70B \u00b7 Free", provider: "openrouter", via: "via OpenRouter" },
+    "google/gemini-flash-1.5:free": { label: "Gemini Flash \u00b7 Free", provider: "openrouter", via: "via OpenRouter" },
+  };
   const OPENAI_BASE     = 'https://api.openai.com/v1/chat/completions';
   const OPENROUTER_BASE = 'https://openrouter.ai/api/v1/chat/completions';
   const SITE_URL        = 'https://ai.quantummerlin.com';
   const SITE_NAME       = 'Aether Intel';
+  const OUTPUT_FILENAME = 'writer-output.md';
 
-  /* ─── State ─── */
-  let isStreaming      = false;
-  let lastUserPrompt   = '';
-  let lastSystemPrompt = '';
-  let lastModelValue   = '';
+  let isStreaming = false;
+  let lastOutput = '';
 
-  /* ─── DOM refs ─── */
-  const topicInput    = document.getElementById('topicInput');
-  const modelSelect   = document.getElementById('modelSelect');
-  const generateBtn   = document.getElementById('generateBtn');
-  const regenerateBtn = document.getElementById('regenerateBtn');
-  const copyBtn       = document.getElementById('copyBtn');
-  const outputContent = document.getElementById('outputContent');
-  const wordCountDisplay = document.getElementById('wordCountDisplay');
+  const runBtn      = document.getElementById('runBtn');
+  const outputPanel = document.getElementById('outputPanel');
+  const providerTag = document.getElementById('providerTag');
+  const modelSelect = document.getElementById('ctrl-model');
 
-  /* ─── Pill tab wiring ─── */
-  function initPillGroup(groupId) {
-    const group = document.getElementById(groupId);
-    if (!group) return;
-    group.addEventListener('click', function (e) {
-      const btn = e.target.closest('.pill-tab');
-      if (!btn) return;
-      group.querySelectorAll('.pill-tab').forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-    });
-  }
-
-  initPillGroup('formatGroup');
-  initPillGroup('toneGroup');
-  initPillGroup('lengthGroup');
-
-  /* ─── Read pill selection ─── */
-  function getActivePill(groupId) {
-    const group = document.getElementById(groupId);
-    if (!group) return '';
-    const active = group.querySelector('.pill-tab.active');
-    return active ? active.dataset.value : '';
-  }
-
-  /* ─── BYOK helpers ─── */
+  // ── Helpers ──
   function getApiKey(provider) {
     if (typeof window.getKey === 'function') return window.getKey(provider);
     return localStorage.getItem('byok_' + provider) || null;
   }
+  function hasApiKey(provider) { return Boolean(getApiKey(provider)); }
 
-  function hasApiKey(provider) {
-    return Boolean(getApiKey(provider));
+  function getModelInfo() {
+    const v = modelSelect.value;
+    return MODELS[v] || { label: v, provider: 'openrouter', via: 'via OpenRouter' };
   }
 
-  function getModelProvider(modelValue) {
-    return modelValue.startsWith('openai/') ? 'openai' : 'openrouter';
+  function updateProviderTag() {
+    providerTag.textContent = getModelInfo().via;
   }
 
-  /* ─── Enable/disable generate button ─── */
-  function refreshGenerateState() {
-    if (isStreaming) {
-      generateBtn.disabled = true;
-      return;
-    }
-    const provider = getModelProvider(modelSelect.value);
-    const hasKey   = hasApiKey(provider);
-    const hasTopic = topicInput.value.trim().length > 0;
-    generateBtn.disabled = !(hasKey && hasTopic);
+  function getControlValue(id) {
+    const el = document.querySelector('[data-ctrl="' + id + '"]');
+    if (!el) return '';
+    return el.value || '';
   }
 
-  topicInput.addEventListener('input', refreshGenerateState);
-  modelSelect.addEventListener('change', refreshGenerateState);
-
-  /* ─── Build system prompt ─── */
-  function buildSystemPrompt(format, tone, length) {
-    return (
-      'You are an expert content writer. Write a ' + format +
-      ' in a ' + tone + ' tone about the following topic. Target length: ' + length + '. ' +
-      'Output ONLY the final content — no preamble, no "Here is your...", no explanation. ' +
-      'Use markdown formatting appropriate for the format type. ' +
-      'For blog posts use headers and subheadings. ' +
-      'For Twitter threads number each tweet. ' +
-      'For emails include subject line. ' +
-      'Start writing immediately.'
-    );
+  function getRequiredControls() {
+    return Array.from(document.querySelectorAll('[data-ctrl]'))
+      .filter(el => el.id !== 'ctrl-model');
   }
 
-  /* ─── Word count ─── */
-  function countWords(text) {
-    const clean = text.trim();
-    if (!clean) return 0;
-    return clean.split(/\s+/).filter(Boolean).length;
+  function isReady() {
+    if (isStreaming) return false;
+    if (!hasApiKey(getModelInfo().provider)) return false;
+    // Require the first textarea/text input to be non-empty
+    const primary = document.querySelector('textarea[data-ctrl], input[data-ctrl]');
+    if (primary && primary.tagName !== 'SELECT' && !primary.value.trim()) return false;
+    return true;
   }
 
-  function updateWordCount(text) {
-    const words = countWords(text);
-    if (words === 0) {
-      wordCountDisplay.innerHTML = '';
-    } else {
-      wordCountDisplay.innerHTML = '<span>' + words.toLocaleString() + '</span> words';
-    }
+  function refreshButton() {
+    runBtn.disabled = !isReady();
   }
 
-  /* ─── Escape HTML for safety ─── */
-  function escapeHtml(str) {
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+  // ── Markdown formatting (lightweight) ──
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
-
-  /* ─── Basic markdown → HTML renderer ─── */
-  function renderMarkdown(text) {
-    // Protect code blocks
-    const codeBlocks = [];
-    text = text.replace(/```[\s\S]*?```/g, function (match) {
-      const idx = codeBlocks.length;
-      const inner = match.replace(/^```\w*\n?/, '').replace(/```$/, '');
-      codeBlocks.push('<pre><code>' + escapeHtml(inner.trim()) + '</code></pre>');
-      return '\x00CODE' + idx + '\x00';
+  function formatMarkdown(text) {
+    let html = text;
+    // fenced code
+    html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, function(_, lang, code) {
+      return '<pre><code>' + escapeHtml(code.trim()) + '</code></pre>';
     });
-
-    // Inline code
-    const inlineCodes = [];
-    text = text.replace(/`([^`]+)`/g, function (_, code) {
-      const idx = inlineCodes.length;
-      inlineCodes.push('<code>' + escapeHtml(code) + '</code>');
-      return '\x01IC' + idx + '\x01';
+    // inline code
+    html = html.replace(/`([^`]+)`/g, function(_, c) { return '<code>' + escapeHtml(c) + '</code>'; });
+    // headings
+    html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
+    // bold/italic
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    // links
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    // bullet list
+    html = html.replace(/(^|\n)([-*] .+(?:\n[-*] .+)*)/g, function(m, lead, block) {
+      const items = block.split(/\n/).map(l => l.replace(/^[-*] /, '')).map(li => '<li>' + li + '</li>').join('');
+      return lead + '<ul>' + items + '</ul>';
     });
-
-    // Headings (must be at start of line)
-    text = text.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-    text = text.replace(/^## (.+)$/gm,  '<h2>$1</h2>');
-    text = text.replace(/^# (.+)$/gm,   '<h1>$1</h1>');
-
-    // Bold / italic
-    text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-    text = text.replace(/\*\*(.+?)\*\*/g,     '<strong>$1</strong>');
-    text = text.replace(/\*(.+?)\*/g,          '<em>$1</em>');
-
-    // Horizontal rule
-    text = text.replace(/^---+$/gm, '<hr>');
-
-    // Lists (unordered)
-    text = text.replace(/^[\-\*] (.+)$/gm, '<li>$1</li>');
-    text = text.replace(/(<li>.*<\/li>(\n|$))+/g, function (m) { return '<ul>' + m + '</ul>'; });
-
-    // Lists (ordered)
-    text = text.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
-
-    // Paragraphs: double newlines
-    text = text.replace(/\n\n+/g, '</p><p>');
-    text = '<p>' + text + '</p>';
-    // Single newlines inside paragraphs
-    text = text.replace(/\n/g, '<br>');
-
-    // Restore inline codes
-    text = text.replace(/\x01IC(\d+)\x01/g, function (_, i) { return inlineCodes[parseInt(i, 10)]; });
-
-    // Restore code blocks
-    text = text.replace(/\x00CODE(\d+)\x00/g, function (_, i) { return codeBlocks[parseInt(i, 10)]; });
-
-    // Clean up empty <p></p> tags and wrapping around block elements
-    text = text.replace(/<p>\s*(<(?:h[1-6]|ul|ol|pre|hr)[^>]*>)/g, '$1');
-    text = text.replace(/(<\/(?:h[1-6]|ul|ol|pre|hr)>)\s*<\/p>/g, '$1');
-    text = text.replace(/<p>\s*<\/p>/g, '');
-
-    return text;
+    // numbered list
+    html = html.replace(/(^|\n)((?:\d+\. .+(?:\n\d+\. .+)*))/g, function(m, lead, block) {
+      const items = block.split(/\n/).map(l => l.replace(/^\d+\. /, '')).map(li => '<li>' + li + '</li>').join('');
+      return lead + '<ol>' + items + '</ol>';
+    });
+    // paragraphs (lines not already wrapped)
+    const lines = html.split(/\n\n+/);
+    html = lines.map(seg => {
+      if (/^<(h\d|ul|ol|pre|blockquote)/.test(seg.trim())) return seg;
+      if (!seg.trim()) return '';
+      return '<p>' + seg.replace(/\n/g, '<br>') + '</p>';
+    }).join('\n');
+    return html;
   }
 
-  /* ─── Parse SSE line ─── */
-  function parseSSEData(line) {
-    if (!line.startsWith('data: ')) return null;
-    const payload = line.slice(6).trim();
-    if (payload === '[DONE]') return '[DONE]';
-    try { return JSON.parse(payload); } catch (_) { return null; }
+  // ── Build the final prompt by interpolating control values into PROMPT_TEMPLATE ──
+  function buildUserPrompt() {
+    let prompt = PROMPT_TEMPLATE;
+    document.querySelectorAll('[data-ctrl]').forEach(el => {
+      const key = el.getAttribute('data-ctrl');
+      if (key === 'model') return;
+      prompt = prompt.replace(new RegExp('\\{' + key + '\\}', 'g'), el.value || '');
+    });
+    return prompt;
   }
 
-  /* ─── Set output to error state ─── */
-  function showOutputError(msg) {
-    outputContent.innerHTML = '<p class="output-error">Error: ' + escapeHtml(msg) + '</p>';
-    outputContent.classList.remove('is-streaming');
-    copyBtn.disabled = true;
-    regenerateBtn.disabled = false;
-    isStreaming = false;
-    updateWordCount('');
-    refreshGenerateState();
+  function showNoKeyPrompt(provider) {
+    outputPanel.classList.remove('empty');
+    outputPanel.innerHTML =
+      '<div class="no-key-prompt">' +
+        '<div class="icon">🔑</div>' +
+        '<h3>Add your API key to continue</h3>' +
+        '<p>This model needs a <strong>' + (provider === 'openai' ? 'OpenAI' : 'OpenRouter') +
+        '</strong> key. Your key stays in your browser only — no servers, no tracking.</p>' +
+        '<button class="btn-add-key" data-byok="open">Add API Key →</button>' +
+      '</div>';
   }
 
-  /* ─── Main streaming function ─── */
-  async function streamContent(apiUrl, apiKey, extraHeaders, body) {
-    // Clear output and start streaming state
-    outputContent.innerHTML = '';
-    outputContent.classList.add('is-streaming');
-    copyBtn.disabled = true;
-    regenerateBtn.disabled = true;
+  function setOutputShellForStreaming() {
+    outputPanel.classList.remove('empty');
+    outputPanel.innerHTML =
+      '<div class="output-header">' +
+        '<span class="output-label">Result</span>' +
+        '<div class="output-actions">' +
+          '<button id="btnCopy" type="button">Copy</button>' +
+          '<button id="btnDownload" type="button">Download .md</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="output-body" id="outputBody"></div>';
 
-    let cursor = document.createElement('span');
-    cursor.className = 'stream-cursor';
-    outputContent.appendChild(cursor);
-
-    let fullText = '';
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: Object.assign({ 'Content-Type': 'application/json' }, extraHeaders),
-        body: JSON.stringify(body)
+    document.getElementById('btnCopy').addEventListener('click', function () {
+      navigator.clipboard.writeText(lastOutput).then(function () {
+        const b = document.getElementById('btnCopy');
+        b.textContent = 'Copied!';
+        setTimeout(() => { b.textContent = 'Copy'; }, 1500);
       });
-
-      if (!response.ok) {
-        let errMsg = 'API error ' + response.status;
-        try {
-          const errJson = await response.json();
-          if (errJson.error && errJson.error.message) errMsg = errJson.error.message;
-        } catch (_) {}
-        if (response.status === 401) errMsg = 'Invalid API key. Please check your key in Configure API Key.';
-        else if (response.status === 429) errMsg = 'Rate limit reached. Please wait a moment and try again.';
-        else if (response.status === 402) errMsg = 'Insufficient credits. Please top up your API account.';
-        else if (response.status === 403) errMsg = 'Access denied. Your key may not have permission for this model.';
-        showOutputError(errMsg);
-        return;
-      }
-
-      const reader  = response.body.getReader();
-      const decoder = new TextDecoder('utf-8');
-      let buffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop(); // keep any incomplete line
-
-        for (const line of lines) {
-          const parsed = parseSSEData(line.trim());
-          if (!parsed || parsed === '[DONE]') continue;
-
-          const delta = parsed.choices &&
-                        parsed.choices[0] &&
-                        parsed.choices[0].delta &&
-                        parsed.choices[0].delta.content;
-          if (delta) {
-            fullText += delta;
-            // Re-render markdown and re-append cursor
-            outputContent.innerHTML = renderMarkdown(fullText);
-            cursor = document.createElement('span');
-            cursor.className = 'stream-cursor';
-            outputContent.appendChild(cursor);
-            updateWordCount(fullText);
-            // Scroll to bottom
-            outputContent.scrollTop = outputContent.scrollHeight;
-          }
-        }
-      }
-
-      // Final render without cursor
-      outputContent.innerHTML = renderMarkdown(fullText);
-      outputContent.classList.remove('is-streaming');
-      updateWordCount(fullText);
-      outputContent.scrollTop = 0;
-
-      copyBtn.disabled    = (fullText.length === 0);
-      regenerateBtn.disabled = false;
-
-    } catch (err) {
-      let errText = 'Network error. Please check your connection and try again.';
-      if (err.name === 'AbortError') errText = 'Request was cancelled.';
-      else if (err.message && err.message.includes('Failed to fetch')) errText = 'Could not reach the API. Check your connection or try again.';
-      showOutputError(errText);
-      return;
-    }
-
-    isStreaming = false;
-    refreshGenerateState();
+    });
+    document.getElementById('btnDownload').addEventListener('click', function () {
+      const blob = new Blob([lastOutput], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = OUTPUT_FILENAME;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
   }
 
-  /* ─── Kick off a generation ─── */
-  async function runGeneration(systemPrompt, userPrompt, modelValue) {
-    if (isStreaming) return;
+  function parseSSE(line) {
+    if (!line.startsWith('data: ')) return null;
+    const data = line.slice(6).trim();
+    if (data === '[DONE]') return '[DONE]';
+    try { return JSON.parse(data); } catch (_) { return null; }
+  }
 
-    const provider = getModelProvider(modelValue);
-    const apiKey   = getApiKey(provider);
+  async function runRequest() {
+    if (!isReady()) return;
+    const info = getModelInfo();
+    const provider = info.provider;
+    const apiKey = getApiKey(provider);
+    if (!apiKey) { showNoKeyPrompt(provider); return; }
 
-    if (!apiKey) {
-      // Show no-key notice inside output panel
-      outputContent.innerHTML = `
-        <div class="no-key-notice">
-          <div class="no-key-notice-icon">&#128273;</div>
-          <h3>API key required</h3>
-          <p>The selected model requires a <strong>${provider === 'openai' ? 'OpenAI' : 'OpenRouter'}</strong> API key stored in your browser.</p>
-          <button class="btn-add-key" onclick="openByokModal()">Configure API Key &rarr;</button>
-        </div>`;
-      return;
-    }
+    const userPrompt = buildUserPrompt();
+    setOutputShellForStreaming();
+    const body = document.getElementById('outputBody');
+    const cursor = document.createElement('span');
+    cursor.className = 'stream-cursor';
+    body.appendChild(cursor);
 
     isStreaming = true;
-    generateBtn.disabled = true;
+    runBtn.disabled = true;
+    runBtn.textContent = 'Generating…';
+    lastOutput = '';
 
     let apiUrl, headers, modelId;
-
     if (provider === 'openai') {
-      apiUrl   = OPENAI_BASE;
-      modelId  = modelValue.replace('openai/', '');
-      headers  = { 'Authorization': 'Bearer ' + apiKey };
+      apiUrl = OPENAI_BASE;
+      modelId = modelSelect.value.replace('openai/', '');
+      headers = { 'Authorization': 'Bearer ' + apiKey };
     } else {
-      apiUrl   = OPENROUTER_BASE;
-      modelId  = modelValue;
-      headers  = {
+      apiUrl = OPENROUTER_BASE;
+      modelId = modelSelect.value;
+      headers = {
         'Authorization': 'Bearer ' + apiKey,
         'HTTP-Referer': SITE_URL,
         'X-Title': SITE_NAME
       };
     }
 
-    const body = {
-      model:       modelId,
-      messages:    [
-        { role: 'system', content: systemPrompt },
+    const payload = {
+      model: modelId,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user',   content: userPrompt }
       ],
-      stream:      true,
-      temperature: 0.8,
-      max_tokens:  2000
+      stream: true,
+      max_tokens: MAX_TOKENS
     };
 
-    await streamContent(apiUrl, apiKey, headers, body);
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...headers },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        let msg = 'API error ' + res.status;
+        try {
+          const j = await res.json();
+          if (j.error && j.error.message) msg = j.error.message;
+        } catch (_) {}
+        if (res.status === 401) msg = 'Invalid API key. Check your key in Manage Keys.';
+        if (res.status === 429) msg = 'Rate limit reached. Wait a moment and try again.';
+        if (res.status === 402) msg = 'Insufficient credits. Top up your API account.';
+        body.innerHTML = '<div class="error-banner">Error: ' + msg + '</div>';
+        isStreaming = false;
+        runBtn.textContent = 'Write';
+        refreshButton();
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let buf = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop();
+        for (const line of lines) {
+          const parsed = parseSSE(line.trim());
+          if (!parsed || parsed === '[DONE]') continue;
+          const delta = parsed.choices?.[0]?.delta?.content;
+          if (delta) {
+            lastOutput += delta;
+            body.innerHTML = formatMarkdown(lastOutput);
+            const c = document.createElement('span');
+            c.className = 'stream-cursor';
+            body.appendChild(c);
+            outputPanel.scrollTop = outputPanel.scrollHeight;
+          }
+        }
+      }
+
+      body.innerHTML = formatMarkdown(lastOutput);
+    } catch (err) {
+      body.innerHTML = '<div class="error-banner">Network error. ' + (err.message || '') + '</div>';
+    }
+
+    isStreaming = false;
+    runBtn.textContent = 'Write';
+    refreshButton();
   }
 
-  /* ─── Generate button handler ─── */
-  generateBtn.addEventListener('click', function () {
-    const topic  = topicInput.value.trim();
-    if (!topic || isStreaming) return;
-
-    const format = getActivePill('formatGroup');
-    const tone   = getActivePill('toneGroup');
-    const length = getActivePill('lengthGroup');
-    const model  = modelSelect.value;
-
-    lastSystemPrompt = buildSystemPrompt(format, tone, length);
-    lastUserPrompt   = topic;
-    lastModelValue   = model;
-
-    runGeneration(lastSystemPrompt, lastUserPrompt, lastModelValue);
-  });
-
-  /* ─── Regenerate button handler ─── */
-  regenerateBtn.addEventListener('click', function () {
-    if (!lastUserPrompt || isStreaming) return;
-    runGeneration(lastSystemPrompt, lastUserPrompt, lastModelValue);
-  });
-
-  /* ─── Copy button handler ─── */
-  copyBtn.addEventListener('click', function () {
-    const text = outputContent.innerText || outputContent.textContent || '';
-    if (!text.trim()) return;
-
-    navigator.clipboard.writeText(text.trim()).then(function () {
-      copyBtn.textContent = 'Copied!';
-      copyBtn.classList.add('copied');
-      setTimeout(function () {
-        copyBtn.textContent = 'Copy';
-        copyBtn.classList.remove('copied');
-      }, 2200);
-    }).catch(function () {
-      copyBtn.textContent = 'Failed';
-      setTimeout(function () { copyBtn.textContent = 'Copy'; }, 2000);
+  // ── Wire up ──
+  runBtn.addEventListener('click', runRequest);
+  document.querySelectorAll('[data-ctrl]').forEach(el => {
+    el.addEventListener('input',  refreshButton);
+    el.addEventListener('change', function () {
+      refreshButton();
+      if (el.id === 'ctrl-model') updateProviderTag();
     });
   });
 
-  /* ─── Listen for storage changes (BYOK modal saved a key) ─── */
   window.addEventListener('storage', function (e) {
-    if (e.key && e.key.startsWith('byok_')) {
-      refreshGenerateState();
-      // If there's a no-key notice showing, clear it
-      const notice = outputContent.querySelector('.no-key-notice');
-      if (notice) {
-        const provider = getModelProvider(modelSelect.value);
-        if (hasApiKey(provider)) {
-          outputContent.innerHTML = '<div class="output-empty" id="emptyState"><div class="output-empty-icon">&#9998;</div><p>Fill in your brief, choose your format and tone, then click Generate.</p></div>';
+    if (e.key && e.key.startsWith('byok_')) refreshButton();
+  });
+
+  function init() {
+    updateProviderTag();
+    refreshButton();
+    if (typeof window.getKey !== 'function') {
+      let n = 0;
+      const t = setInterval(() => {
+        n++;
+        if (typeof window.getKey === 'function' || n > 30) {
+          clearInterval(t);
+          refreshButton();
         }
-      }
+      }, 100);
     }
-  });
-
-  /* ─── Also re-check after BYOK modal interactions ─── */
-  document.addEventListener('click', function (e) {
-    if (
-      e.target.closest('#byokClose') ||
-      e.target.id === 'byokModal' ||
-      e.target.closest('[data-byok-save]') ||
-      e.target.closest('[data-byok-clear]')
-    ) {
-      setTimeout(refreshGenerateState, 150);
-    }
-  });
-
-  /* ─── Init: wait for byok.js to be available ─── */
-  function initAfterByok() {
-    refreshGenerateState();
-  }
-
-  if (typeof window.getKey === 'function') {
-    initAfterByok();
-  } else {
-    let attempts = 0;
-    const poll = setInterval(function () {
-      attempts++;
-      if (typeof window.getKey === 'function' || attempts > 40) {
-        clearInterval(poll);
-        initAfterByok();
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('#byokClose') || e.target.id === 'byokModal' ||
+          e.target.closest('[data-byok-save]') || e.target.closest('[data-byok-clear]')) {
+        setTimeout(refreshButton, 100);
       }
-    }, 100);
+    });
   }
-
+  document.addEventListener('DOMContentLoaded', init);
 })();
 </script>
 
-<script src="/js/byok.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
 </body>
 </html>
