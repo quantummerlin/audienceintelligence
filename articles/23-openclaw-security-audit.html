@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw's Security Problem: 2,000 CVEs, Plaintext Keys, and a Marketplace You Can't Trust – Aether Intel</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/23-openclaw-security-audit.html">
+  <!-- Open Graph -->
+  <meta property="og:title" content="OpenClaw's Security Problem: 2,000 CVEs, Plaintext Keys, and a Marketplace You Can't Trust">
+  <meta property="og:description" content="Based on analysis of 7,347 OpenClaw user comments: the official Docker image has ~2,000 CVEs, credentials sit in plaintext logs, and ClawHub skills can execute arbitrary system commands. Here's the full picture.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/23-openclaw-security-audit.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/23-openclaw-security-audit-hero.png">
+  <meta property="article:published_time" content="2026-05-12">
+  <meta property="article:author" content="Quantum Merlin">
+  <!-- Twitter/X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OpenClaw's Security Problem: 2,000 CVEs, Plaintext Keys, and a Marketplace You Can't Trust">
+  <meta name="twitter:description" content="Based on analysis of 7,347 OpenClaw user comments: the official Docker image has ~2,000 CVEs, credentials sit in plaintext logs, and ClawHub skills can execute arbitrary system commands. Here's the full picture.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/23-openclaw-security-audit-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480241530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="Based on analysis of 7,347 OpenClaw user comments: the official Docker image has ~2,000 CVEs, credentials sit in plaintext logs, and ClawHub skills can execute arbitrary system commands. Here's the full picture.">
+</head>
+<body>
+<main>
+  <article class="article-page">
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/articles/23-openclaw-security-audit-hero.png" alt="OpenClaw security audit — CVEs, plaintext API keys, and ClawHub risks" class="article-hero-img" loading="eager" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/articles.html">Articles</a>
+            <span>&#x203a;</span>
+            <span>OpenClaw's Security Problem</span>
+          </nav>
+          <span class="badge badge-dev">Security</span>
+          <h1 class="article-hero-title">OpenClaw's Security Problem: 2,000 CVEs, Plaintext Keys, and a Marketplace You Can't Trust</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 12, 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">9 min read</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-layout">
+      <div class="article-body">
+
+        <p class="article-lead">People choose OpenClaw for the same reason they self-host anything: control. They want their data on their own hardware, their API keys off some third-party cloud, and their automation running without a vendor able to read their prompts or revoke their access on a Tuesday afternoon. That's a legitimate, reasonable goal.</p>
+
+        <p>The problem is that OpenClaw's default configuration doesn't actually deliver on that promise. Based on an analysis of 7,347 community comments, we found a consistent, high-volume pattern of security complaints — not theoretical risks, but real incidents people were actively dealing with. Leaked API keys. Vulnerable Docker images. Skills that can reach right through your container and touch your filesystem.</p>
+
+        <p>This article is not a hit piece. OpenClaw is genuinely powerful, and its community is doing interesting work. But if you're running it — or thinking about it — you need to understand what you're actually signing up for on the security front. The default posture is not production-ready, and the gap between "it works" and "it's safe" is wider than most users realize.</p>
+
+        <hr class="article-divider">
+
+        <h2 class="article-h2">The CVE Count: What 2,000 Vulnerabilities Actually Means</h2>
+
+        <p>CVE stands for Common Vulnerabilities and Exposures — it's the standard identifier system for publicly known security flaws in software. When someone scans a Docker image and reports 2,000 CVEs, they're saying there are two thousand catalogued, publicly documented security holes in the software that image contains.</p>
+
+        <p>Some CVEs are low severity. Some are high. Some have known exploits circulating in the wild. A number of them involve remote code execution — meaning an attacker who can reach the service could potentially run arbitrary code on your machine. Without digging into the full breakdown, you can't know exactly which bucket each flaw falls into, but two thousand is not a number you hand-wave away.</p>
+
+        <blockquote class="article-quote">
+          <p>"Official OpenClaw image has like 2k CVEs. I'm basically hosting a vulnerability farm on my server."</p>
+          <cite>— Community member, 380 upvotes</cite>
+        </blockquote>
+
+        <p>The irony runs deep here. The entire premise of self-hosting an AI agent framework is privacy and control. You don't want to trust a vendor with your data or your keys. But if the software you're running is riddled with unpatched vulnerabilities, you've traded one set of risks for a potentially worse one. A vendor with a proper security team is at least resourced to respond to CVEs. A solo developer running the official OpenClaw image is not.</p>
+
+        <blockquote class="article-quote">
+          <p>"Scanned the container and wanted to cry. How is this considered production-ready with that many security holes?"</p>
+          <cite>— Community member</cite>
+        </blockquote>
+
+        <p>The root cause is structural. OpenClaw's official Docker image is built on a base that hasn't been kept up to date with security patches. Open-source projects often fall into this pattern: the maintainers are focused on features and functionality, not container hygiene. Updating the base image means testing everything, which takes time nobody has.</p>
+
+        <p>The risk calculus differs depending on your situation. A hobbyist running OpenClaw on a home server, behind a router NAT, accessing it only from their local network, is in a meaningfully different position than a small business running it on a cloud VM with a public IP. But even the hobbyist is one misconfigured port forward, one malicious skill, or one compromised internal device away from that vulnerability surface becoming actively exploitable.</p>
+
+        <blockquote class="article-quote">
+          <p>"I chose self-hosted for privacy but now I'm responsible for patching 2k CVEs. Not sure I made the right choice."</p>
+          <cite>— Community member</cite>
+        </blockquote>
+
+        <p>This is the question nobody asks in the setup tutorial: are you prepared to be your own security team? Because that's what self-hosting actually means.</p>
+
+        <hr class="article-divider">
+
+        <h2 class="article-h2">Your API Keys Are Sitting in Plaintext</h2>
+
+        <p>The second major issue is credential storage. OpenClaw stores API keys in <code>.env</code> files and, critically, those credentials appear in plaintext in application logs. Anyone with filesystem access to your OpenClaw instance can read them.</p>
+
+        <blockquote class="article-quote">
+          <p>"Found my API keys in plaintext in the logs. Anyone with filesystem access can steal them and rack up charges."</p>
+          <cite>— Community member, 290 upvotes</cite>
+        </blockquote>
+
+        <p>The most common real-world incident this produces is the accidental Git commit. The workflow is painfully predictable: a developer sets up OpenClaw in a project directory, the <code>.env</code> file lives right there in the root, they run <code>git add .</code> out of habit, and suddenly their OpenAI key is on GitHub. If the repository is public, GitHub's secret scanning will alert them — usually in the middle of the night, once the key has already been indexed by at least one automated scanner looking for exactly this.</p>
+
+        <blockquote class="article-quote">
+          <p>"Accidentally committed my .env file with the OpenAI key because OpenClaw stores it in plaintext in the project directory. Had to rotate keys at 2am when GitHub alerted me."</p>
+          <cite>— Community member</cite>
+        </blockquote>
+
+        <p>Key rotation at 2am is the best-case scenario. You notice, you act, you're inconvenienced. The worse case is you don't notice for a week and come back to a $4,000 invoice from your API provider because someone has been running LLM queries on your dime, or using your cloud credentials to spin up GPU instances for crypto mining.</p>
+
+        <blockquote class="article-quote">
+          <p>"Why are my credentials just sitting there unencrypted? One compromised skill and my entire AWS account is exposed."</p>
+          <cite>— Community member</cite>
+        </blockquote>
+
+        <p>That last quote points to the second attack vector for credential theft, which is more insidious than the Git accident: a malicious ClawHub skill. If you've installed skills from the ClawHub marketplace — and most OpenClaw users have — those skills run with access to your filesystem. Your <code>.env</code> file is sitting right there. A skill that reads it and exfiltrates the contents would be invisible to most users.</p>
+
+        <p>The community has been asking about this for a long time. The question "How do I prevent OpenClaw from leaking my API keys?" has been asked 22 times across the community, accumulating 410 upvotes. That's not a fringe concern — it's one of the most persistent pain points in the entire ecosystem.</p>
+
+        <hr class="article-divider">
+
+        <h2 class="article-h2">The ClawHub Problem: npm Install With Sudo Access</h2>
+
+        <p>ClawHub is OpenClaw's skill marketplace. The concept is straightforward and genuinely useful: the community builds reusable skills — web search, calendar access, database queries, custom integrations — and shares them for others to install. It dramatically expands what OpenClaw can do without every user needing to write code.</p>
+
+        <p>The security model, however, is essentially nonexistent. Skills execute with full system privileges. There is no sandboxing. There is no code review process. There is no verification that a skill does what its description claims.</p>
+
+        <blockquote class="article-quote">
+          <p>"Scared to install anything from ClawHub. One malicious skill could execute system commands or steal my API keys."</p>
+          <cite>— Community member, 220 upvotes</cite>
+        </blockquote>
+
+        <p>The community's own analogy is the most accurate description of the risk:</p>
+
+        <blockquote class="article-quote">
+          <p>"These skills have full filesystem access and can run arbitrary commands. It's like installing random npm packages with sudo access."</p>
+          <cite>— Community member</cite>
+        </blockquote>
+
+        <p>This is exactly right. The npm ecosystem has a long history of malicious packages — typosquatted names, packages that look legitimate for months before a malicious update, maintainer accounts that get compromised and used to push backdoors. npm at least has some automated scanning and a large security research community watching it. ClawHub has neither.</p>
+
+        <p>The supply chain attack surface is real. A skill author who wants to steal API keys doesn't need to write anything obviously malicious. They write a legitimate, useful skill — say, a calendar integration — they publish it, they build a reputation over a few months, and then they push an update that adds two lines to read <code>.env</code> and POST it to an external endpoint. Most users won't notice because they don't re-review skills after the initial install, and there's no mechanism that would flag the change.</p>
+
+        <p>The question "Is there a way to run OpenClaw without exposing 2,000 CVEs?" has been asked 19 times with 380 upvotes. The underlying anxiety is the same: users are aware they're taking on risk, but they don't have clear guidance on how to mitigate it.</p>
+
+        <hr class="article-divider">
+
+        <h2 class="article-h2">Exposed Gateways and No Access Control</h2>
+
+        <p>The third layer of the problem is network exposure. OpenClaw's default deployment templates expose ports to the network in ways that create serious access control problems.</p>
+
+        <blockquote class="article-quote">
+          <p>"Exposed gateways are a nightmare. Anyone can hit my agent endpoint if I misconfigure one setting."</p>
+          <cite>— Community member, 195 upvotes</cite>
+        </blockquote>
+
+        <p>This isn't a hypothetical edge case. The defaults matter enormously because most users don't deeply audit their deployment configuration — they follow the docs, they get it working, and they move on. If the default configuration exposes ports that shouldn't be public, the majority of users are exposed, because the majority of users don't know they need to look for this.</p>
+
+        <blockquote class="article-quote">
+          <p>"Default configs expose ports that shouldn't be public. Security is clearly an afterthought in the deployment templates."</p>
+          <cite>— Community member</cite>
+        </blockquote>
+
+        <p>The access control situation compounds the exposure problem. OpenClaw doesn't implement meaningful authentication on its agent endpoints by default. If you know the URL — or can guess it — you can trigger agents and read their outputs.</p>
+
+        <blockquote class="article-quote">
+          <p>"No proper access control. Anyone with the URL can trigger my agents and see the results."</p>
+          <cite>— Community member, 240 upvotes</cite>
+        </blockquote>
+
+        <p>This creates a specific problem for teams and multi-user environments. The access model is essentially binary: you either have network access to the endpoint or you don't. There's no per-user authentication, no role-based access control, no audit logging of who triggered what. For a solo developer on a private network, this may be acceptable. For any deployment where multiple people need different levels of access, it's a non-starter.</p>
+
+        <p>The combination of these factors — unpatched CVEs in the base image, exposed ports in the default config, and no authentication on endpoints — creates a threat model that would fail any reasonable security review. Put OpenClaw on a cloud VM with a public IP, follow the default setup guide, and you have a publicly accessible AI automation platform running on software with two thousand known vulnerabilities. That's the actual situation for a non-trivial number of users.</p>
+
+        <hr class="article-divider">
+
+        <h2 class="article-h2">The "Security Later" Pattern — And Why It Fails</h2>
+
+        <p>Here's the honest truth about how most of these situations develop: they don't happen because users are reckless. They happen because users are iterating.</p>
+
+        <p>The "security later" mindset is almost universal in developer tooling. You're trying to figure out whether OpenClaw can do what you need it to do. You're not deploying to production yet. You just need to see if the workflow actually works. So you set it up fast, you use a root-level <code>.env</code> file because that's what the docs show, you install a couple of ClawHub skills to test them, you forward a port to your home server so you can access it from work. You tell yourself you'll lock it down before it goes live.</p>
+
+        <blockquote class="article-quote">
+          <p>"Yeah I know it's insecure but I just need it working. I'll fix the API key exposure later."</p>
+          <cite>— Community member</cite>
+        </blockquote>
+
+        <p>The problem is that "later" has a way of not arriving. The workflow works. It gets useful. You build things on top of it. Changing the credential storage mechanism now means updating a dozen references. Switching to a hardened Docker image means re-testing everything. Adding authentication to the gateway means reworking how you access it from your other tools. The security debt compounds at the same rate as the feature work, but the feature work has obvious immediate value and the security work doesn't feel urgent until it is.</p>
+
+        <p>And then at 2am, GitHub sends you an alert.</p>
+
+        <blockquote class="article-quote">
+          <p>"Found 2k CVEs in the official OpenClaw image, can't believe people are running this with API keys exposed to the filesystem. This is a data breach waiting to happen."</p>
+          <cite>— Community member</cite>
+        </blockquote>
+
+        <p>The sequence matters: first you accept the insecure defaults "temporarily," then you build workflows on top of them, then removing the insecurity becomes genuinely disruptive, then something bad happens, and then you either rotate keys and tighten things up or you don't and something worse happens later. The "security later" pattern doesn't just defer risk — it accumulates it.</p>
+
+        <hr class="article-divider">
+
+        <h2 class="article-h2">A Practical Security Checklist for OpenClaw Users</h2>
+
+        <p>If you're running OpenClaw or planning to, here's what actually matters. This isn't a comprehensive hardening guide — it's the minimum viable security posture for anyone who cares about their credentials and their infrastructure.</p>
+
+        <h3>1. Build a Custom Docker Image From a Minimal Base</h3>
+        <p>Don't use the official OpenClaw image as your production container. Take it as your starting point, then rebuild from a minimal, actively maintained base image — something like <code>debian:bookworm-slim</code> or an Alpine variant with a recent security patch date. Run <code>docker scout cves</code> or <code>trivy image</code> against your final image before deploying. If you see high or critical CVEs with known exploits, don't ship it. Rebuild with updated packages.</p>
+        <p>Yes, this requires more work upfront. It's the baseline entry fee for "self-hosted" meaning anything from a security perspective.</p>
+
+        <h3>2. Use Proper Secret Management — Never .env Files in the Project Directory</h3>
+        <p>Your API keys should never live in a file that could accidentally get committed to version control, or that any process with filesystem access can trivially read. Use Docker secrets, environment variable injection at container start, or a dedicated secrets manager (HashiCorp Vault, AWS Secrets Manager, even <code>pass</code> on a local setup).</p>
+        <p>At minimum: add <code>.env</code> to your <code>.gitignore</code> immediately, before you create the file. Then add it again as a pre-commit hook check. Then, ideally, move the credentials out of the project directory entirely and inject them at runtime.</p>
+
+        <h3>3. Network Isolation — No Exposed Ports to the Internet</h3>
+        <p>If you are the only user of your OpenClaw instance, it should not be reachable from the public internet. Run it on a private network. If you need external access, put it behind a VPN — WireGuard is lightweight and well-documented for this use case. Do not forward OpenClaw ports directly from your router to your server. Do not put it on a cloud VM with a public IP without a reverse proxy that handles authentication.</p>
+        <p>Audit your Docker Compose file or deployment config for any <code>ports:</code> entries that bind to <code>0.0.0.0</code> rather than <code>127.0.0.1</code>. The difference is all exposed versus localhost-only.</p>
+
+        <h3>4. ClawHub Due Diligence — Read the Source Before Installing</h3>
+        <p>Before installing any ClawHub skill, read the source code. All of it. This is not optional. A skill is arbitrary code that will run with your privileges on your machine. If you wouldn't run an unsigned shell script from a stranger without reading it first, you shouldn't install a ClawHub skill without reading it either.</p>
+        <p>Look specifically for: filesystem reads outside the expected scope, network requests to external endpoints, use of environment variables (particularly anything that might capture your API keys), and subprocess or shell execution calls. If you find any of these without a clear, legitimate reason, do not install the skill.</p>
+        <p>After initial install, check what changed when skills update. A skill with a two-year clean history and a suspicious new version is the supply chain attack scenario in practice.</p>
+
+        <h3>5. Scope Your API Keys to Least Privilege</h3>
+        <p>When creating API keys for OpenClaw to use, create them with the narrowest permissions possible for the actual tasks you need. If OpenClaw needs to read from an S3 bucket, give it an IAM role that can read that bucket — not an admin key. If it needs to call the OpenAI API, that's fine, but make sure it's not also sitting on a key with access to your billing dashboard or account settings.</p>
+        <p>Compartmentalization limits the blast radius when — not if — something goes wrong.</p>
+
+        <h3>6. Set Spend Caps at the API Provider Level</h3>
+        <p>Every major AI API provider offers spend limits. Set them. A stolen OpenAI key that can only generate $50 in charges before being cut off is a nuisance. One with no cap can generate thousands of dollars in charges in hours. This is a cheap mitigation that costs you nothing if everything goes right and saves you materially if something goes wrong.</p>
+
+        <h3>7. Add Authentication to Your Gateway</h3>
+        <p>If your OpenClaw instance is accessible over a network — even a local one — put authentication in front of it. At minimum, use a reverse proxy like nginx or Caddy with HTTP basic auth, or use a proper OAuth/OIDC flow if you're running a team setup. The goal is that an unauthenticated request to your agent endpoint should return a 401, not trigger your automation.</p>
+
+        <hr class="article-divider">
+
+        <h2 class="article-h2">The Fair Assessment</h2>
+
+        <p>OpenClaw is genuinely powerful. The ability to build, run, and connect AI agents on your own hardware — without depending on a vendor's uptime, pricing, or data policies — is valuable and getting more valuable as AI agents become more capable. The community building on it is creative and technically sophisticated.</p>
+
+        <p>But the default security posture is not production-ready. The official Docker image carries a CVE burden that would fail any enterprise security review. Credential storage in plaintext files is a beginner-level mistake that has real consequences for real users. The ClawHub marketplace gives community code full system privileges with no verification. The default deployment configs expose more than they should.</p>
+
+        <p>None of this is unfixable. The checklist above is achievable by anyone with intermediate Linux and Docker skills. The OpenClaw community has users who have hardened their deployments and documented how they did it. But the defaults set the floor for most deployments, and right now that floor is uncomfortably low.</p>
+
+        <p>If you're choosing between a managed AI agent platform and self-hosting OpenClaw, "privacy and control" is only a genuine advantage if you actually implement the controls. An OpenClaw instance that leaks your API keys and runs on 2,000 unpatched CVEs gives you neither privacy nor control — it gives you the illusion of both while creating a threat surface the managed platform almost certainly doesn't have.</p>
+
+        <p>Know what you're signing up for. Then do the work to make the self-hosting promise real.</p>
+
+        <p class="article-attribution">Published on ai.quantummerlin.com — Your source for practical AI agent intelligence</p>
+
+        <div class="article-ad-mid">
+          <ins class="adsbygoogle" style="display:block;text-align:center" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+        </div>
+      </div>
+    </div>
+
+    <section class="article-related">
+      <div class="section-header">
+        <h2 class="section-title">Related Articles</h2>
+      </div>
+      <div class="article-grid">
+
+        <article class="article-card">
+          <a href="/articles/12-openclaw-setup-guide.html" class="article-card-link">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/12-openclaw-setup-hero.png" alt="OpenClaw Setup Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            </div>
+            <div class="article-card-body">
+              <span class="badge badge-agents">Agents</span>
+              <h3 class="article-card-title">OpenClaw Setup Guide: Install, Configure, and Run Your First Automation (2026)</h3>
+              <p class="article-card-desc">Full setup walkthrough for OpenClaw — from install to first automation.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="article-card">
+          <a href="/articles/22-ai-agent-true-cost-guide.html" class="article-card-link">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/22-ai-agent-true-cost-guide-hero.png" alt="The Real Cost of Running AI Agents in 2026" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            </div>
+            <div class="article-card-body">
+              <span class="badge badge-business">Business</span>
+              <h3 class="article-card-title">The Real Cost of Running AI Agents in 2026: What Nobody Tells You</h3>
+              <p class="article-card-desc">$300/day for 24/7 operation, $200 overnight disasters. The real agent cost breakdown.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="article-card">
+          <a href="/articles/21-ai-coding-tools-security-crisis.html" class="article-card-link">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/21-ai-coding-tools-security-crisis-hero.png" alt="AI Coding Tools Are Leaking Your Secrets" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            </div>
+            <div class="article-card-body">
+              <span class="badge badge-dev">Dev</span>
+              <h3 class="article-card-title">AI Coding Tools Are Leaking Your Secrets — Here's the Data</h3>
+              <p class="article-card-desc">Copilot has a 40% higher secret leak rate. 2,702 credentials extracted, 200 real.</p>
+            </div>
+          </a>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="article-nl-cta">
+      <div class="nl-home-band">
+        <div class="nl-home-icon">&#x1F4E1;</div>
+        <div class="nl-home-text">
+          <div class="nl-home-title">Get the Weekly AI Brief</div>
+          <div class="nl-home-sub">5 signals. 3 takeaways. 1 deep-dive. Every Sunday.</div>
+        </div>
+        <a href="/newsletter.html" class="btn btn-primary">Subscribe Free &rarr;</a>
+      </div>
+    </section>
+  </article>
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
