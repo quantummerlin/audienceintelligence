@@ -21,33 +21,34 @@
   </div>
   <nav class="sidebar-nav">
     <span class="nav-section-label">Discover</span>
-    <a href="/index.html" class="nav-item" data-page="home"><span class="nav-icon">🏠</span>Home</a>
-    <a href="/articles.html" class="nav-item" data-page="articles"><span class="nav-icon">📰</span>AI News</a>
-    <a href="/ai-hub.html" class="nav-item" data-page="ai-hub"><span class="nav-icon">📡</span>AI Hub</a>
-    <a href="/ai-intelligence.html" class="nav-item" data-page="ai-intelligence"><span class="nav-icon">🔮</span>Intelligence</a>
+    <a href="/index.html" class="nav-item" data-page="home">Home</a>
+    <a href="/articles.html" class="nav-item" data-page="articles">AI News</a>
+    <a href="/ai-hub.html" class="nav-item" data-page="ai-hub">AI Hub</a>
+    <a href="/ai-intelligence.html" class="nav-item" data-page="ai-intelligence">Intelligence</a>
 
     <span class="nav-section-label">Tools</span>
-    <a href="/tools/chat.html" class="nav-item" data-page="chat"><span class="nav-icon">💬</span>AI Chat</a>
-    <a href="/tools/transcript.html" class="nav-item" data-page="transcript"><span class="nav-icon">🎬</span>YT Summarizer</a>
-    <a href="/tools/writer.html" class="nav-item" data-page="writer"><span class="nav-icon">✍️</span>Content Writer</a>
-    <a href="/tools/image.html" class="nav-item" data-page="image"><span class="nav-icon">🎨</span>Image Gen</a>
+    <a href="/tools/chat.html" class="nav-item" data-page="chat">AI Chat</a>
+    <a href="/tools/transcript.html" class="nav-item" data-page="transcript">YT Summarizer</a>
+    <a href="/tools/writer.html" class="nav-item" data-page="writer">Content Writer</a>
+    <a href="/tools/image.html" class="nav-item" data-page="image">Image Gen</a>
 
     <span class="nav-section-label">Resources</span>
-    <a href="/research.html" class="nav-item" data-page="research"><span class="nav-icon">📊</span>Research Reports</a>
-    <a href="/resources.html" class="nav-item" data-page="resources"><span class="nav-icon">📚</span>Resources</a>
-    <a href="/affiliates.html" class="nav-item" data-page="affiliates"><span class="nav-icon">🔗</span>Recommended Tools</a>
-    <a href="/newsletter.html" class="nav-item" data-page="newsletter"><span class="nav-icon">✉️</span>Newsletter</a>
+    <a href="/skills.html" class="nav-item" data-page="skills">Skills Library</a>
+    <a href="/research.html" class="nav-item" data-page="research">Research Reports</a>
+    <a href="/resources.html" class="nav-item" data-page="resources">Resources</a>
+    <a href="/affiliates.html" class="nav-item" data-page="affiliates">Recommended Tools</a>
+    <a href="/newsletter.html" class="nav-item" data-page="newsletter">Newsletter</a>
   </nav>
   <div class="sidebar-cards">
     <div class="sb-card">
-      <h4>🛠 BYOK TOOLS</h4>
+      <h4>BYOK TOOLS</h4>
       <p>Bring your own API key. Zero data collected.</p>
       <a href="/tools/chat.html">Try Free →</a>
     </div>
     <div class="sb-card" style="border-color:rgba(245,158,11,0.2)">
-      <h4 style="color:var(--neon-gold)">📊 REPORTS</h4>
-      <p>Deep AI research from real data.</p>
-      <a href="/research.html" style="color:var(--neon-gold);background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3)">Browse →</a>
+      <h4 style="color:var(--neon-gold)">SKILLS LIBRARY</h4>
+      <p>Free agent skills and prompt packs to download.</p>
+      <a href="/skills.html" style="color:var(--neon-gold);background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3)">Browse →</a>
     </div>
   </div>
 </aside>`;
@@ -170,6 +171,7 @@
     if (p.includes('/tools/transcript')) return 'transcript';
     if (p.includes('/tools/writer')) return 'writer';
     if (p.includes('/tools/image')) return 'image';
+    if (p.includes('/skills')) return 'skills';
     if (p.includes('/research')) return 'research';
     if (p.includes('/resources')) return 'resources';
     if (p.includes('/affiliates')) return 'affiliates';

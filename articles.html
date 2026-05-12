@@ -227,18 +227,6 @@
     </div>
   </div>
 
-  <!-- Filter Pills -->
-  <div class="filter-row">
-    <button class="filter-pill active" data-filter="all">All</button>
-    <button class="filter-pill" data-filter="agents">AI Agents</button>
-    <button class="filter-pill" data-filter="tools">Tools</button>
-    <button class="filter-pill" data-filter="business">Business</button>
-    <button class="filter-pill" data-filter="models">Models</button>
-    <button class="filter-pill" data-filter="development">Development</button>
-  <button class="filter-pill" data-filter="automation">Automation</button>
-    <button class="filter-pill" data-filter="news">News</button>
-  </div>
-
   <!-- Article Grid -->
   <div class="articles-body">
     <div class="article-grid-full">
@@ -551,21 +539,9 @@
 </main>
 
 <script>
-  // Filter pills
-  document.querySelectorAll('.filter-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      const filter = pill.dataset.filter;
-      document.querySelectorAll('.article-card[data-filter]').forEach(card => {
-        card.style.display = (filter === 'all' || card.dataset.filter === filter) ? '' : 'none';
-      });
-    });
-  });
-  // Load more (stub - show alert for now)
-  document.getElementById('loadMoreBtn').addEventListener('click', () => {
-    document.getElementById('loadMoreBtn').textContent = 'More articles coming soon...';
-    document.getElementById('loadMoreBtn').disabled = true;
+  document.getElementById('loadMoreBtn').addEventListener('click', function () {
+    this.textContent = 'More articles coming soon...';
+    this.disabled = true;
   });
 </script>
 

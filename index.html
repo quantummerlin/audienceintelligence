@@ -25,16 +25,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <style>
-    /* ── Quick links row ── */
-    .home-quick-row { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
-    .home-quick-row::-webkit-scrollbar { display:none; }
+    /* ── Hero Carousel ── */
+    .hero-carousel { position:relative; width:100%; height:440px; overflow:hidden; background:var(--bg); user-select:none; flex-shrink:0; }
+    .hero-slide { position:absolute; inset:0; opacity:0; transition:opacity .9s ease; pointer-events:none; }
+    .hero-slide.active { opacity:1; pointer-events:auto; }
+    .hero-slide-bg { position:absolute; inset:0; background-size:cover; background-position:center; transform:scale(1.07); transition:transform 7s ease; }
+    .hero-slide.active .hero-slide-bg { transform:scale(1); }
+    .hero-slide-overlay { position:absolute; inset:0; background:linear-gradient(90deg,rgba(7,7,15,.94) 0%,rgba(7,7,15,.6) 55%,rgba(7,7,15,.12) 100%); }
+    .hero-slide-content { position:absolute; left:36px; bottom:62px; max-width:500px; z-index:2; }
+    .hero-slide-badge { display:inline-block; margin-bottom:12px; }
+    .hero-slide-title { font-family:var(--font-heading); font-size:clamp(1.4rem,3.5vw,2.15rem); font-weight:800; line-height:1.13; color:#fff; margin-bottom:10px; }
+    .hero-slide-desc { font-size:.88rem; color:rgba(255,255,255,.7); margin-bottom:18px; line-height:1.55; max-width:420px; }
+    .hero-label { position:absolute; top:14px; left:18px; font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.18em; color:rgba(255,255,255,.4); text-transform:uppercase; z-index:10; display:flex; align-items:center; gap:7px; }
+    .hero-label::before { content:''; display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--neon-cyan); animation:livePulse 1.8s ease-in-out infinite; }
+    .hero-prev,.hero-next { position:absolute; top:50%; transform:translateY(-50%); width:38px; height:38px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:50%; color:#fff; font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s,border-color .2s; z-index:10; line-height:1; padding:0; }
+    .hero-prev { left:14px; } .hero-next { right:14px; }
+    .hero-prev:hover,.hero-next:hover { background:rgba(129,140,248,.3); border-color:var(--neon-indigo); }
+    .hero-dots { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); display:flex; gap:7px; z-index:10; }
+    .hero-dot { width:8px; height:8px; border-radius:4px; background:rgba(255,255,255,.22); border:none; cursor:pointer; padding:0; transition:background .25s,width .3s; }
+    .hero-dot.active { width:22px; background:var(--neon-indigo); }
 
-    /* ── Site hero ── */
-    .site-hero { padding:40px 28px 8px; }
-    .site-hero-eyebrow { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.2em; color:var(--neon-cyan); text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
-    .site-hero-eyebrow::before { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--neon-cyan); animation:livePulse 1.8s ease-in-out infinite; }
-    .site-hero-title { font-family:var(--font-heading); font-size:clamp(2.1rem,5vw,3.4rem); font-weight:800; line-height:1.08; margin-bottom:16px; background:linear-gradient(135deg,#ffffff 0%,var(--neon-indigo) 60%,var(--neon-cyan) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .site-hero-sub { color:var(--text-secondary); font-size:.97rem; max-width:520px; line-height:1.7; margin-bottom:22px; }
+    /* ── Quick access strip ── */
+    .ql-strip { display:flex; gap:8px; overflow-x:auto; padding:14px 28px 6px; scrollbar-width:none; }
+    .ql-strip::-webkit-scrollbar { display:none; }
+    .ql-pill { display:inline-flex; align-items:center; padding:7px 16px; background:var(--surface); border:1px solid var(--border); border-radius:20px; font-family:var(--font-display); font-size:.63rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--text-secondary); text-decoration:none; white-space:nowrap; transition:border-color .2s,color .2s; }
+    .ql-pill:hover { border-color:var(--neon-indigo); color:var(--neon-indigo); }
 
     /* ── Stats strip ── */
     .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:16px 28px; }
@@ -43,7 +58,7 @@
     .stat-chip-num { display:block; font-family:var(--font-heading); font-size:1.3rem; font-weight:700; color:var(--neon-indigo); }
     .stat-chip-label { display:block; font-family:var(--font-display); font-size:.6rem; font-weight:700; color:var(--text-muted); letter-spacing:.1em; margin-top:2px; text-transform:uppercase; }
 
-    /* ── Newsletter band ── */
+    /* ── Follow band ── */
     .nl-home-band { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; display:flex; flex-wrap:wrap; gap:24px; align-items:center; justify-content:space-between; }
     .nl-home-band-title { font-family:var(--font-heading); font-size:1.4rem; font-weight:700; margin-bottom:8px; }
     .nl-home-band-sub { color:var(--text-secondary); font-size:.9rem; max-width:380px; margin-bottom:14px; }
@@ -56,10 +71,13 @@
 
     /* ── Responsive ── */
     @media(max-width:900px) {
+      .hero-carousel { height:320px; }
+      .hero-slide-content { left:20px; bottom:48px; max-width:75%; }
       .stats-strip { grid-template-columns:repeat(2,1fr); }
     }
     @media(max-width:600px) {
-      .home-greeting { font-size:1.35rem; }
+      .hero-carousel { height:270px; }
+      .hero-prev,.hero-next { display:none; }
       .stats-strip { grid-template-columns:repeat(2,1fr); }
     }
   </style>
@@ -68,32 +86,98 @@
 <main>
 
   <!-- ══════════════════════════════════════════
-       1. HERO + QUICK LINKS
+       1. HERO CAROUSEL — What's New
   ══════════════════════════════════════════ -->
-  <div class="site-hero">
-    <div class="site-hero-eyebrow">Live intelligence feed</div>
-    <h1 class="site-hero-title">Every AI signal<br>that matters.</h1>
-    <p class="site-hero-sub">The noise is deafening. We cut through it — model releases, power moves, tools, and breakthroughs, filtered down to what's actually worth knowing. Nothing else.</p>
-    <div class="home-quick-row">
-      <a href="/tools/chat.html" class="quick-link-item">
-        <span class="quick-link-thumb" style="background:rgba(129,140,248,.18)">💬</span>AI Chat
-      </a>
-      <a href="/tools/transcript.html" class="quick-link-item">
-        <span class="quick-link-thumb" style="background:rgba(244,114,182,.15)">🎬</span>YT Summarizer
-      </a>
-      <a href="/tools/research.html" class="quick-link-item">
-        <span class="quick-link-thumb" style="background:rgba(34,211,238,.13)">🔍</span>Research
-      </a>
-      <a href="/tools/writer.html" class="quick-link-item">
-        <span class="quick-link-thumb" style="background:rgba(167,139,250,.14)">✍️</span>Writer
-      </a>
-      <a href="/tools/image.html" class="quick-link-item">
-        <span class="quick-link-thumb" style="background:rgba(245,158,11,.13)">🎨</span>Image Gen
-      </a>
-      <a href="/articles.html" class="quick-link-item">
-        <span class="quick-link-thumb" style="background:rgba(34,211,238,.12)">📰</span>All Articles
-      </a>
+  <div class="hero-carousel" id="heroCarousel">
+    <div class="hero-label">What's new</div>
+
+    <div class="hero-slide active">
+      <div class="hero-slide-bg" style="background-image:url('/images/articles/23-openclaw-security-audit-hero.png')"></div>
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-slide-content">
+        <span class="badge badge-dev hero-slide-badge">Security</span>
+        <h2 class="hero-slide-title">2,000 CVEs. Plaintext Keys.<br>A Marketplace You Can't Trust.</h2>
+        <p class="hero-slide-desc">What every OpenClaw user needs to know — and the security checklist to run before your next deployment.</p>
+        <a href="/articles/23-openclaw-security-audit.html" class="btn btn-primary">Read the Audit →</a>
+      </div>
     </div>
+
+    <div class="hero-slide">
+      <div class="hero-slide-bg" style="background-image:url('/images/articles/22-ai-agent-true-cost-guide-hero.png')"></div>
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-slide-content">
+        <span class="badge badge-business hero-slide-badge">Business</span>
+        <h2 class="hero-slide-title">The Real Cost of Running<br>AI Agents in 2026</h2>
+        <p class="hero-slide-desc">$300/day for 24/7 operation. $200 overnight loop disasters. The numbers nobody puts in the pitch deck.</p>
+        <a href="/articles/22-ai-agent-true-cost-guide.html" class="btn btn-primary">See the Numbers →</a>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <div class="hero-slide-bg" style="background-image:url('/images/articles/klarnas-100m-disaster-hero.png')"></div>
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-slide-content">
+        <span class="badge badge-business hero-slide-badge">Business</span>
+        <h2 class="hero-slide-title">Klarna's $100M Disaster:<br>What Every Business Can Learn</h2>
+        <p class="hero-slide-desc">They replaced hundreds of humans with AI — then had to walk it back. The real data behind the headlines.</p>
+        <a href="/articles/klarnas-100m-disaster.html" class="btn btn-primary">Read the Analysis →</a>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <div class="hero-slide-bg" style="background-image:url('/images/articles/21-ai-coding-tools-security-crisis-hero.png')"></div>
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-slide-content">
+        <span class="badge badge-dev hero-slide-badge">Security</span>
+        <h2 class="hero-slide-title">AI Coding Tools Are<br>Leaking Your Secrets</h2>
+        <p class="hero-slide-desc">Researchers extracted 2,702 real credentials from Copilot suggestions. 200 were working. Here's the data.</p>
+        <a href="/articles/21-ai-coding-tools-security-crisis.html" class="btn btn-primary">See the Data →</a>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <div class="hero-slide-bg" style="background-image:url('/images/articles/sycophancy-trap-hero.png')"></div>
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-slide-content">
+        <span class="badge badge-agents hero-slide-badge">AI Agents</span>
+        <h2 class="hero-slide-title">The Sycophancy Trap:<br>Why Your AI Is Lying to You</h2>
+        <p class="hero-slide-desc">AI models are trained to agree with you. Understanding this bias is one of the most valuable skills in 2026.</p>
+        <a href="/articles/sycophancy-trap.html" class="btn btn-primary">Read the Deep Dive →</a>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <div class="hero-slide-bg" style="background-image:url('/images/articles/01-hermes-agent-complete-guide-hero.png')"></div>
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-slide-content">
+        <span class="badge badge-agents hero-slide-badge">Guide</span>
+        <h2 class="hero-slide-title">The Complete Hermes<br>Agent Guide</h2>
+        <p class="hero-slide-desc">Setup, skills, and income strategies — everything you need to run the Hermes agent framework, in one place.</p>
+        <a href="/articles/01-hermes-agent-complete-guide.html" class="btn btn-primary">Read the Guide →</a>
+      </div>
+    </div>
+
+    <button class="hero-prev" id="heroPrev">&#8249;</button>
+    <button class="hero-next" id="heroNext">&#8250;</button>
+    <div class="hero-dots">
+      <button class="hero-dot active"></button>
+      <button class="hero-dot"></button>
+      <button class="hero-dot"></button>
+      <button class="hero-dot"></button>
+      <button class="hero-dot"></button>
+      <button class="hero-dot"></button>
+    </div>
+  </div>
+
+  <!-- QUICK ACCESS -->
+  <div class="ql-strip">
+    <a href="/tools/chat.html" class="ql-pill">AI Chat</a>
+    <a href="/tools/transcript.html" class="ql-pill">YT Summarizer</a>
+    <a href="/tools/research.html" class="ql-pill">Research</a>
+    <a href="/tools/writer.html" class="ql-pill">Writer</a>
+    <a href="/tools/image.html" class="ql-pill">Image Gen</a>
+    <a href="/skills.html" class="ql-pill">Skills</a>
+    <a href="/articles.html" class="ql-pill">All Articles</a>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -405,6 +489,33 @@
 </main>
 
 <script>
+  // ── Hero Carousel ──
+  (function () {
+    var slides = document.querySelectorAll('.hero-slide');
+    var dots   = document.querySelectorAll('.hero-dot');
+    if (!slides.length) return;
+    var cur = 0, timer;
+
+    function goTo(n) {
+      slides[cur].classList.remove('active');
+      dots[cur].classList.remove('active');
+      cur = (n + slides.length) % slides.length;
+      slides[cur].classList.add('active');
+      dots[cur].classList.add('active');
+    }
+    function start() { timer = setInterval(function () { goTo(cur + 1); }, 5500); }
+    function reset() { clearInterval(timer); start(); }
+
+    document.getElementById('heroPrev').addEventListener('click', function () { goTo(cur - 1); reset(); });
+    document.getElementById('heroNext').addEventListener('click', function () { goTo(cur + 1); reset(); });
+    dots.forEach(function (d, i) { d.addEventListener('click', function () { goTo(i); reset(); }); });
+
+    var el = document.getElementById('heroCarousel');
+    el.addEventListener('mouseenter', function () { clearInterval(timer); });
+    el.addEventListener('mouseleave', start);
+    start();
+  })();
+
   function handleHomeNLSubmit(e) {
     e.preventDefault();
     var btn = document.getElementById('nl-home-btn');
