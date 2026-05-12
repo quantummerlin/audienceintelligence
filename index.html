@@ -29,10 +29,12 @@
     .home-quick-row { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
     .home-quick-row::-webkit-scrollbar { display:none; }
 
-    /* ── Page intro ── */
-    .home-intro { padding:28px 28px 0; }
-    .home-greeting { font-family:var(--font-heading); font-size:1.7rem; font-weight:700; margin-bottom:6px; }
-    .home-tagline { color:var(--text-secondary); font-size:.95rem; max-width:560px; line-height:1.65; margin-bottom:16px; }
+    /* ── Site hero ── */
+    .site-hero { padding:40px 28px 8px; }
+    .site-hero-eyebrow { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.2em; color:var(--neon-cyan); text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+    .site-hero-eyebrow::before { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--neon-cyan); animation:livePulse 1.8s ease-in-out infinite; }
+    .site-hero-title { font-family:var(--font-heading); font-size:clamp(2.1rem,5vw,3.4rem); font-weight:800; line-height:1.08; margin-bottom:16px; background:linear-gradient(135deg,#ffffff 0%,var(--neon-indigo) 60%,var(--neon-cyan) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .site-hero-sub { color:var(--text-secondary); font-size:.97rem; max-width:520px; line-height:1.7; margin-bottom:22px; }
 
     /* ── Stats strip ── */
     .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:16px 28px; }
@@ -66,11 +68,12 @@
 <main>
 
   <!-- ══════════════════════════════════════════
-       1. GREETING + QUICK LINKS
+       1. HERO + QUICK LINKS
   ══════════════════════════════════════════ -->
-  <div class="home-intro">
-    <p class="home-greeting" id="greeting-text">Good morning</p>
-    <h1 class="home-tagline">AI news, tools, and intelligence — tracked daily. No subscriptions. No tracking. Just signal.</h1>
+  <div class="site-hero">
+    <div class="site-hero-eyebrow">Live intelligence feed</div>
+    <h1 class="site-hero-title">Every AI signal<br>that matters.</h1>
+    <p class="site-hero-sub">The noise is deafening. We cut through it — model releases, power moves, tools, and breakthroughs, filtered down to what's actually worth knowing. Nothing else.</p>
     <div class="home-quick-row">
       <a href="/tools/chat.html" class="quick-link-item">
         <span class="quick-link-thumb" style="background:rgba(129,140,248,.18)">💬</span>AI Chat
@@ -116,12 +119,12 @@
   </div>
 
   <!-- ══════════════════════════════════════════
-       3. THIS WEEK'S SIGNALS
+       3. LATEST SIGNALS
   ══════════════════════════════════════════ -->
   <section class="hub-section reveal-section">
     <div class="section-header">
-      <h2 class="section-title">This Week's Signals</h2>
-      <p class="section-sub">High-signal observations across models, tools, and market dynamics — May 2026.</p>
+      <h2 class="section-title">Latest Signals</h2>
+      <p class="section-sub">High-signal observations across models, tools, and market dynamics — filtered from the noise.</p>
     </div>
     <div class="signals-list">
       <div class="signal-item signal-high">
@@ -351,35 +354,34 @@
   </div>
 
   <!-- ══════════════════════════════════════════
-       8. NEWSLETTER BAND
+       8. FOLLOW CTA
   ══════════════════════════════════════════ -->
   <div class="content-section">
     <div class="nl-home-band reveal-scale" style="margin:0 28px">
       <div>
-        <span class="badge badge-free" style="margin-bottom:10px">✉️ FREE WEEKLY</span>
-        <h2 class="nl-home-band-title">The Aether Intel Signal</h2>
-        <p class="nl-home-band-sub">AI model rankings. Tool drops. Money moves. Delivered free every week — no spam, unsubscribe anytime.</p>
+        <span class="badge badge-secondary" style="margin-bottom:10px">📡 STAY ON THE SIGNAL</span>
+        <h2 class="nl-home-band-title">Get notified when new intelligence drops.</h2>
+        <p class="nl-home-band-sub">No schedule. No noise. New articles and signal drops land in your inbox when they're ready — not on a clock.</p>
         <div class="nl-home-perks">
-          <span class="nl-home-perk">🤖 Model Rankings</span>
-          <span class="nl-home-perk">💰 Money Moves</span>
+          <span class="nl-home-perk">🤖 Model Drops</span>
+          <span class="nl-home-perk">💰 Business Moves</span>
           <span class="nl-home-perk">🛠 Tool Picks</span>
-          <span class="nl-home-perk">📡 Weekly Intel</span>
+          <span class="nl-home-perk">📡 Signal Alerts</span>
         </div>
       </div>
       <div class="nl-home-band-right">
         <form class="nl-home-form" id="nl-home-form" onsubmit="handleHomeNLSubmit(event)">
           <div class="nl-home-input-row">
             <input type="email" class="form-input" placeholder="your@email.com" required id="nl-home-email">
-            <button type="submit" class="btn btn-primary btn-sm" id="nl-home-btn">Get Free Intel →</button>
+            <button type="submit" class="btn btn-primary btn-sm" id="nl-home-btn">Follow the Signal →</button>
           </div>
           <p style="font-size:.72rem;color:var(--text-muted);margin-top:8px">No spam. Unsubscribe anytime.</p>
         </form>
         <div class="nl-home-success hidden" id="nl-home-success">
           <div style="font-size:1.8rem">🎯</div>
           <strong style="color:var(--neon-cyan)">You're in!</strong>
-          <span style="color:var(--text-secondary);font-size:.85rem">Check your inbox to confirm.</span>
+          <span style="color:var(--text-secondary);font-size:.85rem">We'll reach out when new intelligence drops.</span>
         </div>
-        <a href="/newsletter.html" style="display:block;text-align:center;font-size:.72rem;color:var(--text-muted);margin-top:10px">See past issues →</a>
       </div>
     </div>
   </div>
@@ -403,13 +405,6 @@
 </main>
 
 <script>
-  (function(){
-    var h = new Date().getHours();
-    var g = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
-    var el = document.getElementById('greeting-text');
-    if (el) el.textContent = g;
-  })();
-
   function handleHomeNLSubmit(e) {
     e.preventDefault();
     var btn = document.getElementById('nl-home-btn');

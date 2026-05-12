@@ -53,59 +53,28 @@
 </aside>`;
 
   const NOW_BAR_HTML = `
-<div class="now-bar">
-  <div class="now-left">
-    <span class="now-live-pill">LIVE</span>
-    <div class="now-icon">⚡</div>
-    <div class="now-info">
-      <div class="now-title">AETHER INTEL FEED</div>
-      <div class="now-sub">ai news · updated daily</div>
+<footer class="now-bar">
+  <div class="now-bar-left">
+    <div class="now-bar-live-pill">
+      <span class="now-bar-live-pill-dot"></span>
+      LIVE
+    </div>
+    <div class="now-bar-icon-box">⚡</div>
+    <div class="now-bar-info">
+      <div class="now-bar-title">AETHER INTEL</div>
+      <div class="now-bar-sub">ai signal · live feed</div>
     </div>
   </div>
-  <div class="now-center">
-    <div class="ticker-label">BREAKING AI NEWS</div>
-    <div class="ticker-outer">
-      <div class="ticker-track" id="tickerTrack">
-        <span class="t-item"><span class="t-hot">🔥 HOT</span> GPT-5 Turbo lands with 10M context window — developers report 40% speed gains</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">Anthropic raises $5B Series F — valuation reaches $75B as AI investment accelerates</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item"><span class="t-hot">⚡ NEW</span> Claude Sonnet 4.5 outperforms GPT-5 on coding benchmarks in independent tests</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">EU AI Act Phase 2 enforcement begins — high-risk AI systems face mandatory audits</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">Apple integrates on-device AI across entire product line — privacy-first approach signals industry shift</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item"><span class="t-hot">📈 RISE</span> Gemini 2.5 Pro hits 1 billion daily users — Google leads consumer AI adoption</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">Meta releases Llama 4 Scout for free — open source AI ecosystem expands rapidly</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">OpenAI launches operator tier for enterprise — custom GPT deployments now available at scale</span>
-        <span class="t-sep">◆</span>
-        <!-- duplicate for seamless loop -->
-        <span class="t-item"><span class="t-hot">🔥 HOT</span> GPT-5 Turbo lands with 10M context window — developers report 40% speed gains</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">Anthropic raises $5B Series F — valuation reaches $75B as AI investment accelerates</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item"><span class="t-hot">⚡ NEW</span> Claude Sonnet 4.5 outperforms GPT-5 on coding benchmarks in independent tests</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">EU AI Act Phase 2 enforcement begins — high-risk AI systems face mandatory audits</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">Apple integrates on-device AI across entire product line — privacy-first approach signals industry shift</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item"><span class="t-hot">📈 RISE</span> Gemini 2.5 Pro hits 1 billion daily users — Google leads consumer AI adoption</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">Meta releases Llama 4 Scout for free — open source AI ecosystem expands rapidly</span>
-        <span class="t-sep">◆</span>
-        <span class="t-item">OpenAI launches operator tier for enterprise — custom GPT deployments now available at scale</span>
-        <span class="t-sep">◆</span>
-      </div>
+  <div class="now-bar-center">
+    <div class="now-bar-breaking-label">AI INTELLIGENCE FEED</div>
+    <div class="now-bar-ticker-wrap">
+      <div class="now-bar-ticker" id="tickerTrack"></div>
     </div>
   </div>
-  <div class="now-right">
-    <button class="now-vol-btn" id="volBtn" title="Pause ticker">🔊</button>
+  <div class="now-bar-right">
+    <button class="now-bar-btn" id="volBtn" title="Pause feed">🔊</button>
   </div>
-</div>`;
+</footer>`;
 
   const MOBILE_NAV_HTML = `
 <nav class="mobile-bottom-nav">
@@ -338,22 +307,73 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 6. TICKER PAUSE / RESUME
+  // 6. TICKER — JSON-driven with inline fallback
   // ---------------------------------------------------------------------------
 
   function initTicker() {
-    const volBtn = document.getElementById('volBtn');
-    const tickerTrack = document.getElementById('tickerTrack');
-    if (!volBtn || !tickerTrack) return;
+    var volBtn = document.getElementById('volBtn');
+    var tickerTrack = document.getElementById('tickerTrack');
+    if (!tickerTrack) return;
 
-    let paused = false;
+    // Fallback headlines used when /data/ticker.json is unavailable
+    var defaultItems = [
+      { text: 'AI models now processing 10M+ token contexts — long-document analysis reaches a new capability tier', tag: '🔥' },
+      { text: 'OpenAI, Anthropic and Google collectively raise $40B+ in 2026 — AI infrastructure investment accelerates' },
+      { text: 'Llama 4 series achieves near-parity with GPT-4o on reasoning benchmarks — open weight models close the gap', tag: '⚡' },
+      { text: 'EU AI Act Phase 2 enforcement begins — high-risk AI systems face mandatory audits and documentation requirements' },
+      { text: 'GitHub Copilot repos show 40% higher secret leak rate — 2,702 real credentials extracted by independent researchers' },
+      { text: 'n8n surpasses 1 million active workflows — automation platform becomes default AI pipeline infrastructure', tag: '📈' },
+      { text: 'AI coding assistants now used in 78% of enterprise software teams — adoption doubled year-over-year' },
+      { text: 'Claude 3.7 Sonnet ranks #1 on coding benchmarks — fastest token generation at time of launch' },
+      { text: 'On-device AI reaches flagship tier — Apple, Samsung and Google ship edge inference chips in 2026 devices' },
+      { text: 'AI agent operating costs drop 60% year-over-year — Sonnet-class models now viable for 80% of production tasks' },
+      { text: 'Anthropic interpretability research reveals internal concept mapping — first window into model reasoning', tag: '⚡' },
+      { text: 'Recursive self-improvement milestones confirmed in lab settings — AI systems measurably improve their own architecture', tag: '⚠️' }
+    ];
 
-    volBtn.addEventListener('click', function () {
-      paused = !paused;
-      tickerTrack.style.animationPlayState = paused ? 'paused' : 'running';
-      volBtn.textContent = paused ? '⏸' : '🔊';
-      volBtn.title = paused ? 'Resume ticker' : 'Pause ticker';
-    });
+    function buildTickerHTML(items) {
+      // Duplicate content for seamless CSS loop (animation moves translateX(-50%))
+      var html = '';
+      for (var copy = 0; copy < 2; copy++) {
+        for (var i = 0; i < items.length; i++) {
+          var item = items[i];
+          var tagHtml = item.tag
+            ? '<strong style="color:var(--neon-gold);margin-right:6px">' + item.tag + '</strong>'
+            : '';
+          html += '<span class="ticker-item">' + tagHtml + item.text + '</span>';
+          html += '<span class="ticker-sep">◆</span>';
+        }
+      }
+      return html;
+    }
+
+    function loadTicker() {
+      fetch('/data/ticker.json')
+        .then(function (res) {
+          if (!res.ok) throw new Error('ticker.json unavailable');
+          return res.json();
+        })
+        .then(function (data) {
+          var items = (data.items && data.items.length) ? data.items : defaultItems;
+          tickerTrack.innerHTML = buildTickerHTML(items);
+        })
+        .catch(function () {
+          tickerTrack.innerHTML = buildTickerHTML(defaultItems);
+        });
+    }
+
+    loadTicker();
+
+    // Pause / resume button
+    if (volBtn) {
+      var paused = false;
+      volBtn.addEventListener('click', function () {
+        paused = !paused;
+        tickerTrack.style.animationPlayState = paused ? 'paused' : 'running';
+        volBtn.textContent = paused ? '⏸' : '🔊';
+        volBtn.title = paused ? 'Resume feed' : 'Pause feed';
+      });
+    }
   }
 
   // ---------------------------------------------------------------------------
