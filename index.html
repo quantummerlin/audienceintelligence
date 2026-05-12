@@ -60,6 +60,17 @@
     .ql-trust-line { text-align:center; font-family:var(--font-display); font-size:.52rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); padding:0 28px 10px; margin:0; }
     .article-card-readtime { font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); margin-top:auto; padding-top:8px; display:block; }
 
+    /* ── Inline newsletter CTA (compact, mid-page) ── */
+    .nl-inline-cta { display:flex; align-items:center; gap:20px; padding:18px 28px; background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+    .nl-inline-left { display:flex; flex-direction:column; gap:3px; flex:1; min-width:180px; }
+    .nl-inline-eyebrow { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--neon-indigo); }
+    .nl-inline-body { font-family:var(--font-body); font-size:.82rem; color:var(--text-secondary); }
+    .nl-inline-form { display:flex; gap:8px; align-items:center; flex:2; min-width:240px; }
+    .nl-inline-input { flex:1; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-family:var(--font-body); font-size:.82rem; color:var(--text-primary); min-width:0; transition:border-color .18s,box-shadow .18s; outline:none; }
+    .nl-inline-input::placeholder { color:var(--text-muted); }
+    .nl-inline-input:focus { border-color:var(--neon-indigo); box-shadow:0 0 0 3px rgba(129,140,248,.12); }
+    .nl-inline-success { display:flex; align-items:center; gap:10px; }
+
     /* ── Stats strip ── */
     .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:16px 28px; }
     .stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 10px; text-align:center; transition:border-color .2s,box-shadow .2s; text-decoration:none; color:inherit; display:block; }
@@ -270,6 +281,23 @@
       </div>
     </div>
   </section>
+
+  <!-- INLINE NL CTA — compact, positioned after first content block -->
+  <div class="nl-inline-cta reveal-scale" id="nl-inline-cta">
+    <div class="nl-inline-left">
+      <span class="nl-inline-eyebrow">📡 Get the Signal</span>
+      <span class="nl-inline-body">New AI intelligence drops straight to your inbox. No weekly digest.</span>
+    </div>
+    <form class="nl-inline-form" id="nl-inline-form" onsubmit="handleInlineNLSubmit(event)">
+      <label for="nl-inline-email" class="sr-only">Your email address</label>
+      <input type="email" class="nl-inline-input" id="nl-inline-email" placeholder="your@email.com" required>
+      <button type="submit" class="btn btn-primary btn-sm" id="nl-inline-btn">Join →</button>
+    </form>
+    <div class="nl-inline-success hidden" id="nl-inline-success">
+      <strong style="color:var(--neon-cyan)">You're in.</strong>
+      <span style="color:var(--text-secondary);font-size:.8rem">Signal incoming.</span>
+    </div>
+  </div>
 
   <!-- ══════════════════════════════════════════
        4. LATEST AI MODELS (via OpenRouter — live)
@@ -536,6 +564,18 @@
     el.addEventListener('mouseleave', start);
     start();
   })();
+
+  function handleInlineNLSubmit(e) {
+    e.preventDefault();
+    var btn = document.getElementById('nl-inline-btn');
+    var form = document.getElementById('nl-inline-form');
+    var success = document.getElementById('nl-inline-success');
+    if (btn) btn.textContent = 'Joining...';
+    setTimeout(function(){
+      if (form) form.classList.add('hidden');
+      if (success) success.classList.remove('hidden');
+    }, 900);
+  }
 
   function handleHomeNLSubmit(e) {
     e.preventDefault();
