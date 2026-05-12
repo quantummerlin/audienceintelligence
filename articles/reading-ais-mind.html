@@ -3,109 +3,975 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reading AI's Mind: How Interpretability Research Is Cracking Open the Black Box – Aether Intel</title>
-  <meta name="robots" content="index, follow">
+  <title>AI Can Read Your Mind — Here's Exactly How Far It's Gone | Aether Intel</title>
+
+  <!-- SEO -->
+  <meta name="description" content="A team at UT Austin decoded inner speech at 72–82% accuracy. Stanford's BCI patient communicates at 62 wpm. UCSF hit 78. Here's the gap between 'feasible' and 'regulated.'">
   <link rel="canonical" href="https://ai.quantummerlin.com/articles/reading-ais-mind.html">
+
   <!-- Open Graph -->
-  <meta property="og:title" content="Reading AI's Mind: How Interpretability Research Is Cracking Open the Black Box">
-  <meta property="og:description" content="For the first time, researchers can see what AI models 'think' about specific topics. The implications for safety, alignment, and building better agents are profound.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://ai.quantummerlin.com/articles/reading-ais-mind.html">
+  <meta property="og:title" content="AI Can Read Your Mind — Here's Exactly How Far It's Gone">
+  <meta property="og:description" content="72–82% accuracy on perceived speech. 78 words per minute via brain implant. The technology is real — and the law hasn't started the conversation yet.">
   <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/reading-ais-mind-hero.png">
-  <meta property="article:published_time" content="2026-05-12">
-  <meta property="article:author" content="Quantum Merlin">
-  <!-- Twitter/X Card -->
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/reading-ais-mind.html">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Reading AI's Mind: How Interpretability Research Is Cracking Open the Black Box">
-  <meta name="twitter:description" content="For the first time, researchers can see what AI models 'think' about specific topics. The implications for safety,.">
-  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/reading-ais-mind-hero.png">
+
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts — Aether Intel type stack -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
-  <meta name="description" content="For the first time, researchers can see what AI models 'think' about specific topics. The implications for safety, alignment, and building better agents are profound.">
+
+  <style>
+    /* ================================================================
+       AETHER INTEL — DESIGN TOKENS
+       Mirror of /css/style.css root variables
+       ================================================================ */
+    :root {
+      --bg:            #07070f;
+      --surface:       #0d0d1a;
+      --surface-2:     #131326;
+      --border:        rgba(129,140,248,0.12);
+      --border-bright: rgba(129,140,248,0.28);
+
+      --neon-indigo:  #818cf8;
+      --neon-cyan:    #22d3ee;
+      --neon-gold:    #f59e0b;
+      --neon-green:   #34d399;
+      --neon-orange:  #f97316;
+
+      --text-primary:   #f1f5f9;
+      --text-secondary: rgba(241,245,249,0.65);
+      --text-muted:     rgba(241,245,249,0.45);
+
+      --font-display: 'Orbitron', monospace;
+      --font-heading: 'Sora', sans-serif;
+      --font-body:    'Space Grotesk', sans-serif;
+
+      --radius-card: 12px;
+      --transition-fast: 0.18s ease;
+      --transition-base: 0.28s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      background: var(--bg);
+      color: var(--text-primary);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ================================================================
+       STANDALONE NAV (hidden when main.js injects the shell)
+       ================================================================ */
+    .standalone-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,7,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      text-decoration: none;
+    }
+
+    .nav-back {
+      font-family: var(--font-display);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color var(--transition-fast);
+    }
+
+    .nav-back:hover { color: var(--neon-cyan); }
+
+    /* ================================================================
+       PAGE LAYOUT
+       ================================================================ */
+    .page-wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 28px 100px;
+    }
+
+    /* ================================================================
+       ARTICLE HERO IMAGE
+       ================================================================ */
+    .article-hero-img-wrap {
+      margin: 0 -28px;
+      max-height: 520px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .article-hero-img {
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      object-position: center 30%;
+      display: block;
+    }
+
+    /* Gradient fade from image into background */
+    .article-hero-img-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 180px;
+      background: linear-gradient(to bottom, transparent, var(--bg));
+    }
+
+    /* ================================================================
+       ARTICLE HEADER — title, meta, deck
+       ================================================================ */
+    .article-header {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 36px 0 0;
+    }
+
+    .article-category-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .article-cat-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: var(--font-display);
+      font-size: 0.56rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      background: rgba(129,140,248,0.12);
+      border: 1px solid rgba(129,140,248,0.28);
+      color: var(--neon-indigo);
+    }
+
+    .article-meta-text {
+      font-family: var(--font-display);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .article-meta-sep {
+      color: var(--border-bright);
+    }
+
+    .article-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+    }
+
+    .article-deck {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 40px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ================================================================
+       ARTICLE BODY — text content
+       ================================================================ */
+    .article-body {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .article-body p {
+      font-size: 1.05rem;
+      line-height: 1.78;
+      color: var(--text-secondary);
+      margin-bottom: 22px;
+    }
+
+    .article-body p:first-child {
+      font-size: 1.12rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .article-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .article-h2 {
+      font-family: var(--font-heading);
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.015em;
+      line-height: 1.25;
+      margin: 48px 0 18px;
+      padding-top: 12px;
+    }
+
+    .article-h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      margin: 32px 0 12px;
+    }
+
+    /* ================================================================
+       CALLOUT BOXES — article-deepening pattern
+       border-left: 3px solid var(--neon-indigo)
+       ================================================================ */
+    .article-callout {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 var(--radius-card) var(--radius-card) 0;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+
+    .article-callout.callout-cyan  { border-left-color: var(--neon-cyan); }
+    .article-callout.callout-gold  { border-left-color: var(--neon-gold); }
+
+    .callout-label {
+      font-family: var(--font-display);
+      font-size: 0.56rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .callout-cyan .callout-label  { color: var(--neon-cyan); }
+    .callout-gold  .callout-label { color: var(--neon-gold); }
+
+    .callout-stat-row {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .callout-stat {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .callout-stat-value {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--neon-cyan);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .callout-gold .callout-stat-value { color: var(--neon-gold); }
+
+    .callout-stat-label {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .callout-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .callout-text strong { color: var(--text-primary); }
+
+    /* ================================================================
+       PULL QUOTES
+       ================================================================ */
+    .pull-quote {
+      margin: 40px 0;
+      padding: 28px 32px;
+      border-left: 3px solid var(--neon-indigo);
+      background: rgba(129,140,248,0.04);
+      border-radius: 0 var(--radius-card) var(--radius-card) 0;
+    }
+
+    .pull-quote-text {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.5;
+      color: var(--text-primary);
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    .pull-quote-source {
+      font-family: var(--font-display);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ================================================================
+       BCI TRACKER EMBED LINK
+       ================================================================ */
+    .tracker-link-card {
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-card);
+      padding: 24px 28px;
+      margin: 36px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      text-decoration: none;
+      transition: border-color var(--transition-base), box-shadow var(--transition-base);
+      flex-wrap: wrap;
+    }
+
+    .tracker-link-card:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 4px 20px rgba(34,211,238,0.1);
+    }
+
+    .tracker-link-left {}
+
+    .tracker-link-eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.56rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--neon-cyan);
+      margin-bottom: 6px;
+    }
+
+    .tracker-link-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .tracker-link-sub {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .tracker-link-cta {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--neon-cyan);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ================================================================
+       CHECKLIST — article-deepening pattern
+       <ul class="article-checklist">
+       ================================================================ */
+    .checklist-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 28px 32px;
+      margin: 36px 0;
+    }
+
+    .checklist-title {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .checklist-sub {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .article-checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .article-checklist li {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .article-checklist li .check {
+      color: var(--neon-green);
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .article-checklist li strong { color: var(--text-primary); }
+
+    /* ================================================================
+       QUICK HITS
+       ================================================================ */
+    .quick-hits {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 28px 32px;
+      margin: 36px 0;
+    }
+
+    .quick-hits-title {
+      font-family: var(--font-display);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--neon-gold);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quick-hits-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .quick-hits-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .quick-hits-list li {
+      display: grid;
+      grid-template-columns: 6px 1fr;
+      gap: 14px;
+      align-items: start;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .quick-hits-list li::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--neon-indigo);
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+
+    .quick-hits-list li strong { color: var(--text-primary); }
+
+    /* ================================================================
+       LEAD MAGNET CTA
+       ================================================================ */
+    .lead-magnet {
+      background: linear-gradient(135deg, rgba(129,140,248,0.08) 0%, rgba(34,211,238,0.04) 100%);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-card);
+      padding: 36px 32px;
+      text-align: center;
+      margin: 48px 0 32px;
+    }
+
+    .lead-magnet-eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--neon-gold);
+      margin-bottom: 14px;
+    }
+
+    .lead-magnet-title {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .lead-magnet-sub {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      max-width: 480px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--neon-indigo), #6366f1);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(129,140,248,0.22);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 4px 28px rgba(129,140,248,0.42);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border-bright);
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+    }
+
+    /* ================================================================
+       ARTICLE TAGS + FOOTER
+       ================================================================ */
+    .article-tags {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tags-label {
+      font-family: var(--font-display);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .tag-pill {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: border-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .tag-pill:hover {
+      border-color: var(--neon-indigo);
+      color: var(--neon-indigo);
+    }
+
+    /* ================================================================
+       AD STRIP
+       ================================================================ */
+    .ad-strip {
+      max-width: 760px;
+      margin: 40px auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      text-align: center;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ================================================================
+       REVEAL ANIMATIONS
+       ================================================================ */
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    [data-animate].visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-animate] { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
+
+    /* ================================================================
+       RESPONSIVE
+       ================================================================ */
+    @media (max-width: 768px) {
+      .page-wrap { padding: 0 16px 70px; }
+      .article-hero-img-wrap { margin: 0 -16px; }
+      .article-hero-img { height: 300px; }
+      .article-title { font-size: 1.8rem; }
+      .article-deck { font-size: 1rem; }
+      .pull-quote { padding: 20px; }
+      .pull-quote-text { font-size: 1.1rem; }
+      .checklist-section, .quick-hits, .lead-magnet { padding: 22px 20px; }
+      .tracker-link-card { flex-direction: column; gap: 12px; }
+      .callout-stat-row { gap: 16px; }
+    }
+  </style>
 </head>
 <body>
-<main>
-  <article class="article-page">
-    <div class="article-hero">
-      <div class="article-hero-img-wrap">
-        <img src="/images/articles/reading-ais-mind-hero.png" alt="Reading AI's Mind: How Interpretability Research Is Cracking Open the Black Box" class="article-hero-img" loading="eager" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
-      </div>
-      <div class="article-hero-overlay">
-        <div class="article-hero-content">
-          <nav class="article-breadcrumb">
-            <a href="/">Home</a><span>›</span>
-            <a href="/articles.html">Articles</a><span>›</span>
-            <span>Reading AI's Mind: How Interpretability Research Is Cracking Open the Black Box</span>
-          </nav>
-          <span class="badge badge-agents">AI Agents</span>
-          <h1 class="article-hero-title">Reading AI's Mind: How Interpretability Research Is Cracking Open the Black Box</h1>
-          <div class="article-meta">
-            <span class="article-meta-date">May 12, 2026</span>
-            <span class="article-meta-dot">·</span>
-            <span class="article-meta-read">10 min read</span>
-          </div>
+
+<!-- Standalone nav — main.js replaces this with the full sidebar shell on the site -->
+<nav class="standalone-nav">
+  <a href="https://ai.quantummerlin.com" class="nav-logo">Aether Intel</a>
+  <a href="https://ai.quantummerlin.com/articles.html" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    All Articles
+  </a>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ============================================================
+       HERO IMAGE
+       Site deployment: save hero to /images/articles/reading-ais-mind-hero.png
+       ============================================================ -->
+  <div class="article-hero-img-wrap">
+    <img
+      src="https://hyperagent.com/api/files/usergenerated/threads/cmp2jn3qx0z7807adhuvzayp8/images/7e35e1de-692f-4c55-a24f-8d27670b077e.png"
+      alt="Dark brain scan showing language-processing activation clusters in indigo and cyan, with decoded text appearing below"
+      class="article-hero-img"
+    >
+  </div>
+
+  <!-- ============================================================
+       ARTICLE HEADER
+       ============================================================ -->
+  <header class="article-header" data-animate>
+    <div class="article-category-row">
+      <span class="article-cat-badge">AI Research</span>
+      <span class="article-meta-text">May 2026</span>
+      <span class="article-meta-sep">·</span>
+      <span class="article-meta-text">9 min read</span>
+      <span class="article-meta-sep">·</span>
+      <span class="article-meta-text">Doomsday Scroll + Ideology War</span>
+    </div>
+
+    <h1 class="article-title">AI Can Read Your Mind — Here's Exactly How Far It's Gone</h1>
+
+    <p class="article-deck">A team at UT Austin decoded inner speech at 72–82% accuracy using an fMRI scanner and a language model. Stanford's BCI patient communicates at 62 words per minute. UCSF hit 78. The bottleneck is no longer physics — it's law, and the law hasn't started the conversation.</p>
+  </header>
+
+  <!-- ============================================================
+       ARTICLE BODY
+       ============================================================ -->
+  <article class="article-body">
+
+    <!-- HOOK -->
+    <div data-animate>
+      <p>A team at the University of Texas at Austin trained a large language model on 16 hours of fMRI scans from three human subjects — then pointed it at a new story the subjects were silently reading. The model generated text. About half the time, it matched the meaning of what was going through their heads. Not the words — the meaning. Published in <em>Nature Neuroscience</em>, led by grad student Jerry Tang and Prof. Alexandra Huth, this wasn't a trick. It was proof of concept that the semantic maps inside GPT-style models and the semantic maps inside human brains are measurably, usably the same. The bottleneck is now engineering, not physics.</p>
+    </div>
+
+    <!-- SECTION 1: BIG STORY -->
+    <div data-animate>
+      <h2 class="article-h2">The Race That Most People Haven't Noticed</h2>
+
+      <p>The UT Austin experiment works in three stages. Subjects spend 16 hours inside an fMRI machine while listening to narrative podcasts. The scanner records blood-oxygen-level-dependent (BOLD) signals in the brain — not individual neurons, but clusters of roughly 100,000 neurons at once. A language model, trained on the same audio, learns to map those fMRI patterns to semantic meaning. When a new, unseen story is played, the decoder reconstructs the approximate meaning of what the subject is hearing.</p>
+
+      <p>The accuracy numbers: <strong>72–82% for perceived speech</strong> (something the subject is actually hearing), 41–72% for imagined speech (something they're picturing in their head), 21–45% for silent video clips — where the decoder is attempting to reconstruct what subjects are watching without any audio. Those numbers drop sharply once you remove the training requirement. The decoder works only for the specific subjects who spent 16 hours in the scanner. Apply it to a stranger and you get gibberish.</p>
+    </div>
+
+    <!-- Callout: UT Austin stats -->
+    <div class="article-callout callout-cyan" data-animate>
+      <span class="callout-label">UT Austin / Nature Neuroscience — 2023</span>
+      <div class="callout-stat-row">
+        <div class="callout-stat">
+          <div class="callout-stat-value">72–82%</div>
+          <div class="callout-stat-label">Semantic accuracy decoding perceived speech</div>
+        </div>
+        <div class="callout-stat">
+          <div class="callout-stat-value">16h</div>
+          <div class="callout-stat-label">Training data required per individual subject</div>
+        </div>
+        <div class="callout-stat">
+          <div class="callout-stat-value">3</div>
+          <div class="callout-stat-label">Subjects trained — roughly 8 billion left to go</div>
         </div>
       </div>
     </div>
 
-    <div class="article-layout">
-      <div class="article-body">
-        <p class="article-intro">For the first time, researchers can see what AI models 'think' about specific topics. The implications for safety, alignment, and building better agents are profound.</p>
+    <div data-animate>
+      <p>On the other side of the invasive/non-invasive divide, two separate teams published results in the same stretch of 2023 that are harder to dismiss. At Stanford, a patient called Pat — ALS patient, speech and facial movement compromised — had microelectrode arrays implanted in her speech motor cortex. The array reads from 100+ individual neurons. A language model with a 100,000-word vocabulary interprets those signals. Pat now communicates at <strong>62 words per minute</strong>. Her previous best, with eye-tracking technology: roughly 10 words per minute.</p>
 
-        <hr class="article-divider">
+      <p>At UCSF, a second team achieved <strong>78 words per minute</strong> using a surface electrode array (ECoG) and a separate avatar speech synthesis layer that produces a synthesized voice in real time. The patient had a brain stem stroke. Both systems are active clinical trials — not consumer products, not FDA-cleared devices, but real people getting real utility from real brain implants attached to real language models.</p>
+    </div>
 
-        <div class="article-coming-soon">
-          <div class="coming-soon-icon">✍️</div>
-          <h2 class="article-h2">Full Article Coming Soon</h2>
-          <p>We're finishing the research and writing for this article. Subscribe to the newsletter to be notified when it goes live — plus get our weekly AI intelligence brief in the meantime.</p>
-          <a href="/newsletter.html" class="btn btn-primary" style="margin-top:16px;display:inline-block">Get Notified →</a>
+    <!-- Callout: Speed trajectory -->
+    <div class="article-callout callout-gold" data-animate>
+      <span class="callout-label">The Speed Race: 2021 → 2023</span>
+      <div class="callout-stat-row">
+        <div class="callout-stat">
+          <div class="callout-stat-value" style="color:var(--text-muted)">15 wpm</div>
+          <div class="callout-stat-label">Pre-AI baseline (P300 EEG speller, 2021)</div>
         </div>
-
-        <div class="article-ad-mid">
-          <ins class="adsbygoogle" style="display:block;text-align:center" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+        <div class="callout-stat">
+          <div class="callout-stat-value" style="color:var(--neon-cyan)">62 wpm</div>
+          <div class="callout-stat-label">Stanford BrainGate2 (implanted array, 2023)</div>
+        </div>
+        <div class="callout-stat">
+          <div class="callout-stat-value" style="color:var(--neon-gold)">78 wpm</div>
+          <div class="callout-stat-label">UCSF ECoG Avatar (surface array, 2023)</div>
         </div>
       </div>
     </div>
 
-    <section class="article-related">
-      <div class="section-header">
-        <h2 class="section-title">Related Articles</h2>
-      </div>
-      <div class="article-grid">
-        <a href="/articles/01-hermes-agent-complete-guide.html" class="article-card">
-          <div class="article-card-img-wrap"><img src="/images/articles/01-hermes-agent-complete-guide-hero.png" alt="Hermes Agent Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')"></div>
-          <div class="article-card-body"><span class="badge badge-agents">AI Agents</span><h3 class="article-card-title">The Complete Hermes Agent Guide</h3><p class="article-card-desc">Setup, skills, and making money in >2026.</p></div>
-        </a>
-        <a href="/articles/04-ai-automation-agency-guide.html" class="article-card">
-          <div class="article-card-img-wrap"><img src="/images/articles/04-ai-automation-agency-hero.png" alt="AI Automation Agency" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')"></div>
-          <div class="article-card-body"><span class="badge badge-business">Business</span><h3 class="article-card-title">How to Start an AI Automation Agency</h3><p class="article-card-desc">Step-by-step guide to building a 6-figure AI agency.</p></div>
-        </a>
-        <a href="/articles/14-openrouter-guide.html" class="article-card">
-          <div class="article-card-img-wrap"><img src="/images/articles/14-openrouter-guide-hero.png" alt="OpenRouter Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(34,211,238,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')"></div>
-          <div class="article-card-body"><span class="badge badge-tools">Tools</span><h3 class="article-card-title">OpenRouter: 100+ Models, One API Key</h3><p class="article-card-desc">The complete setup and optimization guide.</p></div>
-        </a>
-      </div>
-    </section>
+    <div data-animate>
+      <p>That's a 5× improvement in two years. Moore's Law for paralyzed people. The AI component isn't incidental — the jump from 15 to 62–78 words per minute happened precisely because language models got good enough to fill in context, correct neural noise, and handle the ambiguity of reading electrical signals from a brain.</p>
+    </div>
 
-    <section class="article-nl-cta">
-      <div class="nl-home-band">
-        <div class="nl-home-icon">📡</div>
-        <div class="nl-home-text">
-          <div class="nl-home-title">Get the Weekly AI Brief</div>
-          <div class="nl-home-sub">5 signals. 3 takeaways. 1 deep-dive. Every Sunday.</div>
-        </div>
-        <a href="/newsletter.html" class="btn btn-primary">Subscribe Free →</a>
+    <!-- SECTION 2: SO WHAT? -->
+    <div data-animate>
+      <h2 class="article-h2">What the Surveillance Framing Gets Wrong</h2>
+
+      <p>The fMRI decoder is not surveillance. Not yet, and not for obvious reasons. It requires the subject's willing participation for 16+ hours of labeled data collection inside an fMRI machine — a device that costs $3–7 million, requires a specially shielded room, and demands the subject stay nearly motionless. And even then, it works only for the specific person who donated the training data. The decoder trained on Pat's brain reads nothing from yours.</p>
+
+      <p>But Dr. Huth's lab noticed something the surveillance framing obscures entirely. To build the decoder, they needed to know what "understanding language" looks like in both an LLM and a brain. What they found: the context embeddings in GPT-style language models — the internal representations of how words relate to each other — <strong>predict brain activity patterns with striking accuracy</strong>. The brain and the transformer are not merely analogous. They're measurably, usably similar.</p>
+
+      <p>That finding cuts both directions. It suggests LLMs are doing something cognitively real — not just statistical pattern-matching, but something structurally closer to the kind of semantic encoding biological brains do. And it suggests that as models improve, their semantic maps may become better proxies for human neural patterns, eventually making decoders more general, not more individual-specific.</p>
+    </div>
+
+    <!-- Pull quote -->
+    <div class="pull-quote" data-animate>
+      <p class="pull-quote-text">"Brain activity is a kind of encrypted signal and language models provide ways to decipher it."</p>
+      <span class="pull-quote-source">Shinji Nishimoto, Neuroscientist — via The AI Daily Brief</span>
+    </div>
+
+    <div data-animate>
+      <p>Jean Remi King (Meta FAIR) describes the current limitation as "interindividual variability of neural representations": each brain maps the same concept slightly differently, based on lifetime experience and development. That's the bottleneck. It's real. But it's an engineering problem, not a physics problem. And meanwhile, the law hasn't started the conversation. Chile passed the world's first constitutional neurorights amendment in 2021. Colorado enacted the first US neural data privacy law in 2024 (HB24-1058). The other 49 states have nothing. No EU equivalent. No UK equivalent.</p>
+    </div>
+
+    <!-- SECTION 3: TOOL OF THE WEEK -->
+    <div data-animate>
+      <h2 class="article-h2">The Consumer Path: Meta's MEG Decoder</h2>
+
+      <p>Meta's MEG-based brain decoder is the non-surgery version of this technology. Magnetoencephalography captures magnetic fields produced by electrical activity in neurons — at millisecond resolution, roughly 1,000× faster than fMRI — without requiring the subject to lie motionless in a $5 million machine. MEG helmets exist that look something like bike helmets. The spatial resolution isn't as sharp as fMRI, but the temporal precision is dramatically better.</p>
+
+      <p>The architecture Jean Remi King's team built has three components: an image encoder that compresses visual information into embeddings; a brain encoder that learns to map MEG signals to those same embedding spaces; and an image decoder that reconstructs the original visual content from the brain-aligned embedding. The result: a system that can reconstruct, in real time, approximately what a subject is looking at. Not perfectly. Not reliably. But the direction is clear.</p>
+
+      <p>The <strong>invasive path</strong> (Neuralink, Synchron, BrainGate) involves implanted electrodes and surgery. The <strong>non-invasive path</strong> (MEG, fMRI, EEG) involves wearable or external sensors with lower resolution but no surgery. The speed benchmark below maps both paths against each other:</p>
+    </div>
+
+    <!-- BCI Tracker embed card -->
+    <a href="https://ai.quantummerlin.com/tools/bci-tracker.html" target="_blank" rel="noopener noreferrer" class="tracker-link-card" data-animate>
+      <div class="tracker-link-left">
+        <div class="tracker-link-eyebrow">Live Tracker — Aether Intel</div>
+        <div class="tracker-link-title">BCI Speed Benchmark: 15 → 78 wpm and climbing</div>
+        <div class="tracker-link-sub">All major brain-computer interface systems ranked by speed, invasiveness, and clinical status. Updated as new results are published.</div>
       </div>
-    </section>
+      <div class="tracker-link-cta">
+        View Tracker
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 3H13V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 3L3 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+    </a>
+
+    <!-- SECTION 4: HUMAN ELEMENT -->
+    <div data-animate>
+      <h2 class="article-h2">The Right You Don't Know You're About to Lose</h2>
+
+      <p>The most useful framing for this technology didn't come from a research paper. It came from a video discussing brain-data privacy: <em>"If your credit card gets swiped, you can cancel it. But you can't just change your neural data. That data is you."</em></p>
+
+      <p>A field called neuro law is forming to address this. Brain scans, in criminal proceedings, may already be more diagnostic than lie detectors. Researchers as far back as 2018 were demanding new human rights legislation covering when and how brains could be read — before the 2023 wave of published BCI results, and before LLMs got good enough to decode meaning rather than just categories.</p>
+
+      <p>Hans Berger recorded the first human EEG in 1924. For 100 years, we had no way to act meaningfully on brain data at scale. Now we do. The window between "feasible to decode" and "regulated" is open, and nobody knows how long it stays open.</p>
+    </div>
+
+    <!-- Cognitive Liberty Checklist (article-deepening: implementation checklist) -->
+    <div class="checklist-section" data-animate>
+      <div class="checklist-title">Neural Privacy: 5 Questions Before Your Organization Touches Brain Data</div>
+      <div class="checklist-sub">HR teams, legal departments, and healthcare technology companies should be asking these before the first lawsuit lands — not after.</div>
+      <ul class="article-checklist">
+        <li>
+          <span class="check">✓</span>
+          <span><strong>Does your state have a neural data privacy law?</strong> Colorado (HB24-1058, 2024) leads. Most states have nothing specific. Check whether your existing biometric privacy framework covers "biological neural data."</span>
+        </li>
+        <li>
+          <span class="check">✓</span>
+          <span><strong>What consent looks like is still undefined.</strong> Standard "informed consent" was written for blood draws and surveys. A 16-hour fMRI dataset is a different category of data — unique, permanent, and increasingly decodable. Your consent forms likely don't cover this.</span>
+        </li>
+        <li>
+          <span class="check">✓</span>
+          <span><strong>Third-party brain data providers.</strong> Wellness technology, meditation apps (EEG headbands), sleep trackers, and neuro-feedback devices all collect brain-adjacent signals. Before integrating them, audit what data they retain, who they sell it to, and under what jurisdiction.</span>
+        </li>
+        <li>
+          <span class="check">✓</span>
+          <span><strong>The "inaccurate decoder" problem.</strong> Dr. Huth's lab noted that "bad decoded results could still be used nefariously, much like inaccurate lie detector exams." A decoder that's 50% accurate in lab conditions may be treated as 100% accurate in a courtroom or HR proceeding. Accuracy claims need legal scrutiny, not just technical validation.</span>
+        </li>
+        <li>
+          <span class="check">✓</span>
+          <span><strong>Watch Chile's neurorights model.</strong> The first constitutional neurorights amendment passed in 2021. The EU and US have none equivalent. Chile's framework covers the right to mental privacy, cognitive liberty, mental continuity, and psychological integrity. These categories are almost certainly coming to other jurisdictions.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- SECTION 5: QUICK HITS -->
+    <div class="quick-hits" data-animate>
+      <div class="quick-hits-title">Quick Hits</div>
+      <ul class="quick-hits-list">
+        <li><strong>72–82% accuracy</strong> — GPT-style decoder on perceived speech from fMRI, per <em>Nature Neuroscience</em> 2023 (Tang, Huth lab, UT Austin)</li>
+        <li><strong>78 wpm</strong> — UCSF ECoG + avatar synthesis system produces synthesized speech from surface electrodes; patient had brain stem stroke; 1,000-word vocabulary in real-time avatar output</li>
+        <li><strong>Meta's MEG system</strong> can reconstruct what people are seeing in real time using publicly released research — no surgery, no implant, 1ms temporal resolution</li>
+        <li><strong>Chile's neurorights amendment (2021)</strong> is the world's first constitutional protection for mental privacy, cognitive liberty, and psychological integrity — and it has no US, EU, or UK equivalent</li>
+        <li><strong>3 subjects trained</strong> — the UT Austin decoder. Each brain is effectively a bespoke operating system, shaped by a lifetime of development. Generalizing across individuals remains the fundamental open problem</li>
+        <li>A field called <strong>neuro law</strong> is already arguing brain scans are more accurate than lie detectors for criminal proceedings — and wanting new human rights legislation before the technology outpaces the courts</li>
+      </ul>
+    </div>
+
+    <!-- LEAD MAGNET / CTA -->
+    <div class="lead-magnet" data-animate>
+      <div class="lead-magnet-eyebrow">Free Download — Aether Intel</div>
+      <div class="lead-magnet-title">Neural Privacy Checklist: 10 Questions Before Your Company Uses Brain Data</div>
+      <div class="lead-magnet-sub">A one-page PDF for HR managers, legal teams, and healthcare tech founders. What to ask before the first lawsuit lands — not after.</div>
+      <div class="btn-row">
+        <a href="/newsletter" class="btn btn-primary">
+          Get Free PDF — Join Newsletter
+        </a>
+        <a href="/tools/bci-tracker.html" class="btn btn-ghost">
+          View BCI Speed Tracker →
+        </a>
+      </div>
+    </div>
+
+    <!-- AD STRIP -->
+    <div class="ad-strip">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-3480541530392777"
+           data-ad-slot="auto"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- ARTICLE TAGS -->
+    <div class="article-tags" data-animate>
+      <span class="tags-label">Topics:</span>
+      <a href="/articles.html?filter=research" class="tag-pill">AI Research</a>
+      <a href="/articles.html?filter=safety" class="tag-pill">AI Safety</a>
+      <a href="/articles.html?filter=neuroscience" class="tag-pill">Neuroscience</a>
+      <a href="/articles.html?filter=regulation" class="tag-pill">Regulation</a>
+      <a href="/articles.html?filter=bci" class="tag-pill">BCI</a>
+      <a href="/articles.html?filter=privacy" class="tag-pill">Privacy</a>
+    </div>
+
   </article>
-</main>
-<script src="/js/main.js"></script>
-<script src="/js/byok.js"></script>
+</div><!-- /page-wrap -->
+
+<!-- ================================================================
+     Site deployment: replace these two lines with:
+     <script src="/js/main.js"></script>
+     <script src="/js/byok.js"></script>
+     (the standalone nav above can then be removed — main.js injects it)
+     ================================================================ -->
+<script>
+/* Reveal animations — mirrors the IntersectionObserver pattern from
+   web-animation-mastery + aether-intel-site-architecture.
+   In site deployment, main.js handles this; keep as fallback. */
+(function() {
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    root: null,           /* standalone: window is the scroll container */
+    rootMargin: '0px 0px -50px 0px',
+    threshold: 0.05,
+  });
+
+  document.querySelectorAll('[data-animate]').forEach(function(el) {
+    observer.observe(el);
+  });
+})();
+</script>
 </body>
 </html>
