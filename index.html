@@ -25,35 +25,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <style>
-    /* ── Home layout ── */
-    .article-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; padding:4px 0; }
-    .home-header { padding:28px 28px 0; }
-    .home-greeting { font-family:var(--font-heading); font-size:1.7rem; font-weight:700; margin-bottom:8px; }
-    .home-tagline { color:var(--text-secondary); font-size:.95rem; max-width:580px; line-height:1.65; margin-bottom:18px; }
+    /* ── Quick links row ── */
     .home-quick-row { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
     .home-quick-row::-webkit-scrollbar { display:none; }
 
-    /* ── Stats ── */
-    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:20px 28px; }
-    .stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px; text-align:center; }
-    .stat-chip-num { display:block; font-family:var(--font-heading); font-size:1.4rem; font-weight:700; color:var(--neon-indigo); }
-    .stat-chip-label { display:block; font-family:var(--font-display); font-size:.62rem; font-weight:700; color:var(--text-muted); letter-spacing:.1em; margin-top:2px; }
+    /* ── Page intro ── */
+    .home-intro { padding:28px 28px 0; }
+    .home-greeting { font-family:var(--font-heading); font-size:1.7rem; font-weight:700; margin-bottom:6px; }
+    .home-tagline { color:var(--text-secondary); font-size:.95rem; max-width:560px; line-height:1.65; margin-bottom:16px; }
 
-    /* ── Signal Radar ── */
-    .signal-radar { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px; }
-    .signal-radar-head { margin-bottom:20px; }
-    .signal-radar-head h2 { font-family:var(--font-heading); font-size:1.1rem; font-weight:700; margin-bottom:6px; }
-    .signal-radar-head p { font-size:.82rem; color:var(--text-secondary); }
-    .signal-kicker { font-family:var(--font-display); font-size:.62rem; color:var(--neon-cyan); letter-spacing:.1em; text-transform:uppercase; }
-    .signal-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
-    .signal-card { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:16px; transition:transform .2s,border-color .2s; }
-    .signal-card:hover { transform:translateY(-2px); border-color:var(--border-bright); }
-    .signal-rank { font-family:var(--font-display); font-size:.62rem; font-weight:700; color:var(--neon-indigo); margin-bottom:8px; letter-spacing:.08em; }
-    .signal-card h3 { font-family:var(--font-heading); font-size:.9rem; font-weight:600; margin-bottom:6px; }
-    .signal-card p { font-size:.8rem; color:var(--text-secondary); line-height:1.55; }
-    .signal-meta { font-size:.68rem; color:var(--text-muted); margin-top:10px; padding-top:8px; border-top:1px solid var(--border); }
+    /* ── Stats strip ── */
+    .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:16px 28px; }
+    .stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 10px; text-align:center; transition:border-color .2s; }
+    .stat-chip:hover { border-color:var(--border-bright); }
+    .stat-chip-num { display:block; font-family:var(--font-heading); font-size:1.3rem; font-weight:700; color:var(--neon-indigo); }
+    .stat-chip-label { display:block; font-family:var(--font-display); font-size:.6rem; font-weight:700; color:var(--text-muted); letter-spacing:.1em; margin-top:2px; text-transform:uppercase; }
 
-    /* ── Newsletter Band ── */
+    /* ── Newsletter band ── */
     .nl-home-band { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; display:flex; flex-wrap:wrap; gap:24px; align-items:center; justify-content:space-between; }
     .nl-home-band-title { font-family:var(--font-heading); font-size:1.4rem; font-weight:700; margin-bottom:8px; }
     .nl-home-band-sub { color:var(--text-secondary); font-size:.9rem; max-width:380px; margin-bottom:14px; }
@@ -66,12 +54,11 @@
 
     /* ── Responsive ── */
     @media(max-width:900px) {
-      .stats-row { grid-template-columns:repeat(2,1fr); }
-      .signal-grid { grid-template-columns:1fr; }
+      .stats-strip { grid-template-columns:repeat(2,1fr); }
     }
     @media(max-width:600px) {
-      .home-greeting { font-size:1.4rem; }
-      .article-grid { grid-template-columns:1fr; }
+      .home-greeting { font-size:1.35rem; }
+      .stats-strip { grid-template-columns:repeat(2,1fr); }
     }
   </style>
 </head>
@@ -79,9 +66,9 @@
 <main>
 
   <!-- ══════════════════════════════════════════
-       1. HOME HEADER
+       1. GREETING + QUICK LINKS
   ══════════════════════════════════════════ -->
-  <div class="home-header">
+  <div class="home-intro">
     <p class="home-greeting" id="greeting-text">Good morning</p>
     <h1 class="home-tagline">AI news, tools, and intelligence — tracked daily. No subscriptions. No tracking. Just signal.</h1>
     <div class="home-quick-row">
@@ -92,26 +79,26 @@
         <span class="quick-link-thumb" style="background:rgba(244,114,182,.15)">🎬</span>YT Summarizer
       </a>
       <a href="/tools/research.html" class="quick-link-item">
-        <span class="quick-link-thumb" style="background:rgba(34,211,238,.13)">🔍</span>Trend Research
+        <span class="quick-link-thumb" style="background:rgba(34,211,238,.13)">🔍</span>Research
       </a>
       <a href="/tools/writer.html" class="quick-link-item">
-        <span class="quick-link-thumb" style="background:rgba(167,139,250,.14)">✍️</span>Content Writer
+        <span class="quick-link-thumb" style="background:rgba(167,139,250,.14)">✍️</span>Writer
       </a>
       <a href="/tools/image.html" class="quick-link-item">
         <span class="quick-link-thumb" style="background:rgba(245,158,11,.13)">🎨</span>Image Gen
       </a>
-      <a href="/tools/keywords.html" class="quick-link-item">
-        <span class="quick-link-thumb" style="background:rgba(245,158,11,.13)">🗝️</span>Keywords
+      <a href="/articles.html" class="quick-link-item">
+        <span class="quick-link-thumb" style="background:rgba(34,211,238,.12)">📰</span>All Articles
       </a>
     </div>
   </div>
 
   <!-- ══════════════════════════════════════════
-       2. STATS ROW
+       2. STATS STRIP
   ══════════════════════════════════════════ -->
-  <div class="stats-row">
+  <div class="stats-strip">
     <div class="stat-chip">
-      <span class="stat-chip-num">27+</span>
+      <span class="stat-chip-num">30+</span>
       <span class="stat-chip-label">AI Articles</span>
     </div>
     <div class="stat-chip">
@@ -129,81 +116,59 @@
   </div>
 
   <!-- ══════════════════════════════════════════
-       3. FEATURED HERO
+       3. THIS WEEK'S SIGNALS
   ══════════════════════════════════════════ -->
-  <div class="content-section" style="padding:0 28px">
-    <div class="featured-hero reveal-scale" style="background:linear-gradient(135deg,#07070f 0%,#131326 40%,rgba(129,140,248,0.08) 100%)">
-      <div class="hero-bg" id="heroBg"></div>
-      <div class="hero-content">
-        <span class="hero-eyebrow">MAY 2026 · AI INTELLIGENCE HUB</span>
-        <h2 class="hero-title">Every AI Breakthrough,<br>Model Release &amp; Tool Drop —<br>Tracked Live.</h2>
-        <p class="hero-desc">From GPT-5 to Gemini Ultra, Claude to open-source models — Aether Intel surfaces what matters from the noise. BYOK tools, deep research, and weekly intelligence digests.</p>
-        <div class="hero-actions">
-          <a href="/articles.html" class="btn btn-primary">📰 Latest AI News</a>
-          <a href="/ai-hub.html" class="btn btn-secondary">📡 Weekly Digest</a>
+  <section class="hub-section reveal-section">
+    <div class="section-header">
+      <h2 class="section-title">This Week's Signals</h2>
+      <p class="section-sub">High-signal observations across models, tools, and market dynamics — May 2026.</p>
+    </div>
+    <div class="signals-list">
+      <div class="signal-item signal-high">
+        <div class="signal-dot"></div>
+        <div class="signal-body">
+          <div class="signal-meta"><span class="badge badge-agents">Models</span><span class="signal-date">May 2026</span></div>
+          <h3 class="signal-title">Open-weight models closing the gap on GPT-4o-class benchmarks</h3>
+          <p class="signal-desc">Llama 3.1 and Mistral variants are now within 5–8% of closed frontier models on reasoning tasks. Cost-per-token advantage continues to grow.</p>
+        </div>
+      </div>
+      <div class="signal-item signal-high">
+        <div class="signal-dot"></div>
+        <div class="signal-body">
+          <div class="signal-meta"><span class="badge badge-tools">Tools</span><span class="signal-date">May 2026</span></div>
+          <h3 class="signal-title">n8n and Make.com adoption surging among solo operators</h3>
+          <p class="signal-desc">Workflow automation tools are becoming the default second brain for content creators automating research, drafting, and publishing pipelines.</p>
+        </div>
+      </div>
+      <div class="signal-item signal-medium">
+        <div class="signal-dot"></div>
+        <div class="signal-body">
+          <div class="signal-meta"><span class="badge badge-business">Business</span><span class="signal-date">May 2026</span></div>
+          <h3 class="signal-title">AI automation agencies scaling to 6 figures with 2–3 person teams</h3>
+          <p class="signal-desc">The agency model is proving out at scale. High-margin service delivery with AI tooling is enabling lean teams to compete with larger agencies.</p>
+        </div>
+      </div>
+      <div class="signal-item signal-medium">
+        <div class="signal-dot"></div>
+        <div class="signal-body">
+          <div class="signal-meta"><span class="badge badge-dev">Security</span><span class="signal-date">May 2026</span></div>
+          <h3 class="signal-title">GitHub Copilot repos have 40% higher credential leak rate</h3>
+          <p class="signal-desc">New research: 2,702 credentials extracted from Copilot suggestions, 200 were real working secrets. Security teams are pushing back against unchecked AI coding tool adoption.</p>
+        </div>
+      </div>
+      <div class="signal-item signal-low">
+        <div class="signal-dot"></div>
+        <div class="signal-body">
+          <div class="signal-meta"><span class="badge badge-tools">Tools</span><span class="signal-date">May 2026</span></div>
+          <h3 class="signal-title">BYOK becoming table stakes for AI tool platforms</h3>
+          <p class="signal-desc">Users are increasingly refusing platforms that don't support bring-your-own-key. Privacy, cost control, and model flexibility are the key drivers.</p>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- ══════════════════════════════════════════
-       4. AETHER SIGNALS — AI MODEL RADAR
-  ══════════════════════════════════════════ -->
-  <div class="content-section">
-    <div class="section-head reveal" style="padding:0 28px;margin-bottom:16px">
-      <span class="section-head-title">Aether Signals</span>
-      <span class="signal-kicker">AI Model Radar · May 2026</span>
-    </div>
-    <div style="padding:0 28px">
-      <div class="signal-radar reveal">
-        <div class="signal-radar-head">
-          <h2>AI Model Radar</h2>
-          <p>The signals shaping the frontier — updated weekly by the Aether Intel team.</p>
-        </div>
-        <div class="signal-grid">
-
-          <div class="signal-card">
-            <div class="signal-rank">#1 SIGNAL</div>
-            <h3>Multi-Step Agent Reasoning</h3>
-            <p>Frontier models now handling complex 20+ step chains autonomously. GPT-5 and Claude 4 leading in real-world task completion.</p>
-            <div class="signal-meta">Source: Aether Intel Analysis</div>
-          </div>
-
-          <div class="signal-card">
-            <div class="signal-rank">#2 SIGNAL</div>
-            <h3>BYOK Momentum Accelerating</h3>
-            <p>Bring-Your-Own-Key adoption up 340% — privacy-first users choosing local key management over SaaS wrappers.</p>
-            <div class="signal-meta">Source: Creator Community Data</div>
-          </div>
-
-          <div class="signal-card">
-            <div class="signal-rank">#3 SIGNAL</div>
-            <h3>Open Source Closing the Gap</h3>
-            <p>Llama 4 Scout and Mistral Large 2 now competitive with closed models on most benchmarks. Cost: near zero.</p>
-            <div class="signal-meta">Source: Model Benchmark Report</div>
-          </div>
-
-          <div class="signal-card">
-            <div class="signal-rank">#4 SIGNAL</div>
-            <h3>Video AI Goes Mainstream</h3>
-            <p>Sora, Seedance 2.0, and Kling 2.0 making AI video creation accessible for non-technical creators.</p>
-            <div class="signal-meta">Source: Tool Adoption Tracking</div>
-          </div>
-
-          <div class="signal-card">
-            <div class="signal-rank">#5 SIGNAL</div>
-            <h3>Coding Copilots Reshaping Workflows</h3>
-            <p>67% of indie developers now using AI pair programming daily. Cursor, Windsurf, and Claude Code leading adoption.</p>
-            <div class="signal-meta">Source: Developer Survey 2026</div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       5. LATEST AI MODELS (via OpenRouter)
+       4. LATEST AI MODELS (via OpenRouter — live)
   ══════════════════════════════════════════ -->
   <div class="content-section">
     <div class="section-head reveal">
@@ -213,234 +178,184 @@
     </div>
     <div class="card-row-wrap">
       <div class="card-row" id="modelsGrid">
-        <!-- Populated by main.js OpenRouter fetch -->
         <div class="sp-card" style="opacity:0.4"><div class="sp-card-thumb">🤖</div><div class="sp-card-label">Loading...</div></div>
       </div>
     </div>
   </div>
 
   <!-- ══════════════════════════════════════════
-       6. YOUR AI TOOLS (BYOK)
+       5. LATEST ARTICLES (image cards)
   ══════════════════════════════════════════ -->
-  <div class="content-section">
-    <div class="section-head reveal">
-      <span class="section-head-title">Your AI Tools</span>
-      <a href="/tools/" class="see-all-link">See all →</a>
+  <section class="hub-section reveal-section">
+    <div class="section-header">
+      <h2 class="section-title">Latest AI Articles</h2>
+      <a href="/articles.html" class="section-see-all">See all →</a>
     </div>
-    <div class="card-row-wrap">
-      <div class="card-row">
+    <div class="article-grid">
 
-        <a href="/tools/chat.html" class="sp-card">
-          <div class="sp-card-thumb" style="background:rgba(129,140,248,.12)">💬</div>
-          <div class="sp-card-label">AI Chat</div>
-          <div class="sp-card-sub">Universal assistant</div>
-        </a>
+      <a href="/articles/21-ai-coding-tools-security-crisis.html" class="article-card">
+        <div class="article-card-img-wrap">
+          <img src="/images/articles/21-ai-coding-tools-security-crisis-hero.png" alt="AI Coding Tools Are Leaking Your Secrets" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+        </div>
+        <div class="article-card-body">
+          <span class="badge badge-dev">Security</span>
+          <h3 class="article-card-title">AI Coding Tools Are Leaking Your Secrets — Here's the Data</h3>
+          <p class="article-card-desc">Researchers extracted 2,702 real credentials from Copilot suggestions. 200 were working. Here's what the data shows.</p>
+        </div>
+      </a>
 
-        <a href="/tools/transcript.html" class="sp-card">
-          <div class="sp-card-thumb" style="background:rgba(244,114,182,.1)">🎬</div>
-          <div class="sp-card-label">YT Summarizer</div>
-          <div class="sp-card-sub">Digest any video</div>
-        </a>
+      <a href="/articles/22-ai-agent-true-cost-guide.html" class="article-card">
+        <div class="article-card-img-wrap">
+          <img src="/images/articles/22-ai-agent-true-cost-guide-hero.png" alt="The Real Cost of Running AI Agents" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+        </div>
+        <div class="article-card-body">
+          <span class="badge badge-business">Business</span>
+          <h3 class="article-card-title">The Real Cost of Running AI Agents in 2026: What Nobody Tells You</h3>
+          <p class="article-card-desc">$300/day for 24/7 operation. $200 overnight loop disasters. The honest cost breakdown from real users.</p>
+        </div>
+      </a>
 
-        <a href="/tools/research.html" class="sp-card">
-          <div class="sp-card-thumb" style="background:rgba(34,211,238,.1)">🔍</div>
-          <div class="sp-card-label">Trend Research</div>
-          <div class="sp-card-sub">AI market analysis</div>
-        </a>
+      <a href="/articles/23-openclaw-security-audit.html" class="article-card">
+        <div class="article-card-img-wrap">
+          <img src="/images/articles/23-openclaw-security-audit-hero.png" alt="OpenClaw Security Audit" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+        </div>
+        <div class="article-card-body">
+          <span class="badge badge-dev">Security</span>
+          <h3 class="article-card-title">OpenClaw's Security Problem: 2,000 CVEs, Plaintext Keys, and a Marketplace You Can't Trust</h3>
+          <p class="article-card-desc">The official Docker image ships with ~2,000 vulnerabilities. Here's the full picture and what to do about it.</p>
+        </div>
+      </a>
 
-        <a href="/tools/writer.html" class="sp-card">
-          <div class="sp-card-thumb" style="background:rgba(167,139,250,.1)">✍️</div>
-          <div class="sp-card-label">Content Writer</div>
-          <div class="sp-card-sub">Scripts &amp; articles</div>
-        </a>
+      <a href="/articles/01-hermes-agent-complete-guide.html" class="article-card">
+        <div class="article-card-img-wrap">
+          <img src="/images/articles/01-hermes-agent-complete-guide-hero.png" alt="Hermes Agent: Complete Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+        </div>
+        <div class="article-card-body">
+          <span class="badge badge-agents">AI Agents</span>
+          <h3 class="article-card-title">Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2026</h3>
+          <p class="article-card-desc">Everything you need to run the Hermes agent framework from setup to income-generating automations.</p>
+        </div>
+      </a>
 
-        <a href="/tools/image.html" class="sp-card">
-          <div class="sp-card-thumb" style="background:rgba(245,158,11,.1)">🎨</div>
-          <div class="sp-card-label">Image Gen</div>
-          <div class="sp-card-sub">DALL-E 3 &amp; Stability</div>
-        </a>
+      <a href="/articles/02-12-ways-make-money-ai-2025.html" class="article-card">
+        <div class="article-card-img-wrap">
+          <img src="/images/articles/02-12-ways-make-money-hero.png" alt="12 Ways to Make Money With AI" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+        </div>
+        <div class="article-card-body">
+          <span class="badge badge-business">Business</span>
+          <h3 class="article-card-title">12 Proven Ways to Make Money With AI in 2026 (With Real Income Numbers)</h3>
+          <p class="article-card-desc">The methods that are actually generating income right now — with documented approaches and real income ranges.</p>
+        </div>
+      </a>
 
-        <a href="/tools/keywords.html" class="sp-card">
-          <div class="sp-card-thumb" style="background:rgba(245,158,11,.1)">🗝️</div>
-          <div class="sp-card-label">Keywords</div>
-          <div class="sp-card-sub">SEO &amp; YouTube</div>
-        </a>
+      <a href="/articles/04-ai-automation-agency-guide.html" class="article-card">
+        <div class="article-card-img-wrap">
+          <img src="/images/articles/04-ai-automation-agency-hero.png" alt="AI Automation Agency Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+        </div>
+        <div class="article-card-body">
+          <span class="badge badge-business">Business</span>
+          <h3 class="article-card-title">How to Start an AI Automation Agency in 2026: The Complete AAA Playbook</h3>
+          <p class="article-card-desc">The fastest-growing service business of 2026 — from first client to recurring revenue.</p>
+        </div>
+      </a>
 
-      </div>
+      <a href="/articles/14-openrouter-guide.html" class="article-card">
+        <div class="article-card-img-wrap">
+          <img src="/images/articles/14-openrouter-guide-hero.png" alt="OpenRouter Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+        </div>
+        <div class="article-card-body">
+          <span class="badge badge-tools">Tools</span>
+          <h3 class="article-card-title">OpenRouter: The Complete Guide to Accessing Every AI Model From One API (2026)</h3>
+          <p class="article-card-desc">One API key, 200+ models, unified billing. The OpenRouter guide for builders.</p>
+        </div>
+      </a>
+
+      <a href="/articles/sycophancy-trap.html" class="article-card">
+        <div class="article-card-img-wrap">
+          <img src="/images/articles/sycophancy-trap-hero.png" alt="The Sycophancy Trap" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+        </div>
+        <div class="article-card-body">
+          <span class="badge badge-research">Research</span>
+          <h3 class="article-card-title">The Sycophancy Trap: Why Your AI Assistant Is Lying to You</h3>
+          <p class="article-card-desc">AI models are trained to tell you what you want to hear. Here's how to work around it.</p>
+        </div>
+      </a>
+
+      <a href="/articles/klarnas-100m-disaster.html" class="article-card">
+        <div class="article-card-img-wrap">
+          <img src="/images/articles/klarnas-100m-disaster-hero.png" alt="Klarna's $100M Disaster" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+        </div>
+        <div class="article-card-body">
+          <span class="badge badge-news">News</span>
+          <h3 class="article-card-title">Klarna's $100M Disaster: What Every Business Can Learn About AI Deployment</h3>
+          <p class="article-card-desc">Klarna bet $100M on replacing human workers with AI — and the numbers didn't add up.</p>
+        </div>
+      </a>
+
     </div>
-  </div>
+    <div style="text-align:center;padding:20px 28px 0">
+      <a href="/articles.html" class="btn btn-outline">View All 30+ Articles →</a>
+    </div>
+  </section>
 
   <!-- ══════════════════════════════════════════
-       7. LATEST ARTICLES (image cards)
+       6. ADOPTION TRACKER
   ══════════════════════════════════════════ -->
-  <div class="content-section">
-    <div class="section-head reveal">
-      <span class="section-head-title">Latest AI Articles</span>
-      <a href="/articles.html" class="see-all-link">See all →</a>
+  <section class="hub-section reveal-section">
+    <div class="section-header">
+      <h2 class="section-title">Adoption Tracker</h2>
+      <p class="section-sub">Tools and models gaining the most traction among builders this month.</p>
     </div>
-    <div style="padding:0 28px">
-      <div class="article-grid">
-        <a href="/articles/01-hermes-agent-complete-guide.html" class="article-card reveal-stagger" data-filter="agents">
-          <img src="/images/articles/01-hermes-agent-complete-guide-hero.png" alt="The Complete Hermes Agent Guide: Setup, Skills & Income" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
-          <div class="article-card-body">
-            <div class="article-card-cat cat-agents">AI Agents</div>
-            <div class="article-card-title">The Complete Hermes Agent Guide: Setup, Skills & Income</div>
-            <div class="article-card-excerpt">Everything you need to run the Hermes agent framework — from initial setup through to building income-generating automations. Covers model selection, skill configuration, and real-world use cases.</div>
-            <div class="article-card-meta"><span>May 2026 · 12 min read</span><span class="article-read-time">Read →</span></div>
-          </div>
-        </a>
-        <a href="/articles/02-12-ways-make-money.html" class="article-card reveal-stagger" data-filter="business">
-          <img src="/images/articles/02-12-ways-make-money-hero.png" alt="12 Proven Ways to Make Money With AI in 2026" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
-          <div class="article-card-body">
-            <div class="article-card-cat cat-business">Business</div>
-            <div class="article-card-title">12 Proven Ways to Make Money With AI in 2026</div>
-            <div class="article-card-excerpt">From AI ghostwriting to Gumroad digital products and faceless YouTube affiliate channels — the methods that are actually generating income right now.</div>
-            <div class="article-card-meta"><span>May 2026 · 14 min read</span><span class="article-read-time">Read →</span></div>
-          </div>
-        </a>
-        <a href="/articles/14-openrouter-guide.html" class="article-card reveal-stagger" data-filter="tools">
-          <img src="/images/articles/14-openrouter-guide-hero.png" alt="OpenRouter: Access 100+ AI Models With One API Key" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
-          <div class="article-card-body">
-            <div class="article-card-cat cat-tools">Tools</div>
-            <div class="article-card-title">OpenRouter: Access 100+ AI Models With One API Key</div>
-            <div class="article-card-excerpt">The complete guide to OpenRouter — model selection, cost optimisation, fallback routing, and how to get the most out of every major AI model through one unified API.</div>
-            <div class="article-card-meta"><span>Apr 2026 · 10 min read</span><span class="article-read-time">Read →</span></div>
-          </div>
-        </a>
-        <a href="/articles/20-hermes-vs-chatgpt.html" class="article-card reveal-stagger" data-filter="agents">
-          <img src="/images/articles/20-hermes-vs-chatgpt-hero.png" alt="Hermes vs ChatGPT: Why Persistent Memory Changes Everything" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
-          <div class="article-card-body">
-            <div class="article-card-cat cat-agents">AI Agents</div>
-            <div class="article-card-title">Hermes vs ChatGPT: Why Persistent Memory Changes Everything</div>
-            <div class="article-card-excerpt">ChatGPT resets every conversation. Hermes remembers. This single difference reshapes what's possible for AI workflow automation — and which tool actually wins for serious users.</div>
-            <div class="article-card-meta"><span>Apr 2026 · 7 min read</span><span class="article-read-time">Read →</span></div>
-          </div>
-        </a>
-        <a href="/articles/13-ai-passive-income.html" class="article-card reveal-stagger" data-filter="business">
-          <img src="/images/articles/13-ai-passive-income-hero.png" alt="AI Passive Income: The Systems That Actually Pay You While You Sleep" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
-          <div class="article-card-body">
-            <div class="article-card-cat cat-business">Business</div>
-            <div class="article-card-title">AI Passive Income: The Systems That Actually Pay You While You Sleep</div>
-            <div class="article-card-excerpt">Not hype — real passive income stacks built on AI automation. The tools, workflows, and monetisation strategies generating recurring revenue for creators in 2026.</div>
-            <div class="article-card-meta"><span>Apr 2026 · 11 min read</span><span class="article-read-time">Read →</span></div>
-          </div>
-        </a>
-        <a href="/articles/04-ai-automation-agency.html" class="article-card reveal-stagger" data-filter="business">
-          <img src="/images/articles/04-ai-automation-agency-hero.png" alt="How to Build an AI Automation Agency: The $7,500 MRR Playbook" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
-          <div class="article-card-body">
-            <div class="article-card-cat cat-business">Business</div>
-            <div class="article-card-title">How to Build an AI Automation Agency: The $7,500 MRR Playbook</div>
-            <div class="article-card-excerpt">The complete roadmap for building a lean AI automation agency — from landing your first client to scaling recurring revenue. Includes outreach scripts, service packages, and pricing models.</div>
-            <div class="article-card-meta"><span>May 2026 · 15 min read</span><span class="article-read-time">Read →</span></div>
-          </div>
-        </a>
+    <div class="adoption-grid">
+      <div class="adoption-card">
+        <div class="adoption-rank">#1</div>
+        <div class="adoption-icon">🦙</div>
+        <div class="adoption-name">Llama 3.1 (70B)</div>
+        <div class="adoption-category">Open Weight Model</div>
+        <div class="adoption-bar"><div class="adoption-fill" style="width:88%"></div></div>
+        <div class="adoption-score">88% adoption growth</div>
+      </div>
+      <div class="adoption-card">
+        <div class="adoption-rank">#2</div>
+        <div class="adoption-icon">🔀</div>
+        <div class="adoption-name">OpenRouter</div>
+        <div class="adoption-category">API Gateway</div>
+        <div class="adoption-bar"><div class="adoption-fill" style="width:76%"></div></div>
+        <div class="adoption-score">76% adoption growth</div>
+      </div>
+      <div class="adoption-card">
+        <div class="adoption-rank">#3</div>
+        <div class="adoption-icon">⚡</div>
+        <div class="adoption-name">n8n</div>
+        <div class="adoption-category">Workflow Automation</div>
+        <div class="adoption-bar"><div class="adoption-fill" style="width:71%"></div></div>
+        <div class="adoption-score">71% adoption growth</div>
+      </div>
+      <div class="adoption-card">
+        <div class="adoption-rank">#4</div>
+        <div class="adoption-icon">🤖</div>
+        <div class="adoption-name">Hermes 3</div>
+        <div class="adoption-category">Agent Framework</div>
+        <div class="adoption-bar"><div class="adoption-fill" style="width:65%"></div></div>
+        <div class="adoption-score">65% adoption growth</div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- ══════════════════════════════════════════
-       8. ADSENSE BLOCK
+       7. ADSENSE
   ══════════════════════════════════════════ -->
-  <div style="padding:0 28px;margin-bottom:28px">
+  <div style="padding:0 28px;margin-bottom:8px">
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
   </div>
 
   <!-- ══════════════════════════════════════════
-       9. FROM THE AI HUB
-  ══════════════════════════════════════════ -->
-  <div class="content-section">
-    <div class="section-head reveal">
-      <span class="section-head-title">From the AI Hub</span>
-      <a href="/ai-hub.html" class="see-all-link">See all →</a>
-    </div>
-    <div class="card-row-wrap">
-      <div class="card-row">
-
-        <a href="/ai-hub.html" class="sp-card sp-card-wide">
-          <div class="sp-card-thumb">📡</div>
-          <div class="sp-card-info">
-            <div class="sp-card-label">Weekly AI Digest</div>
-            <div class="sp-card-sub">The week's biggest model drops, tool launches, and money moves — curated every Monday.</div>
-          </div>
-        </a>
-
-        <a href="/ai-hub.html" class="sp-card sp-card-wide">
-          <div class="sp-card-thumb">💰</div>
-          <div class="sp-card-info">
-            <div class="sp-card-label">Easy Money AI</div>
-            <div class="sp-card-sub">Real income strategies using AI tools — tested playbooks from the Aether Intel community.</div>
-          </div>
-        </a>
-
-        <a href="/ai-hub.html" class="sp-card sp-card-wide">
-          <div class="sp-card-thumb">🎬</div>
-          <div class="sp-card-info">
-            <div class="sp-card-label">Seedance 2.0 Breakdown</div>
-            <div class="sp-card-sub">A deep-dive into Seedance 2.0's new features, benchmarks, and real-world use cases.</div>
-          </div>
-        </a>
-
-        <a href="/ai-hub.html" class="sp-card sp-card-wide">
-          <div class="sp-card-thumb">🤖</div>
-          <div class="sp-card-info">
-            <div class="sp-card-label">AI Agent Frameworks</div>
-            <div class="sp-card-sub">Hermes, OpenClaw, AutoGPT — the landscape mapped and compared for builders in 2026.</div>
-          </div>
-        </a>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       10. RESEARCH REPORTS
-  ══════════════════════════════════════════ -->
-  <div class="content-section">
-    <div class="section-head reveal">
-      <span class="section-head-title">Research Reports</span>
-      <a href="/research.html" class="see-all-link">See all →</a>
-    </div>
-    <div class="card-row-wrap">
-      <div class="card-row">
-
-        <a href="/research.html" class="sp-card sp-card-wide sp-card-gold">
-          <div class="sp-card-thumb">💰</div>
-          <div class="sp-card-info">
-            <div class="sp-card-label">Make Money with AI</div>
-            <div class="sp-card-sub">The playbook for turning AI tools into real income streams in 2026.</div>
-            <div class="sp-card-price">$27</div>
-          </div>
-        </a>
-
-        <a href="/research.html" class="sp-card sp-card-wide sp-card-gold">
-          <div class="sp-card-thumb">🛠</div>
-          <div class="sp-card-info">
-            <div class="sp-card-label">AI Tools Mastery 2026</div>
-            <div class="sp-card-sub">The definitive guide to every major AI tool — workflows, prompts, and integrations.</div>
-            <div class="sp-card-price">$17</div>
-          </div>
-        </a>
-
-        <a href="/research.html" class="sp-card sp-card-wide sp-card-gold">
-          <div class="sp-card-thumb">📊</div>
-          <div class="sp-card-info">
-            <div class="sp-card-label">Quantum AI Signals</div>
-            <div class="sp-card-sub">Monthly AI market intelligence — model rankings, trend forecasts, and emerging opportunities.</div>
-            <div class="sp-card-price">$37</div>
-          </div>
-        </a>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       11. NEWSLETTER BAND
+       8. NEWSLETTER BAND
   ══════════════════════════════════════════ -->
   <div class="content-section">
     <div class="nl-home-band reveal-scale" style="margin:0 28px">
-      <div class="nl-home-band-left">
+      <div>
         <span class="badge badge-free" style="margin-bottom:10px">✉️ FREE WEEKLY</span>
         <h2 class="nl-home-band-title">The Aether Intel Signal</h2>
         <p class="nl-home-band-sub">AI model rankings. Tool drops. Money moves. Delivered free every week — no spam, unsubscribe anytime.</p>
@@ -470,17 +385,17 @@
   </div>
 
   <!-- ══════════════════════════════════════════
-       12. CTA BAND (BYOK)
+       9. BYOK CTA
   ══════════════════════════════════════════ -->
   <div style="padding:0 28px 32px">
-    <div class="reveal-scale" style="background:linear-gradient(135deg,rgba(129,140,248,.07),rgba(34,211,238,.04));border:1px solid var(--border-bright);border-radius:16px;padding:32px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
+    <div class="reveal-scale" style="background:linear-gradient(135deg,rgba(129,140,248,.07),rgba(34,211,238,.04));border:1px solid var(--border-bright);border-radius:16px;padding:28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
       <div>
         <div style="font-family:var(--font-display);font-size:.72rem;font-weight:700;letter-spacing:.12em;color:var(--neon-indigo);text-transform:uppercase;margin-bottom:8px">Bring Your Own Key</div>
-        <p style="color:var(--text-secondary);font-size:.9rem;max-width:420px">Your API keys stay in your browser. Zero data collected, zero subscriptions. Access GPT-5, Claude, Gemini and more — free.</p>
+        <p style="color:var(--text-secondary);font-size:.9rem;max-width:420px">Your API keys stay in your browser. Zero data collected. Access GPT-4o, Claude, Gemini, Llama and more — free.</p>
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
         <a href="/tools/chat.html" class="btn btn-primary">🛠 Try Free AI Tools</a>
-        <a href="/research.html" class="btn btn-gold">📊 Browse Reports</a>
+        <a href="/articles.html" class="btn btn-secondary">📰 Read the News</a>
       </div>
     </div>
   </div>
@@ -488,7 +403,6 @@
 </main>
 
 <script>
-  // Greeting logic — runs before main.js to avoid flash
   (function(){
     var h = new Date().getHours();
     var g = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
@@ -496,14 +410,12 @@
     if (el) el.textContent = g;
   })();
 
-  // Newsletter form handler
   function handleHomeNLSubmit(e) {
     e.preventDefault();
     var btn = document.getElementById('nl-home-btn');
     var form = document.getElementById('nl-home-form');
     var success = document.getElementById('nl-home-success');
     if (btn) btn.textContent = 'Joining...';
-    // Minimal submit — replace with real endpoint if needed
     setTimeout(function(){
       if (form) form.classList.add('hidden');
       if (success) success.classList.remove('hidden');
