@@ -870,6 +870,47 @@ nav.mobile-bottom-nav {
 
 
 /* =============================================================================
+   10b. MOBILE TOPBAR
+   ============================================================================= */
+
+.mobile-topbar {
+  display: none; /* shown via media query */
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: rgba(10, 10, 20, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 400;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-topbar-logo {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.mobile-topbar-logo .logo-aether {
+  color: var(--text-primary);
+}
+
+.mobile-topbar-logo .logo-intel {
+  color: var(--neon-indigo);
+}
+
+
+/* =============================================================================
    11. HOME HEADER
    ============================================================================= */
 
@@ -2271,6 +2312,16 @@ nav.mobile-bottom-nav {
     height: auto;
     /* Leave space for now bar + mobile nav + extra breathing room */
     padding-bottom: calc(var(--nowbar-h) + var(--mobnav-h) + 24px);
+  }
+
+  /* Ensure <main> also clears the fixed bottom bars */
+  main {
+    padding-bottom: calc(var(--nowbar-h) + var(--mobnav-h) + 24px);
+  }
+
+  /* Show mobile topbar */
+  .mobile-topbar {
+    display: flex;
   }
 
   /* Show mobile bottom nav */

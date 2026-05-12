@@ -28,7 +28,6 @@
 
     <span class="nav-section-label">Tools</span>
     <a href="/tools/chat.html" class="nav-item" data-page="chat">AI Chat</a>
-    <a href="/tools/transcript.html" class="nav-item" data-page="transcript">YT Summarizer</a>
     <a href="/tools/writer.html" class="nav-item" data-page="writer">Content Writer</a>
     <a href="/tools/image.html" class="nav-item" data-page="image">Image Gen</a>
 
@@ -52,6 +51,13 @@
     </div>
   </div>
 </aside>`;
+
+  const MOBILE_HEADER_HTML = `
+<div class="mobile-topbar">
+  <a href="/index.html" class="mobile-topbar-logo">
+    <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
+  </a>
+</div>`;
 
   const NOW_BAR_HTML = `
 <footer class="now-bar">
@@ -112,8 +118,15 @@
     const existingMain = body.querySelector('main');
     const mainContent = document.createElement('div');
     mainContent.className = 'main-content';
+
+    // Inject mobile topbar at the very top of .main-content
+    const mobileHeaderWrapper = document.createElement('div');
+    mobileHeaderWrapper.innerHTML = MOBILE_HEADER_HTML.trim();
+    const mobileHeaderEl = mobileHeaderWrapper.firstElementChild;
+    mainContent.appendChild(mobileHeaderEl);
+
     if (existingMain) {
-      // Move the existing <main> into .main-content
+      // Move the existing <main> into .main-content (after mobile header)
       body.removeChild(existingMain);
       mainContent.appendChild(existingMain);
     }
@@ -168,7 +181,6 @@
     if (p.includes('/ai-hub')) return 'ai-hub';
     if (p.includes('/ai-intelligence')) return 'ai-intelligence';
     if (p.includes('/tools/chat')) return 'chat';
-    if (p.includes('/tools/transcript')) return 'transcript';
     if (p.includes('/tools/writer')) return 'writer';
     if (p.includes('/tools/image')) return 'image';
     if (p.includes('/skills')) return 'skills';

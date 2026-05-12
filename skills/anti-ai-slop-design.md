@@ -22,7 +22,7 @@ works-with: Claude, GPT-4o, Cursor, VS Code Copilot, Any image AI
 1. **Build `design-memory.md` before any generation.** Document: brand intent, typography rules, color roles, spacing rhythm, component patterns, motion language. This file is your AI's source of truth for every session. See the Design Memory Template skill.
 2. **Attach design memory and references to every prompt.** Every generation pass starts with: "Use design-memory.md as your source of truth." No exceptions.
 3. **Run focused iteration loops — not single-pass generation.** Generate 3 distinct directions, not one. Score each against your quality gate. Pick the strongest and iterate it through 3 refinement passes.
-4. **Apply the quality gate before shipping.** Check: visual consistency with prior pages, originality (no generic template patterns), conversion clarity (does the message land in 5 seconds?).
+4. **Apply the quality gate before shipping.** Check: visual consistency with prior pages, originality (no generic template patterns), conversion clarity (does the message land in 5 seconds?), and language hygiene (no em dashes — use commas, periods, or colons instead).
 5. **Remix into other formats only after craft is locked.** Slides, social cuts, mobile variants — only after the master version passes the gate.
 
 ## Signal Prompt
@@ -36,6 +36,7 @@ For each direction:
 - Apply the brand system from design-memory.md strictly
 - Reject any generic template patterns (gradient blobs, stock hero layouts, default card grids)
 - Write a self-review: consistency score, originality score, conversion clarity score
+- Use no em dashes (—). Replace with commas, periods, or colons.
 
 Select the highest-scoring direction. Run 3 iteration passes on it before producing any derivative formats.
 
