@@ -57,6 +57,7 @@
   <a href="/index.html" class="mobile-topbar-logo">
     <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
   </a>
+  <span class="mobile-topbar-tagline">AI News · Tools · Intelligence</span>
 </div>`;
 
   const NOW_BAR_HTML = `
@@ -202,6 +203,20 @@
       } else {
         el.classList.remove('active');
       }
+    });
+  }
+
+  /**
+   * Applies .active to any .ql-pill whose href matches the current pathname.
+   * Enables the quick-access strip to reflect current page location.
+   */
+  function setActivePills() {
+    var p = window.location.pathname;
+    document.querySelectorAll('.ql-pill').forEach(function (pill) {
+      var href = pill.getAttribute('href') || '';
+      // Exact match, or pathname starts with the pill's path (handles index = /)
+      var isActive = href && (p === href || (href !== '/' && p.startsWith(href.replace('.html', ''))));
+      pill.classList.toggle('active', isActive);
     });
   }
 
@@ -618,6 +633,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     injectAppShell();
     setActiveNav();
+    setActivePills();
     initScrollProgress();
     initScrollReveal();
     setGreeting();

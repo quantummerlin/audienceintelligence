@@ -901,14 +901,16 @@ nav.mobile-bottom-nav {
   top: 0;
   left: 0;
   right: 0;
-  height: 48px;
+  height: 56px;
   background: rgba(10, 10, 20, 0.97);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   z-index: 400;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2px;
   flex-shrink: 0;
 }
 
@@ -921,6 +923,7 @@ nav.mobile-bottom-nav {
   display: flex;
   align-items: center;
   gap: 2px;
+  line-height: 1;
 }
 
 .mobile-topbar-logo .logo-aether {
@@ -929,6 +932,16 @@ nav.mobile-bottom-nav {
 
 .mobile-topbar-logo .logo-intel {
   color: var(--neon-indigo);
+}
+
+.mobile-topbar-tagline {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1;
 }
 
 
@@ -1029,6 +1042,49 @@ nav.mobile-bottom-nav {
   max-width: 72px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+
+/* QL Pill strip — quick-access horizontal pill row (homepage + tools pages) */
+.ql-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 14px 28px 6px;
+  scrollbar-width: none;
+}
+
+.ql-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.ql-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-family: var(--font-display);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.ql-pill:hover {
+  border-color: var(--neon-indigo);
+  color: var(--neon-indigo);
+}
+
+.ql-pill.active {
+  border-color: var(--neon-indigo);
+  color: var(--neon-indigo);
+  background: rgba(129, 140, 248, 0.08);
 }
 
 
