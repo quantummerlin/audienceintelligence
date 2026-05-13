@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Memory Architecture: How to Build AI Agents That Actually Remember | Aether Intel</title>
+  <meta name="description" content="Episodic vs semantic vs working memory, how to architect all three for production agents, vector stores vs databases, memory injection patterns, and the failure modes that silently break agent recall." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ai.quantummerlin.com/skills/agent-memory.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://ai.quantummerlin.com/skills/agent-memory.html" />
+  <meta property="og:title" content="Agent Memory Architecture: How to Build AI Agents That Actually Remember" />
+  <meta property="og:description" content="Episodic vs semantic vs working memory, how to architect all three for production, vector stores vs databases, and the failure modes that silently break agent recall." />
+  <meta property="og:site_name" content="Aether Intel" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    /* ── Article Layout ──────────────────────────────────── */
+    .skill-article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 32px 0 0;
+      font-family: var(--font-display);
+      font-size: .68rem;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color .18s; }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb-sep { opacity: .4; }
+
+    /* ── Agent accent colour: violet ── */
+    :root { --agent-accent: #a78bfa; --agent-dim: rgba(167,139,250,.15); --agent-border: rgba(167,139,250,.25); }
+
+    /* Article Header */
+    .skill-article-header {
+      padding: 28px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    .skill-article-badges { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .skill-article-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+      margin: 0 0 16px;
+    }
+    .skill-article-title span {
+      background: linear-gradient(135deg, #a78bfa, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .skill-article-lede {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin: 0 0 24px;
+    }
+    .skill-article-meta {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+      font-family: var(--font-display); font-size: .68rem;
+      letter-spacing: .07em; color: var(--text-muted); text-transform: uppercase;
+    }
+    .skill-article-meta span { display: flex; align-items: center; gap: 6px; }
+    .skill-article-meta svg { width: 13px; height: 13px; fill: none; stroke: var(--agent-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Table of Contents */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--agent-accent);
+      border-radius: 0 var(--radius-card) var(--radius-card) 0;
+      padding: 22px 26px;
+      margin-bottom: 44px;
+    }
+    .toc-title { font-family: var(--font-display); font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+    .toc ol { margin: 0; padding: 0; list-style: none; counter-reset: toc-counter; display: flex; flex-direction: column; gap: 10px; }
+    .toc li { counter-increment: toc-counter; display: flex; align-items: baseline; gap: 10px; }
+    .toc li::before { content: counter(toc-counter, decimal-leading-zero); font-family: var(--font-display); font-size: .62rem; font-weight: 700; color: var(--agent-accent); opacity: .7; flex-shrink: 0; }
+    .toc a { font-size: .84rem; color: var(--text-secondary); text-decoration: none; line-height: 1.4; transition: color .18s; }
+    .toc a:hover { color: var(--neon-cyan); }
+
+    /* Article Body */
+    .skill-article-body h2 { font-family: var(--font-heading); font-size: 1.45rem; font-weight: 800; line-height: 1.25; margin: 52px 0 18px; padding-top: 8px; }
+    .skill-article-body h3 { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; line-height: 1.3; margin: 32px 0 12px; color: var(--text-primary); }
+    .skill-article-body p { font-size: .96rem; line-height: 1.8; color: var(--text-secondary); margin: 0 0 20px; }
+    .skill-article-body p strong { color: var(--text-primary); font-weight: 600; }
+    .skill-article-body ul, .skill-article-body ol { padding-left: 0; list-style: none; margin: 0 0 24px; display: flex; flex-direction: column; gap: 10px; }
+    .skill-article-body ul li, .skill-article-body ol li { font-size: .94rem; line-height: 1.7; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 10px; }
+    .skill-article-body ul li::before { content: ''; width: 5px; height: 5px; background: var(--agent-accent); border-radius: 50%; flex-shrink: 0; margin-top: 8px; }
+    .skill-article-body ol { counter-reset: list-counter; }
+    .skill-article-body ol li { counter-increment: list-counter; }
+    .skill-article-body ol li::before { content: counter(list-counter); font-family: var(--font-display); font-size: .7rem; font-weight: 700; color: var(--agent-accent); background: var(--agent-dim); border-radius: 4px; padding: 1px 6px; flex-shrink: 0; margin-top: 2px; }
+    .skill-article-body a { color: var(--neon-cyan); text-decoration: none; border-bottom: 1px solid rgba(34,211,238,.25); transition: border-color .18s; }
+    .skill-article-body a:hover { border-color: var(--neon-cyan); }
+
+    /* Code blocks */
+    .code-block { background: #0d0d1a; border: 1px solid rgba(255,255,255,.08); border-radius: 10px; margin: 24px 0 32px; overflow: hidden; }
+    .code-block-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,.06); background: rgba(255,255,255,.03); }
+    .code-block-label { font-family: var(--font-display); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); }
+    .code-copy-btn { font-family: var(--font-display); font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); background: none; border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px; cursor: pointer; transition: all .18s; }
+    .code-copy-btn:hover { color: var(--neon-cyan); border-color: var(--neon-cyan); }
+    .code-block pre { margin: 0; padding: 20px; font-family: 'Courier New', 'Consolas', monospace; font-size: .8rem; line-height: 1.7; color: rgba(255,255,255,.65); overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+    .code-block .hl-key   { color: var(--neon-cyan); font-weight: 600; }
+    .code-block .hl-val   { color: #a5f3fc; }
+    .code-block .hl-cmt   { color: rgba(255,255,255,.28); font-style: italic; }
+    .code-block .hl-step  { color: var(--agent-accent); font-weight: 700; }
+    .code-block .hl-good  { color: #34d399; }
+    .code-block .hl-warn  { color: #fbbf24; }
+    .code-block .hl-bad   { color: #f87171; }
+    .code-block .hl-head  { color: #c4b5fd; font-weight: 700; }
+
+    /* Callout boxes */
+    .callout { border-radius: 10px; padding: 18px 22px; margin: 28px 0; display: flex; gap: 14px; align-items: flex-start; }
+    .callout-tip    { background: var(--agent-dim);              border: 1px solid var(--agent-border); }
+    .callout-warn   { background: rgba(251,191,36,.07);          border: 1px solid rgba(251,191,36,.2); }
+    .callout-good   { background: rgba(52,211,153,.07);          border: 1px solid rgba(52,211,153,.2); }
+    .callout-icon   { font-size: 1.1rem; flex-shrink: 0; line-height: 1.6; }
+    .callout-body   { flex: 1; }
+    .callout-body strong { display: block; font-size: .78rem; font-family: var(--font-display); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-tip    .callout-body strong { color: var(--agent-accent); }
+    .callout-warn   .callout-body strong { color: #fbbf24; }
+    .callout-good   .callout-body strong { color: #34d399; }
+    .callout-body p { font-size: .87rem !important; margin: 0 !important; line-height: 1.6 !important; }
+
+    /* Memory tier cards */
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 28px 0 36px;
+    }
+    .tier-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .tier-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .tier-card:nth-child(1)::before { background: #34d399; }
+    .tier-card:nth-child(2)::before { background: var(--agent-accent); }
+    .tier-card:nth-child(3)::before { background: var(--neon-cyan); }
+    .tier-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .tier-card:nth-child(1) .tier-label { color: #34d399; }
+    .tier-card:nth-child(2) .tier-label { color: var(--agent-accent); }
+    .tier-card:nth-child(3) .tier-label { color: var(--neon-cyan); }
+    .tier-name {
+      font-family: var(--font-heading);
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .tier-card p {
+      font-size: .78rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .tier-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .tier-meta span {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+    }
+    .tier-meta span strong {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* Step box */
+    .step-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 22px 26px; margin: 20px 0; }
+    .step-box-num { font-family: var(--font-display); font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--agent-accent); margin-bottom: 8px; }
+    .step-box h4 { font-family: var(--font-heading); font-size: .98rem; font-weight: 700; margin: 0 0 10px; }
+    .step-box p { font-size: .86rem !important; margin: 0 !important; line-height: 1.65 !important; }
+
+    /* Comparison table */
+    .compare-table { width: 100%; border-collapse: collapse; margin: 24px 0 32px; font-size: .84rem; }
+    .compare-table th { font-family: var(--font-display); font-size: .65rem; letter-spacing: .09em; text-transform: uppercase; color: var(--text-muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    .compare-table td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.04); color: var(--text-secondary); line-height: 1.5; vertical-align: top; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table td:first-child { color: var(--text-primary); font-weight: 500; }
+    .compare-table .good { color: #34d399; }
+    .compare-table .warn { color: #fbbf24; }
+    .compare-table .bad  { color: #f87171; }
+
+    /* Download CTA */
+    .download-cta {
+      background: linear-gradient(135deg, var(--agent-dim), rgba(129,140,248,.05));
+      border: 1px solid var(--agent-border);
+      border-radius: var(--radius-card);
+      padding: 32px 36px;
+      margin: 48px 0;
+      display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+    }
+    .download-cta-icon { width: 52px; height: 52px; background: var(--agent-accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .download-cta-icon svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .download-cta-body { flex: 1; min-width: 200px; }
+    .download-cta-body h3 { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin: 0 0 6px !important; padding: 0 !important; color: var(--text-primary) !important; }
+    .download-cta-body p { color: var(--text-secondary); font-size: .85rem !important; margin: 0 !important; line-height: 1.55 !important; }
+    .btn-download-article {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px; background: var(--agent-accent); color: #0a0a14;
+      border: none; border-radius: 8px;
+      font-family: var(--font-display); font-size: .72rem; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      cursor: pointer; transition: background .18s, transform .12s;
+      text-decoration: none; border-bottom: none; white-space: nowrap; flex-shrink: 0;
+    }
+    .btn-download-article:hover { background: #c4b5fd; color: #0a0a14; transform: translateY(-1px); border-bottom: none; }
+    .btn-download-article svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Related skills */
+    .related-skills { border-top: 1px solid var(--border); padding-top: 44px; margin-top: 60px; }
+    .related-skills-label { font-family: var(--font-display); font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+    .related-skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .related-skill-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 16px 18px; text-decoration: none; color: inherit; transition: border-color .18s, box-shadow .18s; display: block; }
+    .related-skill-card:hover { border-color: var(--border-bright); box-shadow: 0 0 0 1px var(--agent-border), 0 4px 24px var(--agent-dim); }
+    .related-skill-card-cat { font-family: var(--font-display); font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--agent-accent); margin-bottom: 6px; }
+    .related-skill-card-title { font-family: var(--font-heading); font-size: .88rem; font-weight: 700; line-height: 1.35; color: var(--text-primary); }
+
+    /* Reading progress */
+    .reading-progress { position: fixed; top: 0; left: 0; width: 0%; height: 2px; background: linear-gradient(90deg, #a78bfa, #818cf8); z-index: 9999; transition: width .1s linear; }
+
+    @media (max-width: 600px) {
+      .skill-article-wrap { padding: 0 16px 60px; }
+      .download-cta { padding: 22px 20px; }
+      .skill-article-body h2 { font-size: 1.25rem; margin-top: 40px; }
+      .toc { display: none; }
+      .tier-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .tier-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="readingProgress"></div>
+
+  <main>
+    <div class="skill-article-wrap">
+
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <a href="/skills.html">Skills</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Agent Memory Architecture</span>
+      </nav>
+
+      <header class="skill-article-header">
+        <div class="skill-article-badges">
+          <span class="badge badge-agents">Agents</span>
+          <span style="font-family:var(--font-display);font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(167,139,250,.12);color:#a78bfa;">Advanced</span>
+        </div>
+        <h1 class="skill-article-title">Agent Memory Architecture:<br><span>How to Build AI Agents That Actually Remember</span></h1>
+        <p class="skill-article-lede">A stateless agent is a powerful tool. But every conversation starts from zero &#8212; no knowledge of the user, no context from previous sessions, no accumulated understanding of the domain it works in. That&#8217;s fine for a one-shot assistant. It&#8217;s a fundamental limitation for any agent you want users to return to. Here&#8217;s the complete architecture for giving agents memory that actually works in production.</p>
+        <div class="skill-article-meta">
+          <span>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            18 min read
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            May 2026
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Free templates included
+          </span>
+        </div>
+      </header>
+
+      <nav class="toc" aria-label="Table of contents">
+        <div class="toc-title">In This Guide</div>
+        <ol>
+          <li><a href="#why-stateless-fails">Why stateless agents fail in production</a></li>
+          <li><a href="#three-tiers">The three memory tiers</a></li>
+          <li><a href="#working-memory">Working memory &#8212; the context window</a></li>
+          <li><a href="#episodic-memory">Episodic memory &#8212; what happened</a></li>
+          <li><a href="#semantic-memory">Semantic memory &#8212; what the agent knows</a></li>
+          <li><a href="#storage-choices">Vector stores vs databases vs hybrid</a></li>
+          <li><a href="#walkthrough">Walkthrough: building a memory-aware agent</a></li>
+          <li><a href="#common-failures">Common failure modes</a></li>
+          <li><a href="#download">Download the free templates</a></li>
+        </ol>
+      </nav>
+
+      <article class="skill-article-body">
+
+        <!-- ── Section 1 ───────────────────────────────────── -->
+        <h2 id="why-stateless-fails">Why Stateless Agents Fail in Production</h2>
+
+        <p>The first version of almost every AI agent is stateless. You send a message, the agent responds, the conversation ends. On the next request &#8212; same day, same user, related topic &#8212; the agent has no memory of what came before. Every conversation is a cold start.</p>
+
+        <p>For demos and narrow single-task tools, this is acceptable. For any product where the value compounds with use &#8212; a personal assistant, a research agent, a customer-facing bot that improves with each interaction &#8212; statelessness is a ceiling. Users who return expecting continuity get a blank slate instead. They get frustrated. They churn.</p>
+
+        <p>But the problem runs deeper than user experience. Stateless agents make the same mistakes repeatedly. They ask users to re-explain context they&#8217;ve already provided. They apply generic responses to situations they have encountered dozens of times. They cannot build domain expertise because they can&#8217;t remember what they&#8217;ve learned.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">&#9670;</div>
+          <div class="callout-body">
+            <strong>Memory is not just recall</strong>
+            <p>The goal of agent memory isn&#8217;t to reproduce past conversations verbatim. It&#8217;s to give the agent enough context to make better decisions, maintain continuity with the user, and accumulate domain-specific knowledge over time. Retrieval is the mechanism; relevance is the goal.</p>
+          </div>
+        </div>
+
+        <p>Adding memory to an agent is an architectural decision, not a feature you bolt on. It requires thinking carefully about what to store, where to store it, how to retrieve it efficiently, and &#8212; critically &#8212; how to inject it back into the model&#8217;s context without overwhelming the context window or introducing noise. The rest of this guide covers all of that.</p>
+
+
+        <!-- ── Section 2 ───────────────────────────────────── -->
+        <h2 id="three-tiers">The Three Memory Tiers</h2>
+
+        <p>Human memory researchers describe multiple distinct systems that serve different functions: working memory for immediate active processing, episodic memory for autobiographical events, semantic memory for general knowledge and facts. The same taxonomy maps cleanly onto agent architecture &#8212; and for the same reasons. Each type of memory has a different lifetime, retrieval mechanism, and capacity constraint.</p>
+
+        <div class="tier-grid">
+          <div class="tier-card">
+            <div class="tier-label">Tier 1</div>
+            <div class="tier-name">Working Memory</div>
+            <p>The current conversation. What the model is actively processing right now.</p>
+            <div class="tier-meta">
+              <span><strong>Lifetime:</strong> One session</span>
+              <span><strong>Capacity:</strong> Context window</span>
+              <span><strong>Retrieval:</strong> Automatic (in context)</span>
+              <span><strong>Storage:</strong> No persistence needed</span>
+            </div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label">Tier 2</div>
+            <div class="tier-name">Episodic Memory</div>
+            <p>Key events, decisions, and outcomes from past sessions. The agent&#8217;s personal history with this user.</p>
+            <div class="tier-meta">
+              <span><strong>Lifetime:</strong> Months to permanent</span>
+              <span><strong>Capacity:</strong> Large (compressed)</span>
+              <span><strong>Retrieval:</strong> Recency + relevance</span>
+              <span><strong>Storage:</strong> Structured DB</span>
+            </div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label">Tier 3</div>
+            <div class="tier-name">Semantic Memory</div>
+            <p>Facts, preferences, domain knowledge, learned patterns that apply across all users and sessions.</p>
+            <div class="tier-meta">
+              <span><strong>Lifetime:</strong> Permanent until updated</span>
+              <span><strong>Capacity:</strong> Very large</span>
+              <span><strong>Retrieval:</strong> Semantic similarity</span>
+              <span><strong>Storage:</strong> Vector store</span>
+            </div>
+          </div>
+        </div>
+
+        <p>Every production agent needs all three &#8212; but they need to be managed separately. The most common mistake is conflating them: trying to use the raw conversation history as a substitute for episodic memory, or injecting the full semantic knowledge base into every context window. Both approaches collapse under real usage.</p>
+
+
+        <!-- ── Section 3 ───────────────────────────────────── -->
+        <h2 id="working-memory">Working Memory &#8212; The Context Window</h2>
+
+        <p>Working memory is the simplest tier to understand and the most treacherous to manage in production. It is everything currently in the model&#8217;s context window: the system prompt, the conversation history for the current session, any tool outputs, and whatever retrieved memories you have injected from the other two tiers.</p>
+
+        <p>The context window has a hard size limit. Modern frontier models have large windows &#8212; 128k to 1M+ tokens &#8212; but you are paying for every token in every request, and retrieval quality degrades as windows fill. Context is not free capacity; it is a resource you manage deliberately.</p>
+
+        <h3>What belongs in working memory</h3>
+
+        <ul>
+          <li><strong>The current user message and immediate history:</strong> the last 5&#8211;20 turns of the active conversation, depending on how dense the content is</li>
+          <li><strong>Injected episodic context:</strong> a compressed summary of relevant past sessions (not the raw transcripts)</li>
+          <li><strong>Retrieved semantic chunks:</strong> the top-k most relevant knowledge base fragments for the current query</li>
+          <li><strong>Tool outputs:</strong> results from any tools the agent invoked in the current session</li>
+        </ul>
+
+        <h3>Conversation pruning strategies</h3>
+
+        <p>As a conversation grows, you need to decide what to keep in the active window and what to drop or compress. There are three main strategies:</p>
+
+        <div class="step-box">
+          <div class="step-box-num">Strategy 01</div>
+          <h4>Sliding window (simplest)</h4>
+          <p>Keep the last N turns, discard the rest. Fast to implement, zero additional LLM calls. The downside: important context from early in the conversation can fall out of the window. Works well for short, task-focused interactions.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-box-num">Strategy 02</div>
+          <h4>Summarise-and-compress</h4>
+          <p>When the conversation exceeds a token threshold, pass the oldest N turns to a summarisation call and replace them with a compact summary paragraph. The model retains the gist of earlier context without the full token cost. Adds latency on the summarisation step but preserves continuity across long sessions.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-box-num">Strategy 03</div>
+          <h4>Selective retention</h4>
+          <p>After each turn, ask a lightweight LLM call to classify which parts of the exchange contain information worth preserving long-term (decisions, stated preferences, key facts). Extract those immediately into episodic storage; drop everything else from the window. Most sophisticated approach, but requires careful design of the extraction prompt.</p>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-icon">&#9888;</div>
+          <div class="callout-body">
+            <strong>Don&#8217;t let working memory leak into storage</strong>
+            <p>Raw conversation transcripts are expensive, redundant, and full of noise. If you dump entire conversation logs into your episodic memory store, retrieval will surface long rambling exchanges instead of clean, actionable summaries. Compress before you store, every time.</p>
+          </div>
+        </div>
+
+
+        <!-- ── Section 4 ───────────────────────────────────── -->
+        <h2 id="episodic-memory">Episodic Memory &#8212; What Happened</h2>
+
+        <p>Episodic memory stores the agent&#8217;s personal history with a specific user: what was discussed, what decisions were made, what the user&#8217;s goals were, what worked and what didn&#8217;t. Unlike working memory, episodic memory persists across sessions. Unlike semantic memory, it is user-specific and time-stamped.</p>
+
+        <h3>What to store in episodic memory</h3>
+
+        <p>Not everything that happens in a session is worth storing. Storing too much produces noisy retrieval. The right question is: &#8220;If this agent is talking to this user six months from now, what would it need to know from this session?&#8221;</p>
+
+        <ul>
+          <li><strong>Goals and intentions:</strong> &#8220;User is building a SaaS product targeting freelance designers&#8221;</li>
+          <li><strong>Decisions made:</strong> &#8220;Decided to use Stripe for payments rather than Paddle &#8212; user prefers simpler API&#8221;</li>
+          <li><strong>Stated preferences:</strong> &#8220;Prefers concise bullet-point responses over long prose&#8221;</li>
+          <li><strong>Outcomes and feedback:</strong> &#8220;The landing page copy written in session 4 performed well in A/B test (user confirmed)&#8221;</li>
+          <li><strong>Open threads:</strong> &#8220;Asked to follow up on pricing research next session &#8212; not completed&#8221;</li>
+        </ul>
+
+        <h3>The session summary format</h3>
+
+        <p>At the end of every session, generate a structured summary. This is the extraction step that converts raw conversation into episodic memory. A consistent format makes retrieval and injection far cleaner:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Session Summary Extraction Prompt</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-head">SYSTEM:</span>
+<span class="hl-cmt">You extract structured session summaries from conversation transcripts.
+Output valid JSON only. No prose, no explanation.</span>
+
+<span class="hl-head">USER:</span>
+<span class="hl-cmt">Extract a session summary from this conversation transcript.
+
+Transcript:
+{conversation_transcript}
+
+Output this exact JSON structure:
+{
+  "session_date": "YYYY-MM-DD",
+  "topics_covered": ["topic1", "topic2"],
+  "decisions_made": ["decision1", "decision2"],
+  "user_preferences_learned": ["preference1"],
+  "open_threads": ["unfinished_task1"],
+  "summary": "2-3 sentence plain English summary of what happened."
+}</span></pre>
+        </div>
+
+        <h3>Retrieval: loading episodic context at session start</h3>
+
+        <p>When a new session begins, load the most relevant episodic memories before constructing the system prompt. Relevance is a combination of recency (recent sessions are almost always relevant) and topic similarity (match the user&#8217;s opening message against past session topics):</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Python &#8212; Episodic Context Loader</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-step">def</span> load_episodic_context(user_id: str, current_query: str, db) -> str:
+    <span class="hl-cmt"># 1. Always load the 3 most recent sessions</span>
+    recent = db.query(
+        <span class="hl-val">"SELECT summary, session_date FROM sessions"</span>
+        <span class="hl-val">" WHERE user_id = %s ORDER BY session_date DESC LIMIT 3"</span>,
+        [user_id]
+    )
+
+    <span class="hl-cmt"># 2. Load up to 3 older sessions relevant to the current query</span>
+    relevant = db.query(
+        <span class="hl-val">"SELECT summary, session_date FROM sessions"</span>
+        <span class="hl-val">" WHERE user_id = %s AND topics_tsv @@ plainto_tsquery(%s)"</span>
+        <span class="hl-val">" ORDER BY session_date DESC LIMIT 3"</span>,
+        [user_id, current_query]
+    )
+
+    <span class="hl-cmt"># 3. Deduplicate and format for injection</span>
+    seen, items = set(), []
+    <span class="hl-step">for</span> row <span class="hl-step">in</span> [*recent, *relevant]:
+        <span class="hl-step">if</span> row.session_date <span class="hl-step">not in</span> seen:
+            seen.add(row.session_date)
+            items.append(f<span class="hl-val">"[{row.session_date}] {row.summary}"</span>)
+
+    <span class="hl-step">return</span> <span class="hl-val">"\n"</span>.join(items) <span class="hl-step">if</span> items <span class="hl-step">else</span> <span class="hl-val">"No prior sessions."</span></pre>
+        </div>
+
+
+        <!-- ── Section 5 ───────────────────────────────────── -->
+        <h2 id="semantic-memory">Semantic Memory &#8212; What the Agent Knows</h2>
+
+        <p>Semantic memory is the agent&#8217;s accumulated knowledge base: facts about the domain, user preferences that apply across all sessions, learned patterns, curated reference material. Unlike episodic memory &#8212; which is about what happened &#8212; semantic memory is about what is true.</p>
+
+        <p>Semantic memory is retrieved by meaning, not by keyword or date. This is why it requires a different storage mechanism: <strong>embeddings and vector search</strong>. An embedding converts a piece of text into a dense numerical vector that represents its semantic meaning. A vector store lets you find the texts whose meanings are closest to a query, even when the exact words don&#8217;t match.</p>
+
+        <h3>What goes in semantic memory</h3>
+
+        <ul>
+          <li><strong>User facts and preferences</strong> extracted from conversations and confirmed over time: &#8220;Prefers metric units. Works in the EU. Uses Python, not JavaScript.&#8221;</li>
+          <li><strong>Domain knowledge</strong> specific to your application: product documentation, policy documents, domain-specific reference material</li>
+          <li><strong>Learned patterns</strong> from past interactions: which types of responses worked well, which framings the user responds to</li>
+          <li><strong>Curated external knowledge</strong>: documents, articles, or data the agent needs access to across all conversations</li>
+        </ul>
+
+        <h3>Embeddings: how semantic retrieval works</h3>
+
+        <p>When you add a document to your semantic memory store, you first pass it through an embedding model (OpenAI&#8217;s <code>text-embedding-3-small</code>, Cohere&#8217;s Embed, or open-source alternatives like <code>nomic-embed-text</code>). This produces a vector &#8212; a list of hundreds or thousands of numbers &#8212; that represents the document&#8217;s meaning.</p>
+
+        <p>At retrieval time, you embed the user&#8217;s query using the same model, then find the stored documents whose vectors are closest to the query vector (measured by cosine similarity or dot product). Documents about similar concepts will have similar vectors, even if the exact words differ.</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Python &#8212; Semantic Memory Retrieval (OpenAI + pgvector)</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-step">from</span> openai <span class="hl-step">import</span> OpenAI
+
+client = OpenAI()
+
+<span class="hl-step">def</span> embed(text: str) -> list[float]:
+    resp = client.embeddings.create(
+        model=<span class="hl-val">"text-embedding-3-small"</span>,
+        input=text
+    )
+    <span class="hl-step">return</span> resp.data[<span class="hl-val">0</span>].embedding
+
+<span class="hl-step">def</span> retrieve_semantic(query: str, user_id: str, db, top_k: int = <span class="hl-val">5</span>) -> list[str]:
+    query_vec = embed(query)
+
+    <span class="hl-cmt"># pgvector cosine distance query</span>
+    rows = db.query(
+        <span class="hl-val">"""
+        SELECT content, 1 - (embedding &lt;=&gt; %s::vector) AS similarity
+        FROM semantic_memory
+        WHERE user_id = %s OR user_id IS NULL  -- NULL = global knowledge
+        ORDER BY embedding &lt;=&gt; %s::vector
+        LIMIT %s
+        """</span>,
+        [query_vec, user_id, query_vec, top_k]
+    )
+    <span class="hl-step">return</span> [row.content <span class="hl-step">for</span> row <span class="hl-step">in</span> rows <span class="hl-step">if</span> row.similarity > <span class="hl-val">0.75</span>]</pre>
+        </div>
+
+        <h3>Chunking: how to split documents for storage</h3>
+
+        <p>Embedding a 20,000-word document as a single vector is ineffective &#8212; the embedding averages across the whole document and retrieval becomes imprecise. You need to split documents into chunks before embedding, then store and retrieve at the chunk level.</p>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Chunking strategy</th>
+              <th>Best for</th>
+              <th>Chunk size</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fixed-size with overlap</td>
+              <td>Long prose documents, articles</td>
+              <td>400&#8211;600 tokens, 50&#8211;100 token overlap</td>
+            </tr>
+            <tr>
+              <td>Paragraph / section boundary</td>
+              <td>Structured docs, manuals</td>
+              <td>Natural section length</td>
+            </tr>
+            <tr>
+              <td>Sentence-level</td>
+              <td>Dense fact-rich content, FAQs</td>
+              <td>1&#8211;3 sentences</td>
+            </tr>
+            <tr>
+              <td>Semantic chunking</td>
+              <td>Mixed-topic documents</td>
+              <td>Variable &#8212; split at topic boundaries</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Always store the chunk&#8217;s source metadata alongside the vector: document title, section heading, creation date, and any filtering tags (user ID, topic category). Metadata enables hybrid retrieval &#8212; filter by metadata first, then rank by vector similarity within the filtered set.</p>
+
+
+        <!-- ── Section 6 ───────────────────────────────────── -->
+        <h2 id="storage-choices">Vector Stores vs Databases vs Hybrid</h2>
+
+        <p>Once you know what you&#8217;re storing and why, you need to choose where. The decision tree is simpler than the ecosystem of options makes it appear:</p>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Best for</th>
+              <th>Key limitation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PostgreSQL + pgvector</td>
+              <td>Most production agents; combines relational + vector in one DB</td>
+              <td>Slower at very large scale (&gt;10M vectors)</td>
+            </tr>
+            <tr>
+              <td>Pinecone</td>
+              <td>Managed, large-scale semantic search with filtering</td>
+              <td>Hosted only; adds external dependency</td>
+            </tr>
+            <tr>
+              <td>Chroma</td>
+              <td>Local dev, prototyping, small-scale production</td>
+              <td>Limited horizontal scaling</td>
+            </tr>
+            <tr>
+              <td>Qdrant</td>
+              <td>Self-hosted, high-performance at scale</td>
+              <td>Ops overhead vs managed options</td>
+            </tr>
+            <tr>
+              <td>SQLite + embedding column</td>
+              <td>Single-user agents, CLI tools, local apps</td>
+              <td>No approximate nearest-neighbour index</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>The practical recommendation for most agents: <strong>start with PostgreSQL + pgvector</strong>. You already need a relational database for episodic memory (session records, user facts, structured data). Adding the pgvector extension gives you vector search in the same system, without an additional managed service to operate. It handles hundreds of thousands to a few million vectors comfortably, which is sufficient for the vast majority of production agents.</p>
+
+        <div class="callout callout-good">
+          <div class="callout-icon">&#10003;</div>
+          <div class="callout-body">
+            <strong>Hybrid retrieval: the best of both worlds</strong>
+            <p>The most reliable retrieval combines keyword search and vector search. Keyword search (BM25 or full-text) excels at exact term matches and is fast. Vector search excels at conceptual similarity. Run both in parallel, then merge and re-rank the results. PostgreSQL supports this natively: full-text search via <code>tsvector</code>, vector search via <code>pgvector</code>, merge in the same query.</p>
+          </div>
+        </div>
+
+        <h3>Memory consolidation: episodic &#8594; semantic</h3>
+
+        <p>Over time, patterns emerge across many episodic memories. A user preference mentioned once in a session summary might be noise. The same preference appearing across five sessions over two months is a reliable fact that belongs in semantic memory. Consolidation is the process of promoting episodic patterns to semantic facts:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Consolidation Prompt (Run Weekly or On-Demand)</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-head">SYSTEM:</span>
+<span class="hl-cmt">You extract durable facts from a series of session summaries.
+Output a JSON array only. Each item: {"fact": "...", "confidence": 0.0-1.0}
+Only include facts that appear in 3+ sessions or that the user explicitly confirmed.
+Exclude ephemeral details like specific dates, prices, or one-off tasks.</span>
+
+<span class="hl-head">USER:</span>
+<span class="hl-cmt">Review these session summaries and extract durable facts about this user:
+
+{last_30_days_of_session_summaries}
+
+Output only facts with confidence >= 0.7.</span></pre>
+        </div>
+
+
+        <!-- ── Section 7 ───────────────────────────────────── -->
+        <h2 id="walkthrough">Walkthrough: Building a Memory-Aware Agent</h2>
+
+        <p>Here is the complete request lifecycle for an agent with all three memory tiers wired together. We&#8217;ll trace a single request from receipt to response to storage.</p>
+
+        <div class="step-box">
+          <div class="step-box-num">Step 01 — Request received</div>
+          <h4>User sends a message</h4>
+          <p>The user sends: &#8220;Can you pick up where we left off on the pricing strategy?&#8221; The agent has a user ID and the new message. Nothing else &#8212; no context yet.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-box-num">Step 02 — Load episodic context</div>
+          <h4>Query episodic memory for this user</h4>
+          <p>Fetch the 3 most recent session summaries + any sessions tagged with &#8220;pricing&#8221; or matching a keyword query on the user&#8217;s message. Budget: 400&#8211;600 tokens maximum for episodic injection.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-box-num">Step 03 — Retrieve semantic context</div>
+          <h4>Run vector search on semantic memory</h4>
+          <p>Embed the user&#8217;s message and retrieve the top-5 semantic memory chunks with cosine similarity &gt; 0.75. These might be user facts (&#8220;user is targeting SMB market, 10&#8211;50 seat deals&#8221;) or domain knowledge (pricing strategy frameworks). Budget: 500&#8211;800 tokens.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-box-num">Step 04 — Build the context-aware system prompt</div>
+          <h4>Assemble all three tiers into one prompt</h4>
+          <p>Construct the final system prompt by injecting the retrieved context into designated sections. The structure below keeps each tier clearly labelled so the model can use them appropriately.</p>
+        </div>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Memory-Aware System Prompt Template</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-head">## Role</span>
+<span class="hl-cmt">You are [AGENT NAME], a [ROLE] assistant.
+You have memory of past sessions with this user. Use it naturally.</span>
+
+<span class="hl-head">## Recent History (Episodic Memory)</span>
+<span class="hl-cmt">{episodic_context}
+
+Reference this context when the user's message relates to past sessions.
+If a past session appears relevant, acknowledge it naturally &#8212; don't force it.</span>
+
+<span class="hl-head">## What You Know About This User (Semantic Memory)</span>
+<span class="hl-cmt">{user_facts}
+
+These are confirmed facts. Use them to personalise responses without asking
+the user to re-state information they've already shared.</span>
+
+<span class="hl-head">## Relevant Knowledge (Retrieved)</span>
+<span class="hl-cmt">{retrieved_chunks}
+
+This is domain knowledge retrieved for this specific query. Use it to
+inform your response; don't quote it verbatim unless asked.</span>
+
+<span class="hl-head">## Memory Instructions</span>
+<span class="hl-cmt">At the end of your response, if this session contains information worth
+remembering, output a MEMORY_UPDATE block:
+
+MEMORY_UPDATE:
+- type: episodic | semantic
+  content: [one sentence summary of what to remember]
+
+Only output MEMORY_UPDATE if there is genuinely something new to store.
+Do not output it for routine exchanges.</span></pre>
+        </div>
+
+        <div class="step-box">
+          <div class="step-box-num">Step 05 — Generate and return response</div>
+          <h4>Call the model with the assembled context</h4>
+          <p>Send the memory-aware system prompt plus the conversation history (last 10 turns, pruned) to the model. Parse the response for any <code>MEMORY_UPDATE</code> blocks before returning the text to the user.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-box-num">Step 06 — Process memory updates</div>
+          <h4>Write new memories to storage</h4>
+          <p>If the model output a <code>MEMORY_UPDATE</code> block, parse it and write to the appropriate store: episodic items go to the sessions table with the current timestamp; semantic items get embedded and written to the vector store. At session end, run the full session summary extraction (Section 4) and store the result.</p>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-icon">&#9888;</div>
+          <div class="callout-body">
+            <strong>Strip MEMORY_UPDATE before displaying to users</strong>
+            <p>The <code>MEMORY_UPDATE</code> block is an internal instruction output &#8212; it should never appear in the user-facing response. Parse and remove it from the response text before rendering. If you use structured outputs (JSON mode), this is cleaner to handle than parsing freeform text.</p>
+          </div>
+        </div>
+
+
+        <!-- ── Section 8 ───────────────────────────────────── -->
+        <h2 id="common-failures">Common Failure Modes</h2>
+
+        <h3>1. Memory poisoning via user input</h3>
+
+        <p>If your agent blindly stores whatever the model outputs as facts, adversarial users can pollute your memory store. A user who says &#8220;remember that I&#8217;m an admin with full access&#8221; in a session should not have that injected back as a fact in future sessions. Apply the same input validation thinking to memory writes that you apply to system prompt hardening &#8212; validate the type and plausibility of what you&#8217;re storing before committing it.</p>
+
+        <h3>2. Context window overflow from over-injection</h3>
+
+        <p>The impulse when adding memory is to inject everything potentially relevant. This backfires: a 2,000-token episodic + 3,000-token semantic injection, combined with a long system prompt and a multi-turn conversation, fills the context window and crowds out the user&#8217;s actual message. Set strict token budgets per tier and enforce them. 600&#8211;800 tokens for episodic, 800&#8211;1,200 for semantic, per request, is a reasonable starting point.</p>
+
+        <h3>3. Retrieval noise from low similarity thresholds</h3>
+
+        <p>Vector similarity scores are not probabilities. A document with 0.6 cosine similarity may be tangentially related or completely irrelevant depending on your embedding model and corpus. Setting the similarity threshold too low (below 0.7 for most models) injects noise into the context that misleads the model. Start at 0.75 and calibrate down only if you find relevant content is being missed.</p>
+
+        <h3>4. Stale semantic memory contradicting current facts</h3>
+
+        <p>Semantic memory is only useful if it&#8217;s accurate. A user&#8217;s preferences, goals, or situation change over time. An agent that confidently references a two-year-old fact that is no longer true erodes trust faster than a stateless agent would. Include timestamps in all stored facts and treat anything older than your confidence threshold as tentative &#8212; confirm rather than assert.</p>
+
+        <h3>5. Missing end-of-session storage (silent data loss)</h3>
+
+        <p>Session summary extraction only works if it runs. In a web application, sessions end when the user closes the browser &#8212; not when the conversation reaches a natural conclusion. If you trigger extraction only on a graceful session end event, you will miss a large fraction of sessions. Use a background job that runs extraction on sessions that have been inactive for 30+ minutes, regardless of whether a formal end signal was received.</p>
+
+        <h3>6. Treating memory as synchronous</h3>
+
+        <p>Embedding generation, session summary extraction, and consolidation are all latency-sensitive if you run them inline on every request. Push them to background queues. The user&#8217;s response should not wait for embedding or summarisation to complete. Design the memory write pipeline as async from the start.</p>
+
+
+        <!-- Download CTA -->
+        <div class="download-cta">
+          <div class="download-cta-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <div class="download-cta-body">
+            <h3>Free Agent Memory Templates</h3>
+            <p>The memory-aware system prompt, session summary extraction prompt, consolidation prompt, retrieval code patterns, and the complete schema for all three memory tiers.</p>
+          </div>
+          <button class="btn-download-article" onclick="downloadTemplates()">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Free
+          </button>
+        </div>
+
+        <!-- ── Section 9 ───────────────────────────────────── -->
+        <h2 id="download">Download the Free Templates</h2>
+
+        <p>The downloadable reference file contains the memory-aware system prompt template, session summary extraction prompt, consolidation prompt, the pgvector schema, and the retrieval pipeline in copy-ready Python.</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">PostgreSQL + pgvector Schema (Copy-Ready)</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-cmt">-- Enable pgvector extension</span>
+<span class="hl-step">CREATE EXTENSION IF NOT EXISTS</span> vector;
+
+<span class="hl-cmt">-- Episodic memory: one row per session summary</span>
+<span class="hl-step">CREATE TABLE</span> episodic_memory (
+  id            UUID <span class="hl-key">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  user_id       UUID <span class="hl-key">NOT NULL</span>,
+  session_date  TIMESTAMPTZ <span class="hl-key">NOT NULL DEFAULT</span> now(),
+  topics        TEXT[],
+  summary       TEXT <span class="hl-key">NOT NULL</span>,
+  decisions     TEXT[],
+  open_threads  TEXT[],
+  topics_tsv    TSVECTOR <span class="hl-key">GENERATED ALWAYS AS</span> (to_tsvector(<span class="hl-val">'english'</span>, summary)) <span class="hl-key">STORED</span>
+);
+<span class="hl-step">CREATE INDEX ON</span> episodic_memory (user_id, session_date <span class="hl-key">DESC</span>);
+<span class="hl-step">CREATE INDEX ON</span> episodic_memory <span class="hl-key">USING</span> GIN(topics_tsv);
+
+<span class="hl-cmt">-- Semantic memory: user facts + knowledge base chunks</span>
+<span class="hl-step">CREATE TABLE</span> semantic_memory (
+  id         UUID <span class="hl-key">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  user_id    UUID,                       <span class="hl-cmt">-- NULL = global knowledge</span>
+  content    TEXT <span class="hl-key">NOT NULL</span>,
+  source     TEXT,                       <span class="hl-cmt">-- origin document / session</span>
+  category   TEXT,                       <span class="hl-cmt">-- preference | fact | domain</span>
+  embedding  VECTOR(<span class="hl-val">1536</span>),              <span class="hl-cmt">-- match your embedding model dims</span>
+  created_at TIMESTAMPTZ <span class="hl-key">DEFAULT</span> now(),
+  updated_at TIMESTAMPTZ <span class="hl-key">DEFAULT</span> now()
+);
+<span class="hl-step">CREATE INDEX ON</span> semantic_memory <span class="hl-key">USING</span> ivfflat (embedding vector_cosine_ops)
+  <span class="hl-key">WITH</span> (lists = <span class="hl-val">100</span>);
+<span class="hl-step">CREATE INDEX ON</span> semantic_memory (user_id);</pre>
+        </div>
+
+        <!-- Final download CTA -->
+        <div class="download-cta" style="margin-top:12px;">
+          <div class="download-cta-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <div class="download-cta-body">
+            <h3>Download All Templates + Schema</h3>
+            <p>System prompt, extraction prompts, consolidation prompt, Python retrieval code, and the full PostgreSQL schema &#8212; all in one Markdown file.</p>
+          </div>
+          <button class="btn-download-article" onclick="downloadTemplates()">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Free
+          </button>
+        </div>
+
+        <!-- Related Skills -->
+        <div class="related-skills">
+          <div class="related-skills-label">Continue Learning</div>
+          <div class="related-skills-grid">
+            <a href="/skills/rag-basics.html" class="related-skill-card">
+              <div class="related-skill-card-cat">Tools</div>
+              <div class="related-skill-card-title">RAG: Retrieval-Augmented Generation</div>
+            </a>
+            <a href="/skills/system-prompts.html" class="related-skill-card">
+              <div class="related-skill-card-cat">Prompts</div>
+              <div class="related-skill-card-title">System Prompts</div>
+            </a>
+            <a href="/skills/prompt-chaining.html" class="related-skill-card">
+              <div class="related-skill-card-cat">Prompts</div>
+              <div class="related-skill-card-title">Prompt Chaining</div>
+            </a>
+            <a href="/skills/jailbreak-proof.html" class="related-skill-card">
+              <div class="related-skill-card-cat">Security</div>
+              <div class="related-skill-card-title">Jailbreak-Proof Prompting</div>
+            </a>
+          </div>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+
+  <script>
+    /* ── Reading Progress Bar ─────────────────────────────── */
+    (function() {
+      var bar = document.getElementById('readingProgress');
+      if (!bar) return;
+      function update() {
+        var h = document.documentElement;
+        var pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+        bar.style.width = Math.min(pct, 100) + '%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+    })();
+
+    /* ── Copy Code ────────────────────────────────────────── */
+    function copyCode(btn) {
+      var pre = btn.closest('.code-block').querySelector('pre');
+      var text = pre.innerText || pre.textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        var orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = orig; }, 1800);
+      }).catch(function() {
+        btn.textContent = 'Failed';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 1800);
+      });
+    }
+
+    /* ── Download Templates ───────────────────────────────── */
+    function downloadTemplates() {
+      var lines = [
+        '# Agent Memory Architecture Templates',
+        '## Aether Intel — Free Skills Library',
+        '## https://ai.quantummerlin.com/skills.html',
+        '',
+        '---',
+        '',
+        '## The Three Memory Tiers (Quick Reference)',
+        '',
+        'TIER 1: Working Memory (Context Window)',
+        '  Lifetime: One session',
+        '  Capacity: Context window limit',
+        '  Retrieval: Automatic (in-context)',
+        '  Storage:   None needed',
+        '',
+        'TIER 2: Episodic Memory (Session Storage)',
+        '  Lifetime: Months to permanent',
+        '  Capacity: Large (compressed summaries)',
+        '  Retrieval: Recency + keyword matching',
+        '  Storage:   Relational DB (Postgres)',
+        '',
+        'TIER 3: Semantic Memory (Knowledge Base)',
+        '  Lifetime: Permanent until updated',
+        '  Capacity: Very large',
+        '  Retrieval: Vector similarity (cosine)',
+        '  Storage:   Vector store (pgvector, Pinecone, Chroma)',
+        '',
+        '---',
+        '',
+        '## 1. Memory-Aware System Prompt Template',
+        '',
+        '```',
+        '## Role',
+        'You are [AGENT NAME], a [ROLE] assistant.',
+        'You have memory of past sessions with this user. Use it naturally.',
+        '',
+        '## Recent History (Episodic Memory)',
+        '{episodic_context}',
+        '',
+        'Reference this context when the user\'s message relates to past sessions.',
+        'If a past session appears relevant, acknowledge it naturally.',
+        '',
+        '## What You Know About This User (Semantic Memory)',
+        '{user_facts}',
+        '',
+        'These are confirmed facts. Use them to personalise responses without',
+        'asking the user to re-state information they\'ve already shared.',
+        '',
+        '## Relevant Knowledge (Retrieved)',
+        '{retrieved_chunks}',
+        '',
+        'This is domain knowledge retrieved for this specific query.',
+        'Use it to inform your response; don\'t quote it verbatim unless asked.',
+        '',
+        '## Memory Instructions',
+        'At the end of your response, if this session contains information worth',
+        'remembering, output a MEMORY_UPDATE block:',
+        '',
+        'MEMORY_UPDATE:',
+        '- type: episodic | semantic',
+        '  content: [one sentence summary of what to remember]',
+        '',
+        'Only output MEMORY_UPDATE if there is genuinely something new to store.',
+        '```',
+        '',
+        '---',
+        '',
+        '## 2. Session Summary Extraction Prompt',
+        '',
+        '```',
+        'SYSTEM:',
+        'You extract structured session summaries from conversation transcripts.',
+        'Output valid JSON only. No prose, no explanation.',
+        '',
+        'USER:',
+        'Extract a session summary from this conversation transcript.',
+        '',
+        'Transcript:',
+        '{conversation_transcript}',
+        '',
+        'Output this exact JSON structure:',
+        '{',
+        '  "session_date": "YYYY-MM-DD",',
+        '  "topics_covered": ["topic1", "topic2"],',
+        '  "decisions_made": ["decision1", "decision2"],',
+        '  "user_preferences_learned": ["preference1"],',
+        '  "open_threads": ["unfinished_task1"],',
+        '  "summary": "2-3 sentence plain English summary of what happened."',
+        '}',
+        '```',
+        '',
+        '---',
+        '',
+        '## 3. Consolidation Prompt (Episodic → Semantic)',
+        '',
+        '```',
+        'SYSTEM:',
+        'You extract durable facts from a series of session summaries.',
+        'Output a JSON array only.',
+        'Each item: {"fact": "...", "confidence": 0.0-1.0}',
+        'Only include facts that appear in 3+ sessions or the user explicitly confirmed.',
+        'Exclude ephemeral details like specific dates, prices, or one-off tasks.',
+        '',
+        'USER:',
+        'Review these session summaries and extract durable facts about this user:',
+        '',
+        '{last_30_days_of_session_summaries}',
+        '',
+        'Output only facts with confidence >= 0.7.',
+        '```',
+        '',
+        '---',
+        '',
+        '## 4. PostgreSQL + pgvector Schema',
+        '',
+        '```sql',
+        '-- Enable pgvector extension',
+        'CREATE EXTENSION IF NOT EXISTS vector;',
+        '',
+        '-- Episodic memory: one row per session summary',
+        'CREATE TABLE episodic_memory (',
+        '  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),',
+        '  user_id       UUID NOT NULL,',
+        '  session_date  TIMESTAMPTZ NOT NULL DEFAULT now(),',
+        '  topics        TEXT[],',
+        '  summary       TEXT NOT NULL,',
+        '  decisions     TEXT[],',
+        '  open_threads  TEXT[],',
+        '  topics_tsv    TSVECTOR GENERATED ALWAYS AS',
+        '                  (to_tsvector(\'english\', summary)) STORED',
+        ');',
+        'CREATE INDEX ON episodic_memory (user_id, session_date DESC);',
+        'CREATE INDEX ON episodic_memory USING GIN(topics_tsv);',
+        '',
+        '-- Semantic memory: user facts + knowledge base chunks',
+        'CREATE TABLE semantic_memory (',
+        '  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),',
+        '  user_id    UUID,                    -- NULL = global knowledge',
+        '  content    TEXT NOT NULL,',
+        '  source     TEXT,                    -- origin document / session',
+        '  category   TEXT,                    -- preference | fact | domain',
+        '  embedding  VECTOR(1536),            -- match your embedding model dims',
+        '  created_at TIMESTAMPTZ DEFAULT now(),',
+        '  updated_at TIMESTAMPTZ DEFAULT now()',
+        ');',
+        'CREATE INDEX ON semantic_memory',
+        '  USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);',
+        'CREATE INDEX ON semantic_memory (user_id);',
+        '```',
+        '',
+        '---',
+        '',
+        '## 5. Chunking Decision Guide',
+        '',
+        'Fixed-size with overlap (400-600 tokens, 50-100 overlap)',
+        '  → Long prose documents, articles',
+        '',
+        'Paragraph / section boundary',
+        '  → Structured docs, manuals, FAQs',
+        '',
+        'Sentence-level (1-3 sentences)',
+        '  → Dense fact-rich content',
+        '',
+        'Semantic chunking (variable, split at topic boundaries)',
+        '  → Mixed-topic documents',
+        '',
+        '---',
+        '',
+        '## 6. Storage Selection Guide',
+        '',
+        'Starting out / most production agents:',
+        '  PostgreSQL + pgvector — one DB for everything',
+        '',
+        'Large scale (>10M vectors) managed:',
+        '  Pinecone — hosted, filtering support',
+        '',
+        'Self-hosted high performance:',
+        '  Qdrant',
+        '',
+        'Local / single-user:',
+        '  Chroma or SQLite + embedding column',
+        '',
+        '---',
+        '',
+        '*Downloaded from Aether Intel — https://ai.quantummerlin.com*'
+      ];
+
+      var content = lines.join('\n');
+      var blob = new Blob([content], { type: 'text/markdown' });
+      var url  = URL.createObjectURL(blob);
+      var a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'agent-memory-architecture.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

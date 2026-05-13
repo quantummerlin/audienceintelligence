@@ -582,7 +582,7 @@ concise 3-paragraph summary.</div>
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download Free
               </button>
-              <a href="/skills/agent-memory.html" class="skill-guide-link coming">Guide Coming Soon</a>
+              <a href="/skills/agent-memory.html" class="skill-guide-link">Read the Guide &rarr;</a>
             </div>
           </div>
         </div>
@@ -1167,7 +1167,7 @@ Please reason through this decision using the following structure:
 
       'agent-memory': {
         filename: 'agent-memory-architecture.md',
-        content: `# Agent Memory Architecture
+        content: `# Agent Memory Architecture Templates
 ## Aether Intel — Free Skills Library
 ## https://ai.quantummerlin.com/skills.html
 
@@ -1175,95 +1175,147 @@ Please reason through this decision using the following structure:
 
 ## The Three Memory Tiers
 
-### Tier 1: Working Memory (Context Window)
-What the model currently "sees". Limited by context window size.
-Managed by: conversation history, recent tool outputs.
+TIER 1: Working Memory (Context Window)
+  Lifetime: One session | Capacity: Context window | Retrieval: Automatic | Storage: None
 
-### Tier 2: Episodic Memory (Session Storage)
-Key events and outcomes from past sessions. Loaded at agent startup.
-Managed by: structured summaries stored in a database.
+TIER 2: Episodic Memory (Session Storage)
+  Lifetime: Months-permanent | Capacity: Large (compressed) | Retrieval: Recency + keyword | Storage: Postgres
 
-### Tier 3: Semantic Memory (Knowledge Base)
-Facts, preferences, domain knowledge that persists indefinitely.
-Managed by: vector search over a document store.
+TIER 3: Semantic Memory (Knowledge Base)
+  Lifetime: Permanent | Capacity: Very large | Retrieval: Vector similarity | Storage: pgvector / Pinecone
 
 ---
 
-## System Prompt Template: Memory-Aware Agent
+## 1. Memory-Aware System Prompt Template
 
 \`\`\`
+## Role
 You are [AGENT NAME], a [ROLE] assistant.
+You have memory of past sessions with this user. Use it naturally.
 
-## Your Memory
+## Recent History (Episodic Memory)
+{episodic_context}
 
-### Recent Context (Episodic)
-[INSERT LAST SESSION SUMMARY — 3–5 bullet points of key events/decisions]
+Reference this context when the user's message relates to past sessions.
+Acknowledge relevant past context naturally — don't force it.
 
-### What You Know About This User
-[INSERT USER FACTS — preferences, history, stated goals]
+## What You Know About This User (Semantic Memory)
+{user_facts}
 
-### Relevant Knowledge
-[INSERT TOP-K RETRIEVED DOCUMENTS from vector search]
+These are confirmed facts. Use them to personalise responses without
+asking the user to re-state information they've already shared.
 
----
+## Relevant Knowledge (Retrieved)
+{retrieved_chunks}
 
-## How to Use Your Memory
+Domain knowledge retrieved for this query. Use it to inform responses.
 
-- Reference past context naturally when it's relevant.
-- If the user references something you should know but don't have in memory,
-  say so honestly rather than hallucinating.
-- After each session, summarise the key 3–5 facts learned in this format:
-  MEMORY_UPDATE: { "type": "episodic|semantic", "content": "..." }
-
----
-
-## Current Task
-[INSERT CURRENT USER MESSAGE]
-\`\`\`
-
----
-
-## Summary Format (End of Session)
-
-Ask the agent to output this at the end of each conversation:
-
-\`\`\`
-After completing this conversation, output a memory update block:
+## Memory Instructions
+At the end of your response, if this session contains information worth
+remembering, output a MEMORY_UPDATE block:
 
 MEMORY_UPDATE:
-- TYPE: episodic
-  CONTENT: [What happened in this session — 2-3 sentences]
-- TYPE: semantic
-  CONTENT: [Any new fact learned about the user or domain that should persist]
-- TYPE: correction
-  CONTENT: [Anything that updates or corrects previous memory]
+- type: episodic | semantic
+  content: [one sentence summary of what to remember]
+
+Only output MEMORY_UPDATE if there is genuinely something new to store.
 \`\`\`
 
 ---
 
-## Storage Architecture
+## 2. Session Summary Extraction Prompt
 
-| Tier | Storage | Retrieval | Update |
-|------|---------|-----------|--------|
-| Working | In-context | Always loaded | Each message |
-| Episodic | Postgres/SQLite | Last N sessions | End of session |
-| Semantic | Vector DB (Pinecone/Chroma) | Similarity search | When new facts detected |
+\`\`\`
+SYSTEM:
+You extract structured session summaries from conversation transcripts.
+Output valid JSON only. No prose, no explanation.
+
+USER:
+Extract a session summary from this transcript.
+Transcript: {conversation_transcript}
+
+Output:
+{
+  "session_date": "YYYY-MM-DD",
+  "topics_covered": ["topic1"],
+  "decisions_made": ["decision1"],
+  "user_preferences_learned": ["preference1"],
+  "open_threads": ["unfinished_task1"],
+  "summary": "2-3 sentence summary of what happened."
+}
+\`\`\`
 
 ---
 
-## Practical Tips
+## 3. Consolidation Prompt (Episodic → Semantic)
 
-1. **Summarise, don't store raw transcripts.** Full logs are expensive and noisy.
-   Store 3–5 bullet points per session maximum.
+\`\`\`
+SYSTEM:
+You extract durable facts from session summaries.
+Output a JSON array only. Each item: {"fact": "...", "confidence": 0.0-1.0}
+Only include facts in 3+ sessions or explicitly confirmed by the user.
+Exclude ephemeral details (dates, prices, one-off tasks).
 
-2. **Separate user facts from domain facts.** User preferences should be stored
-   separately from general knowledge — they're more important and change more often.
+USER:
+Extract durable facts from these summaries:
+{last_30_days_of_session_summaries}
+Output only facts with confidence >= 0.7.
+\`\`\`
 
-3. **Version your memories.** Keep a timestamp on every memory item so you can
-   debug why an agent "thinks" something.
+---
 
-4. **Explicit forgetting.** Add a TTL (time-to-live) to episodic memories that
-   are no longer relevant after 30/60/90 days.
+## 4. PostgreSQL + pgvector Schema
+
+\`\`\`sql
+CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE episodic_memory (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id      UUID NOT NULL,
+  session_date TIMESTAMPTZ NOT NULL DEFAULT now(),
+  topics       TEXT[],
+  summary      TEXT NOT NULL,
+  decisions    TEXT[],
+  open_threads TEXT[],
+  topics_tsv   TSVECTOR GENERATED ALWAYS AS (to_tsvector('english', summary)) STORED
+);
+CREATE INDEX ON episodic_memory (user_id, session_date DESC);
+CREATE INDEX ON episodic_memory USING GIN(topics_tsv);
+
+CREATE TABLE semantic_memory (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id    UUID,                   -- NULL = global knowledge
+  content    TEXT NOT NULL,
+  source     TEXT,
+  category   TEXT,                   -- preference | fact | domain
+  embedding  VECTOR(1536),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+CREATE INDEX ON semantic_memory
+  USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+CREATE INDEX ON semantic_memory (user_id);
+\`\`\`
+
+---
+
+## 5. Chunking Guide
+
+Fixed-size with overlap (400-600 tokens, 50-100 overlap)  → Long prose, articles
+Paragraph / section boundary                              → Manuals, FAQs
+Sentence-level (1-3 sentences)                           → Dense fact content
+Semantic chunking (variable)                             → Mixed-topic documents
+
+---
+
+## 6. Common Failure Modes
+
+1. Memory poisoning — validate all memory writes; don't store unverified user claims
+2. Context overflow — budget 600-800 tokens episodic, 800-1200 semantic per request
+3. Retrieval noise — set similarity threshold >= 0.75 for most embedding models
+4. Stale facts — timestamp all memories; treat items > 6 months old as tentative
+5. Missing end-of-session storage — use background jobs, not only graceful end events
+6. Synchronous writes — push embedding + summarisation to async queues
 
 ---
 
@@ -1271,7 +1323,7 @@ MEMORY_UPDATE:
 `
       },
 
-      'rag-basics': {
+            'rag-basics': {
         filename: 'rag-basics-guide.md',
         content: `# RAG: Retrieval-Augmented Generation
 ## Aether Intel — Free Skills Library
