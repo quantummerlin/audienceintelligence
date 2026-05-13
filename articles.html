@@ -217,7 +217,7 @@
 
   <!-- Articles Hero -->
   <div class="articles-hero">
-    <div class="articles-hero-label">📰 AI News & Analysis</div>
+    <div class="articles-hero-label">AI NEWS &amp; ANALYSIS</div>
     <h1 class="articles-hero-title">The Latest in<br><span style="background:linear-gradient(90deg,var(--neon-indigo),var(--neon-cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Artificial Intelligence</span></h1>
     <p class="articles-hero-sub">Deep-dive analysis, model reviews, tool guides, and business playbooks — written for builders and creators who use AI to ship.</p>
     <div class="hero-stats">
@@ -227,6 +227,15 @@
     </div>
   </div>
 
+  <!-- Filter Pills -->
+  <div class="filter-row">
+    <button class="filter-pill active" data-filter="all">All</button>
+    <button class="filter-pill" data-filter="agents">Agents</button>
+    <button class="filter-pill" data-filter="business">Business</button>
+    <button class="filter-pill" data-filter="tools">Tools</button>
+    <button class="filter-pill" data-filter="automation">Automation</button>
+    <button class="filter-pill" data-filter="development">Dev &amp; Security</button>
+  </div>
 
   <!-- Article Grid -->
   <div class="articles-body">
@@ -249,7 +258,7 @@
             <div class="article-card-meta"><span>May 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
           </div>
         </a>
-        <a href="/articles/25-vibe-coders-senior-engineer-exodus.html" class="article-card featured reveal-stagger" data-filter="dev">
+        <a href="/articles/25-vibe-coders-senior-engineer-exodus.html" class="article-card featured reveal-stagger" data-filter="development">
           <img src="/images/articles/25-vibe-coders-senior-engineer-exodus-hero.png" alt="Vibe Coders and the Senior Engineer Exodus" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
           <div class="article-card-body">
             <div class="article-card-cat" style="color:#34d399">AI &amp; Work</div>
@@ -583,13 +592,15 @@
       pill.classList.add('active');
       const filter = pill.dataset.filter;
       document.querySelectorAll('.article-card[data-filter]').forEach(card => {
-        card.style.display = (filter === 'all' || card.dataset.filter === filter) ? '' : 'none';
+        const match = filter === 'all' || card.dataset.filter === filter;
+        card.style.display = match ? '' : 'none';
       });
     });
   });
-  // Load more (stub - show alert for now)
+
+  // Load more (stub)
   document.getElementById('loadMoreBtn').addEventListener('click', () => {
-    document.getElementById('loadMoreBtn').textContent = 'More articles coming soon...';
+    document.getElementById('loadMoreBtn').textContent = 'More articles coming soon…';
     document.getElementById('loadMoreBtn').disabled = true;
   });
 </script>
