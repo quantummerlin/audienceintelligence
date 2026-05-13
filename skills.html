@@ -608,7 +608,7 @@ concise 3-paragraph summary.</div>
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download Free
               </button>
-              <a href="/skills/rag-basics.html" class="skill-guide-link coming">Guide Coming Soon</a>
+              <a href="/skills/rag-basics.html" class="skill-guide-link">Read the Guide &rarr;</a>
             </div>
           </div>
         </div>
@@ -1323,101 +1323,250 @@ Semantic chunking (variable)                             → Mixed-topic documen
 `
       },
 
-            'rag-basics': {
+      'rag-basics': {
         filename: 'rag-basics-guide.md',
-        content: `# RAG: Retrieval-Augmented Generation
+        content: `# RAG Basics: Build a Retrieval-Augmented Generation System
 ## Aether Intel — Free Skills Library
 ## https://ai.quantummerlin.com/skills.html
 
 ---
 
-## What Is RAG?
+## 1. What Is RAG and Why Does It Exist?
 
-RAG connects an LLM to your own documents at query time. Instead of relying
-on the model's training data, RAG retrieves relevant passages from your knowledge
-base and injects them into the prompt as context.
+RAG (Retrieval-Augmented Generation) connects a language model to your own
+documents at query time. Instead of baking facts into model weights (fine-tuning)
+or stuffing an entire corpus into one massive prompt (context stuffing), RAG
+retrieves only the relevant passages and injects them as context.
 
-Result: the model answers with your data, not guessed knowledge.
+WHY RAG WINS:
+- Fine-tuning is expensive and goes stale — RAG knowledge is updated by changing the DB
+- Context stuffing costs $$ per call and hits "lost in the middle" degradation at scale
+- RAG keeps model size stable regardless of corpus size
 
----
-
-## The RAG Pipeline
-
-1. INGEST: Split documents into chunks → embed each chunk → store in vector DB
-2. QUERY: Embed the user's question → search for top-K similar chunks
-3. GENERATE: Build a prompt with retrieved chunks → call LLM → return answer
-
----
-
-## Chunking Strategy
-
-| Document Type | Chunk Size | Overlap |
-|--------------|------------|---------|
-| Articles / blog posts | 500 tokens | 50 tokens |
-| Technical docs | 300 tokens | 30 tokens |
-| Legal / dense text | 200 tokens | 40 tokens |
-| Code | Function/class level | — |
-
-Rule of thumb: chunks should be "one idea" — small enough to be specific,
-large enough to have context.
+BEST USE CASES:
+✅ Internal documentation Q&A
+✅ Customer support over product manuals
+✅ Legal / financial document analysis
+✅ Code-base Q&A
+✅ Research assistant over papers
 
 ---
 
-## The Core RAG Prompt Template
+## 2. The Four-Phase RAG Pipeline
 
-\`\`\`
+### Phase 1 — Ingest & Chunk
+Split source documents into smaller pieces that fit inside a prompt segment.
+Load PDFs, HTML, code, markdown → split → attach metadata.
+
+### Phase 2 — Embed & Store
+Convert each chunk into a dense vector using an embedding model.
+Store vectors + metadata in a vector database.
+
+### Phase 3 — Retrieve
+At query time: embed the user question → search vector DB for top-K similar chunks.
+Apply metadata filters (date range, category, author) to narrow the search space.
+
+### Phase 4 — Generate
+Assemble a prompt: system instructions + retrieved chunks + user question.
+Call LLM → return grounded answer.
+
+---
+
+## 3. Embedding Models
+
+| Model | Dims | Max Tokens | Best For |
+|-------|------|-----------|---------|
+| text-embedding-3-small | 1536 | 8192 | Most RAG workloads |
+| text-embedding-3-large | 3072 | 8192 | Higher accuracy, 5x cost |
+| text-embedding-ada-002 | 1536 | 8192 | Legacy; still solid |
+| Cohere embed-english-v3 | 1024 | 512 | Short passages |
+| nomic-embed-text-v1.5 | 768 | 8192 | Open-source, self-host |
+
+RULE: Always use the same embedding model at index time and query time.
+
+---
+
+## 4. Chunking Strategies
+
+### Fixed-size with overlap (start here)
+  chunk_size = 400 tokens
+  overlap    = 40  tokens  (10%)
+
+### Structural / section-based
+Split at headings, page breaks, function boundaries.
+Best for API docs, legal contracts, structured MDX.
+
+### Sentence-level
+Merge sentences until target token count. Best for prose.
+
+### Code-aware
+Split at function/class definitions using tree-sitter or ast.parse.
+Never split mid-function.
+
+CHUNK SIZE TRADE-OFF:
+- Smaller (100–300 tokens) → precise retrieval, less context per chunk
+- Larger (500–1000 tokens) → more context, noisier similarity scores
+Sweet spot: 300–500 tokens with 10% overlap.
+
+CHUNK METADATA SCHEMA:
+{
+  "chunk_id": "uuid",
+  "doc_id": "source-doc-slug",
+  "content": "...the text...",
+  "tokens": 412,
+  "source": "acme-handbook.pdf",
+  "page": 7,
+  "section": "Onboarding",
+  "created_at": "2024-03-01"
+}
+
+---
+
+## 5. Retrieval Quality
+
+SIMILARITY THRESHOLD:
+- Set minimum cosine similarity ≥ 0.75 (below = noise, exclude)
+- > 0.85 : highly relevant
+- 0.75–0.85 : probably relevant
+- < 0.75 : exclude
+
+TOP-K SELECTION:
+- K=3  : focused, low hallucination risk
+- K=5  : balanced default
+- K=10 : high recall, more noise
+
+FILTERED RETRIEVAL (pgvector):
+SELECT content, source, 1 - (embedding <=> $1) AS score
+FROM chunks
+WHERE category = $2
+  AND 1 - (embedding <=> $1) > 0.75
+ORDER BY embedding <=> $1
+LIMIT 5;
+
+HYBRID RETRIEVAL (RRF = Vector + BM25):
+def rrf(vector_results, bm25_results, k=60):
+    scores = {}
+    for rank, (doc_id, _) in enumerate(vector_results):
+        scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank + 1)
+    for rank, (doc_id, _) in enumerate(bm25_results):
+        scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank + 1)
+    return sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+---
+
+## 6. Re-Ranking
+
+Re-rank is a second-pass precision filter:
+Retrieve wide (top-20) → cross-encoder scores each chunk vs query → keep top-5.
+
+Cohere rerank example:
+  response = co.rerank(
+      query=query,
+      documents=[c["content"] for c in chunks],
+      model="rerank-english-v3.0",
+      top_n=5
+  )
+
+Open-source alternative:
+  from sentence_transformers import CrossEncoder
+  model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+  scores = model.predict([(query, c["content"]) for c in chunks])
+
+PATTERN: Retrieve top-20 → re-rank → keep top-5 for prompt.
+
+---
+
+## 7. RAG vs Big Context Window
+
+| Factor | RAG | Big Context Window |
+|--------|-----|--------------------|
+| Corpus size | Millions of docs | Tens to hundreds of docs |
+| Cost per query | Low | High |
+| Latency | Low | High |
+| Lost-in-the-middle risk | None | Real beyond ~100K tokens |
+| Knowledge freshness | Update DB, no redeploy | Re-stuff every call |
+
+DECISION RULE:
+- < ~50 docs AND always fit in context budget → context stuffing
+- Large / growing corpus, cost matters → RAG
+
+---
+
+## 8. RAG Prompt Templates
+
+### Core RAG Template
+---
 You are a helpful assistant with access to a knowledge base.
 Answer the user's question using ONLY the context provided below.
-If the answer is not in the context, say "I don't have that information
-in my knowledge base" — do not guess.
+If the answer is not in the context, say:
+"I don't have that information in my knowledge base."
+Do not guess or draw on outside knowledge.
 
 ## Context
-[CHUNK 1]
-Source: [filename, page, URL]
+[CHUNK 1] (Source: {source_1})
+{content_1}
 
-[CHUNK 2]
-Source: [filename, page, URL]
+[CHUNK 2] (Source: {source_2})
+{content_2}
 
-[CHUNK 3]
-Source: [filename, page, URL]
+[CHUNK 3] (Source: {source_3})
+{content_3}
 
 ## Question
-[USER QUESTION]
+{user_question}
 
 ## Answer
 Provide a clear, direct answer. Cite sources as [Source 1], [Source 2], etc.
-\`\`\`
+---
+
+### Strict Citation Template
+---
+You are a document analyst. Answer using ONLY the provided excerpts.
+Every factual claim must cite a source inline as [n].
+
+[1] {content_1} — {source_1}
+[2] {content_2} — {source_2}
+[3] {content_3} — {source_3}
+
+Question: {user_question}
+
+Rules:
+- Cite every factual claim with [n]
+- If sources agree, cite all: [1][2]
+- If not covered: "Not covered in the provided documents."
+---
+
+### Empty Retrieval Guard
+if not chunks or max(c["score"] for c in chunks) < 0.70:
+    return "I couldn't find relevant information for that question."
 
 ---
 
-## Common Pitfalls
+## 9. Common Failure Modes
 
-❌ **Chunk too large**: Retrieval returns one giant chunk that dilutes relevance
-✅ Fix: Use smaller chunks (200–400 tokens) with overlap
+❌ Chunks too large (>1000 tokens)
+✅ Fix: Use 300–500 token chunks with 10% overlap
 
-❌ **No metadata filtering**: Searching the entire corpus for every query
-✅ Fix: Tag chunks with category/date/author and filter before vector search
+❌ No similarity threshold — all chunks included regardless of score
+✅ Fix: Set threshold >= 0.75; exclude chunks below it
 
-❌ **Raw chunks in prompt**: Pasting retrieved text with no context cues
-✅ Fix: Add source labels and relevance scores; let the model know what it's reading
+❌ No metadata filtering — full corpus searched for every query
+✅ Fix: Add category/date/author metadata; filter before vector search
 
-❌ **Hallucination with empty retrieval**: Model invents an answer when nothing retrieved
-✅ Fix: Add a minimum similarity threshold; if score < 0.75, don't include the chunk
+❌ Empty retrieval hallucination — LLM invents when nothing retrieved
+✅ Fix: Empty retrieval guard (see above)
 
----
+❌ Embedding model mismatch — indexed with model A, queried with model B
+✅ Fix: Store model name as metadata; validate on every query
 
-## Free Tools to Get Started
-
-- **Embedding model**: OpenAI text-embedding-3-small (fast, cheap, good)
-- **Vector DB**: Chroma (local), Pinecone (hosted), pgvector (Postgres)
-- **Orchestration**: LangChain, LlamaIndex, or raw Python
+❌ Stale index — docs updated but chunks not re-embedded
+✅ Fix: Trigger re-indexing on update; version chunks with updated_at
 
 ---
 
 *Downloaded from Aether Intel — https://ai.quantummerlin.com*
 `
       },
-
       'model-routing': {
         filename: 'cost-optimised-model-routing.md',
         content: `# Cost-Optimised Model Routing
