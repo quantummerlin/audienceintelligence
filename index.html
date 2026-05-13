@@ -26,65 +26,36 @@
   <link rel="stylesheet" href="/css/style.css">
   <style>
     /* ── Hero Slideshow ── */
-    .hero-slideshow { position:relative; width:100%; height:62vh; min-height:400px; max-height:680px; overflow:hidden; background:#07070f; }
+    .hero-slideshow { position:relative; width:100%; height:62vh; min-height:420px; max-height:700px; overflow:hidden; background:#07070f; }
     .hero-slides-track { display:flex; height:100%; transition:transform .7s cubic-bezier(.4,0,.2,1); will-change:transform; }
     .hero-slide { flex:0 0 100%; height:100%; background-size:cover; background-position:center; position:relative; }
-    .hero-slide-overlay { position:absolute; inset:0; background:linear-gradient(120deg,rgba(7,7,15,.9) 0%,rgba(7,7,15,.55) 55%,rgba(7,7,15,.15) 100%); display:flex; align-items:flex-end; padding:36px 40px; }
-    .hero-slide-content { max-width:580px; }
-    .hero-slide-badge { margin-bottom:10px; }
-    .hero-slide-title { font-family:var(--font-heading); font-size:clamp(1.4rem,3.2vw,2.15rem); font-weight:800; line-height:1.18; margin:0 0 10px; color:#fff; }
-    .hero-slide-desc { color:rgba(255,255,255,.68); font-size:.88rem; line-height:1.65; margin-bottom:20px; max-width:460px; }
-    .hero-slide-cta { display:inline-flex; align-items:center; gap:6px; background:var(--neon-indigo); color:#fff; font-family:var(--font-display); font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:9px 18px; border-radius:6px; text-decoration:none; transition:background .2s,transform .2s; }
-    .hero-slide-cta:hover { background:#6366f1; transform:translateY(-1px); }
+    .hero-slide-overlay { position:absolute; inset:0; background:linear-gradient(160deg,rgba(7,7,15,.92) 0%,rgba(7,7,15,.6) 50%,rgba(7,7,15,.18) 100%); display:flex; align-items:flex-end; padding:40px 44px; }
+    .hero-slide-content { max-width:600px; }
+    .hero-slide-badge { margin-bottom:12px; }
+    .hero-slide-title { font-family:var(--font-heading); font-size:clamp(1.5rem,3.4vw,2.3rem); font-weight:800; line-height:1.16; margin:0 0 12px; color:#fff; letter-spacing:-.02em; }
+    .hero-slide-desc { color:rgba(255,255,255,.65); font-size:.9rem; line-height:1.7; margin-bottom:24px; max-width:480px; }
+    .hero-slide-cta { display:inline-flex; align-items:center; gap:7px; background:var(--neon-indigo); color:#fff; font-family:var(--font-display); font-size:.69rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:10px 20px; border-radius:7px; text-decoration:none; transition:background .2s,transform .2s,box-shadow .2s; }
+    .hero-slide-cta:hover { background:#6366f1; transform:translateY(-2px); box-shadow:0 8px 24px rgba(99,102,241,.35); }
     /* Navigation dots */
-    .hero-slide-dots { position:absolute; bottom:16px; left:40px; display:flex; gap:7px; z-index:10; }
-    .hero-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.3); border:none; cursor:pointer; transition:all .25s; padding:0; }
-    .hero-dot.active { background:var(--neon-indigo); width:22px; border-radius:3px; }
+    .hero-slide-dots { position:absolute; bottom:20px; left:44px; display:flex; gap:7px; z-index:10; }
+    .hero-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.28); border:none; cursor:pointer; transition:all .25s; padding:0; }
+    .hero-dot.active { background:var(--neon-indigo); width:24px; border-radius:3px; }
     /* Prev/next arrows */
-    .hero-slide-prev,.hero-slide-next { position:absolute; top:50%; transform:translateY(-50%); z-index:10; background:rgba(13,13,26,.65); border:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.8); width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:all .2s; user-select:none; }
+    .hero-slide-prev,.hero-slide-next { position:absolute; top:50%; transform:translateY(-50%); z-index:10; background:rgba(13,13,26,.6); border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.75); width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center; transition:all .2s; user-select:none; }
     .hero-slide-prev:hover,.hero-slide-next:hover { background:var(--neon-indigo); border-color:var(--neon-indigo); color:#fff; }
-    .hero-slide-prev { left:14px; }
-    .hero-slide-next { right:14px; }
-    /* Live pill on slideshow */
-    .hero-live-pill { position:absolute; top:18px; left:40px; z-index:10; display:flex; align-items:center; gap:6px; background:rgba(13,13,26,.75); border:1px solid rgba(129,140,248,.3); border-radius:20px; padding:4px 12px; font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.12em; color:var(--neon-indigo); }
-    .hero-live-dot { width:5px; height:5px; border-radius:50%; background:var(--neon-cyan); animation:livePulse 1.8s ease-in-out infinite; }
-
-    /* ── Quick links row ── */
-    .home-quick-row { display:flex; gap:8px; overflow-x:auto; padding:14px 28px 4px; scrollbar-width:none; }
-    .home-quick-row::-webkit-scrollbar { display:none; }
-    .quick-link-item { display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 14px; text-decoration:none; color:var(--text-secondary); font-size:.8rem; font-family:var(--font-display); font-weight:600; letter-spacing:.04em; white-space:nowrap; transition:border-color .2s,color .2s; }
-    .quick-link-item:hover { border-color:var(--border-bright); color:var(--text-primary); }
-    .quick-link-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-
-    /* ── Stats strip ── */
-    .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:12px 28px 16px; }
-    .stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 10px; text-align:center; transition:border-color .2s; }
-    .stat-chip:hover { border-color:var(--border-bright); }
-    .stat-chip-num { display:block; font-family:var(--font-heading); font-size:1.3rem; font-weight:700; color:var(--neon-indigo); }
-    .stat-chip-label { display:block; font-family:var(--font-display); font-size:.6rem; font-weight:700; color:var(--text-muted); letter-spacing:.1em; margin-top:2px; text-transform:uppercase; }
-
-    /* ── Newsletter band ── */
-    .nl-home-band { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; display:flex; flex-wrap:wrap; gap:24px; align-items:center; justify-content:space-between; }
-    .nl-home-band-title { font-family:var(--font-heading); font-size:1.4rem; font-weight:700; margin-bottom:8px; }
-    .nl-home-band-sub { color:var(--text-secondary); font-size:.9rem; max-width:380px; margin-bottom:14px; }
-    .nl-home-perks { display:flex; flex-wrap:wrap; gap:8px; }
-    .nl-home-perk { background:rgba(129,140,248,.08); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:.72rem; font-family:var(--font-display); color:var(--text-secondary); }
-    .nl-home-band-right { min-width:280px; flex:1; }
-    .nl-home-input-row { display:flex; gap:8px; flex-wrap:wrap; }
-    .nl-home-input-row .form-input { flex:1; min-width:160px; }
-    .nl-home-success { display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; padding:20px; }
-
-    /* ── Responsive ── */
+    .hero-slide-prev { left:16px; }
+    .hero-slide-next { right:16px; }
+    /* Responsive */
     @media(max-width:900px) {
-      .stats-strip { grid-template-columns:repeat(2,1fr); }
-      .hero-slideshow { height:55vw; min-height:300px; }
-      .hero-slide-overlay { padding:24px 20px; }
-      .hero-live-pill,.hero-slide-dots { left:20px; }
+      .hero-slideshow { height:56vw; min-height:320px; }
+      .hero-slide-overlay { padding:24px 22px; }
+      .hero-slide-dots { left:22px; }
     }
     @media(max-width:600px) {
-      .hero-slideshow { height:62vw; }
-      .hero-slide-cta { font-size:.65rem; padding:8px 14px; }
+      .hero-slideshow { height:64vw; min-height:280px; }
+      .hero-slide-cta { font-size:.66rem; padding:9px 15px; }
       .hero-slide-prev,.hero-slide-next { display:none; }
+      .hero-slide-dots { bottom:14px; left:16px; }
     }
   </style>
 </head>
@@ -189,111 +160,11 @@
   </div>
 
   <!-- ══════════════════════════════════════════
-       2. QUICK LINKS + STATS
-  ══════════════════════════════════════════ -->
-  <div class="home-quick-row">
-    <a href="/tools/chat.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(129,140,248,.8)"></span>AI Chat</a>
-    <a href="/tools/transcript.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(244,114,182,.8)"></span>YT Summarizer</a>
-    <a href="/tools/writer.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(167,139,250,.8)"></span>Writer</a>
-    <a href="/tools/image.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(245,158,11,.8)"></span>Image Gen</a>
-    <a href="/articles.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(34,211,238,.8)"></span>All Articles</a>
-    <a href="/skills.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(52,211,153,.8)"></span>Skills</a>
-    <a href="/ai-intelligence.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(129,140,248,.6)"></span>Intelligence</a>
-  </div>
-
-  <div class="stats-strip">
-    <div class="stat-chip">
-      <span class="stat-chip-num">30+</span>
-      <span class="stat-chip-label">AI Articles</span>
-    </div>
-    <div class="stat-chip">
-      <span class="stat-chip-num">100%</span>
-      <span class="stat-chip-label">Free to Use</span>
-    </div>
-    <div class="stat-chip">
-      <span class="stat-chip-num">200+</span>
-      <span class="stat-chip-label">AI Models</span>
-    </div>
-    <div class="stat-chip">
-      <span class="stat-chip-num">0</span>
-      <span class="stat-chip-label">Data Collected</span>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       3. LATEST SIGNALS
+       2. AI NEWS ARTICLES
   ══════════════════════════════════════════ -->
   <section class="hub-section reveal-section">
     <div class="section-header">
-      <h2 class="section-title">Latest Signals</h2>
-      <p class="section-sub">High-signal observations across models, tools, and market dynamics — filtered from the noise.</p>
-    </div>
-    <div class="signals-list">
-      <div class="signal-item signal-high">
-        <div class="signal-dot"></div>
-        <div class="signal-body">
-          <div class="signal-meta"><span class="badge badge-agents">Models</span><span class="signal-date">May 2026</span></div>
-          <h3 class="signal-title">Open-weight models closing the gap on GPT-4o-class benchmarks</h3>
-          <p class="signal-desc">Llama 3.1 and Mistral variants are now within 5–8% of closed frontier models on reasoning tasks. Cost-per-token advantage continues to grow.</p>
-        </div>
-      </div>
-      <div class="signal-item signal-high">
-        <div class="signal-dot"></div>
-        <div class="signal-body">
-          <div class="signal-meta"><span class="badge badge-tools">Tools</span><span class="signal-date">May 2026</span></div>
-          <h3 class="signal-title">n8n and Make.com adoption surging among solo operators</h3>
-          <p class="signal-desc">Workflow automation tools are becoming the default second brain for content creators automating research, drafting, and publishing pipelines.</p>
-        </div>
-      </div>
-      <div class="signal-item signal-medium">
-        <div class="signal-dot"></div>
-        <div class="signal-body">
-          <div class="signal-meta"><span class="badge badge-business">Business</span><span class="signal-date">May 2026</span></div>
-          <h3 class="signal-title">AI automation agencies scaling to 6 figures with 2–3 person teams</h3>
-          <p class="signal-desc">The agency model is proving out at scale. High-margin service delivery with AI tooling is enabling lean teams to compete with larger agencies.</p>
-        </div>
-      </div>
-      <div class="signal-item signal-medium">
-        <div class="signal-dot"></div>
-        <div class="signal-body">
-          <div class="signal-meta"><span class="badge badge-dev">Security</span><span class="signal-date">May 2026</span></div>
-          <h3 class="signal-title">GitHub Copilot repos have 40% higher credential leak rate</h3>
-          <p class="signal-desc">New research: 2,702 credentials extracted from Copilot suggestions, 200 were real working secrets. Security teams are pushing back against unchecked AI coding tool adoption.</p>
-        </div>
-      </div>
-      <div class="signal-item signal-low">
-        <div class="signal-dot"></div>
-        <div class="signal-body">
-          <div class="signal-meta"><span class="badge badge-tools">Tools</span><span class="signal-date">May 2026</span></div>
-          <h3 class="signal-title">BYOK becoming table stakes for AI tool platforms</h3>
-          <p class="signal-desc">Users are increasingly refusing platforms that don't support bring-your-own-key. Privacy, cost control, and model flexibility are the key drivers.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════
-       4. LATEST AI MODELS (via OpenRouter — live)
-  ══════════════════════════════════════════ -->
-  <div class="content-section">
-    <div class="section-head reveal">
-      <span class="section-head-title">Latest AI Models</span>
-      <span style="font-size:.72rem;color:var(--text-muted)">via OpenRouter · live</span>
-      <a href="https://openrouter.ai" target="_blank" class="see-all-link">OpenRouter →</a>
-    </div>
-    <div class="card-row-wrap">
-      <div class="card-row" id="modelsGrid">
-        <div class="sp-card" style="opacity:0.4"><div class="sp-card-thumb">🤖</div><div class="sp-card-label">Loading...</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       5. LATEST ARTICLES (image cards)
-  ══════════════════════════════════════════ -->
-  <section class="hub-section reveal-section">
-    <div class="section-header">
-      <h2 class="section-title">Latest AI Articles</h2>
+      <h2 class="section-title">AI News</h2>
       <a href="/articles.html" class="section-see-all">See all →</a>
     </div>
     <div class="article-grid">
@@ -442,127 +313,14 @@
       </a>
 
     </div>
-    <div style="text-align:center;padding:20px 28px 0">
-      <a href="/articles.html" class="btn btn-outline">View All 30+ Articles →</a>
+    <div style="text-align:center;padding:20px 28px 32px">
+      <a href="/articles.html" class="btn btn-outline">View All Articles →</a>
     </div>
   </section>
-
-  <!-- ══════════════════════════════════════════
-       6. ADOPTION TRACKER
-  ══════════════════════════════════════════ -->
-  <section class="hub-section reveal-section">
-    <div class="section-header">
-      <h2 class="section-title">Adoption Tracker</h2>
-      <p class="section-sub">Tools and models gaining the most traction among builders this month.</p>
-    </div>
-    <div class="adoption-grid">
-      <div class="adoption-card">
-        <div class="adoption-rank">#1</div>
-        <div class="adoption-icon">🦙</div>
-        <div class="adoption-name">Llama 3.1 (70B)</div>
-        <div class="adoption-category">Open Weight Model</div>
-        <div class="adoption-bar"><div class="adoption-fill" style="width:88%"></div></div>
-        <div class="adoption-score">88% adoption growth</div>
-      </div>
-      <div class="adoption-card">
-        <div class="adoption-rank">#2</div>
-        <div class="adoption-icon">🔀</div>
-        <div class="adoption-name">OpenRouter</div>
-        <div class="adoption-category">API Gateway</div>
-        <div class="adoption-bar"><div class="adoption-fill" style="width:76%"></div></div>
-        <div class="adoption-score">76% adoption growth</div>
-      </div>
-      <div class="adoption-card">
-        <div class="adoption-rank">#3</div>
-        <div class="adoption-icon">⚡</div>
-        <div class="adoption-name">n8n</div>
-        <div class="adoption-category">Workflow Automation</div>
-        <div class="adoption-bar"><div class="adoption-fill" style="width:71%"></div></div>
-        <div class="adoption-score">71% adoption growth</div>
-      </div>
-      <div class="adoption-card">
-        <div class="adoption-rank">#4</div>
-        <div class="adoption-icon">🤖</div>
-        <div class="adoption-name">Hermes 3</div>
-        <div class="adoption-category">Agent Framework</div>
-        <div class="adoption-bar"><div class="adoption-fill" style="width:65%"></div></div>
-        <div class="adoption-score">65% adoption growth</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════
-       7. ADSENSE
-  ══════════════════════════════════════════ -->
-  <div style="padding:0 28px;margin-bottom:8px">
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       8. FOLLOW CTA
-  ══════════════════════════════════════════ -->
-  <div class="content-section">
-    <div class="nl-home-band reveal-scale" style="margin:0 28px">
-      <div>
-        <span class="badge badge-secondary" style="margin-bottom:10px">STAY ON THE SIGNAL</span>
-        <h2 class="nl-home-band-title">Get notified when new intelligence drops.</h2>
-        <p class="nl-home-band-sub">No schedule. No noise. New articles and signal drops land in your inbox when they're ready — not on a clock.</p>
-        <div class="nl-home-perks">
-          <span class="nl-home-perk">Model Drops</span>
-          <span class="nl-home-perk">Business Moves</span>
-          <span class="nl-home-perk">Tool Picks</span>
-          <span class="nl-home-perk">Signal Alerts</span>
-        </div>
-      </div>
-      <div class="nl-home-band-right">
-        <form class="nl-home-form" id="nl-home-form" onsubmit="handleHomeNLSubmit(event)">
-          <div class="nl-home-input-row">
-            <input type="email" class="form-input" placeholder="your@email.com" required id="nl-home-email">
-            <button type="submit" class="btn btn-primary btn-sm" id="nl-home-btn">Follow the Signal →</button>
-          </div>
-          <p style="font-size:.72rem;color:var(--text-muted);margin-top:8px">No spam. Unsubscribe anytime.</p>
-        </form>
-        <div class="nl-home-success hidden" id="nl-home-success">
-          <div style="font-size:1.8rem">🎯</div>
-          <strong style="color:var(--neon-cyan)">You're in!</strong>
-          <span style="color:var(--text-secondary);font-size:.85rem">We'll reach out when new intelligence drops.</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       9. BYOK CTA
-  ══════════════════════════════════════════ -->
-  <div style="padding:0 28px 32px">
-    <div class="reveal-scale" style="background:linear-gradient(135deg,rgba(129,140,248,.07),rgba(34,211,238,.04));border:1px solid var(--border-bright);border-radius:16px;padding:28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
-      <div>
-        <div style="font-family:var(--font-display);font-size:.72rem;font-weight:700;letter-spacing:.12em;color:var(--neon-indigo);text-transform:uppercase;margin-bottom:8px">Bring Your Own Key</div>
-        <p style="color:var(--text-secondary);font-size:.9rem;max-width:420px">Your API keys stay in your browser. Zero data collected. Access GPT-4o, Claude, Gemini, Llama and more — free.</p>
-      </div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <a href="/tools/chat.html" class="btn btn-primary">Try Free AI Tools</a>
-        <a href="/articles.html" class="btn btn-secondary">Read the News</a>
-      </div>
-    </div>
-  </div>
 
 </main>
 
 <script>
-  function handleHomeNLSubmit(e) {
-    e.preventDefault();
-    var btn = document.getElementById('nl-home-btn');
-    var form = document.getElementById('nl-home-form');
-    var success = document.getElementById('nl-home-success');
-    if (btn) btn.textContent = 'Joining...';
-    setTimeout(function(){
-      if (form) form.classList.add('hidden');
-      if (success) success.classList.remove('hidden');
-    }, 900);
-  }
-
   // ── Hero Slideshow ──────────────────────────────────────────────────────────
   (function() {
     var TOTAL = 6;

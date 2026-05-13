@@ -63,12 +63,12 @@
   /* Text */
   --text-primary:   #f1f5f9;
   --text-secondary: rgba(241, 245, 249, 0.65);
-  --text-muted:     rgba(241, 245, 249, 0.52);
+  --text-muted:     rgba(241, 245, 249, 0.38);
 
   /* Layout dimensions */
   --sidebar-w:  240px;
   --topbar-h:   64px;
-  --nowbar-h:   68px;
+  --nowbar-h:   38px;
   --mobnav-h:   58px;
 
   /* Shape */
@@ -166,28 +166,6 @@ textarea {
 
 button {
   cursor: pointer;
-}
-
-/* Focus-visible: accessible keyboard focus ring for all interactive elements.
-   Uses outline: none in the reset above — this restores it ONLY for keyboard nav. */
-:focus-visible {
-  outline: 2px solid var(--neon-indigo);
-  outline-offset: 3px;
-}
-
-.article-card:focus-visible,
-.nav-item:focus-visible,
-.ql-pill:focus-visible,
-.mob-nav-item:focus-visible {
-  outline: 2px solid var(--neon-indigo);
-  outline-offset: 2px;
-  border-radius: var(--radius-card);
-}
-
-.btn:focus-visible {
-  outline: 2px solid var(--neon-indigo);
-  outline-offset: 3px;
-  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.18);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -634,115 +612,22 @@ footer.now-bar {
   height: var(--nowbar-h);
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 0 20px;
-  background: rgba(10, 10, 20, 0.88);
+  background: rgba(10, 10, 20, 0.94);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-top: 1px solid var(--border-bright);
+  border-top: 1px solid rgba(255,255,255,.06);
   z-index: 500;
-}
-
-/* --- Left: LIVE pill + icon box + title/sub --- */
-.now-bar-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 180px;
-  flex-shrink: 0;
-}
-
-.now-bar-live-pill {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--neon-indigo);
-  background: rgba(129, 140, 248, 0.12);
-  border: 1px solid var(--border-bright);
-  border-radius: 100px;
-  padding: 3px 9px;
-  flex-shrink: 0;
-}
-
-.now-bar-live-pill-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--neon-indigo);
-  animation: livePulse 1.8s ease-in-out infinite;
-  flex-shrink: 0;
-}
-
-.now-bar-icon-box {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, rgba(129, 140, 248, 0.25), rgba(34, 211, 238, 0.15));
-  border: 1px solid var(--border-bright);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  flex-shrink: 0;
-}
-
-.now-bar-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.now-bar-title {
-  font-family: var(--font-display);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.now-bar-sub {
-  font-family: var(--font-body);
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* --- Center: Label + ticker --- */
-.now-bar-center {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
   overflow: hidden;
 }
 
-.now-bar-breaking-label {
-  font-family: var(--font-display);
-  font-size: 0.55rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--neon-gold);
-  flex-shrink: 0;
-}
-
+/* Full-width ticker strip — no branding, no controls */
 .now-bar-ticker-wrap {
-  width: 100%;
+  flex: 1;
   overflow: hidden;
   position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 /* Fade masks on edges */
@@ -752,29 +637,29 @@ footer.now-bar {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 40px;
+  width: 32px;
   z-index: 1;
   pointer-events: none;
 }
 
 .now-bar-ticker-wrap::before {
   left: 0;
-  background: linear-gradient(90deg, rgba(10, 10, 20, 0.88), transparent);
+  background: linear-gradient(90deg, rgba(10, 10, 20, 0.94), transparent);
 }
 
 .now-bar-ticker-wrap::after {
   right: 0;
-  background: linear-gradient(-90deg, rgba(10, 10, 20, 0.88), transparent);
+  background: linear-gradient(-90deg, rgba(10, 10, 20, 0.94), transparent);
 }
 
 .now-bar-ticker {
   display: flex;
   white-space: nowrap;
-  animation: tickerScroll 50s linear infinite;
+  animation: tickerScroll 55s linear infinite;
   font-family: var(--font-body);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: rgba(255,255,255,.45);
   gap: 0;
 }
 
@@ -786,52 +671,12 @@ footer.now-bar {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 0 24px;
+  padding: 0 28px;
 }
 
 .ticker-sep {
-  color: var(--neon-indigo);
-  opacity: 0.6;
-}
-
-/* --- Right: Controls --- */
-.now-bar-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  min-width: 80px;
-  justify-content: flex-end;
-}
-
-.now-bar-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition:
-    color var(--transition-fast),
-    background var(--transition-fast),
-    border-color var(--transition-fast);
-  flex-shrink: 0;
-}
-
-.now-bar-btn:hover {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.06);
-  border-color: var(--border-bright);
-}
-
-.now-bar-btn.active {
-  color: var(--neon-indigo);
-  border-color: var(--border-bright);
+  color: rgba(129,140,248,.4);
+  font-size: .6rem;
 }
 
 
@@ -881,66 +726,16 @@ nav.mobile-bottom-nav {
   color: var(--neon-indigo);
 }
 
-.mob-nav-icon {
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
-.mob-nav-label {
-  line-height: 1;
-}
-
-
-/* =============================================================================
-   10b. MOBILE TOPBAR
-   ============================================================================= */
-
-.mobile-topbar {
-  display: none; /* shown via media query */
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 56px;
-  background: rgba(10, 10, 20, 0.97);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  z-index: 400;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
+.mob-nav-svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   flex-shrink: 0;
 }
 
-.mobile-topbar-logo {
-  font-family: var(--font-heading);
-  font-size: 0.8rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  line-height: 1;
-}
-
-.mobile-topbar-logo .logo-aether {
-  color: var(--text-primary);
-}
-
-.mobile-topbar-logo .logo-intel {
-  color: var(--neon-indigo);
-}
-
-.mobile-topbar-tagline {
-  font-family: var(--font-display);
-  font-size: 0.5rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.mob-nav-label {
   line-height: 1;
 }
 
@@ -1042,49 +837,6 @@ nav.mobile-bottom-nav {
   max-width: 72px;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-
-/* QL Pill strip — quick-access horizontal pill row (homepage + tools pages) */
-.ql-strip {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 14px 28px 6px;
-  scrollbar-width: none;
-}
-
-.ql-strip::-webkit-scrollbar {
-  display: none;
-}
-
-.ql-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 7px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  font-family: var(--font-display);
-  font-size: 0.63rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
-}
-
-.ql-pill:hover {
-  border-color: var(--neon-indigo);
-  color: var(--neon-indigo);
-}
-
-.ql-pill.active {
-  border-color: var(--neon-indigo);
-  color: var(--neon-indigo);
-  background: rgba(129, 140, 248, 0.08);
 }
 
 
@@ -1477,8 +1229,7 @@ nav.mobile-bottom-nav {
   margin-bottom: 6px;
 }
 
-.article-card-excerpt,
-.article-card-desc {
+.article-card-excerpt {
   font-family: var(--font-body);
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -1953,19 +1704,6 @@ nav.mobile-bottom-nav {
   background: rgba(255, 255, 255, 0.04);
 }
 
-/* Outline — border only, no fill */
-.btn-outline {
-  background: transparent;
-  color: var(--text-secondary);
-  border-color: var(--border-bright);
-}
-
-.btn-outline:hover {
-  color: var(--neon-indigo);
-  border-color: var(--neon-indigo);
-  background: rgba(129, 140, 248, 0.06);
-}
-
 /* Icon-only pill */
 .btn-icon {
   padding: 8px;
@@ -2091,19 +1829,6 @@ nav.mobile-bottom-nav {
 /* Display */
 .hidden {
   display: none !important;
-}
-
-/* Screen-reader only — visually hidden but accessible to AT */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
 .flex {
@@ -2419,16 +2144,6 @@ nav.mobile-bottom-nav {
     padding-bottom: calc(var(--nowbar-h) + var(--mobnav-h) + 24px);
   }
 
-  /* Ensure <main> also clears the fixed bottom bars */
-  main {
-    padding-bottom: calc(var(--nowbar-h) + var(--mobnav-h) + 24px);
-  }
-
-  /* Show mobile topbar */
-  .mobile-topbar {
-    display: flex;
-  }
-
   /* Show mobile bottom nav */
   nav.mobile-bottom-nav {
     display: flex;
@@ -2459,14 +2174,7 @@ nav.mobile-bottom-nav {
     min-width: unset;
   }
 
-  /* Now bar: simplify on mobile */
-  .now-bar-center {
-    display: none;
-  }
-
-  .now-bar-left {
-    flex: 1;
-  }
+  /* Ticker visible full-width on mobile */
 
   /* Hero title scales down */
   .hero-title {
@@ -2557,19 +2265,8 @@ nav.mobile-bottom-nav {
     font-size: 0.85rem;
   }
 
-  /* Shrink now-bar */
-  footer.now-bar {
-    padding: 0 12px;
-    gap: 10px;
-  }
-
-  .now-bar-live-pill {
-    display: none;
-  }
-
-  .now-bar-info .now-bar-title {
-    font-size: 0.62rem;
-  }
+  /* Ticker on small mobile */
+  .now-bar-ticker { font-size: 0.72rem; }
 
   /* Section padding reduced */
   .content-section {
@@ -2618,8 +2315,9 @@ nav.mobile-bottom-nav {
     font-size: 0.5rem;
   }
 
-  .mob-nav-icon {
-    font-size: 1.1rem;
+  .mob-nav-svg {
+    width: 20px;
+    height: 20px;
   }
 
 }

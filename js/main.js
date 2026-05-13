@@ -17,87 +17,40 @@
     <a href="/index.html" class="logo-link">
       <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
     </a>
-    <span class="logo-tagline">AI News · Tools · Intelligence</span>
+    <span class="logo-tagline">AI Signal · Always On</span>
   </div>
   <nav class="sidebar-nav">
-    <span class="nav-section-label">Discover</span>
-    <a href="/index.html" class="nav-item" data-page="home">Home</a>
-    <a href="/articles.html" class="nav-item" data-page="articles">AI News</a>
-    <a href="/ai-hub.html" class="nav-item" data-page="ai-hub">AI Hub</a>
-    <a href="/ai-intelligence.html" class="nav-item" data-page="ai-intelligence">Intelligence</a>
-
-    <span class="nav-section-label">Tools</span>
-    <a href="/tools/chat.html" class="nav-item" data-page="chat">AI Chat</a>
-    <a href="/tools/transcript.html" class="nav-item" data-page="transcript">YT Summarizer</a>
-    <a href="/tools/writer.html" class="nav-item" data-page="writer">Content Writer</a>
-    <a href="/tools/image.html" class="nav-item" data-page="image">Image Gen</a>
-
-    <span class="nav-section-label">Resources</span>
-    <a href="/skills.html" class="nav-item" data-page="skills">Skills &amp; Prompts</a>
-    <a href="/research.html" class="nav-item" data-page="research">Research Reports</a>
-    <a href="/resources.html" class="nav-item" data-page="resources">Resources</a>
-    <a href="/affiliates.html" class="nav-item" data-page="affiliates">Recommended Tools</a>
-    <a href="/newsletter.html" class="nav-item" data-page="newsletter">Newsletter</a>
+    <a href="/index.html" class="nav-item" data-page="news">News</a>
+    <a href="/models.html" class="nav-item" data-page="models">Models</a>
+    <a href="/tools/chat.html" class="nav-item" data-page="playground">Playground</a>
+    <a href="/skills.html" class="nav-item" data-page="skills">Skills</a>
   </nav>
-  <div class="sidebar-cards">
-    <div class="sb-card">
-      <h4>BYOK TOOLS</h4>
-      <p>Bring your own API key. Zero data collected.</p>
-      <a href="/tools/chat.html">Try Free →</a>
-    </div>
-    <div class="sb-card" style="border-color:rgba(245,158,11,0.2)">
-      <h4 style="color:var(--neon-gold)">REPORTS</h4>
-      <p>Deep AI research from real data.</p>
-      <a href="/research.html" style="color:var(--neon-gold);background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3)">Browse →</a>
-    </div>
-  </div>
 </aside>`;
 
   const NOW_BAR_HTML = `
 <footer class="now-bar">
-  <div class="now-bar-left">
-    <div class="now-bar-live-pill">
-      <span class="now-bar-live-pill-dot"></span>
-      LIVE
-    </div>
-    <div class="now-bar-icon-box">⚡</div>
-    <div class="now-bar-info">
-      <div class="now-bar-title">AETHER INTEL</div>
-      <div class="now-bar-sub">ai signal · live feed</div>
-    </div>
-  </div>
-  <div class="now-bar-center">
-    <div class="now-bar-breaking-label">AI INTELLIGENCE FEED</div>
-    <div class="now-bar-ticker-wrap">
-      <div class="now-bar-ticker" id="tickerTrack"></div>
-    </div>
-  </div>
-  <div class="now-bar-right">
-    <button class="now-bar-btn" id="volBtn" title="Pause feed">🔊</button>
+  <div class="now-bar-ticker-wrap">
+    <div class="now-bar-ticker" id="tickerTrack"></div>
   </div>
 </footer>`;
 
   const MOBILE_NAV_HTML = `
 <nav class="mobile-bottom-nav">
-  <a href="/index.html" class="mob-nav-item" data-page="home">
-    <span class="mob-nav-icon">🏠</span>
-    <span class="mob-nav-label">HOME</span>
+  <a href="/index.html" class="mob-nav-item" data-page="news">
+    <svg class="mob-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+    <span class="mob-nav-label">News</span>
   </a>
-  <a href="/articles.html" class="mob-nav-item" data-page="articles">
-    <span class="mob-nav-icon">📰</span>
-    <span class="mob-nav-label">NEWS</span>
+  <a href="/models.html" class="mob-nav-item" data-page="models">
+    <svg class="mob-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>
+    <span class="mob-nav-label">Models</span>
   </a>
-  <a href="/ai-hub.html" class="mob-nav-item" data-page="ai-hub">
-    <span class="mob-nav-icon">📡</span>
-    <span class="mob-nav-label">HUB</span>
+  <a href="/tools/chat.html" class="mob-nav-item" data-page="playground">
+    <svg class="mob-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    <span class="mob-nav-label">Play</span>
   </a>
-  <a href="/tools/chat.html" class="mob-nav-item" data-page="chat">
-    <span class="mob-nav-icon">🛠</span>
-    <span class="mob-nav-label">TOOLS</span>
-  </a>
-  <a href="/research.html" class="mob-nav-item" data-page="research">
-    <span class="mob-nav-icon">📊</span>
-    <span class="mob-nav-label">REPORTS</span>
+  <a href="/skills.html" class="mob-nav-item" data-page="skills">
+    <svg class="mob-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 0 3-3h7z"/></svg>
+    <span class="mob-nav-label">Skills</span>
   </a>
 </nav>`;
 
@@ -163,19 +116,10 @@
     // Normalise: strip trailing slash, lowercase
     const p = pathname.replace(/\/$/, '').toLowerCase();
 
-    if (p === '' || p === '/index.html' || p === '/index') return 'home';
-    if (p.includes('/articles')) return 'articles';
-    if (p.includes('/ai-hub')) return 'ai-hub';
-    if (p.includes('/ai-intelligence')) return 'ai-intelligence';
-    if (p.includes('/tools/chat')) return 'chat';
-    if (p.includes('/tools/transcript')) return 'transcript';
-    if (p.includes('/tools/writer')) return 'writer';
-    if (p.includes('/tools/image')) return 'image';
+    if (p === '' || p === '/index.html' || p === '/index' || p.includes('/articles')) return 'news';
+    if (p.includes('/models')) return 'models';
+    if (p.includes('/tools/')) return 'playground';
     if (p.includes('/skills')) return 'skills';
-    if (p.includes('/research')) return 'research';
-    if (p.includes('/resources')) return 'resources';
-    if (p.includes('/affiliates')) return 'affiliates';
-    if (p.includes('/newsletter')) return 'newsletter';
     return null;
   }
 

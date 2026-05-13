@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Models — Aether Intel</title>
+  <meta name="description" content="Browse 200+ AI models via OpenRouter. Compare context windows, pricing, and capabilities. Updated live. Free, paid, and open-weight models.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models.html">
+  <meta property="og:title" content="AI Models — Aether Intel">
+  <meta property="og:description" content="Browse 200+ AI models live via OpenRouter. Context windows, pricing, and capabilities compared.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models.html">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ── Page Header ── */
+    .models-page-header {
+      padding: 48px 32px 36px;
+      border-bottom: 1px solid var(--border);
+    }
+    .models-page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--neon-cyan);
+      background: rgba(34,211,238,.07);
+      border: 1px solid rgba(34,211,238,.18);
+      border-radius: 100px;
+      padding: 4px 12px;
+      margin-bottom: 16px;
+    }
+    .models-page-eyebrow-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--neon-cyan);
+      animation: livePulse 1.8s ease-in-out infinite;
+    }
+    .models-page-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin: 0 0 12px;
+    }
+    .models-page-title span { color: var(--neon-indigo); }
+    .models-page-sub {
+      color: var(--text-secondary);
+      font-size: .95rem;
+      line-height: 1.65;
+      max-width: 560px;
+      margin: 0 0 28px;
+    }
+    .models-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .models-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: .06em;
+    }
+    .models-meta-item strong { color: var(--text-primary); font-size: .9rem; }
+
+    /* ── Filter Bar ── */
+    .models-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      background: rgba(13,13,26,.6);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .filter-search-wrap {
+      flex: 1;
+      min-width: 200px;
+      max-width: 340px;
+      position: relative;
+    }
+    .filter-search-wrap svg {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      stroke: var(--text-muted);
+    }
+    #modelSearch {
+      width: 100%;
+      background: rgba(7,7,15,.7);
+      border: 1px solid rgba(129,140,248,.18);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: .85rem;
+      padding: 8px 12px 8px 34px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    #modelSearch:focus {
+      border-color: rgba(129,140,248,.45);
+      box-shadow: 0 0 0 3px rgba(129,140,248,.08);
+    }
+    #modelSearch::placeholder { color: var(--text-muted); }
+    .filter-btn-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-family: var(--font-display);
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 13px;
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { color: var(--text-secondary); border-color: var(--border-bright); }
+    .filter-btn.active { color: var(--neon-indigo); background: rgba(129,140,248,.1); border-color: rgba(129,140,248,.4); }
+    .models-count-tag {
+      font-family: var(--font-display);
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: .06em;
+      margin-left: auto;
+    }
+    #visibleCount { color: var(--neon-indigo); }
+
+    /* ── Models Grid ── */
+    .models-grid-section {
+      padding: 28px 32px 40px;
+    }
+    .models-full-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .model-full-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      cursor: default;
+      transition: border-color .2s, transform .18s, box-shadow .2s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .model-full-card:hover {
+      border-color: rgba(129,140,248,.35);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.3);
+    }
+    .model-full-card.hidden { display: none; }
+    .model-full-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .model-full-name {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+      flex: 1;
+      min-width: 0;
+    }
+    .model-full-badge {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .mfb-free { background: rgba(52,211,153,.12); color: #34d399; border: 1px solid rgba(52,211,153,.25); }
+    .mfb-new  { background: rgba(129,140,248,.12); color: var(--neon-indigo); border: 1px solid rgba(129,140,248,.25); }
+    .mfb-pro  { background: rgba(245,158,11,.08); color: var(--neon-gold); border: 1px solid rgba(245,158,11,.2); }
+    .model-full-provider {
+      font-family: var(--font-display);
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .model-full-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .model-full-meta-item {
+      font-family: var(--font-body);
+      font-size: .72rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .model-full-meta-item span { color: var(--text-secondary); }
+    .model-full-try {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-display);
+      font-size: .63rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      background: rgba(129,140,248,.08);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 6px;
+      padding: 5px 11px;
+      text-decoration: none;
+      margin-top: 6px;
+      transition: all .18s;
+      width: fit-content;
+    }
+    .model-full-try:hover { background: rgba(129,140,248,.16); border-color: rgba(129,140,248,.4); }
+
+    /* ── Loading / Error ── */
+    .models-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 80px 32px;
+      color: var(--text-muted);
+      font-size: .9rem;
+    }
+    .models-loading-spinner {
+      width: 22px; height: 22px;
+      border: 2px solid rgba(129,140,248,.2);
+      border-top-color: var(--neon-indigo);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .models-error-msg {
+      padding: 48px 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: .9rem;
+    }
+    .models-error-msg a { color: var(--neon-indigo); }
+
+    /* ── Provider Article CTA ── */
+    .models-guide-band {
+      margin: 0 32px 32px;
+      background: linear-gradient(135deg, rgba(129,140,248,.07), rgba(34,211,238,.04));
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 14px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .models-guide-band-text h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .models-guide-band-text p {
+      color: var(--text-secondary);
+      font-size: .85rem;
+      margin: 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .models-page-header { padding: 32px 20px 24px; }
+      .models-filter-bar { padding: 12px 20px; }
+      .models-grid-section { padding: 20px 16px 32px; }
+      .models-full-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+      .models-guide-band { margin: 0 16px 24px; }
+    }
+    @media (max-width: 600px) {
+      .models-full-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .filter-search-wrap { max-width: 100%; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<main>
+
+  <!-- ── Page Header ── -->
+  <div class="models-page-header">
+    <div class="models-page-eyebrow">
+      <span class="models-page-eyebrow-dot"></span>
+      Live via OpenRouter
+    </div>
+    <h1 class="models-page-title">AI <span>Models</span></h1>
+    <p class="models-page-sub">Browse every model available via OpenRouter — from free open-weight releases to frontier closed models. Updated live from the OpenRouter API.</p>
+    <div class="models-meta-row">
+      <div class="models-meta-item"><strong id="totalCount">—</strong>&nbsp;Models available</div>
+      <div class="models-meta-item"><strong id="freeCount">—</strong>&nbsp;Free models</div>
+      <div class="models-meta-item"><strong id="newCount">—</strong>&nbsp;Added in last 30 days</div>
+    </div>
+  </div>
+
+  <!-- ── Filter Bar ── -->
+  <div class="models-filter-bar">
+    <div class="filter-search-wrap">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="modelSearch" placeholder="Search models…" autocomplete="off">
+    </div>
+    <div class="filter-btn-group">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="free">Free</button>
+      <button class="filter-btn" data-filter="new">New</button>
+      <button class="filter-btn" data-filter="openai">OpenAI</button>
+      <button class="filter-btn" data-filter="anthropic">Anthropic</button>
+      <button class="filter-btn" data-filter="google">Google</button>
+      <button class="filter-btn" data-filter="meta">Meta</button>
+    </div>
+    <div class="models-count-tag"><span id="visibleCount">—</span> shown</div>
+  </div>
+
+  <!-- ── Models Grid ── -->
+  <div class="models-grid-section">
+    <div id="modelsFullGrid" class="models-full-grid">
+      <div class="models-loading">
+        <div class="models-loading-spinner"></div>
+        Fetching models from OpenRouter…
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Guide CTA ── -->
+  <div class="models-guide-band">
+    <div class="models-guide-band-text">
+      <h3>New to OpenRouter?</h3>
+      <p>One API key, 200+ models, unified billing. Our guide explains how to set it up in 10 minutes.</p>
+    </div>
+    <a href="/articles/14-openrouter-guide.html" class="btn btn-primary">Read the Guide →</a>
+  </div>
+
+  <!-- ── AdSense ── -->
+  <div style="padding:0 32px 32px">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+</main>
+
+<script>
+(function() {
+  'use strict';
+
+  var allModels = [];
+  var currentFilter = 'all';
+  var searchQuery = '';
+
+  function formatContext(num) {
+    if (!num || isNaN(num)) return null;
+    if (num >= 1000000) return Math.round(num / 1000000) + 'M ctx';
+    if (num >= 1000) return Math.round(num / 1000) + 'K ctx';
+    return num + ' ctx';
+  }
+
+  function formatPrice(priceStr) {
+    var p = parseFloat(priceStr);
+    if (!p || isNaN(p)) return null;
+    // price is per token — convert to per 1M tokens
+    var per1M = p * 1000000;
+    if (per1M < 0.01) return '<$0.01/M';
+    if (per1M < 1) return '$' + per1M.toFixed(2) + '/M';
+    return '$' + per1M.toFixed(2) + '/M';
+  }
+
+  function getBadge(model) {
+    if (model.pricing &&
+        parseFloat(model.pricing.prompt) === 0 &&
+        parseFloat(model.pricing.completion) === 0) return 'FREE';
+    if (model.created) {
+      var ageMs = Date.now() - model.created * 1000;
+      if (ageMs < 30 * 24 * 60 * 60 * 1000) return 'NEW';
+    }
+    return 'PRO';
+  }
+
+  function getProvider(model) {
+    if (!model.id) return 'unknown';
+    return model.id.split('/')[0].toLowerCase();
+  }
+
+  function buildCard(model) {
+    var badge = getBadge(model);
+    var provider = getProvider(model);
+    var ctx = formatContext(model.context_length);
+    var price = model.pricing ? formatPrice(model.pricing.prompt) : null;
+    var name = model.name || model.id || 'Unknown';
+    var badgeClass = badge === 'FREE' ? 'mfb-free' : (badge === 'NEW' ? 'mfb-new' : 'mfb-pro');
+
+    var metaHtml = '';
+    if (ctx) metaHtml += '<div class="model-full-meta-item">ctx&nbsp;<span>' + ctx + '</span></div>';
+    if (price) metaHtml += '<div class="model-full-meta-item">in&nbsp;<span>' + price + '</span></div>';
+
+    return [
+      '<div class="model-full-card" data-badge="' + badge.toLowerCase() + '" data-provider="' + provider + '" data-name="' + name.toLowerCase() + '">',
+      '  <div class="model-full-card-top">',
+      '    <div class="model-full-name" title="' + name + '">' + name + '</div>',
+      '    <div class="model-full-badge ' + badgeClass + '">' + badge + '</div>',
+      '  </div>',
+      '  <div class="model-full-provider">' + provider + '</div>',
+      '  <div class="model-full-meta">' + metaHtml + '</div>',
+      '  <a href="/tools/chat.html" class="model-full-try">Try in Playground →</a>',
+      '</div>'
+    ].join('');
+  }
+
+  function applyFilters() {
+    var cards = document.querySelectorAll('.model-full-card');
+    var q = searchQuery.trim().toLowerCase();
+    var visible = 0;
+
+    cards.forEach(function(card) {
+      var matchFilter = true;
+      var matchSearch = true;
+
+      if (currentFilter !== 'all') {
+        if (currentFilter === 'free') matchFilter = card.dataset.badge === 'free';
+        else if (currentFilter === 'new') matchFilter = card.dataset.badge === 'new';
+        else matchFilter = card.dataset.provider === currentFilter;
+      }
+
+      if (q) {
+        matchSearch = card.dataset.name.includes(q) || card.dataset.provider.includes(q);
+      }
+
+      var show = matchFilter && matchSearch;
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+
+    var countEl = document.getElementById('visibleCount');
+    if (countEl) countEl.textContent = visible;
+  }
+
+  function renderModels(models) {
+    var grid = document.getElementById('modelsFullGrid');
+    if (!grid) return;
+
+    var sorted = models
+      .filter(function(m) { return m && m.id; })
+      .sort(function(a, b) { return (b.created || 0) - (a.created || 0); });
+
+    allModels = sorted;
+
+    var free = sorted.filter(function(m) { return getBadge(m) === 'FREE'; }).length;
+    var newM = sorted.filter(function(m) { return getBadge(m) === 'NEW'; }).length;
+
+    var totalEl = document.getElementById('totalCount');
+    var freeEl = document.getElementById('freeCount');
+    var newEl = document.getElementById('newCount');
+    if (totalEl) totalEl.textContent = sorted.length;
+    if (freeEl) freeEl.textContent = free;
+    if (newEl) newEl.textContent = newM;
+
+    grid.innerHTML = sorted.map(buildCard).join('');
+    applyFilters();
+  }
+
+  function init() {
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    // Search
+    var searchInput = document.getElementById('modelSearch');
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        searchQuery = searchInput.value;
+        applyFilters();
+      });
+    }
+
+    // Fetch models
+    fetch('https://openrouter.ai/api/v1/models')
+      .then(function(res) {
+        if (!res.ok) throw new Error('fetch failed');
+        return res.json();
+      })
+      .then(function(data) {
+        var models = Array.isArray(data) ? data : (data.data || []);
+        renderModels(models);
+      })
+      .catch(function() {
+        var grid = document.getElementById('modelsFullGrid');
+        if (grid) grid.innerHTML = '<div class="models-error-msg">Could not load models. <a href="https://openrouter.ai/models" target="_blank" rel="noopener">Browse on OpenRouter →</a></div>';
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
