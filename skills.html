@@ -634,7 +634,7 @@ concise 3-paragraph summary.</div>
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download Free
               </button>
-              <a href="/articles/14-openrouter-guide.html" class="skill-guide-link">Read the Guide →</a>
+              <a href="/skills/model-routing.html" class="skill-guide-link">Read the Guide &rarr;</a>
             </div>
           </div>
         </div>
@@ -1568,118 +1568,175 @@ if not chunks or max(c["score"] for c in chunks) < 0.70:
 `
       },
       'model-routing': {
-        filename: 'cost-optimised-model-routing.md',
+        filename: 'model-routing-guide.md',
         content: `# Cost-Optimised Model Routing
 ## Aether Intel — Free Skills Library
 ## https://ai.quantummerlin.com/skills.html
 
 ---
 
-## The Core Idea
+## 1. TIER_MODELS Configuration
 
-Not every task needs your most powerful (expensive) model.
-A routing layer classifies each request by complexity and sends it
-to the cheapest model that can handle it well.
-
-Typical savings: 60–80% reduction in inference costs.
-
----
-
-## Complexity Tiers
-
-| Tier | Task Type | Model Recommendation | Cost |
-|------|-----------|---------------------|------|
-| Tier 1 | Simple lookup, yes/no, classification | Llama 3.1 8B, Gemini Flash, GPT-4o Mini | $0.0001–0.001/1K |
-| Tier 2 | Summarisation, extraction, structured output | Claude Haiku, Mistral Small, Gemma 2 27B | $0.001–0.01/1K |
-| Tier 3 | Complex reasoning, long-form writing, coding | Claude Sonnet, GPT-4o, Gemini 1.5 Pro | $0.01–0.05/1K |
-| Tier 4 | Frontier reasoning, multi-step agent tasks | Claude Opus, GPT-4o, o3 | $0.05–0.15/1K |
-
----
-
-## Classifier Prompt
-
-Use a fast, cheap model (Tier 1) as the router:
-
-\`\`\`
-Classify the following user request by complexity.
-Output ONLY one word: SIMPLE, MEDIUM, COMPLEX, or FRONTIER.
-
-Guidelines:
-- SIMPLE: Yes/no questions, single-fact lookups, basic classification
-- MEDIUM: Summarisation, extraction, template filling, basic analysis
-- COMPLEX: Multi-step reasoning, coding, long-form writing, nuanced decisions
-- FRONTIER: Deep research, complex agent tasks, scientific reasoning, adversarial inputs
-
-User request: [INSERT REQUEST]
-
-Classification:
-\`\`\`
-
----
-
-## Routing Logic (Python pseudocode)
-
-\`\`\`python
 TIER_MODELS = {
-    "SIMPLE":   "meta-llama/llama-3.1-8b-instruct",
-    "MEDIUM":   "anthropic/claude-3-haiku",
+    "SIMPLE":   "openai/gpt-4o-mini",
+    "MEDIUM":   "anthropic/claude-haiku-3-5",
     "COMPLEX":  "anthropic/claude-sonnet-4",
-    "FRONTIER": "anthropic/claude-opus-4"
+    "FRONTIER": "anthropic/claude-opus-4",
 }
 
-def route_request(user_message):
-    # Step 1: Classify (use cheapest model)
-    tier = classify_complexity(user_message, model="meta-llama/llama-3.1-8b-instruct")
-
-    # Step 2: Select model
-    model = TIER_MODELS[tier]
-
-    # Step 3: Generate response
-    response = call_openrouter(model=model, message=user_message)
-
-    # Step 4: Log cost
-    log_usage(tier=tier, model=model, tokens=response.usage)
-
-    return response
-\`\`\`
+Parameterise this — update in one place when model availability changes.
 
 ---
 
-## Fallback Chain
+## 2. Classifier Prompt
 
-If the routed model fails or returns low-confidence output, escalate automatically:
+Classify the following user request.
+Output ONLY one word: SIMPLE, MEDIUM, COMPLEX, or FRONTIER.
 
-\`\`\`
-SIMPLE → MEDIUM → COMPLEX → FRONTIER
+SIMPLE   — Yes/no, single fact, basic classification, greeting
+MEDIUM   — Summarise, extract, fill template, basic writing
+COMPLEX  — Multi-step reasoning, code, long-form writing, analysis
+FRONTIER — Deep research, autonomous tasks, scientific reasoning
 
-Escalate when:
-- Model output contains "I'm not sure" / "I don't know" + high stakes task
-- Output validation fails (e.g., expected JSON but got prose)
-- Latency timeout exceeded
-\`\`\`
+User request: {message}
+
+Classification:
+
+Run this on GPT-4o-mini or Claude Haiku. Cost: ~$0.00002/classification.
+
+---
+
+## 3. System Prompts by Tier
+
+SYSTEM_PROMPTS = {
+    "SIMPLE": (
+        "You are a helpful assistant. Answer questions directly and briefly. "
+        "For yes/no questions, answer yes or no first."
+    ),
+    "MEDIUM": (
+        "You are a helpful assistant. Provide clear, well-structured answers. "
+        "Use bullet points for lists. Keep responses focused."
+    ),
+    "COMPLEX": (
+        "You are an expert assistant. Analyse questions carefully. "
+        "Structure your response with reasoning, then conclusion. "
+        "Enumerate trade-offs clearly."
+    ),
+    "FRONTIER": (
+        "You are an expert research assistant. Approach problems methodically: "
+        "clarify assumptions, break down the problem, reason step by step, "
+        "consider edge cases, synthesise a nuanced answer."
+    ),
+}
 
 ---
 
-## Tracking Costs with OpenRouter
+## 4. Max Tokens by Tier
 
-OpenRouter returns cost per request in the response. Track it:
-
-\`\`\`python
-# OpenRouter includes this in the response body:
-# { "usage": { "prompt_tokens": 142, "completion_tokens": 88, "total_cost": 0.000230 } }
-
-total_cost_usd = response["usage"]["total_cost"]
-log(f"Request routed to {model}: ${total_cost_usd:.6f}")
-\`\`\`
-
-See the full OpenRouter guide: https://ai.quantummerlin.com/articles/14-openrouter-guide.html
+MAX_TOKENS_BY_TIER = {
+    "SIMPLE":   256,
+    "MEDIUM":   1024,
+    "COMPLEX":  4096,
+    "FRONTIER": 16384,
+}
 
 ---
+
+## 5. Hybrid Rule Classifier (Zero-cost fast path)
+
+import re
+
+SIMPLE_PATTERNS = [
+    r"\\b(what is|what are|who is|when did|yes or no|true or false)\\b",
+    r"\\b(define|meaning of|how do you spell)\\b",
+]
+FRONTIER_PATTERNS = [
+    r"\\b(research|synthesise|autonomous|multi-step|write a comprehensive)\\b",
+]
+
+def rule_classify(text: str) -> str:
+    t = text.lower()
+    if any(re.search(p, t) for p in FRONTIER_PATTERNS):
+        return "FRONTIER"
+    if len(text.split()) < 15 and any(re.search(p, t) for p in SIMPLE_PATTERNS):
+        return "SIMPLE"
+    if len(text.split()) > 200:
+        return "COMPLEX"
+    return "MEDIUM"
+
+def classify_request(text: str) -> str:
+    rule_result = rule_classify(text)
+    if rule_result in ("SIMPLE", "FRONTIER"):
+        return rule_result        # High-confidence extremes
+    return llm_classify(text)    # Ambiguous -> LLM classifier
+
+---
+
+## 6. Cascade Escalation Logic
+
+ESCALATION_PATH = ["SIMPLE", "MEDIUM", "COMPLEX", "FRONTIER"]
+
+UNCERTAINTY_PHRASES = [
+    "i'm not sure", "i don't know", "i cannot", "i'm unable",
+]
+
+def cascade_route(router, messages, start_tier="SIMPLE", min_length=20):
+    path = ESCALATION_PATH[ESCALATION_PATH.index(start_tier):]
+    for tier in path:
+        result = router.route(messages, force_tier=tier)
+        if len(result.content.strip()) < min_length:
+            continue
+        if any(p in result.content.lower() for p in UNCERTAINTY_PHRASES):
+            continue
+        return result
+    return result  # Return best attempt
+
+---
+
+## 7. Per-Request Logging Schema
+
+{
+    "ts":             int,      # Unix timestamp
+    "feature":        str,      # "support_bot", "code_review", etc.
+    "tier":           str,      # "SIMPLE" | "MEDIUM" | "COMPLEX" | "FRONTIER"
+    "model":          str,      # exact model string used
+    "input_tokens":   int,
+    "output_tokens":  int,
+    "cost_usd":       float,    # from OpenRouter usage.cost
+    "latency_ms":     int,
+    "escalated":      bool,
+}
+
+---
+
+## 8. Key Metrics
+
+| Metric | Target |
+|--------|--------|
+| Tier 1 % of total requests | > 50% |
+| Escalation rate (Tier 1 -> 2+) | < 10% |
+| API error rate | < 0.5% |
+
+---
+
+## 9. Common Failure Checklist
+
+- [ ] Tier distribution: >50% hitting Tier 1?
+- [ ] Classifier tested against labelled sample (200+ requests)?
+- [ ] TIER_MODELS centralised — not hardcoded in multiple places?
+- [ ] API error fallback: catch exceptions, escalate to next tier?
+- [ ] Cost alert configured in OpenRouter dashboard?
+- [ ] Chain-of-thought added to Tier 3/4 prompts only?
+- [ ] max_tokens set per tier?
+- [ ] Escalation rate logged and monitored?
+
+---
+
+See the full guide: https://ai.quantummerlin.com/skills/model-routing.html
 
 *Downloaded from Aether Intel — https://ai.quantummerlin.com*
 `
       },
-
       'reddit-mining': {
         filename: 'reddit-intelligence-mining.md',
         content: `# Reddit Intelligence Mining

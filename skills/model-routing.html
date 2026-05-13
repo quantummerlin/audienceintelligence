@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cost-Optimised Model Routing | Aether Intel Skills</title>
+  <meta name="description" content="Route AI tasks to the cheapest model that can handle them. A complete guide to building a request classifier, cascade patterns, and cutting inference costs 60–80%." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/skills/model-routing.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://ai.quantummerlin.com/skills/model-routing.html" />
+  <meta property="og:title" content="Cost-Optimised Model Routing | Aether Intel Skills" />
+  <meta property="og:description" content="Route AI tasks to the cheapest model that can handle them. A complete guide to building a request classifier, cascade patterns, and cutting inference costs 60–80%." />
+  <meta property="og:site_name" content="Aether Intel" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VW4LGE7L1T');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    /* ── Article CSS variables ─────────────────────────── */
+    :root {
+      --skill-accent:       #2dd4bf;
+      --skill-accent-dim:   rgba(45,212,191,.12);
+      --skill-accent-glow:  0 0 24px rgba(45,212,191,.25);
+    }
+
+    /* ── Progress bar ──────────────────────────────────── */
+    #read-progress {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      height: 3px; width: 0;
+      background: linear-gradient(90deg, var(--skill-accent), #22d3ee);
+      transition: width .1s linear;
+      pointer-events: none;
+    }
+
+    /* ── Article layout ────────────────────────────────── */
+    .skill-article-wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Breadcrumb ────────────────────────────────────── */
+    .skill-breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      padding: 28px 0 0;
+      font-family: var(--font-display);
+      font-size: .72rem; font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .skill-breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .skill-breadcrumb a:hover { color: var(--skill-accent); }
+    .skill-breadcrumb svg { width:12px; height:12px; stroke: currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* ── Hero ──────────────────────────────────────────── */
+    .skill-hero { padding: 32px 0 36px; }
+    .skill-hero-badges {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap;
+    }
+    .skill-hero-badges .badge-tools {
+      background: rgba(45,212,191,.15);
+      border: 1px solid rgba(45,212,191,.35);
+      color: var(--skill-accent);
+      font-family: var(--font-display);
+      font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 4px;
+    }
+    .skill-hero-badges .diff-pill {
+      font-family: var(--font-display); font-size: .68rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 4px;
+      background: rgba(249,115,22,.15); border: 1px solid rgba(249,115,22,.3); color: #fb923c;
+    }
+    .skill-hero-badges .time-pill {
+      font-family: var(--font-display); font-size: .68rem; font-weight: 600;
+      letter-spacing: .06em; color: var(--text-muted);
+    }
+    .skill-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      font-weight: 900; line-height: 1.1; letter-spacing: -.02em;
+      margin: 0 0 16px;
+    }
+    .skill-hero h1 span {
+      background: linear-gradient(135deg, var(--skill-accent), #22d3ee);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .skill-hero-lead {
+      font-size: 1.1rem; line-height: 1.75; color: var(--text-secondary);
+      max-width: 680px; margin: 0 0 28px;
+    }
+    .skill-hero-meta {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+      padding-top: 20px; border-top: 1px solid var(--border);
+      font-size: .82rem; color: var(--text-muted);
+    }
+    .skill-hero-meta svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; margin-right:4px; }
+
+    /* ── TOC ───────────────────────────────────────────── */
+    .skill-toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--skill-accent);
+      border-radius: var(--radius-card);
+      padding: 22px 26px; margin: 0 0 48px;
+    }
+    .skill-toc-label {
+      font-family: var(--font-display); font-size: .72rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--skill-accent);
+      margin-bottom: 14px;
+    }
+    .skill-toc ol {
+      margin: 0; padding-left: 18px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px 32px;
+    }
+    @media (max-width: 600px) { .skill-toc ol { grid-template-columns: 1fr; } }
+    .skill-toc li { font-size: .88rem; line-height: 1.5; }
+    .skill-toc a { color: var(--text-secondary); text-decoration: none; }
+    .skill-toc a:hover { color: var(--skill-accent); }
+
+    /* ── Section headings ──────────────────────────────── */
+    .skill-section { margin-bottom: 56px; }
+    .skill-section h2 {
+      font-family: var(--font-display); font-size: 1.35rem; font-weight: 800;
+      letter-spacing: -.01em; line-height: 1.2;
+      margin: 0 0 6px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .skill-section h2 .section-num {
+      font-family: var(--font-display); font-size: .72rem; font-weight: 700;
+      letter-spacing: .08em; color: var(--skill-accent);
+      background: var(--skill-accent-dim); border: 1px solid rgba(45,212,191,.25);
+      border-radius: 4px; padding: 2px 8px;
+    }
+    .skill-section h3 {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      letter-spacing: -.005em; color: var(--text-primary);
+      margin: 28px 0 12px;
+    }
+    .skill-section p { font-size: .95rem; line-height: 1.8; color: var(--text-secondary); margin: 0 0 16px; }
+    .skill-section ul, .skill-section ol { padding-left: 20px; margin: 0 0 16px; }
+    .skill-section li { font-size: .92rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 6px; }
+    .skill-section strong { color: var(--text-primary); }
+
+    /* ── Callout boxes ─────────────────────────────────── */
+    .callout {
+      border-radius: var(--radius-card);
+      padding: 16px 20px; margin: 24px 0;
+      font-size: .9rem; line-height: 1.7;
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .callout-body { flex: 1; color: var(--text-secondary); }
+    .callout-body strong { color: var(--text-primary); }
+    .callout.info    { background: rgba(45,212,191,.07); border: 1px solid rgba(45,212,191,.2); }
+    .callout.warning { background: rgba(251,191,36,.07); border: 1px solid rgba(251,191,36,.2); }
+    .callout.danger  { background: rgba(248,113,113,.07); border: 1px solid rgba(248,113,113,.2); }
+    .callout.tip     { background: rgba(167,139,250,.07); border: 1px solid rgba(167,139,250,.2); }
+
+    /* ── Code blocks ───────────────────────────────────── */
+    .code-block {
+      position: relative; margin: 24px 0;
+      background: #0d1117; border: 1px solid #30363d;
+      border-radius: 10px; overflow: hidden;
+    }
+    .code-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; background: #161b22; border-bottom: 1px solid #30363d;
+    }
+    .code-lang {
+      font-family: var(--font-display); font-size: .68rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent);
+    }
+    .copy-btn {
+      background: none; border: 1px solid #30363d; border-radius: 5px;
+      color: #8b949e; font-family: var(--font-display); font-size: .65rem;
+      font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: 3px 10px; cursor: pointer; transition: all .15s;
+    }
+    .copy-btn:hover { border-color: var(--skill-accent); color: var(--skill-accent); }
+    .copy-btn.copied { border-color: #3fb950; color: #3fb950; }
+    .code-block pre {
+      margin: 0; padding: 18px 20px; overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace; font-size: .82rem; line-height: 1.65;
+      color: #e6edf3;
+    }
+    .code-block pre .c  { color: #8b949e; font-style: italic; }  /* comment */
+    .code-block pre .k  { color: #ff7b72; }                       /* keyword */
+    .code-block pre .s  { color: #a5d6ff; }                       /* string */
+    .code-block pre .n  { color: #79c0ff; }                       /* name/var */
+    .code-block pre .nb { color: #ffa657; }                       /* built-in */
+    .code-block pre .mi { color: #79c0ff; }                       /* number */
+    .code-block pre .kw { color: #2dd4bf; }                       /* accent keyword */
+
+    /* ── Comparison table ──────────────────────────────── */
+    .compare-table { overflow-x: auto; margin: 24px 0; }
+    .compare-table table {
+      width: 100%; border-collapse: collapse;
+      font-size: .88rem; line-height: 1.5;
+    }
+    .compare-table th {
+      font-family: var(--font-display); font-size: .7rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent);
+      padding: 10px 14px; border-bottom: 2px solid rgba(45,212,191,.3);
+      background: rgba(45,212,191,.05); text-align: left; white-space: nowrap;
+    }
+    .compare-table td {
+      padding: 10px 14px; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); vertical-align: top;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover td { background: rgba(45,212,191,.03); }
+    .compare-table td strong { color: var(--text-primary); }
+    .compare-table .tier-1 { color: #4ade80; }
+    .compare-table .tier-2 { color: #facc15; }
+    .compare-table .tier-3 { color: #fb923c; }
+    .compare-table .tier-4 { color: #f87171; }
+
+    /* ── Tier cards ────────────────────────────────────── */
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 14px; margin: 24px 0;
+    }
+    .tier-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 18px 20px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .tier-card-num {
+      font-family: var(--font-display); font-size: .7rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px;
+    }
+    .tier-card h4 {
+      font-family: var(--font-display); font-size: .92rem; font-weight: 700;
+      margin: 0; letter-spacing: -.005em;
+    }
+    .tier-card p { font-size: .82rem; line-height: 1.55; color: var(--text-muted); margin: 0; }
+    .tier-card .tier-examples {
+      font-size: .78rem; color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace; line-height: 1.6;
+    }
+    .tier-card .tier-cost {
+      font-family: var(--font-display); font-size: .78rem; font-weight: 700;
+      margin-top: 4px;
+    }
+    .tier-1-card { border-top: 3px solid #4ade80; }
+    .tier-1-card .tier-card-num { color: #4ade80; }
+    .tier-1-card .tier-cost { color: #4ade80; }
+    .tier-2-card { border-top: 3px solid #facc15; }
+    .tier-2-card .tier-card-num { color: #facc15; }
+    .tier-2-card .tier-cost { color: #facc15; }
+    .tier-3-card { border-top: 3px solid #fb923c; }
+    .tier-3-card .tier-card-num { color: #fb923c; }
+    .tier-3-card .tier-cost { color: #fb923c; }
+    .tier-4-card { border-top: 3px solid #f87171; }
+    .tier-4-card .tier-card-num { color: #f87171; }
+    .tier-4-card .tier-cost { color: #f87171; }
+
+    /* ── Step boxes ────────────────────────────────────── */
+    .step-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px 22px; margin: 16px 0;
+      display: flex; gap: 18px; align-items: flex-start;
+    }
+    .step-num {
+      font-family: var(--font-display); font-size: .8rem; font-weight: 900;
+      color: var(--skill-accent); background: var(--skill-accent-dim);
+      border: 1px solid rgba(45,212,191,.25);
+      border-radius: 6px; padding: 4px 10px;
+      flex-shrink: 0; margin-top: 1px; letter-spacing: .06em;
+    }
+    .step-content { flex: 1; }
+    .step-content h4 {
+      font-family: var(--font-display); font-size: .9rem; font-weight: 700;
+      margin: 0 0 6px; letter-spacing: -.005em;
+    }
+    .step-content p { font-size: .88rem; line-height: 1.65; color: var(--text-secondary); margin: 0; }
+    .step-content code {
+      font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+      background: rgba(45,212,191,.1); color: var(--skill-accent);
+      padding: 1px 5px; border-radius: 3px;
+    }
+
+    /* ── Flow diagram ──────────────────────────────────── */
+    .flow-diagram {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 28px 24px; margin: 24px 0;
+      overflow-x: auto;
+    }
+    .flow-row {
+      display: flex; align-items: center; gap: 0; flex-wrap: nowrap;
+      justify-content: center; min-width: max-content;
+    }
+    .flow-node {
+      background: var(--bg-deep, #0a0a14);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 18px; text-align: center; min-width: 120px;
+    }
+    .flow-node-label {
+      font-family: var(--font-display); font-size: .68rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px;
+    }
+    .flow-node-val {
+      font-size: .8rem; color: var(--text-muted); line-height: 1.4;
+    }
+    .flow-arrow {
+      font-size: 1.2rem; color: var(--text-muted);
+      padding: 0 6px; flex-shrink: 0;
+    }
+    .flow-diamond {
+      background: rgba(45,212,191,.08); border: 2px solid rgba(45,212,191,.4);
+      border-radius: 8px; padding: 14px 20px; text-align: center;
+      font-family: var(--font-display); font-size: .8rem; font-weight: 700;
+      color: var(--skill-accent); min-width: 130px;
+    }
+    .flow-label-row {
+      display: flex; justify-content: center; align-items: flex-start;
+      gap: 12px; margin-top: 16px; flex-wrap: wrap;
+    }
+    .flow-legend {
+      display: flex; align-items: center; gap: 8px;
+      font-size: .78rem; color: var(--text-muted);
+    }
+    .flow-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+    /* ── Savings callout ───────────────────────────────── */
+    .savings-banner {
+      background: linear-gradient(135deg, rgba(45,212,191,.12), rgba(34,211,238,.06));
+      border: 1px solid rgba(45,212,191,.3);
+      border-radius: 12px; padding: 24px 28px; margin: 28px 0;
+      display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    }
+    .savings-stat {
+      text-align: center; flex: 1; min-width: 100px;
+    }
+    .savings-stat .stat-val {
+      font-family: var(--font-display); font-size: 2rem; font-weight: 900;
+      color: var(--skill-accent); line-height: 1;
+    }
+    .savings-stat .stat-label {
+      font-family: var(--font-display); font-size: .68rem; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--text-muted); margin-top: 4px;
+    }
+    .savings-divider { width:1px; height:48px; background: rgba(45,212,191,.2); }
+    @media (max-width: 500px) { .savings-divider { display:none; } }
+
+    /* ── Failure mode cards ────────────────────────────── */
+    .failure-grid { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .failure-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid #f87171; border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+    }
+    .failure-card .fail { font-size: .88rem; color: #fca5a5; margin-bottom: 6px; }
+    .failure-card .fix  { font-size: .88rem; color: #86efac; }
+    .failure-card strong { font-family: var(--font-display); font-size: .78rem; font-weight: 700; letter-spacing: .04em; }
+
+    /* ── Download CTA ──────────────────────────────────── */
+    .download-cta {
+      background: linear-gradient(135deg, rgba(45,212,191,.1), rgba(34,211,238,.05));
+      border: 1px solid rgba(45,212,191,.3);
+      border-radius: var(--radius-card); padding: 36px 36px 32px; text-align: center;
+      margin: 56px 0 48px;
+    }
+    .download-cta h2 {
+      font-family: var(--font-display); font-size: 1.4rem; font-weight: 900;
+      margin: 0 0 10px; letter-spacing: -.01em;
+    }
+    .download-cta p { color: var(--text-secondary); font-size: .95rem; margin: 0 0 24px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .download-cta-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .btn-download-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--skill-accent); color: #000;
+      font-family: var(--font-display); font-size: .8rem; font-weight: 800;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .btn-download-primary:hover { opacity: .88; }
+    .btn-download-primary svg { width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+    .btn-back-skills {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--text-secondary);
+      font-family: var(--font-display); font-size: .8rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 12px 24px; border-radius: 8px;
+      border: 1px solid var(--border); cursor: pointer;
+      text-decoration: none; transition: all .15s;
+    }
+    .btn-back-skills:hover { border-color: var(--border-bright); color: var(--text-primary); }
+
+    /* ── Related skills ────────────────────────────────── */
+    .related-skills-section h2 {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+    .related-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px;
+    }
+    .related-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 18px 20px; text-decoration: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .related-card:hover {
+      border-color: var(--border-bright); box-shadow: var(--skill-accent-glow);
+    }
+    .related-card-tag {
+      font-family: var(--font-display); font-size: .65rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent);
+      margin-bottom: 8px;
+    }
+    .related-card h4 {
+      font-family: var(--font-display); font-size: .88rem; font-weight: 700;
+      color: var(--text-primary); margin: 0 0 6px;
+    }
+    .related-card p { font-size: .8rem; color: var(--text-muted); line-height: 1.5; margin: 0; }
+  </style>
+</head>
+<body>
+<div id="read-progress"></div>
+
+<!-- ── Nav ────────────────────────────────────────────── -->
+<nav class="site-nav" id="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>Aether</span><span class="logo-intel">Intel</span>
+    </a>
+    <div class="nav-links">
+      <a href="/index.html">News</a>
+      <a href="/skills.html" class="nav-active">Skills</a>
+      <a href="/tools.html">Tools</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Main ───────────────────────────────────────────── -->
+<main>
+  <div class="skill-article-wrap">
+
+    <!-- Breadcrumb -->
+    <nav class="skill-breadcrumb">
+      <a href="/skills.html">Skills Library</a>
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>Cost-Optimised Model Routing</span>
+    </nav>
+
+    <!-- Hero -->
+    <header class="skill-hero">
+      <div class="skill-hero-badges">
+        <span class="badge-tools">Tools</span>
+        <span class="diff-pill">Advanced</span>
+        <span class="time-pill">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ~1 hour to implement
+        </span>
+      </div>
+      <h1>Cost-Optimised <span>Model Routing</span></h1>
+      <p class="skill-hero-lead">You don't need GPT-4o to answer a yes/no question. Smart routing classifies every incoming request, then sends it to the cheapest model that can handle it well — cutting inference costs 60–80% without degrading output quality.</p>
+      <div class="skill-hero-meta">
+        <span><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Aether Intel Team</span>
+        <span><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> May 2025</span>
+        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 18 min read</span>
+      </div>
+    </header>
+
+    <!-- TOC -->
+    <nav class="skill-toc">
+      <div class="skill-toc-label">In this guide</div>
+      <ol>
+        <li><a href="#why-routing">Why Model Routing Matters</a></li>
+        <li><a href="#tiers">The Four-Tier Model Landscape</a></li>
+        <li><a href="#classification">Request Classification</a></li>
+        <li><a href="#architecture">Router Architecture</a></li>
+        <li><a href="#implementation">Implementation: Python Router</a></li>
+        <li><a href="#cascade">Cascade &amp; Fallback Patterns</a></li>
+        <li><a href="#latency">Latency vs Cost Trade-offs</a></li>
+        <li><a href="#prompt-adaptation">Prompt Adaptation by Tier</a></li>
+        <li><a href="#observability">Tracking &amp; Observability</a></li>
+        <li><a href="#failures">Common Failure Modes</a></li>
+      </ol>
+    </nav>
+
+    <!-- ── 1. Why Routing Matters ─────────────────────── -->
+    <section class="skill-section" id="why-routing">
+      <h2><span class="section-num">01</span> Why Model Routing Matters</h2>
+
+      <p>Most AI applications send every request to the same model — usually the most capable one available. That's the path of least resistance, but it's expensive at scale.</p>
+
+      <p>Consider a customer support bot handling 50,000 queries per day. Most of those queries are routine: "What's my order status?", "What are your hours?", "How do I reset my password?" These don't need GPT-4o or Claude Sonnet. A GPT-4o-mini or Gemini Flash could handle them just as well at a fraction of the cost.</p>
+
+      <div class="savings-banner">
+        <div class="savings-stat">
+          <div class="stat-val">60–80%</div>
+          <div class="stat-label">Cost reduction</div>
+        </div>
+        <div class="savings-divider"></div>
+        <div class="savings-stat">
+          <div class="stat-val">2–5×</div>
+          <div class="stat-label">Latency improvement on Tier 1</div>
+        </div>
+        <div class="savings-divider"></div>
+        <div class="savings-stat">
+          <div class="stat-val">&lt;5%</div>
+          <div class="stat-label">Quality degradation on routed tasks</div>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body"><strong>The key insight:</strong> Model routing doesn't compromise quality — it matches <em>task requirements</em> to <em>model capabilities</em>. You only pay for the extra capability when you actually need it.</div>
+      </div>
+
+      <h3>When You Don't Need It</h3>
+      <p>Routing adds complexity. If your application is:</p>
+      <ul>
+        <li>A one-person tool with low request volume (fewer than ~500 requests/day)</li>
+        <li>A use case where every task genuinely requires frontier-level reasoning</li>
+        <li>A prototype where latency/cost aren't yet constraints</li>
+      </ul>
+      <p>… then start simple. Add a router when cost becomes a real concern or when task types clearly vary in complexity.</p>
+    </section>
+
+    <!-- ── 2. The Four-Tier Landscape ─────────────────── -->
+    <section class="skill-section" id="tiers">
+      <h2><span class="section-num">02</span> The Four-Tier Model Landscape</h2>
+
+      <p>Think of models as four tiers, each one roughly an order of magnitude more expensive than the tier below. The router's job is to identify the <em>lowest tier</em> that can handle a given request reliably.</p>
+
+      <div class="tier-grid">
+        <div class="tier-card tier-1-card">
+          <div class="tier-card-num">TIER 1 — FAST</div>
+          <h4>Cheap &amp; Quick</h4>
+          <div class="tier-examples">
+            GPT-4o-mini<br>
+            Gemini 2.0 Flash<br>
+            Llama 3.1 8B<br>
+            Claude Haiku 3.5
+          </div>
+          <div class="tier-cost">~$0.10–0.40 / M tokens</div>
+        </div>
+        <div class="tier-card tier-2-card">
+          <div class="tier-card-num">TIER 2 — BALANCED</div>
+          <h4>Mid-Range</h4>
+          <div class="tier-examples">
+            Claude Sonnet 4<br>
+            GPT-4o<br>
+            Gemini 2.5 Pro<br>
+            Mistral Medium
+          </div>
+          <div class="tier-cost">~$2–8 / M tokens</div>
+        </div>
+        <div class="tier-card tier-3-card">
+          <div class="tier-card-num">TIER 3 — SMART</div>
+          <h4>High Capability</h4>
+          <div class="tier-examples">
+            Claude Sonnet 4.5<br>
+            GPT-4.5<br>
+            Gemini 2.5 Pro Exp<br>
+            Llama 3.3 70B
+          </div>
+          <div class="tier-cost">~$10–20 / M tokens</div>
+        </div>
+        <div class="tier-card tier-4-card">
+          <div class="tier-card-num">TIER 4 — FRONTIER</div>
+          <h4>Max Reasoning</h4>
+          <div class="tier-examples">
+            Claude Opus 4<br>
+            o3<br>
+            Gemini 2.5 Pro (full)<br>
+            GPT-4.1
+          </div>
+          <div class="tier-cost">~$30–150 / M tokens</div>
+        </div>
+      </div>
+
+      <div class="compare-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Task Type</th>
+              <th>Tier</th>
+              <th>Example Models</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Yes/no questions, fact lookup, simple classification</td>
+              <td><strong class="tier-1">Tier 1</strong></td>
+              <td>GPT-4o-mini, Haiku, Flash</td>
+              <td>Deterministic, no reasoning chain needed</td>
+            </tr>
+            <tr>
+              <td>Summarisation, data extraction, template filling</td>
+              <td><strong class="tier-1">Tier 1–2</strong></td>
+              <td>Haiku, GPT-4o-mini, Mistral Small</td>
+              <td>Pattern-based, minimal judgment</td>
+            </tr>
+            <tr>
+              <td>Writing, analysis, structured output with nuance</td>
+              <td><strong class="tier-2">Tier 2</strong></td>
+              <td>Sonnet, GPT-4o, Gemini 2.5 Pro</td>
+              <td>Requires coherence, style, contextual reasoning</td>
+            </tr>
+            <tr>
+              <td>Complex code review, legal analysis, multi-step logic</td>
+              <td><strong class="tier-3">Tier 3</strong></td>
+              <td>Sonnet 4.5, GPT-4.5</td>
+              <td>Needs deep reasoning, attention to detail</td>
+            </tr>
+            <tr>
+              <td>Research synthesis, autonomous agents, scientific reasoning</td>
+              <td><strong class="tier-4">Tier 4</strong></td>
+              <td>Opus, o3</td>
+              <td>Multi-step, novel problem solving, high stakes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body"><strong>Model availability changes fast.</strong> Specific model names go in and out of availability and pricing. The tier structure stays stable — the exact models in each tier will shift. Parameterise your tier-to-model mapping so you can update it without rewriting business logic.</div>
+      </div>
+    </section>
+
+    <!-- ── 3. Request Classification ──────────────────── -->
+    <section class="skill-section" id="classification">
+      <h2><span class="section-num">03</span> Request Classification</h2>
+
+      <p>The router needs to decide which tier a request belongs to. There are three main approaches — each with different accuracy/cost profiles.</p>
+
+      <h3>Approach 1: LLM-based Classifier</h3>
+      <p>Use a cheap, fast model (Tier 1) as the router itself. This is the most accurate approach and the most widely used.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Classifier Prompt</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>Classify the following user request by complexity.
+Output ONLY one word: SIMPLE, MEDIUM, COMPLEX, or FRONTIER.
+
+SIMPLE  — Yes/no, single fact lookup, basic classification, greeting
+MEDIUM  — Summarise, extract, fill template, basic writing, FAQ answer
+COMPLEX — Multi-step reasoning, code generation, long-form writing, analysis
+FRONTIER — Deep research, autonomous task, scientific reasoning, adversarial
+
+User request: {user_message}
+
+Classification:</pre>
+      </div>
+
+      <p>This prompt is designed to run against <code>gpt-4o-mini</code> or <code>claude-haiku</code>. At ~150 input tokens, it costs ~$0.00002 per classification — essentially free even at high volume.</p>
+
+      <h3>Approach 2: Rule-based (Zero-cost)</h3>
+      <p>Use regex and heuristics. No model call needed. Lower accuracy but zero latency and zero cost.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>import re
+
+SIMPLE_PATTERNS = [
+    r"\b(what is|what are|who is|when did|yes or no|true or false)\b",
+    r"\b(define|meaning of|how do you spell)\b",
+]
+FRONTIER_PATTERNS = [
+    r"\b(research|synthesise|autonomous|multi-step|write a comprehensive)\b",
+    r"\b(analyze the entire|compare all|explain in depth)\b",
+]
+
+def rule_classify(text: str) -> str:
+    t = text.lower()
+    if any(re.search(p, t) for p in FRONTIER_PATTERNS):
+        return "FRONTIER"
+    if len(text.split()) < 15 and any(re.search(p, t) for p in SIMPLE_PATTERNS):
+        return "SIMPLE"
+    if len(text.split()) > 200:
+        return "COMPLEX"
+    return "MEDIUM"  # default</pre>
+      </div>
+
+      <h3>Approach 3: Embedding Similarity (Calibrated)</h3>
+      <p>Pre-label a set of example prompts by tier. At runtime, embed the new request and find the nearest example. Fast after one-time indexing, handles novel phrasings better than rules.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>from openai import OpenAI
+import numpy as np
+
+client = OpenAI()
+
+# Pre-computed: {label: [embedding_vectors]}
+TIER_CENTROIDS = load_tier_centroids()  # dict[str, np.ndarray]
+
+def embed(text: str) -> np.ndarray:
+    resp = client.embeddings.create(
+        model="text-embedding-3-small", input=text
+    )
+    return np.array(resp.data[0].embedding)
+
+def embedding_classify(text: str) -> str:
+    vec = embed(text)
+    scores = {
+        tier: float(np.dot(vec, centroid) /
+               (np.linalg.norm(vec) * np.linalg.norm(centroid)))
+        for tier, centroid in TIER_CENTROIDS.items()
+    }
+    return max(scores, key=scores.get)</pre>
+      </div>
+
+      <h3>Hybrid: Rules first, LLM fallback</h3>
+      <p>The pragmatic approach — use rules for obvious cases (no latency cost), fall back to LLM classification for ambiguous requests.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>def classify_request(text: str) -> str:
+    # Fast path: rule-based
+    rule_result = rule_classify(text)
+    if rule_result in ("SIMPLE", "FRONTIER"):
+        # High-confidence extremes — trust the rule
+        return rule_result
+
+    # Ambiguous middle ground → LLM classifier
+    return llm_classify(text)  # uses gpt-4o-mini</pre>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">🎯</span>
+        <div class="callout-body"><strong>Calibration matters.</strong> Run your classifier against a labelled test set of at least 200 real requests from your application. Aim for &gt;90% accuracy on SIMPLE and FRONTIER tiers — those are the high-value routing decisions. MEDIUM/COMPLEX misrouting is less costly.</div>
+      </div>
+    </section>
+
+    <!-- ── 4. Router Architecture ──────────────────────── -->
+    <section class="skill-section" id="architecture">
+      <h2><span class="section-num">04</span> Router Architecture</h2>
+
+      <p>The router sits between your application and the LLM APIs. Every request passes through it before reaching a model.</p>
+
+      <div class="flow-diagram">
+        <div class="flow-row">
+          <div class="flow-node">
+            <div class="flow-node-label" style="color:#2dd4bf">User Request</div>
+            <div class="flow-node-val">raw prompt</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-diamond">Classify<br>Complexity</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">
+            <div class="flow-node-label" style="color:#2dd4bf">Select Model</div>
+            <div class="flow-node-val">tier → model</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">
+            <div class="flow-node-label" style="color:#2dd4bf">Generate</div>
+            <div class="flow-node-val">+ log cost</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">
+            <div class="flow-node-label" style="color:#4ade80">Validate</div>
+            <div class="flow-node-val">quality check</div>
+          </div>
+        </div>
+        <div class="flow-label-row">
+          <div class="flow-legend"><div class="flow-dot" style="background:#2dd4bf"></div> Core routing path</div>
+          <div class="flow-legend"><div class="flow-dot" style="background:#4ade80"></div> Optional: quality gate before escalation</div>
+        </div>
+      </div>
+
+      <p>The router has four responsibilities:</p>
+
+      <div class="step-box">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h4>Classify</h4>
+          <p>Determine the complexity tier for the incoming request using your chosen classification strategy (rules, LLM, or hybrid). This happens before any model call.</p>
+        </div>
+      </div>
+      <div class="step-box">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h4>Select</h4>
+          <p>Map tier → model using a configurable <code>TIER_MODELS</code> dict. This keeps model selection decoupled from business logic — swap models without touching routing code.</p>
+        </div>
+      </div>
+      <div class="step-box">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h4>Generate &amp; Log</h4>
+          <p>Call the selected model via OpenRouter (or direct API). Capture <code>tier</code>, <code>model</code>, <code>prompt_tokens</code>, <code>completion_tokens</code>, and <code>cost_usd</code> for every request.</p>
+        </div>
+      </div>
+      <div class="step-box">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <h4>Validate (optional)</h4>
+          <p>Check the response before returning it. If validation fails (malformed JSON, too short, policy violation), escalate to the next tier. This is the cascade pattern — covered in section 6.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 5. Implementation ───────────────────────────── -->
+    <section class="skill-section" id="implementation">
+      <h2><span class="section-num">05</span> Implementation: Python Router</h2>
+
+      <p>Here's a full, production-ready router class built on OpenRouter. OpenRouter is the simplest way to access multiple model providers through a single API — and it returns per-request cost in the response body.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python — router.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>import os, time, json, logging
+from dataclasses import dataclass, field
+from typing import Optional
+from openai import OpenAI
+
+logger = logging.getLogger(__name__)
+
+# ── Model tier configuration ──────────────────────────────
+TIER_MODELS: dict[str, str] = {
+    "SIMPLE":   "openai/gpt-4o-mini",
+    "MEDIUM":   "anthropic/claude-haiku-3-5",
+    "COMPLEX":  "anthropic/claude-sonnet-4",
+    "FRONTIER": "anthropic/claude-opus-4",
+}
+
+CLASSIFIER_MODEL = "openai/gpt-4o-mini"
+
+CLASSIFIER_PROMPT = """Classify the following user request.
+Output ONLY one word: SIMPLE, MEDIUM, COMPLEX, or FRONTIER.
+
+SIMPLE   — Yes/no, single fact, basic classification, greeting
+MEDIUM   — Summarise, extract, fill template, basic writing
+COMPLEX  — Multi-step reasoning, code, long-form writing, analysis
+FRONTIER — Deep research, autonomous tasks, scientific reasoning
+
+User request: {message}
+
+Classification:"""
+
+
+@dataclass
+class RouterResult:
+    content:   str
+    tier:      str
+    model:     str
+    input_tokens:  int  = 0
+    output_tokens: int  = 0
+    cost_usd:      float = 0.0
+    latency_ms:    int  = 0
+    escalated:     bool = False
+
+
+class ModelRouter:
+    def __init__(self, api_key: Optional[str] = None):
+        self.client = OpenAI(
+            api_key=api_key or os.environ["OPENROUTER_API_KEY"],
+            base_url="https://openrouter.ai/api/v1",
+        )
+
+    # ── Classification ─────────────────────────────────────
+    def classify(self, message: str) -> str:
+        prompt = CLASSIFIER_PROMPT.format(message=message[:800])
+        resp = self.client.chat.completions.create(
+            model=CLASSIFIER_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=5,
+            temperature=0,
+        )
+        tier = resp.choices[0].message.content.strip().upper()
+        return tier if tier in TIER_MODELS else "MEDIUM"
+
+    # ── Core request ───────────────────────────────────────
+    def _call_model(
+        self,
+        model: str,
+        messages: list[dict],
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+    ) -> tuple[str, dict]:
+        start = time.time()
+        resp = self.client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+        latency = int((time.time() - start) * 1000)
+        usage = resp.usage
+        # OpenRouter returns cost in usage.cost (USD)
+        cost = getattr(usage, "cost", 0.0) or 0.0
+        return resp.choices[0].message.content, {
+            "input_tokens":  usage.prompt_tokens,
+            "output_tokens": usage.completion_tokens,
+            "cost_usd":      float(cost),
+            "latency_ms":    latency,
+        }
+
+    # ── Public route() method ──────────────────────────────
+    def route(
+        self,
+        messages: list[dict],
+        system_prompt: str = "",
+        temperature: float = 0.7,
+        force_tier: Optional[str] = None,
+    ) -> RouterResult:
+        user_message = next(
+            (m["content"] for m in reversed(messages) if m["role"] == "user"), ""
+        )
+        tier = force_tier or self.classify(user_message)
+        model = TIER_MODELS[tier]
+
+        full_messages = messages
+        if system_prompt:
+            full_messages = [{"role": "system", "content": system_prompt}] + messages
+
+        content, meta = self._call_model(model, full_messages, temperature)
+
+        logger.info(
+            "routed",
+            extra={"tier": tier, "model": model, "cost_usd": meta["cost_usd"]}
+        )
+
+        return RouterResult(content=content, tier=tier, model=model, **meta)</pre>
+      </div>
+
+      <h3>Usage</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>router = ModelRouter()
+
+result = router.route(
+    messages=[{"role": "user", "content": "What's the capital of France?"}],
+    system_prompt="You are a helpful assistant."
+)
+
+print(result.content)    # "Paris"
+print(result.tier)       # "SIMPLE"
+print(result.model)      # "openai/gpt-4o-mini"
+print(f"${result.cost_usd:.6f}")  # "$0.000012"</pre>
+      </div>
+    </section>
+
+    <!-- ── 6. Cascade & Fallback ───────────────────────── -->
+    <section class="skill-section" id="cascade">
+      <h2><span class="section-num">06</span> Cascade &amp; Fallback Patterns</h2>
+
+      <p>A cascade router tries the cheapest model first. If the response fails a quality check, it automatically escalates to the next tier. This is the most cost-effective pattern when you can define a quality signal.</p>
+
+      <h3>When to escalate</h3>
+      <ul>
+        <li>Response doesn't parse as expected format (e.g., expected JSON but got prose)</li>
+        <li>Response is too short (below a minimum character threshold)</li>
+        <li>Response contains refusal or uncertainty markers ("I'm not sure", "I cannot")</li>
+        <li>Response fails a downstream validation rule</li>
+        <li>Timeout exceeded (model too slow for the SLA)</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python — cascade_router.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>import json
+
+ESCALATION_PATH = ["SIMPLE", "MEDIUM", "COMPLEX", "FRONTIER"]
+
+UNCERTAINTY_PHRASES = [
+    "i'm not sure", "i don't know", "i cannot", "i'm unable",
+    "i don't have enough", "as an ai",
+]
+
+def response_is_uncertain(text: str) -> bool:
+    lower = text.lower()
+    return any(phrase in lower for phrase in UNCERTAINTY_PHRASES)
+
+def requires_json(task_type: str) -> bool:
+    return task_type in ("extraction", "classification", "structured_output")
+
+
+class CascadeRouter(ModelRouter):
+    def cascade(
+        self,
+        messages: list[dict],
+        task_type: str = "general",
+        start_tier: str = "SIMPLE",
+        min_length: int = 20,
+    ) -> RouterResult:
+        path = ESCALATION_PATH[ESCALATION_PATH.index(start_tier):]
+        last_result = None
+
+        for tier in path:
+            result = self.route(messages, force_tier=tier)
+            result.escalated = (tier != start_tier)
+
+            # Quality checks
+            if len(result.content.strip()) < min_length:
+                continue  # Too short → escalate
+
+            if response_is_uncertain(result.content):
+                continue  # Uncertain → escalate
+
+            if requires_json(task_type):
+                try:
+                    json.loads(result.content)
+                except json.JSONDecodeError:
+                    continue  # Bad JSON → escalate
+
+            return result  # Passed all checks
+
+        return last_result or result  # Return best attempt</pre>
+      </div>
+
+      <div class="callout warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body"><strong>Cascade cost accounting:</strong> Every escalation step incurs additional cost. Track your escalation rate per tier — if more than 15% of SIMPLE requests escalate, your classifier needs retuning, not a cheaper starting tier.</div>
+      </div>
+
+      <h3>Parallel Routing (Confidence-Based)</h3>
+      <p>An alternative pattern: run Tier 1 and Tier 2 in parallel. If they agree on the answer (measured by embedding similarity), return the Tier 1 response. This eliminates cascade latency at the cost of always paying for two model calls.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>import asyncio
+import numpy as np
+
+async def parallel_route(router, messages, similarity_threshold=0.92):
+    # Run both tiers concurrently
+    simple_task  = asyncio.create_task(
+        asyncio.to_thread(router.route, messages, force_tier="SIMPLE")
+    )
+    complex_task = asyncio.create_task(
+        asyncio.to_thread(router.route, messages, force_tier="COMPLEX")
+    )
+    simple_result, complex_result = await asyncio.gather(simple_task, complex_task)
+
+    # Compare semantic similarity of responses
+    emb_simple  = embed(simple_result.content)
+    emb_complex = embed(complex_result.content)
+    similarity  = float(np.dot(emb_simple, emb_complex) /
+                        (np.linalg.norm(emb_simple) * np.linalg.norm(emb_complex)))
+
+    if similarity >= similarity_threshold:
+        return simple_result   # Agree → use cheaper
+    else:
+        return complex_result  # Disagree → trust the better model</pre>
+      </div>
+    </section>
+
+    <!-- ── 7. Latency vs Cost ──────────────────────────── -->
+    <section class="skill-section" id="latency">
+      <h2><span class="section-num">07</span> Latency vs Cost Trade-offs</h2>
+
+      <p>Lower tiers aren't just cheaper — they're also faster. Smaller models have fewer parameters to run inference through, which translates directly to lower time-to-first-token (TTFT) and faster generation throughput.</p>
+
+      <div class="compare-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Tier</th>
+              <th>TTFT (typical)</th>
+              <th>Tokens/sec</th>
+              <th>Input cost / M</th>
+              <th>Output cost / M</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>GPT-4o-mini</strong></td>
+              <td><strong class="tier-1">1</strong></td>
+              <td>~0.3s</td>
+              <td>~110</td>
+              <td>$0.15</td>
+              <td>$0.60</td>
+            </tr>
+            <tr>
+              <td><strong>Claude Haiku 3.5</strong></td>
+              <td><strong class="tier-1">1</strong></td>
+              <td>~0.4s</td>
+              <td>~120</td>
+              <td>$0.80</td>
+              <td>$4.00</td>
+            </tr>
+            <tr>
+              <td><strong>Claude Sonnet 4</strong></td>
+              <td><strong class="tier-2">2</strong></td>
+              <td>~0.8s</td>
+              <td>~85</td>
+              <td>$3.00</td>
+              <td>$15.00</td>
+            </tr>
+            <tr>
+              <td><strong>GPT-4o</strong></td>
+              <td><strong class="tier-2">2</strong></td>
+              <td>~0.8s</td>
+              <td>~80</td>
+              <td>$2.50</td>
+              <td>$10.00</td>
+            </tr>
+            <tr>
+              <td><strong>Gemini 2.5 Pro</strong></td>
+              <td><strong class="tier-3">3</strong></td>
+              <td>~1.2s</td>
+              <td>~60</td>
+              <td>$1.25</td>
+              <td>$10.00</td>
+            </tr>
+            <tr>
+              <td><strong>Claude Opus 4</strong></td>
+              <td><strong class="tier-4">4</strong></td>
+              <td>~2s</td>
+              <td>~40</td>
+              <td>$15.00</td>
+              <td>$75.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">⏱️</span>
+        <div class="callout-body"><strong>SLA-driven routing:</strong> For user-facing applications with a latency SLA (e.g., respond in under 2 seconds), use latency as a hard filter. If the only model that can handle a task is too slow for your SLA, consider streaming the response to the user while it generates.</div>
+      </div>
+
+      <h3>Streaming Latency</h3>
+      <p>Streaming response tokens as they're generated dramatically improves <em>perceived</em> latency — even when the model is slow. For user-facing apps, always stream. The user sees the first token in 0.3–0.8s regardless of total response length.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python — streaming</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>def stream_routed(router, messages, system_prompt=""):
+    tier = router.classify(messages[-1]["content"])
+    model = TIER_MODELS[tier]
+
+    full_messages = messages
+    if system_prompt:
+        full_messages = [{"role": "system", "content": system_prompt}] + messages
+
+    stream = router.client.chat.completions.create(
+        model=model,
+        messages=full_messages,
+        stream=True,
+    )
+    for chunk in stream:
+        delta = chunk.choices[0].delta
+        if delta.content:
+            yield delta.content  # Stream tokens to caller</pre>
+      </div>
+    </section>
+
+    <!-- ── 8. Prompt Adaptation ────────────────────────── -->
+    <section class="skill-section" id="prompt-adaptation">
+      <h2><span class="section-num">08</span> Prompt Adaptation by Tier</h2>
+
+      <p>A prompt optimised for GPT-4o may not work as well for a smaller model. Tier 1 models benefit from simpler, more directive prompts. Tier 4 models can handle nuanced, layered instructions that would confuse smaller models.</p>
+
+      <h3>Prompt tiers in practice</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python — tiered system prompts</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>SYSTEM_PROMPTS: dict[str, str] = {
+    "SIMPLE": (
+        "You are a helpful assistant. Answer questions directly and briefly. "
+        "For yes/no questions, answer yes or no first, then optionally explain."
+    ),
+    "MEDIUM": (
+        "You are a helpful assistant. Provide clear, well-structured answers. "
+        "Use bullet points for lists. Keep responses focused and concise."
+    ),
+    "COMPLEX": (
+        "You are an expert assistant. Analyse questions carefully before answering. "
+        "Structure your response with reasoning, then conclusion. "
+        "If there are trade-offs, enumerate them clearly."
+    ),
+    "FRONTIER": (
+        "You are an expert research assistant with deep domain knowledge. "
+        "Approach problems methodically: clarify assumptions, break down the problem, "
+        "reason step by step, consider edge cases, and synthesise a nuanced answer. "
+        "Cite your reasoning at each step."
+    ),
+}
+
+def route_with_adapted_prompt(router, user_message: str) -> RouterResult:
+    tier = router.classify(user_message)
+    system_prompt = SYSTEM_PROMPTS[tier]
+    return router.route(
+        messages=[{"role": "user", "content": user_message}],
+        system_prompt=system_prompt,
+        force_tier=tier,
+    )</pre>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">🎯</span>
+        <div class="callout-body"><strong>Chain-of-thought for Tier 3+.</strong> Adding "Think step by step" to your system prompt significantly improves Tier 3/4 output quality on reasoning tasks. Don't add it to Tier 1/2 — it wastes tokens and can confuse smaller models.</div>
+      </div>
+
+      <h3>Token budget by tier</h3>
+      <p>Set appropriate <code>max_tokens</code> per tier. Over-allocating tokens wastes money; under-allocating truncates responses.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>MAX_TOKENS_BY_TIER: dict[str, int] = {
+    "SIMPLE":   256,    # Short factual answers
+    "MEDIUM":   1024,   # Summaries, extractions
+    "COMPLEX":  4096,   # Analysis, long-form writing
+    "FRONTIER": 16384,  # Deep research, complex agents
+}</pre>
+      </div>
+    </section>
+
+    <!-- ── 9. Observability ────────────────────────────── -->
+    <section class="skill-section" id="observability">
+      <h2><span class="section-num">09</span> Tracking &amp; Observability</h2>
+
+      <p>Without logging, you're flying blind. You won't know which tiers are being used, whether your classifier is accurate, or how much each feature costs.</p>
+
+      <h3>What to log on every request</h3>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python — structured logging</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>import time, json, hashlib
+
+def log_request(result: RouterResult, user_message: str, feature: str):
+    record = {
+        "ts":             int(time.time()),
+        "feature":        feature,           # e.g. "support_bot", "code_review"
+        "msg_hash":       hashlib.sha256(user_message.encode()).hexdigest()[:12],
+        "tier":           result.tier,
+        "model":          result.model,
+        "input_tokens":   result.input_tokens,
+        "output_tokens":  result.output_tokens,
+        "cost_usd":       round(result.cost_usd, 8),
+        "latency_ms":     result.latency_ms,
+        "escalated":      result.escalated,
+    }
+    print(json.dumps(record))   # Pipe to your log aggregator (Datadog, Grafana, etc.)</pre>
+      </div>
+
+      <h3>Key metrics to track</h3>
+      <ul>
+        <li><strong>Cost by feature:</strong> Which endpoint is responsible for the most spend?</li>
+        <li><strong>Tier distribution:</strong> What % of requests hit each tier? (Should be &gt;50% Tier 1 for most support/Q&amp;A apps)</li>
+        <li><strong>Escalation rate:</strong> What % of Tier 1 requests escalate? (&lt;10% is good; &gt;20% = classifier problem)</li>
+        <li><strong>Latency p50/p95 by tier:</strong> Is your SLA being met?</li>
+        <li><strong>Cost per feature per day:</strong> Trend over time as usage grows</li>
+      </ul>
+
+      <h3>OpenRouter cost tracking</h3>
+      <p>OpenRouter returns actual cost in the response. No estimation needed — it's the actual billed amount.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python — OpenRouter cost extraction</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>resp = client.chat.completions.create(
+    model="openai/gpt-4o-mini",
+    messages=messages,
+)
+
+# OpenRouter includes cost in the usage object
+usage = resp.usage
+cost_usd = getattr(usage, "cost", None)
+
+if cost_usd is not None:
+    print(f"This request cost: ${float(cost_usd):.8f}")
+    # e.g. "This request cost: $0.00002340"
+
+# Alternatively, use the generation stats endpoint
+# GET https://openrouter.ai/api/v1/generation?id={generation_id}
+# Returns detailed cost breakdown, model used, and token counts</pre>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">📊</span>
+        <div class="callout-body"><strong>Set up a cost alert.</strong> Use OpenRouter's dashboard to set a daily spend limit. This prevents a classification bug or runaway loop from sending every request to Claude Opus and burning through your budget overnight.</div>
+      </div>
+    </section>
+
+    <!-- ── 10. Failure Modes ───────────────────────────── -->
+    <section class="skill-section" id="failures">
+      <h2><span class="section-num">10</span> Common Failure Modes</h2>
+
+      <div class="failure-grid">
+        <div class="failure-card">
+          <div class="fail">❌ <strong>Over-routing to expensive models</strong> — classifier is too conservative, sends most requests to Tier 3/4</div>
+          <div class="fix">✅ Audit tier distribution weekly. If &lt;40% of requests hit Tier 1, re-calibrate your classifier with more SIMPLE examples from your actual request logs.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>Under-routing (quality degradation)</strong> — Tier 1 handles tasks that genuinely need Tier 3, producing poor outputs</div>
+          <div class="fix">✅ Add a quality signal (output length, format validation, user thumbs-down) and track it by tier. Escalate systematically rather than one-off exceptions.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>Classification cost exceeds savings</strong> — LLM classifier uses a larger model than it needs to, or classifies every single request including trivial ones</div>
+          <div class="fix">✅ Use rules for the obvious extremes. Only invoke LLM classification for ambiguous middle-ground requests. Use gpt-4o-mini or Haiku — never Sonnet/GPT-4o as the classifier.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>Model name hardcoding</strong> — model strings scattered across codebase; when a model is deprecated you need to find and update dozens of references</div>
+          <div class="fix">✅ Always route through the <code>TIER_MODELS</code> dict. The tier is stable; the model name is not. Update the mapping in one place when model availability changes.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>No fallback on API error</strong> — model API returns 503 or rate-limit error; application crashes instead of trying alternate tier</div>
+          <div class="fix">✅ Wrap every model call in a try/except. On API error, escalate to the next tier (or a backup provider). Never surface raw API errors to users.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>Inconsistent classifier across services</strong> — different microservices implement different classification logic, leading to unpredictable routing behaviour</div>
+          <div class="fix">✅ Deploy the router as a shared library or internal microservice. One classifier, one TIER_MODELS dict, one log stream. Centralising the router also makes cost attribution easier.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Download CTA ────────────────────────────────── -->
+    <div class="download-cta">
+      <h2>Take the Routing Templates</h2>
+      <p>Download the complete model routing reference — router class, classifier prompt, cascade pattern, tier configs, and observability logging — all in one Markdown file.</p>
+      <div class="download-cta-actions">
+        <button class="btn-download-primary" onclick="downloadTemplates()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Free
+        </button>
+        <a href="/skills.html" class="btn-back-skills">← Back to Skills Library</a>
+      </div>
+    </div>
+
+    <!-- ── Related Skills ──────────────────────────────── -->
+    <section class="related-skills-section">
+      <h2>Related Skills</h2>
+      <div class="related-grid">
+        <a href="/skills/rag-basics.html" class="related-card">
+          <div class="related-card-tag">Tools</div>
+          <h4>RAG Basics</h4>
+          <p>Retrieval-augmented generation — connect your LLM to a live knowledge base.</p>
+        </a>
+        <a href="/skills/prompt-chaining.html" class="related-card">
+          <div class="related-card-tag">Prompts</div>
+          <h4>Prompt Chaining</h4>
+          <p>Break complex tasks into sequential prompt chains that use output from each step.</p>
+        </a>
+        <a href="/skills/agent-memory.html" class="related-card">
+          <div class="related-card-tag">Agents</div>
+          <h4>Agent Memory</h4>
+          <p>Persist state across agent sessions with episodic, semantic, and working memory.</p>
+        </a>
+        <a href="/skills/system-prompts.html" class="related-card">
+          <div class="related-card-tag">Prompts</div>
+          <h4>System Prompts</h4>
+          <p>Structure personas, constraints, and context to get consistent, controlled output.</p>
+        </a>
+      </div>
+    </section>
+
+  </div><!-- /skill-article-wrap -->
+</main>
+
+<!-- ── Footer ──────────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a class="nav-logo" href="/">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Aether</span><span class="logo-intel">Intel</span>
+      </a>
+      <p class="footer-tagline">Free AI skills, tools, and news — updated weekly.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/index.html">News</a>
+      <a href="/skills.html">Skills</a>
+      <a href="/tools.html">Tools</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Reading progress bar ──────────────────────────────
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+    document.getElementById('read-progress').style.width = pct + '%';
+  });
+
+  // ── Copy code blocks ──────────────────────────────────
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ── Download templates ────────────────────────────────
+  function downloadTemplates() {
+    const md = `# Cost-Optimised Model Routing
+## Aether Intel — Free Skills Library
+## https://ai.quantummerlin.com/skills.html
+
+---
+
+## 1. TIER_MODELS Configuration
+
+\`\`\`python
+TIER_MODELS = {
+    "SIMPLE":   "openai/gpt-4o-mini",
+    "MEDIUM":   "anthropic/claude-haiku-3-5",
+    "COMPLEX":  "anthropic/claude-sonnet-4",
+    "FRONTIER": "anthropic/claude-opus-4",
+}
+\`\`\`
+
+Parameterise this — update in one place when model availability changes.
+
+---
+
+## 2. Classifier Prompt
+
+\`\`\`
+Classify the following user request.
+Output ONLY one word: SIMPLE, MEDIUM, COMPLEX, or FRONTIER.
+
+SIMPLE   — Yes/no, single fact, basic classification, greeting
+MEDIUM   — Summarise, extract, fill template, basic writing
+COMPLEX  — Multi-step reasoning, code, long-form writing, analysis
+FRONTIER — Deep research, autonomous tasks, scientific reasoning
+
+User request: {message}
+
+Classification:
+\`\`\`
+
+Run this on GPT-4o-mini or Claude Haiku. Cost: ~$0.00002/classification.
+
+---
+
+## 3. System Prompts by Tier
+
+\`\`\`python
+SYSTEM_PROMPTS = {
+    "SIMPLE": (
+        "You are a helpful assistant. Answer questions directly and briefly. "
+        "For yes/no questions, answer yes or no first."
+    ),
+    "MEDIUM": (
+        "You are a helpful assistant. Provide clear, well-structured answers. "
+        "Use bullet points for lists. Keep responses focused."
+    ),
+    "COMPLEX": (
+        "You are an expert assistant. Analyse questions carefully. "
+        "Structure your response with reasoning, then conclusion. "
+        "Enumerate trade-offs clearly."
+    ),
+    "FRONTIER": (
+        "You are an expert research assistant. Approach problems methodically: "
+        "clarify assumptions, break down the problem, reason step by step, "
+        "consider edge cases, synthesise a nuanced answer."
+    ),
+}
+\`\`\`
+
+---
+
+## 4. Max Tokens by Tier
+
+\`\`\`python
+MAX_TOKENS_BY_TIER = {
+    "SIMPLE":   256,
+    "MEDIUM":   1024,
+    "COMPLEX":  4096,
+    "FRONTIER": 16384,
+}
+\`\`\`
+
+---
+
+## 5. Hybrid Rule Classifier (Zero-cost fast path)
+
+\`\`\`python
+import re
+
+SIMPLE_PATTERNS = [
+    r"\\b(what is|what are|who is|when did|yes or no|true or false)\\b",
+    r"\\b(define|meaning of|how do you spell)\\b",
+]
+FRONTIER_PATTERNS = [
+    r"\\b(research|synthesise|autonomous|multi-step|write a comprehensive)\\b",
+    r"\\b(analyze the entire|compare all|explain in depth)\\b",
+]
+
+def rule_classify(text: str) -> str:
+    t = text.lower()
+    if any(re.search(p, t) for p in FRONTIER_PATTERNS):
+        return "FRONTIER"
+    if len(text.split()) < 15 and any(re.search(p, t) for p in SIMPLE_PATTERNS):
+        return "SIMPLE"
+    if len(text.split()) > 200:
+        return "COMPLEX"
+    return "MEDIUM"
+
+def classify_request(text: str) -> str:
+    rule_result = rule_classify(text)
+    if rule_result in ("SIMPLE", "FRONTIER"):
+        return rule_result        # High-confidence extremes
+    return llm_classify(text)    # Ambiguous → LLM classifier
+\`\`\`
+
+---
+
+## 6. Cascade Escalation Logic
+
+\`\`\`python
+ESCALATION_PATH = ["SIMPLE", "MEDIUM", "COMPLEX", "FRONTIER"]
+
+UNCERTAINTY_PHRASES = [
+    "i'm not sure", "i don't know", "i cannot", "i'm unable",
+    "i don't have enough", "as an ai",
+]
+
+def cascade_route(router, messages, start_tier="SIMPLE", min_length=20):
+    path = ESCALATION_PATH[ESCALATION_PATH.index(start_tier):]
+    for tier in path:
+        result = router.route(messages, force_tier=tier)
+        if len(result.content.strip()) < min_length:
+            continue
+        if any(p in result.content.lower() for p in UNCERTAINTY_PHRASES):
+            continue
+        return result
+    return result  # Return best attempt even if all checks failed
+\`\`\`
+
+---
+
+## 7. Per-Request Logging Schema
+
+\`\`\`python
+{
+    "ts":             int,      # Unix timestamp
+    "feature":        str,      # "support_bot", "code_review", etc.
+    "tier":           str,      # "SIMPLE" | "MEDIUM" | "COMPLEX" | "FRONTIER"
+    "model":          str,      # exact model string used
+    "input_tokens":   int,
+    "output_tokens":  int,
+    "cost_usd":       float,    # from OpenRouter usage.cost
+    "latency_ms":     int,
+    "escalated":      bool,     # True if cascade escalated from start_tier
+}
+\`\`\`
+
+---
+
+## 8. Key Metrics Dashboard
+
+Track these daily:
+
+| Metric | Target |
+|--------|--------|
+| Tier 1 % of total requests | > 50% |
+| Escalation rate (Tier 1 → 2+) | < 10% |
+| Cost per 1K requests by feature | Trending down over time |
+| Latency p95 by tier | Under your SLA |
+| API error rate | < 0.5% |
+
+---
+
+## 9. Common Failure Checklist
+
+- [ ] Tier distribution: >50% hitting Tier 1?
+- [ ] Classifier accuracy tested against labelled sample (200+ requests)?
+- [ ] TIER_MODELS dict centralised — not hardcoded in multiple places?
+- [ ] API error fallback: catch exceptions, escalate to next tier?
+- [ ] Cost alert configured in OpenRouter dashboard?
+- [ ] Chain-of-thought added to Tier 3/4 prompts only?
+- [ ] max_tokens set appropriately per tier?
+- [ ] Escalation rate logged and monitored?
+
+---
+
+*Downloaded from Aether Intel — https://ai.quantummerlin.com*
+`;
+
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'model-routing-guide.md';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
