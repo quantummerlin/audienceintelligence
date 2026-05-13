@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chain-of-Thought Prompting: The Technique That Forces AI to Actually Think | Aether Intel</title>
+  <meta name="description" content="Why AI skips reasoning by default, what chain-of-thought prompting actually does inside the model, and how to use all five CoT templates — with a downloadable reference sheet." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ai.quantummerlin.com/skills/chain-of-thought.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://ai.quantummerlin.com/skills/chain-of-thought.html" />
+  <meta property="og:title" content="Chain-of-Thought Prompting: The Technique That Forces AI to Actually Think" />
+  <meta property="og:description" content="Why AI skips reasoning by default, what CoT does inside the model, and how to use all five templates." />
+  <meta property="og:site_name" content="Aether Intel" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    /* ── Article Layout ──────────────────────────────────── */
+    .skill-article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 32px 0 0;
+      font-family: var(--font-display);
+      font-size: .68rem;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .18s;
+    }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb-sep { opacity: .4; }
+
+    /* Article Header */
+    .skill-article-header {
+      padding: 28px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    .skill-article-badges {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .skill-article-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+      margin: 0 0 16px;
+    }
+    .skill-article-title span {
+      background: linear-gradient(135deg, var(--neon-indigo), var(--neon-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .skill-article-lede {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin: 0 0 24px;
+      font-weight: 400;
+    }
+    .skill-article-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-family: var(--font-display);
+      font-size: .68rem;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .skill-article-meta span { display: flex; align-items: center; gap: 6px; }
+    .skill-article-meta svg {
+      width: 13px; height: 13px;
+      fill: none; stroke: var(--neon-indigo);
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* Table of Contents */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 var(--radius-card) var(--radius-card) 0;
+      padding: 22px 26px;
+      margin-bottom: 44px;
+    }
+    .toc-title {
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .toc ol {
+      margin: 0; padding: 0;
+      list-style: none;
+      counter-reset: toc-counter;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toc li {
+      counter-increment: toc-counter;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .toc li::before {
+      content: counter(toc-counter, decimal-leading-zero);
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      color: var(--neon-indigo);
+      opacity: .7;
+      flex-shrink: 0;
+    }
+    .toc a {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 1.4;
+      transition: color .18s;
+    }
+    .toc a:hover { color: var(--neon-cyan); }
+
+    /* Article Body Typography */
+    .skill-article-body h2 {
+      font-family: var(--font-heading);
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin: 52px 0 18px;
+      padding-top: 8px;
+    }
+    .skill-article-body h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 32px 0 12px;
+      color: var(--text-primary);
+    }
+    .skill-article-body p {
+      font-size: .96rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin: 0 0 20px;
+    }
+    .skill-article-body p strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .skill-article-body ul, .skill-article-body ol {
+      padding-left: 0;
+      list-style: none;
+      margin: 0 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .skill-article-body ul li,
+    .skill-article-body ol li {
+      font-size: .94rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .skill-article-body ul li::before {
+      content: '';
+      width: 5px; height: 5px;
+      background: var(--neon-indigo);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+    .skill-article-body ol {
+      counter-reset: list-counter;
+    }
+    .skill-article-body ol li {
+      counter-increment: list-counter;
+    }
+    .skill-article-body ol li::before {
+      content: counter(list-counter);
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--neon-indigo);
+      background: rgba(99,102,241,.12);
+      border-radius: 4px;
+      padding: 1px 6px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .skill-article-body a {
+      color: var(--neon-cyan);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(34,211,238,.25);
+      transition: border-color .18s;
+    }
+    .skill-article-body a:hover { border-color: var(--neon-cyan); }
+
+    /* Code blocks */
+    .code-block {
+      background: #0d0d1a;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      margin: 24px 0 32px;
+      overflow: hidden;
+    }
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.03);
+    }
+    .code-block-label {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .code-copy-btn {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .code-copy-btn:hover { color: var(--neon-cyan); border-color: var(--neon-cyan); }
+    .code-block pre {
+      margin: 0;
+      padding: 20px 20px;
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: .8rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,.65);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .code-block .hl-key   { color: var(--neon-cyan); font-weight: 600; }
+    .code-block .hl-val   { color: #a5f3fc; }
+    .code-block .hl-cmt   { color: rgba(255,255,255,.28); font-style: italic; }
+    .code-block .hl-step  { color: var(--neon-indigo); font-weight: 700; }
+    .code-block .hl-good  { color: #34d399; }
+    .code-block .hl-warn  { color: #fbbf24; }
+
+    /* Callout boxes */
+    .callout {
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 28px 0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .callout-tip  { background: rgba(99,102,241,.08);  border: 1px solid rgba(99,102,241,.2);  }
+    .callout-warn { background: rgba(251,191,36,.07);  border: 1px solid rgba(251,191,36,.2);  }
+    .callout-good { background: rgba(52,211,153,.07);  border: 1px solid rgba(52,211,153,.2);  }
+    .callout-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      line-height: 1.6;
+    }
+    .callout-body { flex: 1; }
+    .callout-body strong {
+      display: block;
+      font-size: .78rem;
+      font-family: var(--font-display);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .callout-tip  .callout-body strong { color: var(--neon-indigo); }
+    .callout-warn .callout-body strong { color: #fbbf24; }
+    .callout-good .callout-body strong { color: #34d399; }
+    .callout-body p {
+      font-size: .87rem !important;
+      margin: 0 !important;
+      line-height: 1.6 !important;
+    }
+
+    /* Step box */
+    .step-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 22px 26px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .step-box-num {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 8px;
+    }
+    .step-box h4 {
+      font-family: var(--font-heading);
+      font-size: .98rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+    .step-box p {
+      font-size: .86rem !important;
+      margin: 0 !important;
+      line-height: 1.65 !important;
+    }
+
+    /* Template cards grid */
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 24px 0 32px;
+    }
+    .template-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 18px 20px;
+      transition: border-color .18s;
+    }
+    .template-card:hover { border-color: var(--border-bright); }
+    .template-card-name {
+      font-family: var(--font-display);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 8px;
+    }
+    .template-card p {
+      font-size: .8rem !important;
+      margin: 0 !important;
+      line-height: 1.6 !important;
+    }
+
+    /* Download CTA */
+    .download-cta {
+      background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(34,211,238,.06));
+      border: 1px solid rgba(99,102,241,.25);
+      border-radius: var(--radius-card);
+      padding: 32px 36px;
+      margin: 48px 0;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .download-cta-icon {
+      width: 52px; height: 52px;
+      background: var(--neon-indigo);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .download-cta-icon svg {
+      width: 24px; height: 24px;
+      fill: none; stroke: #fff;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .download-cta-body { flex: 1; min-width: 200px; }
+    .download-cta-body h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 6px !important;
+      padding: 0 !important;
+      color: var(--text-primary) !important;
+    }
+    .download-cta-body p {
+      color: var(--text-secondary);
+      font-size: .85rem !important;
+      margin: 0 !important;
+      line-height: 1.55 !important;
+    }
+    .btn-download-article {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      background: var(--neon-indigo);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .18s, transform .12s;
+      text-decoration: none;
+      border-bottom: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-download-article:hover {
+      background: var(--neon-cyan);
+      color: #0a0a14;
+      transform: translateY(-1px);
+      border-bottom: none;
+    }
+    .btn-download-article svg {
+      width: 14px; height: 14px;
+      fill: none; stroke: currentColor;
+      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* Comparison table */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0 32px;
+      font-size: .84rem;
+    }
+    .compare-table th {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .compare-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      color: var(--text-secondary);
+      line-height: 1.5;
+      vertical-align: top;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table td:first-child { color: var(--text-primary); font-weight: 500; }
+    .compare-table .good { color: #34d399; }
+    .compare-table .warn { color: #fbbf24; }
+    .compare-table .bad  { color: #f87171; }
+
+    /* Related skills */
+    .related-skills {
+      border-top: 1px solid var(--border);
+      padding-top: 44px;
+      margin-top: 60px;
+    }
+    .related-skills-label {
+      font-family: var(--font-display);
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .related-skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+    .related-skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 16px 18px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .18s, box-shadow .18s;
+      display: block;
+    }
+    .related-skill-card:hover {
+      border-color: var(--border-bright);
+      box-shadow: var(--glow-indigo);
+    }
+    .related-skill-card-cat {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 6px;
+    }
+    .related-skill-card-title {
+      font-family: var(--font-heading);
+      font-size: .88rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--text-primary);
+    }
+
+    /* Article progress bar */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--neon-indigo), var(--neon-cyan));
+      z-index: 9999;
+      transition: width .1s linear;
+    }
+
+    @media (max-width: 600px) {
+      .skill-article-wrap { padding: 0 16px 60px; }
+      .download-cta { padding: 22px 20px; }
+      .skill-article-body h2 { font-size: 1.25rem; margin-top: 40px; }
+      .toc { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="readingProgress"></div>
+
+  <!-- Nav injected by /js/main.js -->
+
+  <main>
+    <div class="skill-article-wrap">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/index.html">Home</a>
+        <span class="breadcrumb-sep">›</span>
+        <a href="/skills.html">Skills</a>
+        <span class="breadcrumb-sep">›</span>
+        <span>Chain-of-Thought Prompting</span>
+      </nav>
+
+      <!-- Article Header -->
+      <header class="skill-article-header">
+        <div class="skill-article-badges">
+          <span class="badge badge-secondary">Prompts</span>
+          <span style="font-family:var(--font-display);font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(52,211,153,.1);color:#34d399;">Beginner</span>
+        </div>
+        <h1 class="skill-article-title">Chain-of-Thought Prompting:<br><span>The Technique That Forces AI to Actually Think</span></h1>
+        <p class="skill-article-lede">Language models don't reason by default — they predict. Chain-of-thought prompting is the simplest technique that changes this. A few words added to your prompt force the model to generate explicit reasoning steps, and those steps dramatically reduce errors on complex tasks. Here's why it works mechanically, and how to use every variation.</p>
+        <div class="skill-article-meta">
+          <span>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            11 min read
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            May 2026
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Free templates included
+          </span>
+        </div>
+      </header>
+
+      <!-- Table of Contents -->
+      <nav class="toc" aria-label="Table of contents">
+        <div class="toc-title">In This Guide</div>
+        <ol>
+          <li><a href="#why-ai-skips-reasoning">Why AI skips reasoning by default</a></li>
+          <li><a href="#what-is-cot">What chain-of-thought actually does</a></li>
+          <li><a href="#the-mechanics">The token prediction mechanics</a></li>
+          <li><a href="#five-templates">The five CoT templates</a></li>
+          <li><a href="#walkthrough">Step-by-step walkthrough</a></li>
+          <li><a href="#when-to-use">When CoT helps (and when it doesn't)</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
+          <li><a href="#download">Download the free templates</a></li>
+        </ol>
+      </nav>
+
+      <!-- Article Body -->
+      <article class="skill-article-body">
+
+        <!-- ── Section 1 ───────────────────────────────────── -->
+        <h2 id="why-ai-skips-reasoning">Why AI Skips Reasoning by Default</h2>
+
+        <p>Ask an AI a maths problem and it will often give you an answer instantly. Ask it to diagnose a system failure and it jumps straight to a solution. Ask it to evaluate a business strategy and it presents a polished conclusion with no visible working.</p>
+
+        <p>This looks like intelligence. It is not reasoning.</p>
+
+        <p>What's happening is token prediction. The model has learned, from billions of examples in its training data, which tokens statistically follow which other tokens. For a question that looks like a common type of problem, it has learned what a confident, well-formed answer looks like — and it produces that, fast, without needing to generate any intermediate steps. The output sounds authoritative precisely because it has learned to mimic authoritative outputs.</p>
+
+        <p>The problem is that this process fails silently. When a problem genuinely requires working through intermediate steps — multi-step maths, logic chains, diagnostic trees — the model can produce a confident wrong answer that has all the surface markers of a correct one. You have no way to detect the error unless you verify independently.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-icon">⚠</div>
+          <div class="callout-body">
+            <strong>The confidence trap</strong>
+            <p>LLMs trained on human-generated text have learned that confident writing sounds a certain way. A model producing a wrong answer will often produce it with exactly the same tone and structure as a correct one. Fluency is not a signal of accuracy.</p>
+          </div>
+        </div>
+
+        <p>This is not a flaw to be patched. It is the fundamental architecture of the technology. The model is a next-token predictor, not a symbolic reasoner. But — and this is the key insight — you can prompt it in a way that forces it to generate reasoning steps, and those steps change what it produces next.</p>
+
+        <h3>Three signs your prompt is getting direct-prediction answers</h3>
+
+        <ul>
+          <li><strong>Instant conclusions with no visible logic:</strong> The model states an answer but doesn't show any intermediate steps, even for problems where intermediate steps exist.</li>
+          <li><strong>Over-confident tone on uncertain topics:</strong> The answer reads decisively on a topic where the correct answer requires weighing several uncertain factors.</li>
+          <li><strong>Errors that are surprisingly basic:</strong> Multi-step arithmetic errors, logic reversals, or ignored constraints — the kind of mistakes that would not survive a single step of explicit working-out.</li>
+        </ul>
+
+
+        <!-- ── Section 2 ───────────────────────────────────── -->
+        <h2 id="what-is-cot">What Chain-of-Thought Actually Does</h2>
+
+        <p>Chain-of-thought (CoT) prompting is the practice of instructing a model to work through its reasoning explicitly before arriving at a final answer. In its simplest form, it means appending a phrase like "Let's think through this step by step" to your prompt.</p>
+
+        <p>That's it. That phrase — or any variation of it — is sufficient to trigger a measurable improvement in reasoning quality across a wide range of tasks.</p>
+
+        <p>The original CoT paper (Wei et al., 2022, Google Brain) demonstrated this across arithmetic, commonsense reasoning, and symbolic reasoning benchmarks. On challenging multi-step maths problems, models with chain-of-thought prompting dramatically outperformed the same models using direct-answer prompting. The improvement wasn't from a better model — it was from asking the same model to show its work.</p>
+
+        <div class="callout callout-good">
+          <div class="callout-icon">✓</div>
+          <div class="callout-body">
+            <strong>The key insight</strong>
+            <p>Chain-of-thought doesn't make the model smarter. It forces it to generate tokens that look like reasoning, and those tokens condition subsequent tokens toward more accurate conclusions. The improvement is architectural, not magical.</p>
+          </div>
+        </div>
+
+        <h3>Standard prompting vs. chain-of-thought: a direct comparison</h3>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Standard Prompt</th>
+              <th>With Chain-of-Thought</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Multi-step maths</td>
+              <td class="bad">High error rate on problems with 3+ steps</td>
+              <td class="good">Significantly lower error rate; working visible</td>
+            </tr>
+            <tr>
+              <td>Logic problems</td>
+              <td class="warn">Plausible-sounding but often wrong</td>
+              <td class="good">Explicit steps catch logical reversals</td>
+            </tr>
+            <tr>
+              <td>Decision analysis</td>
+              <td class="warn">Jumps to conclusion, ignores trade-offs</td>
+              <td class="good">Surfaces assumptions and competing factors</td>
+            </tr>
+            <tr>
+              <td>Factual recall</td>
+              <td class="good">Fast, usually accurate for known facts</td>
+              <td class="warn">No benefit; adds unnecessary tokens</td>
+            </tr>
+            <tr>
+              <td>Creative writing</td>
+              <td class="good">Natural, fluid output</td>
+              <td class="warn">Can make output feel mechanical</td>
+            </tr>
+            <tr>
+              <td>Error auditability</td>
+              <td class="bad">Errors invisible without external verification</td>
+              <td class="good">Reasoning steps expose where logic went wrong</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>The secondary benefit — the one that matters at least as much as accuracy — is auditability. When the model shows its reasoning, you can read the steps and identify exactly where a mistake occurred. With standard prompting, a wrong answer is a black box. With CoT, it's a traceable log.</p>
+
+
+        <!-- ── Section 3 ───────────────────────────────────── -->
+        <h2 id="the-mechanics">The Token Prediction Mechanics</h2>
+
+        <p>To understand why chain-of-thought works, you need to understand one thing about how LLMs generate text: each token is predicted based on everything that came before it in the context.</p>
+
+        <p>When a model generates a reasoning step — "First, I need to calculate X" — that step becomes part of the context for the next token. The next token is now conditioned on the content of that reasoning step. The model is not retrieving a pre-computed answer; it is generating each piece of text in light of everything it has already generated.</p>
+
+        <p>This means that intermediate reasoning steps act as scaffolding. A correct intermediate conclusion steers subsequent tokens toward further correct conclusions. An explicit "checking my assumptions" step forces the model into a mode of output where it generates text that looks like uncertainty-checking, which in turn surfaces assumptions it would otherwise paper over.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">&#9670;</div>
+          <div class="callout-body">
+            <strong>Why "step by step" is enough</strong>
+            <p>The phrase "Let's think through this step by step" works because the model has seen vast amounts of text that follows this exact pattern — worked examples, tutorials, explanations. When you invoke this phrase, you're placing the model into a high-probability distribution of step-by-step reasoning outputs drawn from that training data.</p>
+          </div>
+        </div>
+
+        <h3>The self-consistency principle</h3>
+
+        <p>Because token generation is probabilistic, the same prompt can produce different reasoning paths on different runs. Self-consistency CoT exploits this: run the same CoT prompt multiple times at a moderate temperature (0.7–1.0), then take the majority answer across all runs.</p>
+
+        <p>This approach treats the model like a panel of independent experts, each reasoning from scratch. When multiple independent reasoning chains converge on the same answer, that convergence is strong evidence the answer is correct. The technique was introduced in Wang et al., 2022, and consistently outperforms single-run CoT on maths and factual reasoning benchmarks.</p>
+
+        <p>In practice, three independent runs is usually sufficient. Five gives you more confidence on high-stakes decisions. Beyond five, the marginal benefit of each additional run diminishes rapidly.</p>
+
+
+        <!-- ── Section 4 ───────────────────────────────────── -->
+        <h2 id="five-templates">The Five CoT Templates</h2>
+
+        <p>There isn't one chain-of-thought technique — there are five distinct patterns, each suited to a different type of task. The downloadable template at the bottom of this guide includes ready-to-use versions of all five. Here's how each works and when to reach for it.</p>
+
+        <div class="templates-grid">
+          <div class="template-card">
+            <div class="template-card-name">Zero-Shot CoT</div>
+            <p>Append "Let's think through this step by step." to any prompt. No examples required. Best for quick tasks where you just need the model to slow down and show its working.</p>
+          </div>
+          <div class="template-card">
+            <div class="template-card-name">Few-Shot CoT</div>
+            <p>Provide 2–3 worked examples of the reasoning pattern before your actual question. More reliable than zero-shot, especially for domain-specific problems where the reasoning style matters.</p>
+          </div>
+          <div class="template-card">
+            <div class="template-card-name">Structured Reasoning</div>
+            <p>Give the model an explicit numbered framework: Restate, Identify, Reason, Check, Conclude. Best for analysis tasks where you need to surface assumptions and trade-offs.</p>
+          </div>
+          <div class="template-card">
+            <div class="template-card-name">Self-Consistency</div>
+            <p>Run the same CoT prompt 3–5 times at temperature 0.7–1.0 and take the majority answer. Highest accuracy on maths and factual tasks where a single wrong reasoning path is costly.</p>
+          </div>
+          <div class="template-card">
+            <div class="template-card-name">Decision CoT</div>
+            <p>Structured around options, pros/cons, assumptions, and conditions. Best for consequential decisions where you need to understand what would need to be true for each option to be correct.</p>
+          </div>
+        </div>
+
+        <h3>Template 1: Zero-Shot CoT</h3>
+
+        <p>The simplest form. Add one phrase to the end of any prompt:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Zero-Shot CoT — Minimal</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-cmt">[Your question or task here]</span>
+
+<span class="hl-key">Let's think through this step by step.</span></pre>
+        </div>
+
+        <p>That's the entire technique. Variations that work equally well: "Work through this carefully before giving your final answer." / "Think aloud before concluding." / "Show your reasoning." All of these invoke the same pattern. The exact phrasing matters less than the presence of an explicit instruction to generate reasoning before the answer.</p>
+
+        <h3>Template 2: Few-Shot CoT</h3>
+
+        <p>More reliable for domain-specific or unusual reasoning patterns. You provide examples that show the model what correct step-by-step reasoning looks like for your type of problem, then ask your real question in the same format:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Few-Shot CoT — Structure</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-step">Q:</span> A store sells apples for £1.20 each and oranges for £0.80 each.
+   If I buy 3 apples and 5 oranges, how much do I spend?
+
+<span class="hl-step">A:</span> Let me work through this:
+   <span class="hl-good">- 3 apples × £1.20 = £3.60</span>
+   <span class="hl-good">- 5 oranges × £0.80 = £4.00</span>
+   <span class="hl-good">- Total = £3.60 + £4.00 = £7.60</span>
+   Answer: £7.60
+
+---
+
+<span class="hl-step">Q:</span> [YOUR ACTUAL QUESTION]
+
+<span class="hl-step">A:</span> Let me work through this:</pre>
+        </div>
+
+        <p>The critical detail: the example answer must genuinely demonstrate the reasoning style you need. If you copy-paste examples that happen to have a conclusion but no real intermediate steps, the model will mirror that shallow structure.</p>
+
+        <h3>Template 3: Structured Reasoning</h3>
+
+        <p>Best for analysis, evaluation, and any task where surfacing assumptions matters as much as reaching a conclusion:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Structured Reasoning — Five-Step Framework</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>You are an expert analyst. Before giving your final answer, work
+through the following steps explicitly:
+
+<span class="hl-step">1. RESTATE:</span>  Restate the core question in your own words.
+<span class="hl-step">2. IDENTIFY:</span> List the key factors or variables involved.
+<span class="hl-step">3. REASON:</span>   Work through the logic, considering each factor.
+<span class="hl-step">4. CHECK:</span>    Identify any assumptions you made and flag uncertainties.
+<span class="hl-step">5. CONCLUDE:</span> State your final answer clearly.
+
+---
+
+Question: [YOUR QUESTION]</pre>
+        </div>
+
+        <p>Step 4 — the CHECK step — is the most valuable one and is almost always omitted from standard prompts. Forcing the model to enumerate its assumptions makes them visible to you, giving you the chance to correct any that are wrong before the conclusion is used.</p>
+
+        <h3>Template 4: Self-Consistency CoT</h3>
+
+        <p>For maximum accuracy on high-stakes decisions, maths, or factual questions where a wrong answer has real consequences:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Self-Consistency — Majority Vote</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-cmt">[Your CoT prompt — any of the templates above]</span>
+
+<span class="hl-key">Note: Generate 3 independent solutions to this problem, each reasoning
+from scratch. At the end, identify which answer appears most often
+across all three solutions and state that as your final answer.</span>
+
+<span class="hl-cmt"><!-- Alternatively: run the same prompt 3 times manually
+     at temperature 0.7–1.0 and take the majority answer --></span></pre>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">&#9670;</div>
+          <div class="callout-body">
+            <strong>Temperature matters here</strong>
+            <p>For self-consistency to work, each run needs to take a slightly different reasoning path. At temperature 0, all runs will produce the same output. Set temperature to at least 0.7. If your API client doesn't expose this, run the prompt in separate sessions.</p>
+          </div>
+        </div>
+
+        <h3>Template 5: Decision CoT</h3>
+
+        <p>Structured around the anatomy of a good decision — options, trade-offs, assumptions, and conditions. Use when the answer is "it depends" and you need to know what it depends on:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Decision CoT — Full Framework</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>I need to make a decision about: <span class="hl-val">[DECISION]</span>
+
+Context: <span class="hl-val">[RELEVANT BACKGROUND]</span>
+
+Please reason through this decision using the following structure:
+
+<span class="hl-step">1. OPTIONS:</span>     What are the main options available?
+<span class="hl-step">2. PROS/CONS:</span>   What are the key advantages and disadvantages of each?
+<span class="hl-step">3. ASSUMPTIONS:</span> What assumptions are we making?
+<span class="hl-step">4. CONDITIONS:</span>  What would need to be true for each option to be correct?
+<span class="hl-step">5. RECOMMEND:</span>  Given all of the above, what is the recommended decision
+               and why?</pre>
+        </div>
+
+
+        <!-- ── Section 5 ───────────────────────────────────── -->
+        <h2 id="walkthrough">Step-by-Step Walkthrough: Debugging a Production Issue</h2>
+
+        <p>Seeing templates in isolation is less useful than watching them work on a real problem. Here's a full walkthrough using structured reasoning CoT on a concrete technical task: diagnosing why a scheduled job is intermittently failing in production.</p>
+
+        <h3>The problem</h3>
+
+        <p>A nightly data export job runs at 02:00 UTC. It succeeds on most nights but fails silently roughly once per week. No error is thrown — the job just produces no output file. There's no obvious pattern in the failures.</p>
+
+        <div class="step-box">
+          <div class="step-box-num">Standard prompt (what most people send)</div>
+          <h4>"Why is my scheduled job intermittently producing no output with no error?"</h4>
+          <p>Result: A generic list of possibilities — race conditions, resource limits, external API timeouts, disk space — with no prioritisation and no way to narrow down the cause. Technically correct. Practically useless.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-box-num">CoT prompt (structured reasoning version)</div>
+          <h4>Applying the five-step framework</h4>
+          <p>Same question, but now preceded by: "Before diagnosing this, explicitly: (1) restate what we know and don't know, (2) identify which category of cause is most likely given the intermittent pattern, (3) reason through the top three candidates, (4) state what diagnostic data would rule each one out, (5) recommend the first investigation step."</p>
+        </div>
+
+        <p>The CoT version produces a fundamentally different kind of output. Because it's forced to identify what we know versus don't know (step 1), it immediately surfaces that "no error thrown" is diagnostic — it rules out application-level exceptions and points toward either a silent external dependency failure or a job not running at all. Because it's forced to reason through candidates (step 3), it distinguishes between causes that would produce consistent failures (misconfiguration) and those that produce intermittent ones (time-sensitive dependencies, resource contention). And because it must state what would rule each one out (step 4), it gives you an actual investigation plan rather than a list of possibilities.</p>
+
+        <div class="callout callout-good">
+          <div class="callout-icon">✓</div>
+          <div class="callout-body">
+            <strong>The auditability advantage</strong>
+            <p>When the CoT reasoning is wrong, you can see exactly where it went wrong. If the model's step 2 incorrectly categorises the failure pattern, you can correct that classification and ask it to re-reason from there. This is the real operational advantage of chain-of-thought: not just more accurate answers, but recoverable, correctable reasoning.</p>
+          </div>
+        </div>
+
+        <h3>What the output looks like in practice</h3>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Example CoT Output — Diagnostic Reasoning</span>
+            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-step">RESTATE:</span> A nightly job runs at 02:00 UTC and roughly once/week produces
+no output and no error. The failure pattern is intermittent and
+time-correlated rather than consistent.
+
+<span class="hl-step">IDENTIFY:</span> Key factors:
+  - "No error" rules out application exceptions caught by the job itself
+  - Intermittent (not consistent) rules out static misconfiguration
+  - Time-correlated pattern suggests dependency on something that varies
+    at that time of night (load, external APIs, infrastructure maintenance)
+  - Weekly frequency could correlate with weekly maintenance windows
+
+<span class="hl-step">REASON:</span>
+  Candidate 1 — External API rate limit or maintenance window (HIGH)
+    Most external services have weekly maintenance windows or rate resets.
+    If the job calls an API that is down or rate-limited at 02:00 UTC once
+    per week, it would silently return empty data rather than an error.
+
+  Candidate 2 — Database replication lag / lock contention (MEDIUM)
+    If the job reads from a replica that experiences lag during a weekly
+    batch process, it could read an empty or stale dataset and write
+    nothing, with no error.
+
+  Candidate 3 — Infrastructure auto-scaling cold start (LOW-MEDIUM)
+    If the job runs on a node that was scaled down overnight, the first
+    run after scale-up may timeout before the container is warm. This
+    would typically show up in infrastructure logs.
+
+<span class="hl-step">CHECK:</span>
+  Assumptions: (a) "no output" means zero bytes, not missing file —
+  clarify this. (b) "no error" means no logged exception — confirm
+  whether external API calls log timeouts separately.
+
+<span class="hl-step">CONCLUDE:</span> First investigation step: check the external API's status
+  page for maintenance windows and compare timestamps with your 6–8
+  failure dates. If they correlate, you have your answer in 10 minutes.</pre>
+        </div>
+
+        <p>Notice what the CoT output gives you that a direct answer doesn't: a ranked candidate list, explicit assumptions to verify, and a concrete first step. The model didn't know the answer before it reasoned. The reasoning itself produced the answer.</p>
+
+
+        <!-- ── Section 6 ───────────────────────────────────── -->
+        <h2 id="when-to-use">When CoT Helps — and When It Doesn't</h2>
+
+        <p>Chain-of-thought isn't universally beneficial. Applying it indiscriminately adds tokens (cost and latency) with no accuracy gain on tasks that don't involve multi-step reasoning. Knowing when to use it and when to skip it is part of using it well.</p>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Task Type</th>
+              <th>Use CoT?</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Multi-step maths / calculation</td>
+              <td class="good">Always</td>
+              <td>Step generation directly prevents arithmetic errors</td>
+            </tr>
+            <tr>
+              <td>Logic and deductive reasoning</td>
+              <td class="good">Always</td>
+              <td>Explicit steps catch reversals and invalid inferences</td>
+            </tr>
+            <tr>
+              <td>Root-cause / diagnostic analysis</td>
+              <td class="good">Always</td>
+              <td>Surfaces assumptions; produces auditable, recoverable reasoning</td>
+            </tr>
+            <tr>
+              <td>Consequential decisions with trade-offs</td>
+              <td class="good">Always</td>
+              <td>Exposes what conditions make each option correct</td>
+            </tr>
+            <tr>
+              <td>Code debugging</td>
+              <td class="good">Usually</td>
+              <td>Forces the model to trace execution before guessing a fix</td>
+            </tr>
+            <tr>
+              <td>Simple factual recall</td>
+              <td class="bad">Skip</td>
+              <td>No benefit; adds tokens and latency</td>
+            </tr>
+            <tr>
+              <td>Creative writing / brainstorming</td>
+              <td class="bad">Skip</td>
+              <td>Analytical framing reduces fluency and originality</td>
+            </tr>
+            <tr>
+              <td>Translation or reformatting</td>
+              <td class="bad">Skip</td>
+              <td>Task doesn't involve reasoning; CoT adds nothing</td>
+            </tr>
+            <tr>
+              <td>Summarisation</td>
+              <td class="warn">Sometimes</td>
+              <td>Helps if the summary requires ranking importance; skip for routine compression</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>A useful mental model: ask yourself whether the task has a <em>right answer that requires working out</em>. If yes, CoT helps. If the task is about retrieving known facts, producing creative content, or transforming text in a well-defined way, CoT is overhead.</p>
+
+
+        <!-- ── Section 7 ───────────────────────────────────── -->
+        <h2 id="common-mistakes">Common Mistakes</h2>
+
+        <p>CoT is simple in concept but easy to implement poorly. These are the mistakes that reduce its effectiveness:</p>
+
+        <h3>1. Using CoT on tasks that don't need it</h3>
+
+        <p>The most common mistake. Prefixing "Let's think step by step" onto a simple factual question or a reformatting task doesn't improve accuracy and adds tokens you'll pay for. Learn the cases where CoT helps (reasoning, analysis, calculation) and keep your other prompts clean.</p>
+
+        <h3>2. Using poor few-shot examples</h3>
+
+        <p>If you use few-shot CoT, the examples you provide set the template for the model's reasoning style. Examples with shallow "reasoning" — where the answer is just restated in slightly different words before the conclusion — will produce shallow reasoning on your actual question. Use examples where the intermediate steps are genuine and necessary.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-icon">⚠</div>
+          <div class="callout-body">
+            <strong>The pseudo-reasoning trap</strong>
+            <p>"I need to find the answer to this question, which is [answer]." — This is not reasoning. It is reformatting. If your examples model this pattern, the CoT output will mirror it: confident-sounding steps that contain no actual working.</p>
+          </div>
+        </div>
+
+        <h3>3. Ignoring temperature for self-consistency</h3>
+
+        <p>Self-consistency relies on different reasoning paths on different runs. If your temperature is 0, every run produces the same tokens. You need temperature ≥ 0.7 for self-consistency to provide any benefit over a single run. Many API implementations default to temperature 1.0, which is fine. The risk is users who have explicitly set temperature to 0 for "determinism" and then try to run self-consistency.</p>
+
+        <h3>4. Accepting wrong reasoning steps without correction</h3>
+
+        <p>The whole point of CoT is that the reasoning is visible. If you read the reasoning steps and one of them is wrong, correct it. Don't just note the error and accept the conclusion anyway. Because each step conditions the next, a wrong intermediate step can contaminate an otherwise sound chain of reasoning. Fix the step and ask the model to continue from the corrected position.</p>
+
+        <h3>5. Skipping the CHECK/ASSUMPTIONS step</h3>
+
+        <p>In the structured reasoning framework, step 4 (CHECK) is the one most people drop when building abbreviated versions of the template. It's also the step that most often surfaces the single assumption that changes the entire answer. Keep it.</p>
+
+        <h3>6. Treating CoT output as a black box</h3>
+
+        <p>The value of CoT is not just the final answer — it's the reasoning trace. If you only read the CONCLUDE section and ignore the rest, you're using CoT inefficiently. The intermediate steps are where you validate the logic, catch incorrect assumptions, and learn whether the model's reasoning matches your actual situation.</p>
+
+
+        <!-- ── Download CTA ─────────────────────────────────── -->
+        <div class="download-cta" id="download">
+          <div class="download-cta-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <div class="download-cta-body">
+            <h3>Free CoT Template Pack (.md)</h3>
+            <p>All five chain-of-thought templates — zero-shot, few-shot, structured reasoning, self-consistency, and decision CoT — in one ready-to-paste reference file. Includes when-to-use guidance and example outputs.</p>
+          </div>
+          <button class="btn-download-article" onclick="downloadCoTTemplate()">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Templates
+          </button>
+        </div>
+
+      </article><!-- end .skill-article-body -->
+
+      <!-- Related Skills -->
+      <section class="related-skills">
+        <div class="related-skills-label">Related Skills</div>
+        <div class="related-skills-grid">
+          <a href="/skills/prompt-chaining.html" class="related-skill-card">
+            <div class="related-skill-card-cat">Prompts</div>
+            <div class="related-skill-card-title">Prompt Chaining: The Framework That Makes Complex AI Tasks Actually Work</div>
+          </a>
+          <a href="/skills.html#system-prompts" class="related-skill-card">
+            <div class="related-skill-card-cat">Prompts</div>
+            <div class="related-skill-card-title">System Prompts: Give Every Conversation a Persistent Context and Persona</div>
+          </a>
+          <a href="/skills.html#model-selection" class="related-skill-card">
+            <div class="related-skill-card-cat">Models</div>
+            <div class="related-skill-card-title">Model Selection: Matching the Right AI to Each Task</div>
+          </a>
+          <a href="/skills.html" class="related-skill-card">
+            <div class="related-skill-card-cat">All Skills</div>
+            <div class="related-skill-card-title">Browse the full Aether Intel Skills Library →</div>
+          </a>
+        </div>
+      </section>
+
+    </div><!-- end .skill-article-wrap -->
+  </main>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+
+  <script>
+    // ── Reading Progress Bar ────────────────────────────────
+    (function() {
+      var bar = document.getElementById('readingProgress');
+      if (!bar) return;
+      function update() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var docH = document.documentElement.scrollHeight - window.innerHeight;
+        var pct = docH > 0 ? Math.min(100, (scrollTop / docH) * 100) : 0;
+        bar.style.width = pct + '%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // ── Copy Code Blocks ────────────────────────────────────
+    function copyCode(btn) {
+      var pre = btn.closest('.code-block').querySelector('pre');
+      var text = pre.innerText || pre.textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        var orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.color = '#34d399';
+        btn.style.borderColor = '#34d399';
+        setTimeout(function() {
+          btn.textContent = orig;
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 1800);
+      });
+    }
+
+    // ── Download CoT Templates ──────────────────────────────
+    function downloadCoTTemplate() {
+      var content = [
+        '# Chain-of-Thought Prompting Templates',
+        '## Aether Intel — Free Skills Library',
+        '## https://ai.quantummerlin.com/skills.html',
+        '',
+        '---',
+        '',
+        '## What Is Chain-of-Thought (CoT)?',
+        '',
+        'Chain-of-thought prompting tells the model to show its reasoning step-by-step',
+        'before giving a final answer. This single technique dramatically improves',
+        'accuracy on complex reasoning, maths, and multi-step logic tasks.',
+        '',
+        '---',
+        '',
+        '## Why It Works',
+        '',
+        'LLMs predict tokens. When forced to generate reasoning steps, each step',
+        'conditions the next, guiding the model toward more accurate conclusions.',
+        'Without CoT, the model leaps to an answer before it has "thought" enough.',
+        '',
+        '---',
+        '',
+        '## Template 1: Zero-Shot CoT (Simplest)',
+        '',
+        'Just append this phrase to any prompt:',
+        '',
+        '```',
+        '[Your question or task here]',
+        '',
+        "Let's think through this step by step.",
+        '```',
+        '',
+        "That's it. The phrase \"Let's think through this step by step\" is the trigger.",
+        '',
+        '---',
+        '',
+        '## Template 2: Few-Shot CoT (More Reliable)',
+        '',
+        'Provide 2-3 examples of the reasoning pattern before your actual question:',
+        '',
+        '```',
+        'Q: A store sells apples for £1.20 each and oranges for £0.80 each.',
+        '   If I buy 3 apples and 5 oranges, how much do I spend?',
+        '',
+        'A: Let me work through this:',
+        '   - 3 apples × £1.20 = £3.60',
+        '   - 5 oranges × £0.80 = £4.00',
+        '   - Total = £3.60 + £4.00 = £7.60',
+        '   Answer: £7.60',
+        '',
+        '---',
+        '',
+        'Q: [YOUR ACTUAL QUESTION]',
+        '',
+        'A: Let me work through this:',
+        '```',
+        '',
+        '---',
+        '',
+        '## Template 3: Structured Reasoning (Best for Analysis)',
+        '',
+        '```',
+        'You are an expert analyst. Before giving your final answer, work through the',
+        'following steps explicitly:',
+        '',
+        '1. RESTATE:  Restate the core question in your own words.',
+        '2. IDENTIFY: List the key factors or variables involved.',
+        '3. REASON:   Work through the logic, considering each factor.',
+        '4. CHECK:    Identify any assumptions you made and flag uncertainties.',
+        '5. CONCLUDE: State your final answer clearly.',
+        '',
+        '---',
+        '',
+        'Question: [YOUR QUESTION]',
+        '```',
+        '',
+        '---',
+        '',
+        '## Template 4: Self-Consistency (Highest Accuracy)',
+        '',
+        'Run the same CoT prompt 3-5 times with temperature 0.7-1.0, then take the',
+        'majority answer. This is especially effective for maths and factual reasoning.',
+        '',
+        '```',
+        '[Paste your CoT prompt]',
+        '',
+        'Note: Generate 3 independent solutions to this problem, each reasoning from',
+        'scratch. At the end, identify which answer appears most often across all three',
+        'solutions and state that as your final answer.',
+        '```',
+        '',
+        '---',
+        '',
+        '## Template 5: Decision CoT',
+        '',
+        '```',
+        'I need to make a decision about: [DECISION]',
+        '',
+        'Context: [RELEVANT BACKGROUND]',
+        '',
+        'Please reason through this decision using the following structure:',
+        '1. OPTIONS:     What are the main options available?',
+        '2. PROS/CONS:   What are the key advantages and disadvantages of each?',
+        '3. ASSUMPTIONS: What assumptions are we making?',
+        '4. CONDITIONS:  What would need to be true for each option to be correct?',
+        '5. RECOMMEND:   Given all of the above, what is the recommended decision',
+        '               and why?',
+        '```',
+        '',
+        '---',
+        '',
+        '## When CoT Helps Most',
+        '',
+        '✅ Multi-step maths or logic problems',
+        '✅ Complex decisions with trade-offs',
+        '✅ Diagnostic / root-cause analysis',
+        '✅ Tasks requiring factual recall + reasoning combined',
+        '✅ Code debugging (trace execution before guessing a fix)',
+        '❌ Simple factual lookups (adds latency with no benefit)',
+        '❌ Creative tasks (CoT can make outputs feel mechanical)',
+        '❌ Translation or reformatting (no reasoning step needed)',
+        '',
+        '---',
+        '',
+        '## Common Mistakes',
+        '',
+        '1. Using CoT on tasks that don\'t need it (adds cost, no benefit)',
+        '2. Shallow few-shot examples that model pseudo-reasoning',
+        '3. Running self-consistency at temperature 0 (all runs identical)',
+        '4. Accepting wrong intermediate steps without correction',
+        '5. Skipping the CHECK/ASSUMPTIONS step in structured reasoning',
+        '',
+        '---',
+        '',
+        '*Downloaded from Aether Intel — https://ai.quantummerlin.com*'
+      ].join('\n');
+
+      var blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'chain-of-thought-templates.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
