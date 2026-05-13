@@ -25,61 +25,45 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <style>
-    /* ── Hero Carousel ── */
-    .hero-carousel { position:relative; width:100%; height:440px; overflow:hidden; background:var(--bg); user-select:none; flex-shrink:0; }
-    .hero-slide { position:absolute; inset:0; opacity:0; transition:opacity .9s ease; pointer-events:none; }
-    .hero-slide.active { opacity:1; pointer-events:auto; }
-    .hero-slide-bg { position:absolute; inset:0; background-size:cover; background-position:center; transform:scale(1.07); transition:transform 7s ease; }
-    .hero-slide.active .hero-slide-bg { transform:scale(1); }
-    .hero-slide-overlay { position:absolute; inset:0; background:linear-gradient(90deg,rgba(7,7,15,.94) 0%,rgba(7,7,15,.6) 55%,rgba(7,7,15,.12) 100%); }
-    .hero-slide-content { position:absolute; left:36px; bottom:62px; max-width:500px; z-index:2; }
-    .hero-slide-badge { display:inline-block; margin-bottom:12px; }
-    .hero-slide-title { font-family:var(--font-heading); font-size:clamp(1.4rem,3.5vw,2.15rem); font-weight:800; line-height:1.13; color:#fff; margin-bottom:10px; }
-    .hero-slide-desc { font-size:.88rem; color:rgba(255,255,255,.7); margin-bottom:18px; line-height:1.55; max-width:420px; }
-    .hero-label { position:absolute; top:14px; left:18px; font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.18em; color:rgba(255,255,255,.4); text-transform:uppercase; z-index:10; display:flex; align-items:center; gap:7px; }
-    .hero-label::before { content:''; display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--neon-cyan); animation:livePulse 1.8s ease-in-out infinite; }
-    .hero-prev,.hero-next { position:absolute; top:50%; transform:translateY(-50%); width:38px; height:38px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:50%; color:#fff; font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s,border-color .2s; z-index:10; line-height:1; padding:0; }
-    .hero-prev { left:14px; } .hero-next { right:14px; }
-    .hero-prev:hover,.hero-next:hover { background:rgba(129,140,248,.3); border-color:var(--neon-indigo); }
-    .hero-dots { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); display:flex; gap:7px; z-index:10; }
-    .hero-dot { width:8px; height:8px; border-radius:4px; background:rgba(255,255,255,.22); border:none; cursor:pointer; padding:0; transition:background .25s,width .3s; }
-    .hero-dot.active { width:22px; background:var(--neon-indigo); }
+    /* ── Hero Slideshow ── */
+    .hero-slideshow { position:relative; width:100%; height:62vh; min-height:400px; max-height:680px; overflow:hidden; background:#07070f; }
+    .hero-slides-track { display:flex; height:100%; transition:transform .7s cubic-bezier(.4,0,.2,1); will-change:transform; }
+    .hero-slide { flex:0 0 100%; height:100%; background-size:cover; background-position:center; position:relative; }
+    .hero-slide-overlay { position:absolute; inset:0; background:linear-gradient(120deg,rgba(7,7,15,.9) 0%,rgba(7,7,15,.55) 55%,rgba(7,7,15,.15) 100%); display:flex; align-items:flex-end; padding:36px 40px; }
+    .hero-slide-content { max-width:580px; }
+    .hero-slide-badge { margin-bottom:10px; }
+    .hero-slide-title { font-family:var(--font-heading); font-size:clamp(1.4rem,3.2vw,2.15rem); font-weight:800; line-height:1.18; margin:0 0 10px; color:#fff; }
+    .hero-slide-desc { color:rgba(255,255,255,.68); font-size:.88rem; line-height:1.65; margin-bottom:20px; max-width:460px; }
+    .hero-slide-cta { display:inline-flex; align-items:center; gap:6px; background:var(--neon-indigo); color:#fff; font-family:var(--font-display); font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:9px 18px; border-radius:6px; text-decoration:none; transition:background .2s,transform .2s; }
+    .hero-slide-cta:hover { background:#6366f1; transform:translateY(-1px); }
+    /* Navigation dots */
+    .hero-slide-dots { position:absolute; bottom:16px; left:40px; display:flex; gap:7px; z-index:10; }
+    .hero-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.3); border:none; cursor:pointer; transition:all .25s; padding:0; }
+    .hero-dot.active { background:var(--neon-indigo); width:22px; border-radius:3px; }
+    /* Prev/next arrows */
+    .hero-slide-prev,.hero-slide-next { position:absolute; top:50%; transform:translateY(-50%); z-index:10; background:rgba(13,13,26,.65); border:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.8); width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:all .2s; user-select:none; }
+    .hero-slide-prev:hover,.hero-slide-next:hover { background:var(--neon-indigo); border-color:var(--neon-indigo); color:#fff; }
+    .hero-slide-prev { left:14px; }
+    .hero-slide-next { right:14px; }
+    /* Live pill on slideshow */
+    .hero-live-pill { position:absolute; top:18px; left:40px; z-index:10; display:flex; align-items:center; gap:6px; background:rgba(13,13,26,.75); border:1px solid rgba(129,140,248,.3); border-radius:20px; padding:4px 12px; font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.12em; color:var(--neon-indigo); }
+    .hero-live-dot { width:5px; height:5px; border-radius:50%; background:var(--neon-cyan); animation:livePulse 1.8s ease-in-out infinite; }
 
-    /* ── Site intro strip ── */
-    .site-intro-strip { display:flex; align-items:center; gap:10px; padding:10px 28px; background:var(--surface); border-bottom:1px solid var(--border); flex-wrap:wrap; }
-    .sip-eyebrow { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--neon-indigo); flex-shrink:0; white-space:nowrap; }
-    .sip-divider { color:var(--text-muted); font-size:.7rem; flex-shrink:0; }
-    .sip-body { font-family:var(--font-body); font-size:.8rem; color:var(--text-secondary); line-height:1.4; }
-
-    /* ── Quick access strip ── */
-    .ql-strip { display:flex; gap:8px; overflow-x:auto; padding:14px 28px 6px; scrollbar-width:none; }
-    .ql-strip::-webkit-scrollbar { display:none; }
-    .ql-pill { display:inline-flex; align-items:center; padding:7px 16px; background:var(--surface); border:1px solid var(--border); border-radius:20px; font-family:var(--font-display); font-size:.63rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--text-secondary); text-decoration:none; white-space:nowrap; transition:border-color .2s,color .2s; }
-    .ql-pill:hover { border-color:var(--neon-indigo); color:var(--neon-indigo); }
-    .ql-pill.active { border-color:var(--neon-indigo); color:var(--neon-indigo); background:rgba(129,140,248,0.08); }
-    .ql-trust-line { text-align:center; font-family:var(--font-display); font-size:.52rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); padding:0 28px 10px; margin:0; }
-    .article-card-readtime { font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); margin-top:auto; padding-top:8px; display:block; }
-
-    /* ── Inline newsletter CTA (compact, mid-page) ── */
-    .nl-inline-cta { display:flex; align-items:center; gap:20px; padding:18px 28px; background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); flex-wrap:wrap; }
-    .nl-inline-left { display:flex; flex-direction:column; gap:3px; flex:1; min-width:180px; }
-    .nl-inline-eyebrow { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--neon-indigo); }
-    .nl-inline-body { font-family:var(--font-body); font-size:.82rem; color:var(--text-secondary); }
-    .nl-inline-form { display:flex; gap:8px; align-items:center; flex:2; min-width:240px; }
-    .nl-inline-input { flex:1; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-family:var(--font-body); font-size:.82rem; color:var(--text-primary); min-width:0; transition:border-color .18s,box-shadow .18s; outline:none; }
-    .nl-inline-input::placeholder { color:var(--text-muted); }
-    .nl-inline-input:focus { border-color:var(--neon-indigo); box-shadow:0 0 0 3px rgba(129,140,248,.12); }
-    .nl-inline-success { display:flex; align-items:center; gap:10px; }
+    /* ── Quick links row ── */
+    .home-quick-row { display:flex; gap:8px; overflow-x:auto; padding:14px 28px 4px; scrollbar-width:none; }
+    .home-quick-row::-webkit-scrollbar { display:none; }
+    .quick-link-item { display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 14px; text-decoration:none; color:var(--text-secondary); font-size:.8rem; font-family:var(--font-display); font-weight:600; letter-spacing:.04em; white-space:nowrap; transition:border-color .2s,color .2s; }
+    .quick-link-item:hover { border-color:var(--border-bright); color:var(--text-primary); }
+    .quick-link-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 
     /* ── Stats strip ── */
-    .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:16px 28px; }
-    .stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 10px; text-align:center; transition:border-color .2s,box-shadow .2s; text-decoration:none; color:inherit; display:block; }
-    .stat-chip:hover { border-color:var(--neon-indigo); box-shadow:0 0 0 1px rgba(129,140,248,.15); }
-    .stat-chip:hover .stat-chip-num { color:var(--neon-cyan); }
+    .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:12px 28px 16px; }
+    .stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 10px; text-align:center; transition:border-color .2s; }
+    .stat-chip:hover { border-color:var(--border-bright); }
     .stat-chip-num { display:block; font-family:var(--font-heading); font-size:1.3rem; font-weight:700; color:var(--neon-indigo); }
     .stat-chip-label { display:block; font-family:var(--font-display); font-size:.6rem; font-weight:700; color:var(--text-muted); letter-spacing:.1em; margin-top:2px; text-transform:uppercase; }
 
-    /* ── Follow band ── */
+    /* ── Newsletter band ── */
     .nl-home-band { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; display:flex; flex-wrap:wrap; gap:24px; align-items:center; justify-content:space-between; }
     .nl-home-band-title { font-family:var(--font-heading); font-size:1.4rem; font-weight:700; margin-bottom:8px; }
     .nl-home-band-sub { color:var(--text-secondary); font-size:.9rem; max-width:380px; margin-bottom:14px; }
@@ -92,14 +76,15 @@
 
     /* ── Responsive ── */
     @media(max-width:900px) {
-      .hero-carousel { height:320px; }
-      .hero-slide-content { left:20px; bottom:48px; max-width:75%; }
       .stats-strip { grid-template-columns:repeat(2,1fr); }
+      .hero-slideshow { height:55vw; min-height:300px; }
+      .hero-slide-overlay { padding:24px 20px; }
+      .hero-live-pill,.hero-slide-dots { left:20px; }
     }
     @media(max-width:600px) {
-      .hero-carousel { height:270px; }
-      .hero-prev,.hero-next { display:none; }
-      .stats-strip { grid-template-columns:repeat(2,1fr); }
+      .hero-slideshow { height:62vw; }
+      .hero-slide-cta { font-size:.65rem; padding:8px 14px; }
+      .hero-slide-prev,.hero-slide-next { display:none; }
     }
   </style>
 </head>
@@ -107,127 +92,132 @@
 <main>
 
   <!-- ══════════════════════════════════════════
-       1. HERO CAROUSEL — What's New
+       1. HERO SLIDESHOW
   ══════════════════════════════════════════ -->
-  <div class="hero-carousel" id="heroCarousel" role="region" aria-label="Featured articles">
-    <div class="hero-label">What's new</div>
+  <div class="hero-slideshow" id="heroSlideshow">
+    <div class="hero-live-pill"><span class="hero-live-dot"></span>LIVE INTELLIGENCE</div>
 
-    <div class="hero-slide active">
-      <div class="hero-slide-bg" style="background-image:url('/images/articles/23-openclaw-security-audit-hero.png')"></div>
-      <div class="hero-slide-overlay"></div>
-      <div class="hero-slide-content">
-        <span class="badge badge-dev hero-slide-badge">Security</span>
-        <h2 class="hero-slide-title">2,000 CVEs. Plaintext Keys.<br>A Marketplace You Can't Trust.</h2>
-        <p class="hero-slide-desc">What every OpenClaw user needs to know — and the security checklist to run before your next deployment.</p>
-        <a href="/articles/23-openclaw-security-audit.html" class="btn btn-primary">Read the Audit →</a>
+    <div class="hero-slides-track" id="heroSlidesTrack">
+
+      <!-- Slide 1 -->
+      <div class="hero-slide" style="background-image:url('/images/articles/21-ai-coding-tools-security-crisis-hero.png');background-color:#0d1020">
+        <div class="hero-slide-overlay">
+          <div class="hero-slide-content">
+            <div class="hero-slide-badge"><span class="badge badge-dev">Security</span></div>
+            <h2 class="hero-slide-title">AI Coding Tools Are Leaking Your Secrets — Here's the Data</h2>
+            <p class="hero-slide-desc">Researchers extracted 2,702 real credentials from Copilot suggestions. 200 were working. What the data shows.</p>
+            <a href="/articles/21-ai-coding-tools-security-crisis.html" class="hero-slide-cta">Read Article →</a>
+          </div>
+        </div>
       </div>
+
+      <!-- Slide 2 -->
+      <div class="hero-slide" style="background-image:url('/images/articles/22-ai-agent-true-cost-guide-hero.png');background-color:#0d1020">
+        <div class="hero-slide-overlay">
+          <div class="hero-slide-content">
+            <div class="hero-slide-badge"><span class="badge badge-business">Business</span></div>
+            <h2 class="hero-slide-title">The Real Cost of Running AI Agents in 2026: What Nobody Tells You</h2>
+            <p class="hero-slide-desc">$300/day for 24/7 operation. $200 overnight loop disasters. The honest breakdown from real operators.</p>
+            <a href="/articles/22-ai-agent-true-cost-guide.html" class="hero-slide-cta">Read Article →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="hero-slide" style="background-image:url('/images/articles/01-hermes-agent-complete-guide-hero.png');background-color:#0d1020">
+        <div class="hero-slide-overlay">
+          <div class="hero-slide-content">
+            <div class="hero-slide-badge"><span class="badge badge-agents">AI Agents</span></div>
+            <h2 class="hero-slide-title">Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2026</h2>
+            <p class="hero-slide-desc">Persistent memory, 74+ built-in skills, $3/day at heavy usage. Everything to get started.</p>
+            <a href="/articles/01-hermes-agent-complete-guide.html" class="hero-slide-cta">Read Article →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="hero-slide" style="background-image:url('/images/articles/23-openclaw-security-audit-hero.png');background-color:#0d1020">
+        <div class="hero-slide-overlay">
+          <div class="hero-slide-content">
+            <div class="hero-slide-badge"><span class="badge badge-dev">Security</span></div>
+            <h2 class="hero-slide-title">OpenClaw's Security Problem: 2,000 CVEs, Plaintext Keys, and a Marketplace You Can't Trust</h2>
+            <p class="hero-slide-desc">The official Docker image ships with ~2,000 vulnerabilities. The full picture and what to do.</p>
+            <a href="/articles/23-openclaw-security-audit.html" class="hero-slide-cta">Read Article →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="hero-slide" style="background-image:url('/images/articles/04-ai-automation-agency-hero.png');background-color:#0d1020">
+        <div class="hero-slide-overlay">
+          <div class="hero-slide-content">
+            <div class="hero-slide-badge"><span class="badge badge-business">Business</span></div>
+            <h2 class="hero-slide-title">How to Start an AI Automation Agency in 2026: The Complete AAA Playbook</h2>
+            <p class="hero-slide-desc">The fastest-growing service business model — from first client to recurring revenue with lean teams.</p>
+            <a href="/articles/04-ai-automation-agency-guide.html" class="hero-slide-cta">Read Article →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6 -->
+      <div class="hero-slide" style="background-image:url('/images/articles/14-openrouter-guide-hero.png');background-color:#0d1020">
+        <div class="hero-slide-overlay">
+          <div class="hero-slide-content">
+            <div class="hero-slide-badge"><span class="badge badge-tools">Tools</span></div>
+            <h2 class="hero-slide-title">OpenRouter: Access Every AI Model From One API</h2>
+            <p class="hero-slide-desc">One API key, 200+ models, unified billing. The complete guide for builders who need model flexibility.</p>
+            <a href="/articles/14-openrouter-guide.html" class="hero-slide-cta">Read Article →</a>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="hero-slide">
-      <div class="hero-slide-bg" style="background-image:url('/images/articles/22-ai-agent-true-cost-guide-hero.png')"></div>
-      <div class="hero-slide-overlay"></div>
-      <div class="hero-slide-content">
-        <span class="badge badge-business hero-slide-badge">Business</span>
-        <h2 class="hero-slide-title">The Real Cost of Running<br>AI Agents in 2026</h2>
-        <p class="hero-slide-desc">$300/day for 24/7 operation. $200 overnight loop disasters. The numbers nobody puts in the pitch deck.</p>
-        <a href="/articles/22-ai-agent-true-cost-guide.html" class="btn btn-primary">See the Numbers →</a>
-      </div>
-    </div>
-
-    <div class="hero-slide">
-      <div class="hero-slide-bg" style="background-image:url('/images/articles/klarnas-100m-disaster-hero.png')"></div>
-      <div class="hero-slide-overlay"></div>
-      <div class="hero-slide-content">
-        <span class="badge badge-business hero-slide-badge">Business</span>
-        <h2 class="hero-slide-title">Klarna's $100M Disaster:<br>What Every Business Can Learn</h2>
-        <p class="hero-slide-desc">They replaced hundreds of humans with AI — then had to walk it back. The real data behind the headlines.</p>
-        <a href="/articles/klarnas-100m-disaster.html" class="btn btn-primary">Read the Analysis →</a>
-      </div>
-    </div>
-
-    <div class="hero-slide">
-      <div class="hero-slide-bg" style="background-image:url('/images/articles/21-ai-coding-tools-security-crisis-hero.png')"></div>
-      <div class="hero-slide-overlay"></div>
-      <div class="hero-slide-content">
-        <span class="badge badge-dev hero-slide-badge">Security</span>
-        <h2 class="hero-slide-title">AI Coding Tools Are<br>Leaking Your Secrets</h2>
-        <p class="hero-slide-desc">Researchers extracted 2,702 real credentials from Copilot suggestions. 200 were working. Here's the data.</p>
-        <a href="/articles/21-ai-coding-tools-security-crisis.html" class="btn btn-primary">See the Data →</a>
-      </div>
-    </div>
-
-    <div class="hero-slide">
-      <div class="hero-slide-bg" style="background-image:url('/images/articles/sycophancy-trap-hero.png')"></div>
-      <div class="hero-slide-overlay"></div>
-      <div class="hero-slide-content">
-        <span class="badge badge-agents hero-slide-badge">AI Agents</span>
-        <h2 class="hero-slide-title">The Sycophancy Trap:<br>Why Your AI Is Lying to You</h2>
-        <p class="hero-slide-desc">AI models are trained to agree with you. Understanding this bias is one of the most valuable skills in 2026.</p>
-        <a href="/articles/sycophancy-trap.html" class="btn btn-primary">Read the Deep Dive →</a>
-      </div>
-    </div>
-
-    <div class="hero-slide">
-      <div class="hero-slide-bg" style="background-image:url('/images/articles/01-hermes-agent-complete-guide-hero.png')"></div>
-      <div class="hero-slide-overlay"></div>
-      <div class="hero-slide-content">
-        <span class="badge badge-agents hero-slide-badge">Guide</span>
-        <h2 class="hero-slide-title">The Complete Hermes<br>Agent Guide</h2>
-        <p class="hero-slide-desc">Setup, skills, and income strategies — everything you need to run the Hermes agent framework, in one place.</p>
-        <a href="/articles/01-hermes-agent-complete-guide.html" class="btn btn-primary">Read the Guide →</a>
-      </div>
-    </div>
-
-    <button class="hero-prev" id="heroPrev" aria-label="Previous slide">&#8249;</button>
-    <button class="hero-next" id="heroNext" aria-label="Next slide">&#8250;</button>
-    <div class="hero-dots" role="tablist" aria-label="Slide indicators">
-      <button class="hero-dot active" aria-label="Slide 1" aria-current="true"></button>
+    <!-- Dots -->
+    <div class="hero-slide-dots" id="heroSlideDots">
+      <button class="hero-dot active" aria-label="Slide 1"></button>
       <button class="hero-dot" aria-label="Slide 2"></button>
       <button class="hero-dot" aria-label="Slide 3"></button>
       <button class="hero-dot" aria-label="Slide 4"></button>
       <button class="hero-dot" aria-label="Slide 5"></button>
       <button class="hero-dot" aria-label="Slide 6"></button>
     </div>
-  </div>
 
-  <!-- VALUE PROP STRIP — answers "what is this site?" for first-time visitors -->
-  <div class="site-intro-strip">
-    <span class="sip-eyebrow">Aether Intel</span>
-    <span class="sip-divider">·</span>
-    <span class="sip-body">Real-time AI news, BYOK tools, and signal intelligence for builders. Free, no subscriptions, zero data collected.</span>
+    <!-- Arrows -->
+    <button class="hero-slide-prev" id="heroPrev" aria-label="Previous">&#8249;</button>
+    <button class="hero-slide-next" id="heroNext" aria-label="Next">&#8250;</button>
   </div>
-
-  <!-- QUICK ACCESS -->
-  <div class="ql-strip">
-    <a href="/tools/chat.html" class="ql-pill">AI Chat</a>
-    <a href="/tools/research.html" class="ql-pill">Research</a>
-    <a href="/tools/writer.html" class="ql-pill">Writer</a>
-    <a href="/tools/image.html" class="ql-pill">Image Gen</a>
-    <a href="/skills.html" class="ql-pill">Skills</a>
-    <a href="/articles.html" class="ql-pill">All Articles</a>
-  </div>
-  <p class="ql-trust-line">Bring your own API key · Zero data collected · No account needed</p>
 
   <!-- ══════════════════════════════════════════
-       2. STATS STRIP
+       2. QUICK LINKS + STATS
   ══════════════════════════════════════════ -->
+  <div class="home-quick-row">
+    <a href="/tools/chat.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(129,140,248,.8)"></span>AI Chat</a>
+    <a href="/tools/transcript.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(244,114,182,.8)"></span>YT Summarizer</a>
+    <a href="/tools/writer.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(167,139,250,.8)"></span>Writer</a>
+    <a href="/tools/image.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(245,158,11,.8)"></span>Image Gen</a>
+    <a href="/articles.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(34,211,238,.8)"></span>All Articles</a>
+    <a href="/skills.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(52,211,153,.8)"></span>Skills</a>
+    <a href="/ai-intelligence.html" class="quick-link-item"><span class="quick-link-dot" style="background:rgba(129,140,248,.6)"></span>Intelligence</a>
+  </div>
+
   <div class="stats-strip">
-    <a href="/articles.html" class="stat-chip">
-      <span class="stat-chip-num">32</span>
+    <div class="stat-chip">
+      <span class="stat-chip-num">30+</span>
       <span class="stat-chip-label">AI Articles</span>
-    </a>
-    <a href="/tools/chat.html" class="stat-chip">
+    </div>
+    <div class="stat-chip">
       <span class="stat-chip-num">100%</span>
       <span class="stat-chip-label">Free to Use</span>
-    </a>
-    <a href="https://openrouter.ai" class="stat-chip" target="_blank" rel="noopener noreferrer">
-      <span class="stat-chip-num">100+</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-chip-num">200+</span>
       <span class="stat-chip-label">AI Models</span>
-    </a>
-    <a href="/tools/chat.html" class="stat-chip">
+    </div>
+    <div class="stat-chip">
       <span class="stat-chip-num">0</span>
       <span class="stat-chip-label">Data Collected</span>
-    </a>
+    </div>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -235,8 +225,8 @@
   ══════════════════════════════════════════ -->
   <section class="hub-section reveal-section">
     <div class="section-header">
-      <h2 class="section-title">What's Moving in AI</h2>
-      <p class="section-sub">High-signal observations on models, tools, and market dynamics — filtered from the noise, updated weekly.</p>
+      <h2 class="section-title">Latest Signals</h2>
+      <p class="section-sub">High-signal observations across models, tools, and market dynamics — filtered from the noise.</p>
     </div>
     <div class="signals-list">
       <div class="signal-item signal-high">
@@ -282,23 +272,6 @@
     </div>
   </section>
 
-  <!-- INLINE NL CTA — compact, positioned after first content block -->
-  <div class="nl-inline-cta reveal-scale" id="nl-inline-cta">
-    <div class="nl-inline-left">
-      <span class="nl-inline-eyebrow">📡 Get the Signal</span>
-      <span class="nl-inline-body">New AI intelligence drops straight to your inbox. No weekly digest.</span>
-    </div>
-    <form class="nl-inline-form" id="nl-inline-form" onsubmit="handleInlineNLSubmit(event)">
-      <label for="nl-inline-email" class="sr-only">Your email address</label>
-      <input type="email" class="nl-inline-input" id="nl-inline-email" placeholder="your@email.com" required>
-      <button type="submit" class="btn btn-primary btn-sm" id="nl-inline-btn">Join →</button>
-    </form>
-    <div class="nl-inline-success hidden" id="nl-inline-success">
-      <strong style="color:var(--neon-cyan)">You're in.</strong>
-      <span style="color:var(--text-secondary);font-size:.8rem">Signal incoming.</span>
-    </div>
-  </div>
-
   <!-- ══════════════════════════════════════════
        4. LATEST AI MODELS (via OpenRouter — live)
   ══════════════════════════════════════════ -->
@@ -330,9 +303,9 @@
           <img src="/images/articles/21-ai-coding-tools-security-crisis-hero.png" alt="AI Coding Tools Are Leaking Your Secrets" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
+          <span class="badge badge-dev">Security</span>
           <h3 class="article-card-title">AI Coding Tools Are Leaking Your Secrets — Here's the Data</h3>
           <p class="article-card-desc">Researchers extracted 2,702 real credentials from Copilot suggestions. 200 were working. Here's what the data shows.</p>
-          <span class="article-card-readtime">7 min read</span>
         </div>
       </a>
 
@@ -341,9 +314,9 @@
           <img src="/images/articles/22-ai-agent-true-cost-guide-hero.png" alt="The Real Cost of Running AI Agents" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
+          <span class="badge badge-business">Business</span>
           <h3 class="article-card-title">The Real Cost of Running AI Agents in 2026: What Nobody Tells You</h3>
           <p class="article-card-desc">$300/day for 24/7 operation. $200 overnight loop disasters. The honest cost breakdown from real users.</p>
-          <span class="article-card-readtime">9 min read</span>
         </div>
       </a>
 
@@ -352,9 +325,9 @@
           <img src="/images/articles/23-openclaw-security-audit-hero.png" alt="OpenClaw Security Audit" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
+          <span class="badge badge-dev">Security</span>
           <h3 class="article-card-title">OpenClaw's Security Problem: 2,000 CVEs, Plaintext Keys, and a Marketplace You Can't Trust</h3>
           <p class="article-card-desc">The official Docker image ships with ~2,000 vulnerabilities. Here's the full picture and what to do about it.</p>
-          <span class="article-card-readtime">11 min read</span>
         </div>
       </a>
 
@@ -363,9 +336,9 @@
           <img src="/images/articles/01-hermes-agent-complete-guide-hero.png" alt="Hermes Agent: Complete Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
+          <span class="badge badge-agents">AI Agents</span>
           <h3 class="article-card-title">Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2026</h3>
           <p class="article-card-desc">Everything you need to run the Hermes agent framework from setup to income-generating automations.</p>
-          <span class="article-card-readtime">12 min read</span>
         </div>
       </a>
 
@@ -374,9 +347,9 @@
           <img src="/images/articles/02-12-ways-make-money-hero.png" alt="12 Ways to Make Money With AI" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
+          <span class="badge badge-business">Business</span>
           <h3 class="article-card-title">12 Proven Ways to Make Money With AI in 2026 (With Real Income Numbers)</h3>
           <p class="article-card-desc">The methods that are actually generating income right now — with documented approaches and real income ranges.</p>
-          <span class="article-card-readtime">10 min read</span>
         </div>
       </a>
 
@@ -385,9 +358,9 @@
           <img src="/images/articles/04-ai-automation-agency-hero.png" alt="AI Automation Agency Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
+          <span class="badge badge-business">Business</span>
           <h3 class="article-card-title">How to Start an AI Automation Agency in 2026: The Complete AAA Playbook</h3>
           <p class="article-card-desc">The fastest-growing service business of 2026 — from first client to recurring revenue.</p>
-          <span class="article-card-readtime">10 min read</span>
         </div>
       </a>
 
@@ -396,9 +369,9 @@
           <img src="/images/articles/14-openrouter-guide-hero.png" alt="OpenRouter Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
+          <span class="badge badge-tools">Tools</span>
           <h3 class="article-card-title">OpenRouter: The Complete Guide to Accessing Every AI Model From One API (2026)</h3>
           <p class="article-card-desc">One API key, 200+ models, unified billing. The OpenRouter guide for builders.</p>
-          <span class="article-card-readtime">8 min read</span>
         </div>
       </a>
 
@@ -407,9 +380,9 @@
           <img src="/images/articles/sycophancy-trap-hero.png" alt="The Sycophancy Trap" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
+          <span class="badge badge-research">Research</span>
           <h3 class="article-card-title">The Sycophancy Trap: Why Your AI Assistant Is Lying to You</h3>
           <p class="article-card-desc">AI models are trained to tell you what you want to hear. Here's how to work around it.</p>
-          <span class="article-card-readtime">6 min read</span>
         </div>
       </a>
 
@@ -418,9 +391,9 @@
           <img src="/images/articles/klarnas-100m-disaster-hero.png" alt="Klarna's $100M Disaster" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
+          <span class="badge badge-news">News</span>
           <h3 class="article-card-title">Klarna's $100M Disaster: What Every Business Can Learn About AI Deployment</h3>
           <p class="article-card-desc">Klarna bet $100M on replacing human workers with AI — and the numbers didn't add up.</p>
-          <span class="article-card-readtime">7 min read</span>
         </div>
       </a>
 
@@ -488,25 +461,23 @@
   <div class="content-section">
     <div class="nl-home-band reveal-scale" style="margin:0 28px">
       <div>
-        <span class="badge badge-secondary" style="margin-bottom:10px">📡 STAY ON THE SIGNAL</span>
+        <span class="badge badge-secondary" style="margin-bottom:10px">STAY ON THE SIGNAL</span>
         <h2 class="nl-home-band-title">Get notified when new intelligence drops.</h2>
         <p class="nl-home-band-sub">No schedule. No noise. New articles and signal drops land in your inbox when they're ready — not on a clock.</p>
         <div class="nl-home-perks">
-          <span class="nl-home-perk">🤖 Model Drops</span>
-          <span class="nl-home-perk">💰 Business Moves</span>
-          <span class="nl-home-perk">🛠 Tool Picks</span>
-          <span class="nl-home-perk">📡 Signal Alerts</span>
+          <span class="nl-home-perk">Model Drops</span>
+          <span class="nl-home-perk">Business Moves</span>
+          <span class="nl-home-perk">Tool Picks</span>
+          <span class="nl-home-perk">Signal Alerts</span>
         </div>
-        <p style="font-size:.76rem;color:var(--text-muted);margin-top:14px;line-height:1.5">Independent publication. Written by a human who builds with these tools daily — not a content scheduler.</p>
       </div>
       <div class="nl-home-band-right">
         <form class="nl-home-form" id="nl-home-form" onsubmit="handleHomeNLSubmit(event)">
           <div class="nl-home-input-row">
-            <label for="nl-home-email" class="sr-only">Your email address</label>
             <input type="email" class="form-input" placeholder="your@email.com" required id="nl-home-email">
             <button type="submit" class="btn btn-primary btn-sm" id="nl-home-btn">Follow the Signal →</button>
           </div>
-          <p style="font-size:.72rem;color:var(--text-muted);margin-top:8px">No weekly digest. Signal drops when there's something worth saying. Unsubscribe anytime.</p>
+          <p style="font-size:.72rem;color:var(--text-muted);margin-top:8px">No spam. Unsubscribe anytime.</p>
         </form>
         <div class="nl-home-success hidden" id="nl-home-success">
           <div style="font-size:1.8rem">🎯</div>
@@ -527,8 +498,8 @@
         <p style="color:var(--text-secondary);font-size:.9rem;max-width:420px">Your API keys stay in your browser. Zero data collected. Access GPT-4o, Claude, Gemini, Llama and more — free.</p>
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <a href="/tools/chat.html" class="btn btn-primary">🛠 Try Free AI Tools</a>
-        <a href="/articles.html" class="btn btn-secondary">📰 Read the News</a>
+        <a href="/tools/chat.html" class="btn btn-primary">Try Free AI Tools</a>
+        <a href="/articles.html" class="btn btn-secondary">Read the News</a>
       </div>
     </div>
   </div>
@@ -536,47 +507,6 @@
 </main>
 
 <script>
-  // ── Hero Carousel ──
-  (function () {
-    var slides = document.querySelectorAll('.hero-slide');
-    var dots   = document.querySelectorAll('.hero-dot');
-    if (!slides.length) return;
-    var cur = 0, timer;
-
-    function goTo(n) {
-      slides[cur].classList.remove('active');
-      dots[cur].classList.remove('active');
-      dots[cur].removeAttribute('aria-current');
-      cur = (n + slides.length) % slides.length;
-      slides[cur].classList.add('active');
-      dots[cur].classList.add('active');
-      dots[cur].setAttribute('aria-current', 'true');
-    }
-    function start() { timer = setInterval(function () { goTo(cur + 1); }, 5500); }
-    function reset() { clearInterval(timer); start(); }
-
-    document.getElementById('heroPrev').addEventListener('click', function () { goTo(cur - 1); reset(); });
-    document.getElementById('heroNext').addEventListener('click', function () { goTo(cur + 1); reset(); });
-    dots.forEach(function (d, i) { d.addEventListener('click', function () { goTo(i); reset(); }); });
-
-    var el = document.getElementById('heroCarousel');
-    el.addEventListener('mouseenter', function () { clearInterval(timer); });
-    el.addEventListener('mouseleave', start);
-    start();
-  })();
-
-  function handleInlineNLSubmit(e) {
-    e.preventDefault();
-    var btn = document.getElementById('nl-inline-btn');
-    var form = document.getElementById('nl-inline-form');
-    var success = document.getElementById('nl-inline-success');
-    if (btn) btn.textContent = 'Joining...';
-    setTimeout(function(){
-      if (form) form.classList.add('hidden');
-      if (success) success.classList.remove('hidden');
-    }, 900);
-  }
-
   function handleHomeNLSubmit(e) {
     e.preventDefault();
     var btn = document.getElementById('nl-home-btn');
@@ -588,6 +518,66 @@
       if (success) success.classList.remove('hidden');
     }, 900);
   }
+
+  // ── Hero Slideshow ──────────────────────────────────────────────────────────
+  (function() {
+    var TOTAL = 6;
+    var INTERVAL = 5000;
+    var current = 0;
+    var timer = null;
+    var track = document.getElementById('heroSlidesTrack');
+    var dots = document.querySelectorAll('.hero-dot');
+    var prev = document.getElementById('heroPrev');
+    var next = document.getElementById('heroNext');
+
+    function goTo(idx) {
+      current = (idx + TOTAL) % TOTAL;
+      if (track) track.style.transform = 'translateX(-' + (current * 100) + '%)';
+      dots.forEach(function(d, i) {
+        d.classList.toggle('active', i === current);
+      });
+    }
+
+    function startAuto() {
+      clearInterval(timer);
+      timer = setInterval(function() { goTo(current + 1); }, INTERVAL);
+    }
+
+    function resetAuto() { startAuto(); }
+
+    // Dot clicks
+    dots.forEach(function(d, i) {
+      d.addEventListener('click', function() { goTo(i); resetAuto(); });
+    });
+
+    // Arrow clicks
+    if (prev) prev.addEventListener('click', function() { goTo(current - 1); resetAuto(); });
+    if (next) next.addEventListener('click', function() { goTo(current + 1); resetAuto(); });
+
+    // Touch swipe
+    var touchStartX = 0;
+    var slideshow = document.getElementById('heroSlideshow');
+    if (slideshow) {
+      slideshow.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].clientX;
+      }, { passive: true });
+      slideshow.addEventListener('touchend', function(e) {
+        var dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 50) {
+          goTo(dx < 0 ? current + 1 : current - 1);
+          resetAuto();
+        }
+      }, { passive: true });
+    }
+
+    // Pause on hover
+    if (slideshow) {
+      slideshow.addEventListener('mouseenter', function() { clearInterval(timer); });
+      slideshow.addEventListener('mouseleave', function() { startAuto(); });
+    }
+
+    startAuto();
+  })();
 </script>
 <script src="/js/main.js"></script>
 <script src="/js/byok.js"></script>

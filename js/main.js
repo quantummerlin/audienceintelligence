@@ -28,11 +28,12 @@
 
     <span class="nav-section-label">Tools</span>
     <a href="/tools/chat.html" class="nav-item" data-page="chat">AI Chat</a>
+    <a href="/tools/transcript.html" class="nav-item" data-page="transcript">YT Summarizer</a>
     <a href="/tools/writer.html" class="nav-item" data-page="writer">Content Writer</a>
     <a href="/tools/image.html" class="nav-item" data-page="image">Image Gen</a>
 
     <span class="nav-section-label">Resources</span>
-    <a href="/skills.html" class="nav-item" data-page="skills">Skills Library</a>
+    <a href="/skills.html" class="nav-item" data-page="skills">Skills &amp; Prompts</a>
     <a href="/research.html" class="nav-item" data-page="research">Research Reports</a>
     <a href="/resources.html" class="nav-item" data-page="resources">Resources</a>
     <a href="/affiliates.html" class="nav-item" data-page="affiliates">Recommended Tools</a>
@@ -45,20 +46,12 @@
       <a href="/tools/chat.html">Try Free →</a>
     </div>
     <div class="sb-card" style="border-color:rgba(245,158,11,0.2)">
-      <h4 style="color:var(--neon-gold)">SKILLS LIBRARY</h4>
-      <p>Free agent skills and prompt packs to download.</p>
-      <a href="/skills.html" style="color:var(--neon-gold);background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3)">Browse →</a>
+      <h4 style="color:var(--neon-gold)">REPORTS</h4>
+      <p>Deep AI research from real data.</p>
+      <a href="/research.html" style="color:var(--neon-gold);background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3)">Browse →</a>
     </div>
   </div>
 </aside>`;
-
-  const MOBILE_HEADER_HTML = `
-<div class="mobile-topbar">
-  <a href="/index.html" class="mobile-topbar-logo">
-    <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
-  </a>
-  <span class="mobile-topbar-tagline">AI News · Tools · Intelligence</span>
-</div>`;
 
   const NOW_BAR_HTML = `
 <footer class="now-bar">
@@ -119,15 +112,8 @@
     const existingMain = body.querySelector('main');
     const mainContent = document.createElement('div');
     mainContent.className = 'main-content';
-
-    // Inject mobile topbar at the very top of .main-content
-    const mobileHeaderWrapper = document.createElement('div');
-    mobileHeaderWrapper.innerHTML = MOBILE_HEADER_HTML.trim();
-    const mobileHeaderEl = mobileHeaderWrapper.firstElementChild;
-    mainContent.appendChild(mobileHeaderEl);
-
     if (existingMain) {
-      // Move the existing <main> into .main-content (after mobile header)
+      // Move the existing <main> into .main-content
       body.removeChild(existingMain);
       mainContent.appendChild(existingMain);
     }
@@ -135,7 +121,6 @@
     // Build .scroll-progress bar
     const scrollProgress = document.createElement('div');
     scrollProgress.className = 'scroll-progress';
-    scrollProgress.setAttribute('aria-hidden', 'true');
 
     // Build .app-shell
     const appShell = document.createElement('div');
@@ -183,6 +168,7 @@
     if (p.includes('/ai-hub')) return 'ai-hub';
     if (p.includes('/ai-intelligence')) return 'ai-intelligence';
     if (p.includes('/tools/chat')) return 'chat';
+    if (p.includes('/tools/transcript')) return 'transcript';
     if (p.includes('/tools/writer')) return 'writer';
     if (p.includes('/tools/image')) return 'image';
     if (p.includes('/skills')) return 'skills';
@@ -203,20 +189,6 @@
       } else {
         el.classList.remove('active');
       }
-    });
-  }
-
-  /**
-   * Applies .active to any .ql-pill whose href matches the current pathname.
-   * Enables the quick-access strip to reflect current page location.
-   */
-  function setActivePills() {
-    var p = window.location.pathname;
-    document.querySelectorAll('.ql-pill').forEach(function (pill) {
-      var href = pill.getAttribute('href') || '';
-      // Exact match, or pathname starts with the pill's path (handles index = /)
-      var isActive = href && (p === href || (href !== '/' && p.startsWith(href.replace('.html', ''))));
-      pill.classList.toggle('active', isActive);
     });
   }
 
@@ -633,7 +605,6 @@
   document.addEventListener('DOMContentLoaded', function () {
     injectAppShell();
     setActiveNav();
-    setActivePills();
     initScrollProgress();
     initScrollReveal();
     setGreeting();
