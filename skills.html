@@ -535,6 +535,32 @@ concise 3-paragraph summary.</div>
           </div>
         </div>
 
+        <!-- Few-Shot Prompting -->
+        <div class="skill-card" data-category="prompts" data-name="few shot prompting in-context learning examples format tone classification extraction">
+          <div class="skill-card-body">
+            <div class="skill-card-meta">
+              <span class="badge badge-secondary">Prompts</span>
+              <span class="skill-diff skill-diff-beginner">Beginner</span>
+              <span class="skill-time">~20 min</span>
+            </div>
+            <h3 class="skill-card-title">Few-Shot Prompting</h3>
+            <p class="skill-card-why">When you can't fully describe what you want in words, show the model.</p>
+            <p class="skill-card-desc">Include 2–5 worked examples directly in your prompt and the model infers format, tone, and edge-case handling from them — no fine-tuning required. The fastest way to lock in exact output schemas and teach unusual output styles.</p>
+            <ul class="skill-learns">
+              <li>What in-context learning actually does inside the model</li>
+              <li>How many examples to use (and when adding more hurts)</li>
+              <li>How to write examples that teach the right things</li>
+            </ul>
+            <div class="skill-card-actions">
+              <button class="btn-skill-download" onclick="downloadSkill('few-shot-prompting')">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Free
+              </button>
+              <a href="/skills/few-shot-prompting.html" class="skill-guide-link">Read the Guide →</a>
+            </div>
+          </div>
+        </div>
+
         <!-- Agent Memory Architecture -->
         <div class="skill-card" data-category="agents" data-name="agent memory architecture vector episodic persistent context">
           <div class="skill-card-body">
@@ -825,6 +851,161 @@ DATA: [paste step 2 output]
 
 4. **Use temperature 0** for extraction and verification steps (you want
    determinism). Use higher temperature for the synthesis/writing step.
+
+---
+
+*Downloaded from Aether Intel — https://ai.quantummerlin.com*
+`
+      },
+
+      'few-shot-prompting': {
+        filename: 'few-shot-prompting-templates.md',
+        content: `# Few-Shot Prompting Templates
+## Aether Intel — Free Skills Library
+## https://ai.quantummerlin.com/skills.html
+
+---
+
+## What Is Few-Shot Prompting?
+
+Few-shot prompting includes worked examples directly in your prompt so the
+model can infer format, tone, and edge-case handling from them — not just
+from instructions. Useful when the output is easier to show than to describe.
+
+---
+
+## Decision Checklist: Zero-Shot vs Few-Shot
+
+Use FEW-SHOT when:
+✅ Output format must be exact (JSON schema, specific fields)
+✅ Tone is highly specific or unusual (brand voice, niche register)
+✅ Task has edge cases or ambiguous inputs to handle
+✅ Classification with a closed label set
+✅ Model is consistently mis-formatting despite instructions
+
+Use ZERO-SHOT when:
+❌ Simple factual lookup or summary
+❌ Open-ended creative generation
+❌ Reasoning task (try Chain-of-Thought first instead)
+
+---
+
+## Template 1: Classification (2-Shot)
+
+\`\`\`
+Classify the following text. Use ONLY these category values:
+[CATEGORY_A] | [CATEGORY_B] | [CATEGORY_C]
+Return JSON exactly as shown.
+
+Input: "[EXAMPLE_INPUT_1]"
+JSON: {"category":"[CATEGORY_A]","confidence":"high","notes":null}
+
+---
+
+Input: "[EXAMPLE_INPUT_2 — edge case or ambiguous]"
+JSON: {"category":"[CATEGORY_B]","confidence":"medium","notes":"[REASON]"}
+
+---
+
+Input: [YOUR ACTUAL INPUT]
+JSON:
+\`\`\`
+
+---
+
+## Template 2: Data Extraction (2-Shot)
+
+\`\`\`
+Extract the following fields from each text. Return JSON.
+Use null for any field not present in the text.
+
+Text: "[EXAMPLE_TEXT_1]"
+JSON: {"field_1":"value","field_2":"value","field_3":null}
+
+---
+
+Text: "[EXAMPLE_TEXT_2 — with a missing field]"
+JSON: {"field_1":"value","field_2":null,"field_3":"value"}
+
+---
+
+Text: [YOUR TEXT]
+JSON:
+\`\`\`
+
+---
+
+## Template 3: Tone Rewriting (2-Shot)
+
+\`\`\`
+Rewrite each message in [TARGET TONE: e.g. warm, direct, human].
+Do not change the meaning. Keep responses under [X] words.
+
+Original: "[EXAMPLE_ORIGINAL_1]"
+Rewrite: "[EXAMPLE_REWRITE_1 — demonstrates the target tone]"
+
+---
+
+Original: "[EXAMPLE_ORIGINAL_2]"
+Rewrite: "[EXAMPLE_REWRITE_2 — different context, same tone]"
+
+---
+
+Original: [YOUR TEXT]
+Rewrite:
+\`\`\`
+
+---
+
+## Template 4: Structured Scoring (3-Shot)
+
+\`\`\`
+Score the following items against these criteria:
+[CRITERION_1], [CRITERION_2], [CRITERION_3]
+Return JSON with a score 1-5 and one-line rationale for each.
+
+Item: "[EXAMPLE_ITEM_1]"
+JSON: {
+  "criterion_1": {"score": 4, "note": "..."},
+  "criterion_2": {"score": 2, "note": "..."},
+  "criterion_3": {"score": 5, "note": "..."}
+}
+
+---
+
+Item: [YOUR ITEM]
+JSON:
+\`\`\`
+
+---
+
+## Anatomy of a Good Example
+
+1. REALISTIC INPUT  — use inputs that look like real-world data, not idealised
+2. EXACT FORMAT     — output format must match production requirements precisely
+3. REPRESENTATIVE   — cover at least one edge case (missing data, ambiguous input)
+4. CLEAR SEPARATOR  — use --- or blank lines between examples and real question
+5. CONSISTENT TONE  — all examples must model the same tone/style
+
+---
+
+## How Many Examples?
+
+1 example   — locks in output format
+2-3 examples — adds tone consistency and handles basic variation
+4-5 examples — add specifically for edge cases
+6+ examples  — diminishing returns; check if example quality is the real issue
+
+---
+
+## Common Mistakes
+
+1. Only using clean/easy examples — add at least one edge case
+2. Examples that contradict instructions — examples win, keep them consistent
+3. Examples too long — output length mirrors example length
+4. No separator between examples and real question
+5. Biased class balance in classification examples
+6. Using examples instead of a clear task description
 
 ---
 
