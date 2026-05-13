@@ -103,8 +103,7 @@
   ══════════════════════════════════════════ -->
   <section class="hub-section reveal-section">
     <div class="section-header">
-      <h2 class="section-title">AI News</h2>
-      <a href="/articles.html" class="section-see-all">See all →</a>
+      <h2 class="section-title">Latest AI News</h2>
     </div>
     <div class="article-grid">
 
@@ -260,55 +259,108 @@
 </main>
 
 <script>
-  // ── Hero Slideshow ──────────────────────────────────────────────────────────
+  // ── Hero Slideshow ─────────────────────────────────────────────────────────
   (function() {
     var SLIDES_DATA = [
-      { badge:'badge-dev', cat:'AI &amp; Work', title:'"I'm Quitting My Job Due to Vibe Coders." The AI Coding Crisis Driving Senior Engineers Out.', desc:'Senior engineers are walking out. Copilot repos have a 40% higher credential leak rate. 2,702 real secrets extracted.', href:'/articles/25-vibe-coders-senior-engineer-exodus.html' },
-      { badge:'badge-business', cat:'Content &amp; Creators', title:'Why "AI Slop" Is Losing the Internet: The Human-Touch Content Divide', desc:'AI content formulas saturate in weeks. Audiences are developing immunity. The creators pulling ahead studied actual psychology.', href:'/articles/27-ai-slop-human-touch-content.html' },
-      { badge:'badge-business', cat:'Business', title:'The AI Passive Income Fantasy vs. Reality: Why the Dream Keeps Failing', desc:'AI job anxiety is driving the gold rush. SaaS requires 20+ hours/week. Here's the gap between promise and practice.', href:'/articles/26-ai-passive-income-reality-check.html' },
-      { badge:'badge-dev', cat:'Security', title:'Self-Hosting OpenClaw Was Supposed to Give You Control. Here's What You Actually Got.', desc:'2,000 CVEs in the official image, $300/day runaway bills, and memory that forgets mid-task.', href:'/articles/24-openclaw-self-hosting-reality.html' },
-      { badge:'badge-dev', cat:'Security', title:'AI Coding Tools Are Leaking Your Secrets — Here's the Data', desc:'Researchers extracted 2,702 real credentials from Copilot suggestions. 200 were working.', href:'/articles/21-ai-coding-tools-security-crisis.html' },
-      { badge:'badge-agents', cat:'AI Agents', title:'Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2026', desc:'Persistent memory, 74+ built-in skills, $3/day at heavy usage. Everything to get started.', href:'/articles/01-hermes-agent-complete-guide.html' }
+      {
+        badge: "badge-dev",
+        cat:   "AI &amp; Work",
+        title: "\u201cI\u2019m Quitting My Job Due to Vibe Coders.\u201d The AI Coding Crisis Driving Senior Engineers Out.",
+        desc:  "Senior engineers are walking out. Copilot repos have a 40% higher credential leak rate. 2,702 real secrets extracted.",
+        href:  "/articles/25-vibe-coders-senior-engineer-exodus.html"
+      },
+      {
+        badge: "badge-business",
+        cat:   "Content &amp; Creators",
+        title: "Why \u201cAI Slop\u201d Is Losing the Internet: The Human-Touch Content Divide",
+        desc:  "AI content formulas saturate in weeks. Audiences are developing immunity. The creators pulling ahead studied actual psychology.",
+        href:  "/articles/27-ai-slop-human-touch-content.html"
+      },
+      {
+        badge: "badge-business",
+        cat:   "Business",
+        title: "The AI Passive Income Fantasy vs. Reality: Why the Dream Keeps Failing",
+        desc:  "AI job anxiety is driving the gold rush. SaaS requires 20+ hours/week. Here\u2019s the gap between promise and practice.",
+        href:  "/articles/26-ai-passive-income-reality-check.html"
+      },
+      {
+        badge: "badge-dev",
+        cat:   "Security",
+        title: "Self-Hosting OpenClaw Was Supposed to Give You Control. Here\u2019s What You Actually Got.",
+        desc:  "2,000 CVEs in the official image, $300/day runaway bills, and memory that forgets mid-task.",
+        href:  "/articles/24-openclaw-self-hosting-reality.html"
+      },
+      {
+        badge: "badge-dev",
+        cat:   "Security",
+        title: "AI Coding Tools Are Leaking Your Secrets \u2014 Here\u2019s the Data",
+        desc:  "Researchers extracted 2,702 real credentials from Copilot suggestions. 200 were working.",
+        href:  "/articles/21-ai-coding-tools-security-crisis.html"
+      },
+      {
+        badge: "badge-agents",
+        cat:   "AI Agents",
+        title: "Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2026",
+        desc:  "Persistent memory, 74+ built-in skills, $3/day at heavy usage. Everything to get started.",
+        href:  "/articles/01-hermes-agent-complete-guide.html"
+      }
     ];
-    var TOTAL = SLIDES_DATA.length, INTERVAL = 6000, current = 0, timer = null;
-    var track = document.getElementById('heroSlidesTrack');
-    var dots = document.querySelectorAll('.hero-dot');
-    var prev = document.getElementById('heroPrev');
-    var next = document.getElementById('heroNext');
-    var panel = document.getElementById('heroContentPanel');
+
+    var TOTAL    = SLIDES_DATA.length;
+    var INTERVAL = 6000;
+    var current  = 0;
+    var timer    = null;
+
+    var track  = document.getElementById("heroSlidesTrack");
+    var dots   = document.querySelectorAll(".hero-dot");
+    var prev   = document.getElementById("heroPrev");
+    var next   = document.getElementById("heroNext");
+    var panel  = document.getElementById("heroContentPanel");
 
     function updatePanel(idx) {
       if (!panel) return;
       var s = SLIDES_DATA[idx];
-      panel.innerHTML = '<div class="hero-slide-badge"><span class="badge ' + s.badge + '">' + s.cat + '</span></div>' +
+      panel.innerHTML =
+        '<div class="hero-slide-badge"><span class="badge ' + s.badge + '">' + s.cat + '</span></div>' +
         '<h2 class="hero-slide-title">' + s.title + '</h2>' +
         '<p class="hero-slide-desc">' + s.desc + '</p>' +
-        '<a href="' + s.href + '" class="hero-slide-cta">Read Article →</a>';
+        '<a href="' + s.href + '" class="hero-slide-cta">Read Article \u2192</a>';
     }
 
     function goTo(idx) {
       current = (idx + TOTAL) % TOTAL;
-      if (track) track.style.transform = 'translateX(-' + (current * 100) + '%)';
-      dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
+      if (track) track.style.transform = "translateX(-" + (current * 100) + "%)";
+      dots.forEach(function(d, i) { d.classList.toggle("active", i === current); });
       updatePanel(current);
     }
 
-    function startAuto() { clearInterval(timer); timer = setInterval(function() { goTo(current + 1); }, INTERVAL); }
+    function startAuto() {
+      clearInterval(timer);
+      timer = setInterval(function() { goTo(current + 1); }, INTERVAL);
+    }
 
-    dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); startAuto(); }); });
-    if (prev) prev.addEventListener('click', function() { goTo(current - 1); startAuto(); });
-    if (next) next.addEventListener('click', function() { goTo(current + 1); startAuto(); });
+    dots.forEach(function(d, i) {
+      d.addEventListener("click", function() { goTo(i); startAuto(); });
+    });
+    if (prev) prev.addEventListener("click", function() { goTo(current - 1); startAuto(); });
+    if (next) next.addEventListener("click", function() { goTo(current + 1); startAuto(); });
 
+    // Touch swipe — registered on the slideshow div
     var touchStartX = 0;
-    var slideshow = document.getElementById('heroSlideshow');
+    var slideshow = document.getElementById("heroSlideshow");
     if (slideshow) {
-      slideshow.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
-      slideshow.addEventListener('touchend', function(e) {
-        var dx = e.changedTouches[0].clientX - touchStartX;
-        if (Math.abs(dx) > 40) { goTo(dx < 0 ? current + 1 : current - 1); startAuto(); }
+      slideshow.addEventListener("touchstart", function(e) {
+        touchStartX = e.changedTouches[0].clientX;
       }, { passive: true });
-      slideshow.addEventListener('mouseenter', function() { clearInterval(timer); });
-      slideshow.addEventListener('mouseleave', function() { startAuto(); });
+      slideshow.addEventListener("touchend", function(e) {
+        var dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 40) {
+          goTo(dx < 0 ? current + 1 : current - 1);
+          startAuto();
+        }
+      }, { passive: true });
+      slideshow.addEventListener("mouseenter", function() { clearInterval(timer); });
+      slideshow.addEventListener("mouseleave", function() { startAuto(); });
     }
 
     updatePanel(0);
