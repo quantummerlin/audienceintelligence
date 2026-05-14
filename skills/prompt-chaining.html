@@ -3,1206 +3,1374 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompt Chaining: The Framework That Makes Complex AI Tasks Actually Work | Aether Intel</title>
-  <meta name="description" content="Learn how to break complex AI tasks into sequential prompt chains. Why single-shot prompting fails, how chaining works, and a step-by-step guide with downloadable templates." />
-  <meta name="robots" content="index, follow" />
+  <title>Prompt Chaining for Complex Tasks | Aether Intel Skills</title>
+  <meta name="description" content="Break complex AI tasks into sequential prompt chains. Learn how to pass structured outputs between steps, run parallel branches, handle errors, and build auditable multi-step pipelines." />
   <link rel="canonical" href="https://ai.quantummerlin.com/skills/prompt-chaining.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://ai.quantummerlin.com/skills/prompt-chaining.html" />
-  <meta property="og:title" content="Prompt Chaining: The Framework That Makes Complex AI Tasks Actually Work" />
-  <meta property="og:description" content="Why single-shot prompting fails, how chaining works, and a step-by-step guide with downloadable templates." />
+  <meta property="og:title" content="Prompt Chaining for Complex Tasks | Aether Intel Skills" />
+  <meta property="og:description" content="Break complex AI tasks into sequential prompt chains. Learn how to pass structured outputs between steps, run parallel branches, handle errors, and build auditable multi-step pipelines." />
   <meta property="og:site_name" content="Aether Intel" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-  <!-- Analytics -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VW4LGE7L1T');
+  </script>
+
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="/css/style.css" />
 
   <style>
-    /* ── Article Layout ──────────────────────────────────── */
+    :root {
+      --skill-accent:      #6366f1;
+      --skill-accent-dim:  rgba(99,102,241,.12);
+      --skill-accent-glow: 0 0 24px rgba(99,102,241,.28);
+    }
+
+    #read-progress {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      height: 3px; width: 0;
+      background: linear-gradient(90deg, var(--skill-accent), #818cf8);
+      transition: width .1s linear;
+      pointer-events: none;
+    }
+
     .skill-article-wrap {
-      max-width: 800px;
+      max-width: 820px;
       margin: 0 auto;
       padding: 0 24px 80px;
     }
 
-    /* Breadcrumb */
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 32px 0 0;
+    .skill-breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      padding: 28px 0 0;
       font-family: var(--font-display);
-      font-size: .68rem;
-      letter-spacing: .08em;
+      font-size: .72rem; font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase;
       color: var(--text-muted);
-      text-transform: uppercase;
     }
-    .breadcrumb a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color .18s;
-    }
-    .breadcrumb a:hover { color: var(--neon-indigo); }
-    .breadcrumb-sep { opacity: .4; }
+    .skill-breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .skill-breadcrumb a:hover { color: var(--skill-accent); }
+    .skill-breadcrumb svg { width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
-    /* Article Header */
-    .skill-article-header {
-      padding: 28px 0 36px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 40px;
+    .skill-hero { padding: 32px 0 36px; }
+    .skill-hero-badges { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+    .badge-prompts {
+      background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.35); color: var(--skill-accent);
+      font-family: var(--font-display); font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 4px;
     }
-    .skill-article-badges {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+    .diff-pill {
+      font-family: var(--font-display); font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 4px;
+      background: rgba(250,204,21,.15); border: 1px solid rgba(250,204,21,.3); color: #fbbf24;
     }
-    .skill-article-title {
-      font-family: var(--font-heading);
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -.02em;
-      margin: 0 0 16px;
+    .time-pill {
+      font-family: var(--font-display); font-size: .68rem; font-weight: 600;
+      letter-spacing: .06em; color: var(--text-muted); display: flex; align-items: center; gap: 5px;
     }
-    .skill-article-title span {
-      background: linear-gradient(135deg, var(--neon-indigo), var(--neon-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .time-pill svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .skill-hero h1 {
+      font-family: var(--font-display); font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      font-weight: 900; line-height: 1.1; letter-spacing: -.02em; margin: 0 0 16px;
     }
-    .skill-article-lede {
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      line-height: 1.75;
-      margin: 0 0 24px;
-      font-weight: 400;
+    .skill-hero h1 span {
+      background: linear-gradient(135deg, var(--skill-accent), #818cf8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .skill-article-meta {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      font-family: var(--font-display);
-      font-size: .68rem;
-      letter-spacing: .07em;
-      color: var(--text-muted);
-      text-transform: uppercase;
+    .skill-hero-lead {
+      font-size: 1.1rem; line-height: 1.75; color: var(--text-secondary);
+      max-width: 680px; margin: 0 0 28px;
     }
-    .skill-article-meta span { display: flex; align-items: center; gap: 6px; }
-    .skill-article-meta svg {
-      width: 13px; height: 13px;
-      fill: none; stroke: var(--neon-indigo);
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    .skill-hero-meta {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+      padding-top: 20px; border-top: 1px solid var(--border);
+      font-size: .82rem; color: var(--text-muted);
+    }
+    .skill-hero-meta svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; margin-right:4px; }
+
+    .skill-toc {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--skill-accent); border-radius: var(--radius-card);
+      padding: 22px 26px; margin: 0 0 48px;
+    }
+    .skill-toc-label {
+      font-family: var(--font-display); font-size: .72rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--skill-accent); margin-bottom: 14px;
+    }
+    .skill-toc ol {
+      margin: 0; padding-left: 18px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px 32px;
+    }
+    @media (max-width: 600px) { .skill-toc ol { grid-template-columns: 1fr; } }
+    .skill-toc li { font-size: .88rem; line-height: 1.5; }
+    .skill-toc a { color: var(--text-secondary); text-decoration: none; }
+    .skill-toc a:hover { color: var(--skill-accent); }
+
+    .skill-section { margin-bottom: 56px; }
+    .skill-section h2 {
+      font-family: var(--font-display); font-size: 1.35rem; font-weight: 800;
+      letter-spacing: -.01em; line-height: 1.2; margin: 0 0 6px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;
+    }
+    .skill-section h2 .section-num {
+      font-family: var(--font-display); font-size: .72rem; font-weight: 700;
+      letter-spacing: .08em; color: var(--skill-accent);
+      background: var(--skill-accent-dim); border: 1px solid rgba(99,102,241,.25);
+      border-radius: 4px; padding: 2px 8px;
+    }
+    .skill-section h3 {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      letter-spacing: -.005em; color: var(--text-primary); margin: 28px 0 12px;
+    }
+    .skill-section p { font-size: .95rem; line-height: 1.8; color: var(--text-secondary); margin: 0 0 16px; }
+    .skill-section ul, .skill-section ol { padding-left: 20px; margin: 0 0 16px; }
+    .skill-section li { font-size: .92rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 6px; }
+    .skill-section strong { color: var(--text-primary); }
+    .skill-section code {
+      font-family: 'JetBrains Mono', monospace; font-size: .82rem;
+      background: rgba(99,102,241,.1); color: var(--skill-accent); padding: 1px 5px; border-radius: 3px;
     }
 
-    /* Table of Contents */
-    .toc {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--neon-indigo);
-      border-radius: 0 var(--radius-card) var(--radius-card) 0;
-      padding: 22px 26px;
-      margin-bottom: 44px;
+    .callout {
+      border-radius: var(--radius-card); padding: 16px 20px; margin: 24px 0;
+      font-size: .9rem; line-height: 1.7; display: flex; gap: 14px; align-items: flex-start;
     }
-    .toc-title {
-      font-family: var(--font-display);
-      font-size: .7rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    .toc ol {
-      margin: 0; padding: 0;
-      list-style: none;
-      counter-reset: toc-counter;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .toc li {
-      counter-increment: toc-counter;
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-    }
-    .toc li::before {
-      content: counter(toc-counter, decimal-leading-zero);
-      font-family: var(--font-display);
-      font-size: .62rem;
-      font-weight: 700;
-      color: var(--neon-indigo);
-      opacity: .7;
-      flex-shrink: 0;
-    }
-    .toc a {
-      font-size: .84rem;
-      color: var(--text-secondary);
-      text-decoration: none;
-      line-height: 1.4;
-      transition: color .18s;
-    }
-    .toc a:hover { color: var(--neon-cyan); }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .callout-body { flex: 1; color: var(--text-secondary); }
+    .callout-body strong { color: var(--text-primary); }
+    .callout.info    { background: rgba(99,102,241,.07); border: 1px solid rgba(99,102,241,.2); }
+    .callout.warning { background: rgba(251,191,36,.07); border: 1px solid rgba(251,191,36,.2); }
+    .callout.tip     { background: rgba(45,212,191,.07); border: 1px solid rgba(45,212,191,.2); }
 
-    /* Article Body Typography */
-    .skill-article-body h2 {
-      font-family: var(--font-heading);
-      font-size: 1.45rem;
-      font-weight: 800;
-      line-height: 1.25;
-      margin: 52px 0 18px;
-      padding-top: 8px;
-    }
-    .skill-article-body h3 {
-      font-family: var(--font-heading);
-      font-size: 1.1rem;
-      font-weight: 700;
-      line-height: 1.3;
-      margin: 32px 0 12px;
-      color: var(--text-primary);
-    }
-    .skill-article-body p {
-      font-size: .96rem;
-      line-height: 1.8;
-      color: var(--text-secondary);
-      margin: 0 0 20px;
-    }
-    .skill-article-body p strong {
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-    .skill-article-body ul, .skill-article-body ol {
-      padding-left: 0;
-      list-style: none;
-      margin: 0 0 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .skill-article-body ul li,
-    .skill-article-body ol li {
-      font-size: .94rem;
-      line-height: 1.7;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .skill-article-body ul li::before {
-      content: '';
-      width: 5px; height: 5px;
-      background: var(--neon-indigo);
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 8px;
-    }
-    .skill-article-body ol {
-      counter-reset: list-counter;
-    }
-    .skill-article-body ol li {
-      counter-increment: list-counter;
-    }
-    .skill-article-body ol li::before {
-      content: counter(list-counter);
-      font-family: var(--font-display);
-      font-size: .7rem;
-      font-weight: 700;
-      color: var(--neon-indigo);
-      background: rgba(99,102,241,.12);
-      border-radius: 4px;
-      padding: 1px 6px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .skill-article-body a {
-      color: var(--neon-cyan);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(34,211,238,.25);
-      transition: border-color .18s;
-    }
-    .skill-article-body a:hover { border-color: var(--neon-cyan); }
-
-    /* Code blocks */
     .code-block {
-      background: #0d0d1a;
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 10px;
-      margin: 24px 0 32px;
-      overflow: hidden;
+      position: relative; margin: 24px 0;
+      background: #0d1117; border: 1px solid #30363d; border-radius: 10px; overflow: hidden;
     }
     .code-block-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      background: rgba(255,255,255,.03);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; background: #161b22; border-bottom: 1px solid #30363d;
     }
-    .code-block-label {
-      font-family: var(--font-display);
-      font-size: .62rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
+    .code-lang {
+      font-family: var(--font-display); font-size: .68rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent);
     }
-    .code-copy-btn {
-      font-family: var(--font-display);
-      font-size: .62rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 3px 8px;
-      cursor: pointer;
-      transition: all .18s;
+    .copy-btn {
+      background: none; border: 1px solid #30363d; border-radius: 5px;
+      color: #8b949e; font-family: var(--font-display); font-size: .65rem;
+      font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: 3px 10px; cursor: pointer; transition: all .15s;
     }
-    .code-copy-btn:hover { color: var(--neon-cyan); border-color: var(--neon-cyan); }
+    .copy-btn:hover { border-color: var(--skill-accent); color: var(--skill-accent); }
+    .copy-btn.copied { border-color: #3fb950; color: #3fb950; }
     .code-block pre {
-      margin: 0;
-      padding: 20px 20px;
-      font-family: 'Courier New', 'Consolas', monospace;
-      font-size: .8rem;
-      line-height: 1.7;
-      color: rgba(255,255,255,.65);
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-    .code-block .hl-key   { color: var(--neon-cyan); font-weight: 600; }
-    .code-block .hl-val   { color: #a5f3fc; }
-    .code-block .hl-cmt   { color: rgba(255,255,255,.28); font-style: italic; }
-    .code-block .hl-step  { color: var(--neon-indigo); font-weight: 700; }
-    .code-block .hl-good  { color: #34d399; }
-    .code-block .hl-warn  { color: #fbbf24; }
-
-    /* Callout boxes */
-    .callout {
-      border-radius: 10px;
-      padding: 18px 22px;
-      margin: 28px 0;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-    }
-    .callout-tip  { background: rgba(99,102,241,.08);  border: 1px solid rgba(99,102,241,.2);  }
-    .callout-warn { background: rgba(251,191,36,.07);  border: 1px solid rgba(251,191,36,.2);  }
-    .callout-good { background: rgba(52,211,153,.07);  border: 1px solid rgba(52,211,153,.2);  }
-    .callout-icon {
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      line-height: 1.6;
-    }
-    .callout-body { flex: 1; }
-    .callout-body strong {
-      display: block;
-      font-size: .78rem;
-      font-family: var(--font-display);
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .callout-tip  .callout-body strong { color: var(--neon-indigo); }
-    .callout-warn .callout-body strong { color: #fbbf24; }
-    .callout-good .callout-body strong { color: #34d399; }
-    .callout-body p {
-      font-size: .87rem !important;
-      margin: 0 !important;
-      line-height: 1.6 !important;
+      margin: 0; padding: 18px 20px; overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace; font-size: .82rem; line-height: 1.65; color: #e6edf3;
     }
 
-    /* Step box */
-    .step-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      padding: 22px 26px;
-      margin: 20px 0;
-      position: relative;
-    }
-    .step-box-num {
-      font-family: var(--font-display);
-      font-size: .65rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--neon-indigo);
-      margin-bottom: 8px;
-    }
-    .step-box h4 {
-      font-family: var(--font-heading);
-      font-size: .98rem;
-      font-weight: 700;
-      margin: 0 0 10px;
-    }
-    .step-box p {
-      font-size: .86rem !important;
-      margin: 0 !important;
-      line-height: 1.65 !important;
-    }
-
-    /* Patterns grid */
-    .patterns-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 14px;
-      margin: 24px 0 32px;
-    }
-    .pattern-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      padding: 18px 20px;
-      transition: border-color .18s;
-    }
-    .pattern-card:hover { border-color: var(--border-bright); }
-    .pattern-card-name {
-      font-family: var(--font-display);
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-      color: var(--neon-indigo);
-      margin-bottom: 8px;
-    }
-    .pattern-card p {
-      font-size: .8rem !important;
-      margin: 0 !important;
-      line-height: 1.6 !important;
-    }
-
-    /* Download CTA */
-    .download-cta {
-      background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(34,211,238,.06));
-      border: 1px solid rgba(99,102,241,.25);
-      border-radius: var(--radius-card);
-      padding: 32px 36px;
-      margin: 48px 0;
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      flex-wrap: wrap;
-    }
-    .download-cta-icon {
-      width: 52px; height: 52px;
-      background: var(--neon-indigo);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .download-cta-icon svg {
-      width: 24px; height: 24px;
-      fill: none; stroke: #fff;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
-    .download-cta-body { flex: 1; min-width: 200px; }
-    .download-cta-body h3 {
-      font-family: var(--font-heading);
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin: 0 0 6px !important;
-      padding: 0 !important;
-      color: var(--text-primary) !important;
-    }
-    .download-cta-body p {
-      color: var(--text-secondary);
-      font-size: .85rem !important;
-      margin: 0 !important;
-      line-height: 1.55 !important;
-    }
-    .btn-download-article {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 22px;
-      background: var(--neon-indigo);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-family: var(--font-display);
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background .18s, transform .12s;
-      text-decoration: none;
-      border-bottom: none;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .btn-download-article:hover {
-      background: var(--neon-cyan);
-      color: #0a0a14;
-      transform: translateY(-1px);
-      border-bottom: none;
-    }
-    .btn-download-article svg {
-      width: 14px; height: 14px;
-      fill: none; stroke: currentColor;
-      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
-    }
-
-    /* Comparison table */
-    .compare-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 24px 0 32px;
-      font-size: .84rem;
-    }
+    .compare-table { overflow-x: auto; margin: 24px 0; }
+    .compare-table table { width: 100%; border-collapse: collapse; font-size: .88rem; line-height: 1.5; }
     .compare-table th {
-      font-family: var(--font-display);
-      font-size: .65rem;
-      letter-spacing: .09em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      padding: 10px 14px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
+      font-family: var(--font-display); font-size: .7rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent);
+      padding: 10px 14px; border-bottom: 2px solid rgba(99,102,241,.3);
+      background: rgba(99,102,241,.05); text-align: left; white-space: nowrap;
     }
-    .compare-table td {
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.04);
-      color: var(--text-secondary);
-      line-height: 1.5;
-      vertical-align: top;
-    }
+    .compare-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
     .compare-table tr:last-child td { border-bottom: none; }
-    .compare-table td:first-child { color: var(--text-primary); font-weight: 500; }
-    .compare-table .good { color: #34d399; }
-    .compare-table .warn { color: #fbbf24; }
-    .compare-table .bad  { color: #f87171; }
+    .compare-table tr:hover td { background: rgba(99,102,241,.03); }
+    .compare-table td strong { color: var(--text-primary); }
+    .yes { color: #4ade80; font-weight: 600; }
+    .no  { color: #f87171; font-weight: 600; }
 
-    /* Related skills */
-    .related-skills {
-      border-top: 1px solid var(--border);
-      padding-top: 44px;
-      margin-top: 60px;
+    .step-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px 22px; margin: 16px 0;
+      display: flex; gap: 18px; align-items: flex-start;
     }
-    .related-skills-label {
-      font-family: var(--font-display);
-      font-size: .68rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 20px;
+    .step-num {
+      font-family: var(--font-display); font-size: .8rem; font-weight: 900;
+      color: var(--skill-accent); background: var(--skill-accent-dim);
+      border: 1px solid rgba(99,102,241,.25); border-radius: 6px; padding: 4px 10px;
+      flex-shrink: 0; margin-top: 1px; letter-spacing: .06em;
     }
-    .related-skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 14px;
+    .step-content { flex: 1; }
+    .step-content h4 { font-family: var(--font-display); font-size: .9rem; font-weight: 700; margin: 0 0 6px; }
+    .step-content p { font-size: .88rem; line-height: 1.65; color: var(--text-secondary); margin: 0; }
+
+    /* ── Chain visualiser ── */
+    .chain-visual {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin: 24px 0; overflow-x: auto;
     }
-    .related-skill-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      padding: 16px 18px;
-      text-decoration: none;
-      color: inherit;
-      transition: border-color .18s, box-shadow .18s;
-      display: block;
+    .chain-row { display: flex; align-items: stretch; gap: 0; min-width: max-content; }
+    .chain-node {
+      background: var(--bg-deep, #0a0a14); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 18px; min-width: 120px; text-align: center;
     }
-    .related-skill-card:hover {
-      border-color: var(--border-bright);
-      box-shadow: var(--glow-indigo);
+    .chain-node-step {
+      font-family: var(--font-display); font-size: .65rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--skill-accent); margin-bottom: 6px;
     }
-    .related-skill-card-cat {
-      font-family: var(--font-display);
-      font-size: .6rem;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--neon-indigo);
-      margin-bottom: 6px;
+    .chain-node-title { font-family: var(--font-display); font-size: .82rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .chain-node-out { font-size: .75rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+    .chain-arrow { display: flex; align-items: center; justify-content: center; padding: 0 8px; color: var(--text-muted); font-size: 1.1rem; flex-shrink: 0; }
+
+    /* ── Parallel diagram ── */
+    .parallel-visual {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin: 24px 0;
     }
-    .related-skill-card-title {
-      font-family: var(--font-heading);
-      font-size: .88rem;
-      font-weight: 700;
-      line-height: 1.35;
-      color: var(--text-primary);
+    .parallel-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .parallel-label {
+      font-family: var(--font-display); font-size: .7rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; padding: 6px 12px; border-radius: 6px;
+    }
+    .parallel-input { color: var(--skill-accent); background: var(--skill-accent-dim); border: 1px solid rgba(99,102,241,.25); }
+    .parallel-merge { color: #4ade80; background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.25); }
+    .parallel-branches { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 200px; }
+    .parallel-branch {
+      background: var(--bg-deep, #0a0a14); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 10px;
+    }
+    .branch-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .branch-label { font-family: var(--font-display); font-size: .78rem; font-weight: 700; color: var(--text-primary); }
+    .branch-desc { font-size: .75rem; color: var(--text-muted); }
+
+    /* ── Decision tree ── */
+    .decision-tree {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin: 24px 0;
+    }
+    .dt-root {
+      background: rgba(99,102,241,.08); border: 2px solid rgba(99,102,241,.3);
+      border-radius: 8px; padding: 12px 16px; text-align: center;
+      font-family: var(--font-display); font-weight: 700; color: var(--text-primary);
+      margin-bottom: 16px; display: block; width: 100%; box-sizing: border-box;
+    }
+    .dt-branches { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 560px) { .dt-branches { grid-template-columns: 1fr; } }
+    .dt-branch { display: flex; flex-direction: column; gap: 8px; }
+    .dt-condition {
+      font-family: var(--font-display); font-size: .7rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; text-align: center;
+    }
+    .dt-cond-yes { background: rgba(74,222,128,.1); color: #4ade80; border: 1px solid rgba(74,222,128,.25); }
+    .dt-cond-no  { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.25); }
+    .dt-node {
+      background: var(--bg-deep, #0a0a14); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px; font-size: .82rem; color: var(--text-secondary); line-height: 1.5;
     }
 
-    /* Article progress bar */
-    .reading-progress {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 0%;
-      height: 2px;
-      background: linear-gradient(90deg, var(--neon-indigo), var(--neon-cyan));
-      z-index: 9999;
-      transition: width .1s linear;
+    /* ── Failure cards ── */
+    .failure-grid { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .failure-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid #f87171; border-radius: 0 8px 8px 0; padding: 14px 18px;
     }
+    .failure-card .fail { font-size: .88rem; color: #fca5a5; margin-bottom: 6px; }
+    .failure-card .fix  { font-size: .88rem; color: #86efac; }
+    .failure-card strong { font-family: var(--font-display); font-size: .78rem; font-weight: 700; letter-spacing: .04em; }
 
-    @media (max-width: 600px) {
-      .skill-article-wrap { padding: 0 16px 60px; }
-      .download-cta { padding: 22px 20px; }
-      .skill-article-body h2 { font-size: 1.25rem; margin-top: 40px; }
-      .toc { display: none; } /* hide on small mobile, too cramped */
+    /* ── Download CTA ── */
+    .download-cta {
+      background: linear-gradient(135deg, rgba(99,102,241,.1), rgba(129,140,248,.05));
+      border: 1px solid rgba(99,102,241,.3); border-radius: var(--radius-card);
+      padding: 36px 36px 32px; text-align: center; margin: 56px 0 48px;
     }
+    .download-cta h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 900; margin: 0 0 10px; }
+    .download-cta p { color: var(--text-secondary); font-size: .95rem; margin: 0 0 24px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .download-cta-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .btn-download-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--skill-accent); color: #fff;
+      font-family: var(--font-display); font-size: .8rem; font-weight: 800;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .btn-download-primary:hover { opacity: .88; }
+    .btn-download-primary svg { width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+    .btn-back-skills {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--text-secondary);
+      font-family: var(--font-display); font-size: .8rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border);
+      cursor: pointer; text-decoration: none; transition: all .15s;
+    }
+    .btn-back-skills:hover { border-color: var(--border-bright); color: var(--text-primary); }
+
+    /* ── Related skills ── */
+    .related-skills-section h2 {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 16px;
+    }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .related-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 18px 20px; text-decoration: none; transition: border-color .18s, box-shadow .18s;
+    }
+    .related-card:hover { border-color: var(--border-bright); box-shadow: var(--skill-accent-glow); }
+    .related-card-tag {
+      font-family: var(--font-display); font-size: .65rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent); margin-bottom: 8px;
+    }
+    .related-card h4 { font-family: var(--font-display); font-size: .88rem; font-weight: 700; color: var(--text-primary); margin: 0 0 6px; }
+    .related-card p { font-size: .8rem; color: var(--text-muted); line-height: 1.5; margin: 0; }
   </style>
 </head>
 <body>
-  <div class="reading-progress" id="readingProgress"></div>
+<div id="read-progress"></div>
 
-  <!-- Nav injected by /js/main.js -->
+<nav class="site-nav" id="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>Aether</span><span class="logo-intel">Intel</span>
+    </a>
+    <div class="nav-links">
+      <a href="/index.html">News</a>
+      <a href="/skills.html" class="nav-active">Skills</a>
+      <a href="/tools.html">Tools</a>
+    </div>
+  </div>
+</nav>
 
-  <main>
-    <div class="skill-article-wrap">
+<main>
+  <div class="skill-article-wrap">
 
-      <!-- Breadcrumb -->
-      <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="/index.html">Home</a>
-        <span class="breadcrumb-sep">›</span>
-        <a href="/skills.html">Skills</a>
-        <span class="breadcrumb-sep">›</span>
-        <span>Prompt Chaining</span>
-      </nav>
+    <nav class="skill-breadcrumb">
+      <a href="/skills.html">Skills Library</a>
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>Prompt Chaining</span>
+    </nav>
 
-      <!-- Article Header -->
-      <header class="skill-article-header">
-        <div class="skill-article-badges">
-          <span class="badge badge-secondary">Prompts</span>
-          <span class="skill-diff skill-diff-intermediate" style="font-family:var(--font-display);font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(251,191,36,.1);color:#fbbf24;">Intermediate</span>
-        </div>
-        <h1 class="skill-article-title">Prompt Chaining:<br><span>The Framework That Makes Complex AI Tasks Actually Work</span></h1>
-        <p class="skill-article-lede">Most AI prompts fail not because the model is incapable, but because they ask it to do too much at once. Prompt chaining solves this by splitting work into focused stages — each output feeding the next. Here's why it works, and exactly how to build your own chains.</p>
-        <div class="skill-article-meta">
-          <span>
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            12 min read
-          </span>
-          <span>
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            May 2026
-          </span>
-          <span>
-            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Free template included
-          </span>
-        </div>
-      </header>
+    <header class="skill-hero">
+      <div class="skill-hero-badges">
+        <span class="badge-prompts">Prompts</span>
+        <span class="diff-pill">Intermediate</span>
+        <span class="time-pill">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ~30 min to learn
+        </span>
+      </div>
+      <h1>Prompt Chaining for <span>Complex Tasks</span></h1>
+      <p class="skill-hero-lead">Most prompts fail because you're asking one model to do too much at once. Prompt chaining breaks complex tasks into focused, sequential steps — each one feeding the next — to reduce hallucinations, improve auditability, and produce reliably better output.</p>
+      <div class="skill-hero-meta">
+        <span><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Aether Intel Team</span>
+        <span><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> May 2025</span>
+        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 16 min read</span>
+      </div>
+    </header>
 
-      <!-- Table of Contents -->
-      <nav class="toc" aria-label="Table of contents">
-        <div class="toc-title">In This Guide</div>
-        <ol>
-          <li><a href="#why-single-shot-fails">Why single-shot prompting fails</a></li>
-          <li><a href="#what-is-chaining">What is prompt chaining?</a></li>
-          <li><a href="#core-mechanics">The core mechanics</a></li>
-          <li><a href="#walkthrough">Step-by-step walkthrough</a></li>
-          <li><a href="#five-patterns">The five chain patterns</a></li>
-          <li><a href="#handling-errors">Handling errors and edge cases</a></li>
-          <li><a href="#common-mistakes">Common mistakes</a></li>
-          <li><a href="#download">Download the free template</a></li>
-        </ol>
-      </nav>
+    <nav class="skill-toc">
+      <div class="skill-toc-label">In this guide</div>
+      <ol>
+        <li><a href="#why-chaining">Why Chaining Works</a></li>
+        <li><a href="#when-to-chain">When to Chain vs Single Prompt</a></li>
+        <li><a href="#sequential">Sequential Chains</a></li>
+        <li><a href="#json-contract">The JSON Contract Pattern</a></li>
+        <li><a href="#parallel">Parallel Chains</a></li>
+        <li><a href="#conditional">Conditional Branching</a></li>
+        <li><a href="#error-handling">Error Handling Between Steps</a></li>
+        <li><a href="#state">State Management</a></li>
+        <li><a href="#real-pipeline">Real Pipeline: Research to Article</a></li>
+        <li><a href="#failures">Common Failure Modes</a></li>
+      </ol>
+    </nav>
 
-      <!-- Article Body -->
-      <article class="skill-article-body">
+    <!-- 1 -->
+    <section class="skill-section" id="why-chaining">
+      <h2><span class="section-num">01</span> Why Chaining Works</h2>
+      <p>Language models have finite attention and reasoning capacity per forward pass. When you ask a model to simultaneously extract facts, verify them, synthesise a narrative, and format the output as structured JSON — you're asking it to context-switch between four different cognitive modes at once. The result is usually a compromise that does none of them well.</p>
+      <p>Chaining solves this by giving the model <strong>one job at a time</strong>. Each prompt is focused, short, and specific. Errors are contained within a single step and can be caught before they propagate. Intermediate outputs become inspectable artifacts you can log, validate, and reuse.</p>
+      <div class="callout info">
+        <span class="callout-icon">🧠</span>
+        <div class="callout-body"><strong>The cognitive load principle:</strong> A model performing extraction is in a different "mode" than one doing analysis or synthesis. Keeping steps atomic lets you tune each step independently — different temperature, different role, different model tier — without those decisions interfering with each other.</div>
+      </div>
+      <h3>What chaining gives you</h3>
+      <ul>
+        <li><strong>Auditability</strong> — log and inspect every intermediate output, not just the final answer</li>
+        <li><strong>Error isolation</strong> — a failure in step 2 doesn't corrupt step 4's output; you know exactly where it broke</li>
+        <li><strong>Per-step tuning</strong> — use <code>temperature=0</code> for extraction; higher for writing; use cheap model for classification, expensive for synthesis</li>
+        <li><strong>Reusability</strong> — a fact-extraction step built for one pipeline can be dropped into another</li>
+        <li><strong>Controllability</strong> — inject human review or validation between any two steps</li>
+      </ul>
+    </section>
 
-        <!-- ── Section 1 ───────────────────────────────────── -->
-        <h2 id="why-single-shot-fails">Why Single-Shot Prompting Fails</h2>
-
-        <p>You've experienced this before: you write a carefully crafted prompt asking an AI to research a topic, analyse it, draw conclusions, and write a polished summary — all in one go. The result is either too shallow, confidently wrong, or weirdly truncated. You try again with a longer, more detailed prompt. Still not right. You add more instructions. Still disappointing.</p>
-
-        <p>The problem isn't your writing. It's the architecture.</p>
-
-        <p>When you ask a language model to do multiple cognitively distinct tasks in a single prompt, you're asking it to hold too many competing objectives at once. Extraction, verification, synthesis, and formatting all require different "modes" of reasoning. Bundled together, the model makes trade-offs you didn't intend — cutting depth to hit format requirements, skipping verification because the extraction already filled the context, or doing surface-level synthesis because there was no dedicated step for anything else.</p>
-
-        <div class="callout callout-warn">
-          <div class="callout-icon">⚠</div>
-          <div class="callout-body">
-            <strong>The hallucination trap</strong>
-            <p>Single-shot prompts are most dangerous when they mix research and synthesis. The model will generate a confident, well-structured answer that blends real facts with plausible-sounding inventions — because it's optimising for a coherent output, not a verified one.</p>
-          </div>
-        </div>
-
-        <p>Research on this is consistent: complex reasoning tasks produce significantly better results when broken into steps. Anthropic's own work on chain-of-thought prompting showed that explicit reasoning steps reduce errors on multi-step problems. The same logic applies at the task architecture level — if you want better outputs, you need to engineer the workflow, not just the wording.</p>
-
-        <h3>The three ways single-shot fails</h3>
-
-        <ul>
-          <li><strong>Shallow depth:</strong> The model needs to hit every requirement you listed, so it gives each one the minimum viable treatment rather than doing any of them properly.</li>
-          <li><strong>Unverified claims:</strong> With no dedicated verification step, the model blends retrieved facts and confident confabulation. There's no internal mechanism to flag the difference.</li>
-          <li><strong>Format-content conflict:</strong> When you specify both the analysis required and the output format, the model will sacrifice analysis quality to fit the format rather than let the format be shaped by the content.</li>
-        </ul>
-
-
-        <!-- ── Section 2 ───────────────────────────────────── -->
-        <h2 id="what-is-chaining">What Is Prompt Chaining?</h2>
-
-        <p>Prompt chaining is the practice of breaking a complex task into a sequence of smaller, focused prompts — where the output of each step becomes the input for the next.</p>
-
-        <p>Instead of one prompt that asks for research + analysis + verification + a polished write-up, you create four separate prompts. Each one has a single job. The model can do that single job well, produce structured output, and pass it cleanly to the next stage.</p>
-
-        <p>The result is a pipeline: inputs flow in, a series of focused transformations are applied, and a high-quality output comes out. The pipeline is auditable (you can inspect any stage), recoverable (if one stage fails, you fix that stage and re-run from there), and improvable (you can swap in a better model or prompt for any individual step without rebuilding everything).</p>
-
-        <div class="callout callout-good">
-          <div class="callout-icon">✓</div>
-          <div class="callout-body">
-            <strong>The key insight</strong>
-            <p>Prompt chaining doesn't make the model smarter — it makes the <em>system</em> smarter. You're providing the architecture that the model's individual capabilities can actually shine within.</p>
-          </div>
-        </div>
-
-        <h3>Single-shot vs. chained: a direct comparison</h3>
-
-        <table class="compare-table">
+    <!-- 2 -->
+    <section class="skill-section" id="when-to-chain">
+      <h2><span class="section-num">02</span> When to Chain vs Single Prompt</h2>
+      <p>Chaining adds overhead — multiple API round-trips, more total tokens, more code. Don't reach for it automatically.</p>
+      <div class="compare-table">
+        <table>
           <thead>
-            <tr>
-              <th>Dimension</th>
-              <th>Single-Shot</th>
-              <th>Chained</th>
-            </tr>
+            <tr><th>Signal</th><th>Single Prompt</th><th>Chain</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Output depth</td>
-              <td class="warn">Shallow — spread across requirements</td>
-              <td class="good">Deep — each step fully focused</td>
-            </tr>
-            <tr>
-              <td>Hallucination risk</td>
-              <td class="bad">High — no verification mechanism</td>
-              <td class="good">Lower — explicit verify step</td>
-            </tr>
-            <tr>
-              <td>Debuggability</td>
-              <td class="bad">Opaque — hard to see where it went wrong</td>
-              <td class="good">Transparent — inspect any stage</td>
-            </tr>
-            <tr>
-              <td>Cost</td>
-              <td class="good">Lower — one call</td>
-              <td class="warn">Higher — multiple calls</td>
-            </tr>
-            <tr>
-              <td>Speed</td>
-              <td class="good">Faster for simple tasks</td>
-              <td class="warn">Slower — sequential calls</td>
-            </tr>
-            <tr>
-              <td>Consistency</td>
-              <td class="bad">Variable — slight wording changes shift results</td>
-              <td class="good">More consistent — structured at each step</td>
-            </tr>
+            <tr><td>Task has 1–2 clear steps</td><td><span class="yes">✓ Prefer</span></td><td><span class="no">Overkill</span></td></tr>
+            <tr><td>Output format is simple (prose, short answer)</td><td><span class="yes">✓ Prefer</span></td><td><span class="no">Overkill</span></td></tr>
+            <tr><td>Latency budget is very tight (&lt;500ms)</td><td><span class="yes">✓ Prefer</span></td><td><span class="no">Multiple round-trips</span></td></tr>
+            <tr><td>Task requires 3+ distinct cognitive modes</td><td><span class="no">Struggles</span></td><td><span class="yes">✓ Prefer</span></td></tr>
+            <tr><td>You need to audit intermediate results</td><td><span class="no">Not possible</span></td><td><span class="yes">✓ Prefer</span></td></tr>
+            <tr><td>Different steps suit different model tiers</td><td><span class="no">All-or-nothing</span></td><td><span class="yes">✓ Prefer</span></td></tr>
+            <tr><td>Output fails quality checks inconsistently</td><td><span class="no">Hard to debug</span></td><td><span class="yes">✓ Prefer</span></td></tr>
+            <tr><td>Human review needed mid-workflow</td><td><span class="no">Not possible</span></td><td><span class="yes">✓ Prefer</span></td></tr>
           </tbody>
         </table>
+      </div>
+      <div class="callout warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body"><strong>Don't chain for the sake of it.</strong> If a single well-structured prompt reliably produces the output you need, use it. Add chaining only when single-prompt approaches are demonstrably failing or when auditability / cost-routing is a real requirement.</div>
+      </div>
+    </section>
 
-        <p>The cost and speed trade-offs are real — but for complex tasks, they're worth it. A single-shot prompt that produces an unusable result and requires 10 retries is slower and more expensive than a three-step chain that works the first time.</p>
-
-
-        <!-- ── Section 3 ───────────────────────────────────── -->
-        <h2 id="core-mechanics">The Core Mechanics</h2>
-
-        <p>There are three things that make a prompt chain actually work: <strong>output formatting</strong>, <strong>clean handoffs</strong>, and <strong>role assignment</strong>. Get these right and chains are remarkably reliable. Skip any of them and you'll spend hours debugging.</p>
-
-        <h3>1. Output formatting</h3>
-        <p>Every step in a chain must produce output in a format the next step can reliably consume. The most common mistake is letting a step produce unstructured prose and then feeding it into a step that expects to work from specific data points. You end up with the second step summarising the first step's prose rather than doing its actual job.</p>
-
-        <p>Use JSON for machine-processed data, numbered or bulleted lists for items that need to be iterated over, and clearly labelled sections for complex outputs that combine multiple types. Always specify the output format explicitly in the prompt — never assume the model will infer it.</p>
-
-        <div class="code-block">
-          <div class="code-block-header">
-            <span class="code-block-label">Bad — unformatted output</span>
+    <!-- 3 -->
+    <section class="skill-section" id="sequential">
+      <h2><span class="section-num">03</span> Sequential Chains</h2>
+      <p>The foundational pattern: each step produces an output that becomes the input for the next. Steps run in series — step N cannot start until step N-1 is complete.</p>
+      <div class="chain-visual">
+        <div class="chain-row">
+          <div class="chain-node">
+            <div class="chain-node-step">Step 1</div>
+            <div class="chain-node-title">Extract</div>
+            <div class="chain-node-out">→ JSON list</div>
           </div>
-          <pre>Extract the key claims from the following article.
-
-[article text]</pre>
-        </div>
-
-        <div class="code-block">
-          <div class="code-block-header">
-            <span class="code-block-label">Good — structured output specified</span>
-            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="chain-arrow">→</div>
+          <div class="chain-node">
+            <div class="chain-node-step">Step 2</div>
+            <div class="chain-node-title">Verify</div>
+            <div class="chain-node-out">→ scored JSON</div>
           </div>
-          <pre>Extract every factual claim from the article below.
-<span class="hl-key">Output ONLY as a JSON array</span> — no preamble, no commentary.
-Schema: <span class="hl-val">[{ "claim": "...", "source_sentence": "..." }]</span>
-
-ARTICLE:
-[article text]</pre>
-        </div>
-
-        <h3>2. Clean handoffs</h3>
-        <p>Each step should receive exactly what it needs and nothing more. Don't feed a 3,000-word article into a verification step when all it needs is the 12 claims extracted in step 1. Trim the input to the relevant data at each handoff. This improves accuracy (the model focuses on the right thing) and reduces cost (fewer tokens processed).</p>
-
-        <p>Use a simple template for all handoffs: inject the prior step's output into a clearly labelled block, and tell the model explicitly what that block is.</p>
-
-        <h3>3. Role assignment</h3>
-        <p>Assign a different, focused role to each step. "You are a research assistant" gives the model a very different orientation than "You are a fact-checker" — even when asked to look at the same content. Role assignment isn't just flavour text; it primes the model's reasoning mode for the type of task that step requires.</p>
-
-        <div class="callout callout-tip">
-          <div class="callout-icon">◆</div>
-          <div class="callout-body">
-            <strong>Temperature tip</strong>
-            <p>Set temperature to <strong>0</strong> for extraction and verification steps — you want deterministic, predictable output. Use <strong>0.7–1.0</strong> for synthesis and writing steps, where creative variation improves output quality.</p>
+          <div class="chain-arrow">→</div>
+          <div class="chain-node">
+            <div class="chain-node-step">Step 3</div>
+            <div class="chain-node-title">Filter</div>
+            <div class="chain-node-out">→ clean list</div>
+          </div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-node">
+            <div class="chain-node-step">Step 4</div>
+            <div class="chain-node-title">Synthesise</div>
+            <div class="chain-node-out">→ final prose</div>
           </div>
         </div>
+      </div>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Python — sequential chain</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>from openai import OpenAI
+import json
+
+client = OpenAI()
+
+def llm(system: str, user: str, temperature: float = 0.0) -> str:
+    resp = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": system},
+            {"role": "user",   "content": user},
+        ],
+        temperature=temperature,
+    )
+    return resp.choices[0].message.content.strip()
 
 
-        <!-- ── Section 4 ───────────────────────────────────── -->
-        <h2 id="walkthrough">Step-by-Step Walkthrough</h2>
+def run_chain(source_text: str) -> str:
+    # Step 1 — Extract
+    raw_claims = llm(
+        system=(
+            "You are a research assistant. Extract every factual claim from the text. "
+            "Return ONLY a JSON array of strings. No commentary."
+        ),
+        user=source_text,
+    )
+    claims = json.loads(raw_claims)
 
-        <p>Let's build a real chain from scratch. The task: produce a research brief on any given topic. We'll take raw input — an article, a transcript, or a collection of notes — and produce a polished, verified, executive-ready brief.</p>
+    # Step 2 — Score
+    scored_raw = llm(
+        system=(
+            "You are a fact-checker. For each claim, rate confidence 0–10. "
+            "Return JSON: [{\"claim\": \"...\", \"confidence\": 8}]"
+        ),
+        user=json.dumps(claims),
+    )
+    scored = json.loads(scored_raw)
 
-        <div class="step-box">
-          <div class="step-box-num">Step 1 of 4</div>
-          <h4>Extract — pull out every factual claim</h4>
-          <p>The model's only job here is extraction. No analysis, no summary. Just identify every discrete factual claim and output them as a structured list. Use temperature 0.</p>
+    # Step 3 — Filter (pure Python — no LLM needed)
+    strong = [c for c in scored if c["confidence"] >= 7]
+    if not strong:
+        return "Insufficient high-confidence claims found."
+
+    # Step 4 — Synthesise
+    brief = llm(
+        system=(
+            "You are a senior analyst. Using ONLY the provided claims, "
+            "write a concise 3-paragraph executive brief. Cite claims as [n]."
+        ),
+        user=json.dumps(strong),
+        temperature=0.6,
+    )
+    return brief</pre>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">🌡️</span>
+        <div class="callout-body"><strong>Temperature by step role:</strong> Use <code>temperature=0</code> for extraction, verification, classification, and JSON formatting — you want determinism. Use <code>temperature=0.5–0.8</code> only for creative or synthesis steps where variety improves quality.</div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="skill-section" id="json-contract">
+      <h2><span class="section-num">04</span> The JSON Contract Pattern</h2>
+      <p>The single biggest source of chain failures is unpredictable output format. If step 2 produces prose when step 3 expects a JSON array, the chain breaks. The JSON Contract pattern solves this by defining a strict schema for every inter-step handoff before writing any prompts.</p>
+      <h3>Define the schema first</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Python — Pydantic schemas</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>from pydantic import BaseModel
+
+# Step 1 output contract
+class ExtractedClaim(BaseModel):
+    text:         str
+    source_quote: str
+
+class ExtractionResult(BaseModel):
+    claims: list[ExtractedClaim]
+
+# Step 2 output contract
+class ScoredClaim(BaseModel):
+    text:         str
+    source_quote: str
+    confidence:   int   # 0–10
+    needs_source: bool
+    note:         str = ""
+
+class ScoringResult(BaseModel):
+    claims: list[ScoredClaim]
+
+# Step 3 is pure Python — no LLM call
+def filter_claims(result: ScoringResult, min_score: int = 7) -> list[ScoredClaim]:
+    return [c for c in result.claims if c.confidence >= min_score]</pre>
+      </div>
+      <h3>Enforce the schema in the prompt</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Prompt Template</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>You are a research assistant. Extract every factual claim from the text below.
+
+Return ONLY valid JSON matching this exact schema. No text before or after.
+
+Schema:
+{
+  "claims": [
+    {
+      "text":         "The factual claim in one sentence",
+      "source_quote": "Exact phrase from source this claim comes from"
+    }
+  ]
+}
+
+If no factual claims are present, return: {"claims": []}
+
+TEXT TO PROCESS:
+{source_text}</pre>
+      </div>
+      <h3>Parse and validate at every step boundary</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Python — parse-and-validate wrapper</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>import json
+from pydantic import BaseModel, ValidationError
+from typing import TypeVar, Type
+
+T = TypeVar("T", bound=BaseModel)
+
+def parse_step_output(raw: str, schema: Type[T], step_name: str) -> T:
+    # Strip markdown code fences if model wrapped output
+    cleaned = raw.strip()
+    if cleaned.startswith("```"):
+        cleaned = "\n".join(cleaned.split("\n")[1:-1])
+
+    try:
+        data = json.loads(cleaned)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"[{step_name}] JSON parse error: {e}\nRaw: {raw[:200]}")
+
+    try:
+        return schema.model_validate(data)
+    except ValidationError as e:
+        raise ValueError(f"[{step_name}] Schema validation failed: {e}")</pre>
+      </div>
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body"><strong>OpenAI Structured Outputs</strong> — using <code>response_format={"type": "json_schema", ...}</code> guarantees JSON conformance at the API level, eliminating the parse step for supported models. Anthropic offers equivalent guarantees via <code>tool_use</code> with a JSON schema.</div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="skill-section" id="parallel">
+      <h2><span class="section-num">05</span> Parallel Chains</h2>
+      <p>When a task has multiple independent sub-tasks that don't depend on each other's outputs, run them simultaneously. Total wall-clock time drops from the sum of all steps to the duration of the longest single step.</p>
+      <div class="parallel-visual">
+        <div class="parallel-row">
+          <div class="parallel-label parallel-input">Input</div>
+          <div style="color:var(--text-muted);padding:0 6px">→</div>
+          <div class="parallel-branches">
+            <div class="parallel-branch">
+              <div class="branch-dot" style="background:#6366f1"></div>
+              <div><div class="branch-label">Branch A — Extract facts</div><div class="branch-desc">factual claims as JSON</div></div>
+            </div>
+            <div class="parallel-branch">
+              <div class="branch-dot" style="background:#818cf8"></div>
+              <div><div class="branch-label">Branch B — Extract sentiment</div><div class="branch-desc">tone + emotional signals</div></div>
+            </div>
+            <div class="parallel-branch">
+              <div class="branch-dot" style="background:#a5b4fc"></div>
+              <div><div class="branch-label">Branch C — Extract action items</div><div class="branch-desc">next steps as structured list</div></div>
+            </div>
+          </div>
+          <div style="color:var(--text-muted);padding:0 6px">→</div>
+          <div class="parallel-label parallel-merge">Merge &amp; Synthesise</div>
         </div>
+      </div>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Python — asyncio parallel branches</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>import asyncio, json
+from openai import AsyncOpenAI
 
-        <div class="code-block">
-          <div class="code-block-header">
-            <span class="code-block-label">Step 1 Prompt — Extract</span>
-            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+aclient = AsyncOpenAI()
+
+async def llm_async(system: str, user: str, temperature: float = 0.0) -> str:
+    resp = await aclient.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": system},
+            {"role": "user",   "content": user},
+        ],
+        temperature=temperature,
+    )
+    return resp.choices[0].message.content.strip()
+
+
+async def parallel_extract(document: str) -> dict:
+    # All three branches launch simultaneously
+    facts_raw, sentiment_raw, actions_raw = await asyncio.gather(
+        llm_async(
+            'Extract every factual claim. Return JSON: {"claims": ["..."]}',
+            document,
+        ),
+        llm_async(
+            'Analyse tone. Return JSON: {"sentiment": "positive|negative|neutral", '
+            '"confidence": 0.9, "signals": ["..."]}',
+            document,
+        ),
+        llm_async(
+            'List action items. Return JSON: {"actions": [{"item": "...", "owner": "..."}]}',
+            document,
+        ),
+    )
+    return {
+        "facts":     json.loads(facts_raw),
+        "sentiment": json.loads(sentiment_raw),
+        "actions":   json.loads(actions_raw),
+    }
+
+
+async def parallel_chain(document: str) -> str:
+    extracted = await parallel_extract(document)           # Parallel
+
+    synthesis = await llm_async(                           # Sequential — needs all results
+        system="You are a senior analyst. Synthesise the data into a concise briefing.",
+        user=str(extracted),
+        temperature=0.6,
+    )
+    return synthesis
+
+
+result = asyncio.run(parallel_chain(document_text))</pre>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">⚡</span>
+        <div class="callout-body"><strong>Parallel latency wins:</strong> Three sequential steps at 1.5s each = 4.5s. Three parallel steps = 1.5s + synthesis time. <code>asyncio.gather()</code> is one of the highest-leverage optimisations in any multi-step pipeline.</div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="skill-section" id="conditional">
+      <h2><span class="section-num">06</span> Conditional Branching</h2>
+      <p>Not every input needs the same processing path. A conditional chain inspects the output of an early step and routes to different downstream steps based on what it finds.</p>
+      <div class="decision-tree">
+        <div class="dt-root">Step 1: Classify Input Type</div>
+        <div class="dt-branches">
+          <div class="dt-branch">
+            <div class="dt-condition dt-cond-yes">type = "question"</div>
+            <div class="dt-node">Step 2A: RAG retrieval → ground answer in docs → return cited response</div>
           </div>
-          <pre><span class="hl-step">ROLE:</span> You are a precise research assistant.
-
-<span class="hl-step">TASK:</span> Extract every factual claim from the text below.
-A "factual claim" is any assertion about the world that could be verified.
-Do not include opinions, predictions, or vague statements.
-
-<span class="hl-step">OUTPUT FORMAT:</span> JSON array only. No preamble, no explanation.
-Schema: <span class="hl-val">[{ "id": 1, "claim": "...", "quote": "..." }]</span>
-Where "quote" is the exact sentence from the source.
-
-<span class="hl-step">SOURCE TEXT:</span>
-[PASTE YOUR SOURCE CONTENT HERE]</pre>
-        </div>
-
-        <div class="step-box">
-          <div class="step-box-num">Step 2 of 4</div>
-          <h4>Verify — score confidence and flag gaps</h4>
-          <p>Feed the JSON array from step 1 directly into this prompt. The model rates each claim's confidence (based on its training knowledge) and flags anything that needs external sourcing. Use temperature 0.</p>
-        </div>
-
-        <div class="code-block">
-          <div class="code-block-header">
-            <span class="code-block-label">Step 2 Prompt — Verify</span>
-            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
-          </div>
-          <pre><span class="hl-step">ROLE:</span> You are a rigorous fact-checker.
-
-<span class="hl-step">TASK:</span> For each claim in the JSON below, assess its reliability.
-Rate confidence 1–10 (10 = certain, 1 = likely false).
-Flag any claim that requires an external source to verify.
-
-<span class="hl-step">OUTPUT FORMAT:</span> Return the same JSON array with added fields.
-Schema: <span class="hl-val">[{ "id": 1, "claim": "...", "confidence": 8, "needs_source": false, "note": "..." }]</span>
-The "note" field is mandatory — explain your confidence rating briefly.
-
-<span class="hl-step">CLAIMS TO VERIFY:</span>
-[PASTE STEP 1 JSON OUTPUT HERE]</pre>
-        </div>
-
-        <div class="step-box">
-          <div class="step-box-num">Step 3 of 4</div>
-          <h4>Filter — keep only high-confidence claims</h4>
-          <p>This is often just a code step (filter the JSON for <code>confidence >= 7</code> and <code>needs_source === false</code>), but you can also do it with a prompt. Either way, you end up with a clean, verified claim set to build from.</p>
-        </div>
-
-        <div class="code-block">
-          <div class="code-block-header">
-            <span class="code-block-label">Step 3 — Filter (code or prompt)</span>
-            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
-          </div>
-          <pre><span class="hl-cmt"># Option A: Python (fastest)</span>
-verified = [c for c in claims if c["confidence"] >= 7 and not c["needs_source"]]
-
-<span class="hl-cmt"># Option B: Prompt</span>
-From the claims below, return only those where confidence >= 7
-and needs_source is false.
-Keep the same JSON schema.
-
-CLAIMS: [PASTE STEP 2 OUTPUT]</pre>
-        </div>
-
-        <div class="step-box">
-          <div class="step-box-num">Step 4 of 4</div>
-          <h4>Synthesise — write the brief using only verified data</h4>
-          <p>Now the model writes. Crucially, it's working only from a clean, verified set of claims — not from the original messy source. The constraints produce better writing. Use temperature 0.7.</p>
-        </div>
-
-        <div class="code-block">
-          <div class="code-block-header">
-            <span class="code-block-label">Step 4 Prompt — Synthesise</span>
-            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
-          </div>
-          <pre><span class="hl-step">ROLE:</span> You are a senior analyst writing for an executive audience.
-
-<span class="hl-step">TASK:</span> Write a 3-paragraph research brief using ONLY the verified claims below.
-Structure: Context → Key Findings → Implications.
-Cite each claim inline as [claim_id].
-Do not introduce any information not present in the claims.
-If the claims are insufficient for any section, note that explicitly.
-
-<span class="hl-step">FORMAT:</span>
-<span class="hl-val">Context (1 paragraph)</span>: Background and why this matters.
-<span class="hl-val">Key Findings (1 paragraph)</span>: The most important verified facts.
-<span class="hl-val">Implications (1 paragraph)</span>: What this means for decision-makers.
-
-<span class="hl-step">VERIFIED CLAIMS:</span>
-[PASTE STEP 3 OUTPUT HERE]</pre>
-        </div>
-
-        <p>The output of step 4 is a well-structured brief built entirely from verified, attributed claims. No hallucinations. Fully auditable. You can trace every sentence back to a source claim, and every claim back to the original quote.</p>
-
-
-        <!-- ── Section 5 ───────────────────────────────────── -->
-        <h2 id="five-patterns">The Five Chain Patterns</h2>
-
-        <p>Most prompt chains are variations of five core patterns. Learn these and you can construct a chain for almost any complex task.</p>
-
-        <div class="patterns-grid">
-          <div class="pattern-card">
-            <div class="pattern-card-name">Linear</div>
-            <p>A → B → C. Each step feeds the next. The most common pattern. Use for: research briefs, structured analysis, any multi-stage transformation.</p>
-          </div>
-          <div class="pattern-card">
-            <div class="pattern-card-name">Branching</div>
-            <p>A → B and C (parallel). Run two independent analyses on the same input, then merge the results. Use for: comparing approaches, multi-perspective analysis.</p>
-          </div>
-          <div class="pattern-card">
-            <div class="pattern-card-name">Looping</div>
-            <p>A → B → [check] → A. Re-run a step if output doesn't meet a quality threshold. Use for: generation tasks where you need to hit a specific standard.</p>
-          </div>
-          <div class="pattern-card">
-            <div class="pattern-card-name">Fan-out / Fan-in</div>
-            <p>A → [B1, B2, B3] → C. Process multiple items in parallel, then aggregate. Use for: analysing multiple sources, batch processing.</p>
-          </div>
-          <div class="pattern-card">
-            <div class="pattern-card-name">Self-critique</div>
-            <p>A → [critique A] → [revise A]. The model generates output, then critiques it, then revises. Use for: high-stakes writing and reasoning tasks.</p>
+          <div class="dt-branch">
+            <div class="dt-condition dt-cond-no">type = "task"</div>
+            <div class="dt-node">Step 2B: Decompose into subtasks → execute each → return action plan</div>
           </div>
         </div>
+      </div>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Python — conditional branching</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>import json
 
-        <h3>The self-critique pattern in detail</h3>
-        <p>This pattern is especially powerful for writing and analysis. You run three prompts: generate, critique, revise. The result is consistently better than asking the model to generate a great response in one shot — because "revise this based on these specific flaws" is a much more tractable task than "write something excellent."</p>
+ROUTER_PROMPT = """Classify the user input into one of these categories.
+Return ONLY JSON: {{"type": "question" | "task" | "feedback" | "unknown"}}
 
-        <div class="code-block">
-          <div class="code-block-header">
-            <span class="code-block-label">Self-Critique Chain</span>
-            <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
-          </div>
-          <pre><span class="hl-cmt">--- PROMPT 1: Generate ---</span>
-Write a [content type] about [topic].
-[Your content requirements here]
+User input: {message}"""
 
-<span class="hl-cmt">--- PROMPT 2: Critique ---</span>
-You are a critical editor reviewing the draft below.
-Identify the 3 most significant weaknesses:
-1. Arguments that are weak or unsupported
-2. Clarity problems
-3. Structural issues or missing sections
-Be specific. Quote the problematic sections.
+async def conditional_chain(user_message: str) -> str:
+    # Step 1 — Classify
+    raw = await llm_async(
+        system="You are a router. Classify inputs accurately.",
+        user=ROUTER_PROMPT.format(message=user_message),
+    )
+    input_type = json.loads(raw).get("type", "unknown")
 
-DRAFT: [STEP 1 OUTPUT]
+    # Step 2 — Branch
+    if input_type == "question":
+        return await handle_question(user_message)
+    elif input_type == "task":
+        return await handle_task(user_message)
+    elif input_type == "feedback":
+        return await handle_feedback(user_message)
+    else:
+        return await llm_async(
+            system="You are a helpful assistant.",
+            user=user_message,
+            temperature=0.7,
+        )
 
-<span class="hl-cmt">--- PROMPT 3: Revise ---</span>
-Rewrite the draft below, addressing every critique listed.
-Do not introduce new ideas — only fix the identified problems.
 
-DRAFT: [STEP 1 OUTPUT]
-CRITIQUE: [STEP 2 OUTPUT]</pre>
+async def handle_task(message: str) -> str:
+    # Decompose first, then execute
+    subtasks_raw = await llm_async(
+        system='Break this task into numbered subtasks. Return JSON: {"subtasks": ["step 1", "step 2"]}',
+        user=message,
+    )
+    subtasks = json.loads(subtasks_raw)["subtasks"]
+    return "Action plan:\n" + "\n".join(f"{i+1}. {t}" for i, t in enumerate(subtasks))</pre>
+      </div>
+      <h3>Routing table pattern</h3>
+      <p>For complex multi-level routing, keep the decision tree in Python — not buried in a single prompt. Use a lookup table that maps (type, sub-type) to handlers:</p>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Python — routing table</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>ROUTING_TABLE = {
+    ("question", "factual"):  handle_factual_question,
+    ("question", "opinion"):  handle_opinion_question,
+    ("task",     "simple"):   handle_simple_task,
+    ("task",     "complex"):  handle_complex_task,
+}
+
+async def route(message: str) -> str:
+    top_type = await classify_type(message)       # "question" | "task"
+    sub_type = await classify_complexity(message) # "factual" | "simple" | etc.
+
+    handler = ROUTING_TABLE.get((top_type, sub_type))
+    return await handler(message) if handler else await fallback(message)</pre>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="skill-section" id="error-handling">
+      <h2><span class="section-num">07</span> Error Handling Between Steps</h2>
+      <p>Chains break at step boundaries. Without explicit error handling, a bad output in step 2 silently corrupts everything downstream.</p>
+      <h3>The three failure types</h3>
+      <div class="step-box">
+        <div class="step-num">TYPE 1</div>
+        <div class="step-content">
+          <h4>Format failures</h4>
+          <p>Model returned prose instead of JSON, or JSON with the wrong schema. Catch at parse time. Retry the step with a corrective prompt appended to the user turn.</p>
         </div>
-
-
-        <!-- ── Section 6 ───────────────────────────────────── -->
-        <h2 id="handling-errors">Handling Errors and Edge Cases</h2>
-
-        <p>Every chain will eventually encounter a step that produces unexpected output. A verification step returns malformed JSON. An extraction step misses half the claims. A synthesis step ignores its instructions and goes off-script. Here's how to handle each.</p>
-
-        <h3>Malformed JSON</h3>
-        <p>The most common failure in structured output chains. Fix it with three defences:</p>
-        <ul>
-          <li><strong>Ask twice:</strong> End your extraction prompt with "Double-check your JSON output is valid before responding." Sounds trivial — it meaningfully reduces malformed output.</li>
-          <li><strong>Specify what's not allowed:</strong> "Do not include trailing commas. Do not wrap the JSON in markdown code blocks." These specific prohibitions catch the most common malformation patterns.</li>
-          <li><strong>Repair as a step:</strong> If you regularly get malformed JSON, add a lightweight repair step using a cheap model: "Fix any syntax errors in the JSON below. Return only the corrected JSON."</li>
-        </ul>
-
-        <h3>Incomplete extraction</h3>
-        <p>The model extracted 8 claims but you can see there are clearly 15 in the source. Add this to your extraction prompt: "Before finalising your output, re-read the source and verify you have not missed any factual claims. If you find additional claims, add them." A second-pass instruction at the end of the prompt improves recall significantly.</p>
-
-        <h3>Step ignoring instructions</h3>
-        <p>A synthesis step that starts inventing information not in the claims list, or a verification step that just agrees with every claim. This is usually a sign your prompt is too long and the instructions at the top are being underweighted. Move your most critical constraints to the bottom of the prompt — models weight recent tokens more heavily. The instruction "DO NOT add any information not present in the verified claims below" should be the last line before the data, not the first.</p>
-
-        <div class="callout callout-tip">
-          <div class="callout-icon">◆</div>
-          <div class="callout-body">
-            <strong>Log every step</strong>
-            <p>When building a new chain, log the full output of every step to a file before passing it to the next. You'll spend far less time debugging if you can see exactly what each step received and produced.</p>
-          </div>
+      </div>
+      <div class="step-box">
+        <div class="step-num">TYPE 2</div>
+        <div class="step-content">
+          <h4>Quality failures</h4>
+          <p>Valid JSON but wrong content (empty results, hallucinated data, low confidence). Catch at validation time. Check business rules — not just schema conformance.</p>
         </div>
-
-
-        <!-- ── Section 7 ───────────────────────────────────── -->
-        <h2 id="common-mistakes">Common Mistakes (and How to Avoid Them)</h2>
-
-        <h3>Mistake 1: Too many steps</h3>
-        <p>More steps is not always better. A 10-step chain introduces 10 potential failure points and multiplies your cost. Start with the minimum viable chain — usually 3–4 steps. Add a step only when you can identify a specific failure mode it would prevent.</p>
-
-        <h3>Mistake 2: Not specifying output format</h3>
-        <p>Already covered in mechanics, but worth repeating: this is the most common mistake and the source of most chain failures. Every step must specify its output format explicitly. "Return a JSON array with this exact schema" is not over-specifying — it's necessary.</p>
-
-        <h3>Mistake 3: Using the same model for every step</h3>
-        <p>Your extraction and verification steps don't need GPT-4o or Claude Opus. A faster, cheaper model — Haiku, GPT-4o Mini, Llama 3.1 8B — can handle structured extraction reliably and at a fraction of the cost. Reserve expensive models for the synthesis step where reasoning quality matters. This alone can cut your chain's cost by 60–80%.</p>
-
-        <h3>Mistake 4: Feeding too much context into later steps</h3>
-        <p>Step 3 doesn't need to see the original source article. It only needs the verified claims from step 2. Trimming inputs to the minimum necessary data at each step improves accuracy and reduces token waste. Each step should receive a clean, purpose-built input — not the growing accumulated output of everything before it.</p>
-
-        <h3>Mistake 5: No human checkpoints</h3>
-        <p>Fully automated chains are powerful, but for high-stakes outputs, add at least one human review point. This is typically after verification — a human scans the verified claim set before the synthesis step runs. This is where you catch the extractions the model got subtly wrong, before they become the foundation of your final output.</p>
-
-
-        <!-- ── Download CTA ────────────────────────────────── -->
-        <div id="download" class="download-cta">
-          <div class="download-cta-icon">
-            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          </div>
-          <div class="download-cta-body">
-            <h3>Free Prompt Chaining Template</h3>
-            <p>The complete four-step research brief chain from this guide — ready to copy, paste, and adapt. Includes all prompts, schema definitions, and template variables. No email required.</p>
-          </div>
-          <button class="btn-download-article" onclick="downloadTemplate()">
-            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download Free
-          </button>
+      </div>
+      <div class="step-box">
+        <div class="step-num">TYPE 3</div>
+        <div class="step-content">
+          <h4>API / network failures</h4>
+          <p>Rate limits, timeouts, provider outages. Catch at network time. Retry with exponential backoff; fall back to an alternate model if retries are exhausted.</p>
         </div>
+      </div>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Python — retry with corrective prompt</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>import asyncio
+from pydantic import BaseModel
+from typing import Type, TypeVar
 
-        <h2 style="margin-top:0">Putting It All Together</h2>
+T = TypeVar("T", bound=BaseModel)
 
-        <p>Prompt chaining isn't a complex technique. It's a discipline: one step, one job. The payoff is disproportionate to the effort — chains that take 20 minutes to design routinely outperform hours of single-shot prompt engineering.</p>
+async def llm_with_retry(
+    system: str,
+    user: str,
+    schema: Type[T],
+    step_name: str,
+    max_retries: int = 3,
+) -> T:
+    last_error = None
+    current_user = user
 
-        <p>The pattern to internalise: whenever a task requires more than one cognitive mode (e.g., any combination of extraction, analysis, verification, and writing), it's a candidate for a chain. Whenever you're getting inconsistent results from a single-shot prompt, ask yourself which part of the task is being deprioritised — that's where you add a step.</p>
+    for attempt in range(max_retries):
+        try:
+            raw = await llm_async(system=system, user=current_user)
+            return parse_step_output(raw, schema, step_name)
 
-        <p>Start with the three-step minimum: <strong>Extract → Verify → Synthesise</strong>. Master that pattern across a few different use cases. Then explore branching chains for comparative analysis, self-critique chains for high-quality writing, and fan-out chains for processing multiple sources in parallel.</p>
+        except ValueError as e:
+            last_error = str(e)
+            # Append corrective context for the next attempt
+            current_user = (
+                f"{user}\n\n"
+                f"PREVIOUS ATTEMPT FAILED:\n{last_error}\n\n"
+                "Return ONLY valid JSON matching the required schema. No other text."
+            )
+            if attempt < max_retries - 1:
+                await asyncio.sleep(0.5 * (attempt + 1))
 
-        <p>The template above gives you the exact prompts to start today. Adapt the role descriptions and output schemas to your specific domain, and you have a reusable framework for any complex information task you'll encounter.</p>
+        except Exception as e:
+            last_error = str(e)
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)   # Exponential back-off for API errors
 
-      </article>
+    raise RuntimeError(
+        f"[{step_name}] Failed after {max_retries} attempts. Last: {last_error}"
+    )</pre>
+      </div>
+      <h3>Graceful degradation</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Python — partial result instead of crash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>async def run_chain_safely(source_text: str) -> dict:
+    result = {"status": "success", "output": None, "warnings": []}
 
-      <!-- Related Skills -->
-      <div class="related-skills">
-        <div class="related-skills-label">Related Skills</div>
-        <div class="related-skills-grid">
-          <a href="/skills/chain-of-thought.html" class="related-skill-card">
-            <div class="related-skill-card-cat">Prompts · Beginner</div>
-            <div class="related-skill-card-title">Chain-of-Thought Prompting</div>
-          </a>
-          <a href="/skills/agent-memory.html" class="related-skill-card">
-            <div class="related-skill-card-cat">Agents · Advanced</div>
-            <div class="related-skill-card-title">Agent Memory Architecture</div>
-          </a>
-          <a href="/skills/rag-basics.html" class="related-skill-card">
-            <div class="related-skill-card-cat">Tools · Intermediate</div>
-            <div class="related-skill-card-title">RAG: Retrieval-Augmented Generation</div>
-          </a>
-          <a href="/skills.html" class="related-skill-card">
-            <div class="related-skill-card-cat">All Skills</div>
-            <div class="related-skill-card-title">Browse the full skills library →</div>
-          </a>
+    try:
+        claims = await extract_claims(source_text)
+    except RuntimeError as e:
+        result["warnings"].append(f"Extraction failed: {e}")
+        claims = []   # Continue with empty list rather than crashing
+
+    try:
+        scored = await score_claims(claims) if claims else []
+    except RuntimeError as e:
+        result["warnings"].append(f"Scoring failed: {e}")
+        scored = claims   # Fall back to unscored claims
+
+    try:
+        result["output"] = await synthesise(scored)
+    except RuntimeError as e:
+        result["status"] = "partial"
+        result["output"] = "Synthesis unavailable."
+        result["raw_claims"] = [c["text"] for c in (scored or [])]
+
+    return result</pre>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section class="skill-section" id="state">
+      <h2><span class="section-num">08</span> State Management</h2>
+      <p>As chains grow longer, a chain state object carries everything — original input, each step's output, timings, errors — through the pipeline as a single structured artifact. This makes debugging, logging, and resuming failed runs straightforward.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Python — chain state dataclass</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>from dataclasses import dataclass, field
+import time, uuid
+
+@dataclass
+class ChainState:
+    run_id:       str   = field(default_factory=lambda: str(uuid.uuid4()))
+    source_text:  str   = ""
+    started_at:   float = field(default_factory=time.time)
+
+    # Step outputs — filled as chain progresses
+    claims:       list[dict] = field(default_factory=list)
+    scored:       list[dict] = field(default_factory=list)
+    filtered:     list[dict] = field(default_factory=list)
+    output:       str        = ""
+
+    # Execution metadata
+    step_timings: dict[str, float] = field(default_factory=dict)
+    errors:       list[str]        = field(default_factory=list)
+    completed:    bool             = False
+
+    def record_step(self, step_name: str, duration_ms: float):
+        self.step_timings[step_name] = duration_ms
+
+    def to_log_record(self) -> dict:
+        return {
+            "run_id":    self.run_id,
+            "duration":  int((time.time() - self.started_at) * 1000),
+            "steps":     self.step_timings,
+            "n_claims":  len(self.claims),
+            "errors":    self.errors,
+            "completed": self.completed,
+        }
+
+
+# Each step mutates state in place
+async def step_extract(state: ChainState) -> ChainState:
+    t0 = time.time()
+    raw = await llm_async(EXTRACT_SYSTEM, state.source_text)
+    state.claims = json.loads(raw)["claims"]
+    state.record_step("extract", (time.time() - t0) * 1000)
+    return state
+
+async def run_pipeline(source_text: str) -> ChainState:
+    state = ChainState(source_text=source_text)
+    state = await step_extract(state)
+    state = await step_score(state)
+    state.filtered = [c for c in state.scored if c["confidence"] >= 7]
+    state.completed = True
+    return state</pre>
+      </div>
+      <div class="callout info">
+        <span class="callout-icon">💾</span>
+        <div class="callout-body"><strong>Persist state for long chains.</strong> For chains running over many minutes or with human-in-the-loop steps, serialise state to a database after each step. This lets you resume a failed run from the last successful checkpoint rather than re-running the whole pipeline.</div>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section class="skill-section" id="real-pipeline">
+      <h2><span class="section-num">09</span> Real Pipeline: Research Material → Article</h2>
+      <p>A complete, production-style pipeline that turns raw research (transcripts, notes, web content) into a structured article draft — the kind of pipeline that powers the content behind Aether Intel.</p>
+      <div class="chain-visual">
+        <div class="chain-row">
+          <div class="chain-node">
+            <div class="chain-node-step">Step 1</div>
+            <div class="chain-node-title">Extract</div>
+            <div class="chain-node-out">claims JSON</div>
+          </div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-node">
+            <div class="chain-node-step">Step 2 ∥</div>
+            <div class="chain-node-title">Score + Dedupe</div>
+            <div class="chain-node-out">parallel</div>
+          </div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-node">
+            <div class="chain-node-step">Step 3</div>
+            <div class="chain-node-title">Outline</div>
+            <div class="chain-node-out">section plan</div>
+          </div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-node">
+            <div class="chain-node-step">Step 4</div>
+            <div class="chain-node-title">Draft</div>
+            <div class="chain-node-out">prose article</div>
+          </div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-node">
+            <div class="chain-node-step">Step 5</div>
+            <div class="chain-node-title">Polish</div>
+            <div class="chain-node-out">final article</div>
+          </div>
         </div>
       </div>
 
-    </div><!-- /.skill-article-wrap -->
-  </main>
+      <h3>Step 1 — Extract claims</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Prompt</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>You are a research analyst. Read the source material and extract every distinct
+factual claim, statistic, opinion, or insight.
 
-  <script src="/js/main.js"></script>
-  <script src="/js/byok.js"></script>
-
-  <script>
-    /* ── Reading progress bar ────────────────────────────── */
-    window.addEventListener('scroll', () => {
-      const doc = document.documentElement;
-      const scrolled = doc.scrollTop;
-      const total = doc.scrollHeight - doc.clientHeight;
-      const pct = total > 0 ? (scrolled / total) * 100 : 0;
-      document.getElementById('readingProgress').style.width = pct + '%';
-    }, { passive: true });
-
-    /* ── Copy code buttons ───────────────────────────────── */
-    function copyCode(btn) {
-      const pre = btn.closest('.code-block').querySelector('pre');
-      const text = pre.innerText || pre.textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        const orig = btn.textContent;
-        btn.textContent = 'Copied!';
-        btn.style.color = 'var(--neon-cyan)';
-        setTimeout(() => {
-          btn.textContent = orig;
-          btn.style.color = '';
-        }, 2000);
-      });
+Return ONLY JSON:
+{
+  "claims": [
+    {
+      "text":         "The claim in one clear sentence",
+      "type":         "fact" | "statistic" | "opinion" | "insight",
+      "source_quote": "Verbatim phrase from source",
+      "importance":   1-5
     }
+  ]
+}
 
-    /* ── Download template ───────────────────────────────── */
-    function downloadTemplate() {
-      const content = `# Prompt Chaining: Research Brief Framework
+Source material:
+{source_text}</pre>
+      </div>
+
+      <h3>Step 2 — Score and deduplicate (parallel)</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Prompt — deduplication branch</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>You are an editor. Review this list of claims and remove duplicates.
+Two claims are duplicates if they express the same idea, even with different words.
+Keep the version with the clearest wording.
+
+Return JSON: {"claims": [...same schema, duplicates removed...]}
+
+Claims:
+{claims_json}</pre>
+      </div>
+
+      <h3>Step 3 — Outline</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Prompt</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>You are a content strategist. Using the claims below, create an article outline
+with 4–6 sections. Each section should have a clear angle supported by 2–4 claims.
+
+Return JSON:
+{
+  "title": "Article headline (compelling, specific, under 70 chars)",
+  "sections": [
+    {
+      "heading": "Section heading",
+      "angle":   "What this section argues or explains",
+      "claims":  [0, 3, 7]
+    }
+  ]
+}
+
+Claims:
+{filtered_claims_json}</pre>
+      </div>
+
+      <h3>Step 4 — Draft</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Prompt</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>You are a technology journalist writing for an informed audience.
+Write the full article following the outline. Use ONLY the provided claims as your
+factual foundation — do not add information not in the claims.
+
+Style: clear, direct, no filler. Active voice.
+Avoid: "In today's rapidly evolving landscape..." and similar empty openers.
+
+Add inline citations as (claim_id) when using a specific claim.
+
+Outline: {outline_json}
+Claims:  {claims_json}</pre>
+      </div>
+
+      <h3>Step 5 — Polish</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">Prompt</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>You are a copy editor. Improve the article below for:
+1. Clarity — remove redundant words, tighten sentences
+2. Flow — ensure paragraphs connect naturally
+3. Consistency — unified voice throughout
+4. Headlines — make title and headings compelling
+
+Do NOT change factual content, add new information, or alter citations.
+Return the improved article as plain text.
+
+Article:
+{draft}</pre>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="skill-section" id="failures">
+      <h2><span class="section-num">10</span> Common Failure Modes</h2>
+      <div class="failure-grid">
+        <div class="failure-card">
+          <div class="fail">❌ <strong>No format enforcement</strong> — each step returns whatever the model feels like, causing downstream parse failures</div>
+          <div class="fix">✅ Define a JSON schema for every inter-step handoff. Include it verbatim in the system prompt. Parse and validate before passing to the next step.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>Error propagation</strong> — a hallucinated fact or empty result in step 2 flows silently to the final output, which looks plausible but is wrong</div>
+          <div class="fix">✅ Validate business rules at every boundary, not just JSON schema. Fail fast: if step 2 returns empty claims, stop and report rather than running 3 more steps on nothing.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>Over-chaining</strong> — every task gets decomposed into 8 steps; most add no value, inflating latency and cost</div>
+          <div class="fix">✅ Add a step only when it has a clear responsibility that conflicts with adjacent steps. If two consecutive steps could be merged without quality loss, merge them.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>Bloated late-step prompts</strong> — by step 5, the model sees the source text, claims, scored claims, outline, and draft all at once — exceeding the useful context window</div>
+          <div class="fix">✅ Pass only what each step needs. Step 5 (polish) should receive the draft only — not the full upstream chain state. Prune aggressively between steps.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>No state persistence</strong> — a chain fails at step 6 of 8; the whole run restarts from step 1, wasting time and money</div>
+          <div class="fix">✅ Serialise chain state to a DB after each successful step. Implement resume-from-checkpoint for long-running or human-in-loop pipelines.</div>
+        </div>
+        <div class="failure-card">
+          <div class="fail">❌ <strong>Uniform temperature across all steps</strong> — using 0.7 everywhere produces "creative" extractions and "deterministic" prose — neither is what you want</div>
+          <div class="fix">✅ Set temperature per step role: 0.0 for extraction/verification/classification, 0.2–0.4 for analysis, 0.5–0.8 for synthesis and writing.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Download CTA -->
+    <div class="download-cta">
+      <h2>Take the Chaining Templates</h2>
+      <p>Download the complete prompt chaining reference — sequential template, JSON contract patterns, parallel chain, conditional branching, error handling, and the full research pipeline — all in one Markdown file.</p>
+      <div class="download-cta-actions">
+        <button class="btn-download-primary" onclick="downloadTemplates()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Free
+        </button>
+        <a href="/skills.html" class="btn-back-skills">← Back to Skills Library</a>
+      </div>
+    </div>
+
+    <!-- Related Skills -->
+    <section class="related-skills-section">
+      <h2>Related Skills</h2>
+      <div class="related-grid">
+        <a href="/skills/system-prompts.html" class="related-card">
+          <div class="related-card-tag">Prompts</div>
+          <h4>System Prompts</h4>
+          <p>Structure personas, constraints, and context to get consistent, controlled output.</p>
+        </a>
+        <a href="/skills/model-routing.html" class="related-card">
+          <div class="related-card-tag">Tools</div>
+          <h4>Model Routing</h4>
+          <p>Send different chain steps to different model tiers — cut costs 60–80%.</p>
+        </a>
+        <a href="/skills/rag-basics.html" class="related-card">
+          <div class="related-card-tag">Tools</div>
+          <h4>RAG Basics</h4>
+          <p>Add a retrieval step to your chain to ground answers in your own documents.</p>
+        </a>
+        <a href="/skills/agent-memory.html" class="related-card">
+          <div class="related-card-tag">Agents</div>
+          <h4>Agent Memory</h4>
+          <p>Persist chain state and outputs across sessions with episodic and semantic memory.</p>
+        </a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a class="nav-logo" href="/">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Aether</span><span class="logo-intel">Intel</span>
+      </a>
+      <p class="footer-tagline">Free AI skills, tools, and news — updated weekly.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/index.html">News</a>
+      <a href="/skills.html">Skills</a>
+      <a href="/tools.html">Tools</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+    document.getElementById('read-progress').style.width = pct + '%';
+  });
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function downloadTemplates() {
+    const md = `# Prompt Chaining Framework
 ## Aether Intel — Free Skills Library
-## https://ai.quantummerlin.com/skills/prompt-chaining.html
+## https://ai.quantummerlin.com/skills.html
 
 ---
 
-## The Four-Step Research Brief Chain
+## When to Chain vs Single Prompt
 
-This framework takes any source content (article, transcript, report) and
-produces a polished, verified, executive-ready brief.
+USE A CHAIN WHEN:
+- Task has 3+ distinct cognitive modes (extract + verify + write)
+- You need to audit or validate intermediate results
+- Different steps benefit from different models or temperatures
+- Output fails quality checks inconsistently
+- Human review needed at an intermediate stage
 
-Set temperature=0 for steps 1–3. Use temperature=0.7 for step 4.
-
----
-
-## STEP 1 — EXTRACT
-Model: Any (GPT-4o Mini / Claude Haiku / Llama 3.1 8B work well)
-Temperature: 0
-
-\`\`\`
-ROLE: You are a precise research assistant.
-
-TASK: Extract every factual claim from the text below.
-A "factual claim" is any assertion about the world that could be verified.
-Do not include opinions, predictions, or vague statements.
-
-OUTPUT FORMAT: JSON array only. No preamble, no explanation.
-Schema: [{ "id": 1, "claim": "...", "quote": "..." }]
-Where "quote" is the exact sentence from the source.
-
-SOURCE TEXT:
-[PASTE YOUR SOURCE CONTENT HERE]
-\`\`\`
+USE A SINGLE PROMPT WHEN:
+- Task has 1-2 clear steps
+- Latency budget is very tight
+- A single well-structured prompt reliably works already
 
 ---
 
-## STEP 2 — VERIFY
-Model: Any (same as step 1 is fine)
-Temperature: 0
-Input: JSON output from Step 1
+## Core Sequential Template
 
-\`\`\`
-ROLE: You are a rigorous fact-checker.
+STEP 1 - EXTRACT
+You are a [role].
+Your only job is to [specific extraction task].
+Do not summarise, interpret, or add commentary.
+Return ONLY JSON: { "items": [...] }
 
-TASK: For each claim in the JSON below, assess its reliability.
-Rate confidence 1–10 (10 = certain, 1 = likely false).
-Flag any claim that requires an external source to verify.
-
-OUTPUT FORMAT: Return the same JSON array with added fields.
-Schema: [{ "id": 1, "claim": "...", "confidence": 8, "needs_source": false, "note": "..." }]
-The "note" field is mandatory — explain your confidence rating briefly.
-
-CLAIMS TO VERIFY:
-[PASTE STEP 1 JSON OUTPUT HERE]
-\`\`\`
+TEXT TO PROCESS:
+{source_text}
 
 ---
 
-## STEP 3 — FILTER
-Option A (code): filter for confidence >= 7 AND needs_source == false
-Option B (prompt):
+STEP 2 - VERIFY / SCORE
+You are a [verifier role].
+For each item below, [scoring task].
+Return the same schema with added fields.
 
-\`\`\`
-From the claims below, return only those where:
-- confidence is 7 or higher
-- needs_source is false
-
-Return the same JSON schema. No preamble.
-
-CLAIMS: [PASTE STEP 2 OUTPUT]
-\`\`\`
+ITEMS:
+{step_1_output}
 
 ---
 
-## STEP 4 — SYNTHESISE
-Model: Your best available (GPT-4o / Claude Sonnet / Gemini 1.5 Pro)
-Temperature: 0.7
-Input: JSON output from Step 3
+STEP 3 - SYNTHESISE
+You are a [synthesiser role].
+Using ONLY the verified data below (ignore flagged items),
+write [final output format].
 
-\`\`\`
-ROLE: You are a senior analyst writing for an executive audience.
-
-TASK: Write a 3-paragraph research brief using ONLY the verified claims below.
-Structure: Context → Key Findings → Implications.
-Cite each claim inline as [claim_id].
-Do not introduce any information not present in the claims.
-If the claims are insufficient for any section, note that explicitly.
-
-FORMAT:
-Context (1 paragraph): Background and why this matters.
-Key Findings (1 paragraph): The most important verified facts.
-Implications (1 paragraph): What this means for decision-makers.
-
-VERIFIED CLAIMS:
-[PASTE STEP 3 OUTPUT HERE]
-\`\`\`
+VERIFIED DATA:
+{step_2_output}
 
 ---
 
-## QUICK REFERENCE: Other Chain Patterns
+## Temperature by Step Role
 
-### Self-Critique Chain (for writing tasks)
-Step 1: Generate draft
-Step 2: Critique — identify 3 specific weaknesses (with quotes)
-Step 3: Revise — fix only the identified issues
-
-### Fan-Out / Fan-In (for multiple sources)
-Step 1: Extract claims from Source A
-Step 1b: Extract claims from Source B (parallel)
-Step 2: Merge and deduplicate claims
-Step 3: Verify merged claims
-Step 4: Synthesise
-
-### Branching (for comparative analysis)
-Step 1: Extract from input
-Step 2a: Analyse from Perspective A
-Step 2b: Analyse from Perspective B (parallel)
-Step 3: Compare and synthesise both analyses
+| Step Role              | Temperature |
+|------------------------|-------------|
+| Extraction             | 0.0         |
+| Classification         | 0.0         |
+| Verification / scoring | 0.0-0.2     |
+| Analysis               | 0.2-0.4     |
+| Writing / synthesis    | 0.5-0.8     |
 
 ---
 
-## TOP TIPS
+## JSON Contract Pattern
 
-1. Set temperature=0 for extraction and verification. Higher for synthesis.
-2. Always specify output schema explicitly — never rely on the model to infer format.
-3. Use cheap models for extraction/verification. Save expensive models for synthesis.
-4. Log every step's output during development.
-5. Move critical constraints to the BOTTOM of prompts — they get more weight.
-6. Add "Re-read the source and verify you haven't missed anything" to extraction prompts.
+RULE: Define schemas before writing prompts.
+
+Example schema for extraction step:
+{
+  "claims": [
+    {
+      "text":         "Claim in one sentence",
+      "type":         "fact | statistic | opinion | insight",
+      "source_quote": "Verbatim phrase from source",
+      "importance":   1-5
+    }
+  ]
+}
+
+Include the full schema in the system prompt.
+Parse and validate JSON at every step boundary.
+Strip markdown code fences before parsing if needed.
+
+---
+
+## Parallel Branch Pattern (asyncio)
+
+facts_raw, sentiment_raw, actions_raw = await asyncio.gather(
+    llm_async('Extract facts as JSON', document),
+    llm_async('Analyse sentiment as JSON', document),
+    llm_async('Extract action items as JSON', document),
+)
+
+Result: wall-clock time = longest single branch, not sum of all.
+
+---
+
+## Conditional Branching Pattern
+
+# Step 1: Classify
+raw = await llm_async("Classify input. Return JSON: {type: question|task|feedback}")
+input_type = json.loads(raw)["type"]
+
+# Step 2: Branch
+if input_type == "question":
+    return await handle_question(message)
+elif input_type == "task":
+    return await handle_task(message)
+
+---
+
+## Error Handling: Retry with Corrective Prompt
+
+On JSON parse failure, retry with this appended to the user turn:
+"PREVIOUS ATTEMPT FAILED: {error}
+Return ONLY valid JSON matching the required schema. No other text."
+
+Retry up to 3 times with exponential backoff for API errors.
+
+---
+
+## Research to Article Pipeline
+
+STEP 1: EXTRACT
+Extract every factual claim, statistic, opinion, or insight.
+Return JSON: {"claims": [{"text":"...", "type":"fact|statistic|opinion|insight",
+"source_quote":"...", "importance":1-5}]}
+
+STEP 2A (parallel): SCORE CONFIDENCE
+For each claim, rate confidence 0-10 and flag if external source needed.
+Add to schema: {"confidence": 8, "needs_source": false}
+
+STEP 2B (parallel): DEDUPLICATE
+Remove duplicate claims. Keep the clearest wording of each idea.
+
+STEP 3: OUTLINE
+Create 4-6 section outline.
+Return JSON: {"title":"...", "sections":[{"heading":"...",
+"angle":"...", "claims":[0,3,7]}]}
+
+STEP 4: DRAFT
+Write full article following outline. Use only provided claims.
+No filler. Active voice. Cite claims as (claim_id).
+
+STEP 5: POLISH
+Improve clarity, flow, consistency. Do not change facts or citations.
+
+---
+
+## Chain State Template
+
+@dataclass
+class ChainState:
+    run_id:       str
+    source_text:  str
+    claims:       list[dict] = field(default_factory=list)
+    scored:       list[dict] = field(default_factory=list)
+    filtered:     list[dict] = field(default_factory=list)
+    output:       str = ""
+    step_timings: dict = field(default_factory=dict)
+    errors:       list[str] = field(default_factory=list)
+    completed:    bool = False
+
+---
+
+## Common Failure Checklist
+
+- [ ] Every inter-step output has a defined JSON schema?
+- [ ] JSON parsed AND validated at each step boundary?
+- [ ] Failed steps fail fast rather than propagating bad data?
+- [ ] Temperature set per step role (0 for extract, 0.7 for write)?
+- [ ] Late steps receive only what they need, not full upstream history?
+- [ ] Retry logic with corrective prompts on format failures?
+- [ ] Chain state persisted to DB for long or human-in-loop chains?
 
 ---
 
 *Downloaded from Aether Intel — https://ai.quantummerlin.com*
-*Full guide: https://ai.quantummerlin.com/skills/prompt-chaining.html*
 `;
-
-      const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'prompt-chaining-framework.md';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-  </script>
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'prompt-chaining-framework.md';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
 </body>
 </html>

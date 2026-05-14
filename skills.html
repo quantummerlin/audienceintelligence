@@ -777,113 +777,162 @@ concise 3-paragraph summary.</div>
 
 ---
 
-## What Is Prompt Chaining?
+## When to Chain vs Single Prompt
 
-Prompt chaining breaks a complex task into sequential, smaller prompts where
-each output becomes the input for the next step. Instead of asking one LLM to
-do everything at once (which leads to hallucinations and shallow reasoning),
-you give it one focused job at a time.
+USE A CHAIN WHEN:
+- Task has 3+ distinct cognitive modes (extract + verify + write)
+- You need to audit or validate intermediate results
+- Different steps benefit from different models or temperatures
+- Output fails quality checks inconsistently
+- Human review needed at an intermediate stage
 
----
-
-## When To Use It
-
-✅ Multi-step research, analysis, or writing tasks
-✅ When you need auditable reasoning at each stage
-✅ When a single prompt keeps producing shallow or inconsistent results
-❌ Simple Q&A or single-fact lookups (overkill)
+USE A SINGLE PROMPT WHEN:
+- Task has 1-2 clear steps and a tight latency budget
+- A single well-structured prompt reliably works already
 
 ---
 
-## The Core Template
+## Core Sequential Template
 
-### STEP 1 — EXTRACT
-\`\`\`
+STEP 1 - EXTRACT
 You are a [role].
 Your only job is to [specific extraction task].
 Do not summarise, interpret, or add commentary.
-Output as JSON with the schema: { "items": [...] }
+Return ONLY JSON: { "items": [...] }
 
-TEXT TO PROCESS:
-[INSERT INPUT]
-\`\`\`
-
-### STEP 2 — PROCESS / VERIFY
-\`\`\`
-You are a [different role, e.g. fact-checker / analyst].
-Below is a JSON list of items extracted in a previous step.
-For each item, [specific processing task].
-Return the same JSON structure with added fields: { "rating": 0-10, "flag": true/false, "note": "" }
-
-ITEMS:
-[INSERT STEP 1 OUTPUT]
-\`\`\`
-
-### STEP 3 — SYNTHESISE
-\`\`\`
-You are a [senior role, e.g. editor / strategist].
-Using ONLY the verified data below (ignore anything flagged as false),
-write [final output format].
-Do not add information not present in the data.
-
-VERIFIED DATA:
-[INSERT STEP 2 OUTPUT]
-\`\`\`
+TEXT TO PROCESS: {source_text}
 
 ---
 
-## Practical Example: Research Brief
+STEP 2 - VERIFY / SCORE
+You are a [verifier role].
+For each item below, [scoring task].
+Return the same schema with added fields.
 
-### Step 1 — Extract claims
-\`\`\`
-You are a research assistant.
-Extract every factual claim from the text below.
-Output as JSON: { "claims": [{ "text": "...", "source_quote": "..." }] }
-
-TEXT: [paste article or transcript]
-\`\`\`
-
-### Step 2 — Verify claims
-\`\`\`
-You are a fact-checker with access to general knowledge up to [model cutoff].
-For each claim, rate confidence 0–10 and flag any that require external sourcing.
-Return: { "claims": [{ "text": "...", "confidence": 8, "needs_source": false, "note": "..." }] }
-
-CLAIMS: [paste step 1 output]
-\`\`\`
-
-### Step 3 — Write the brief
-\`\`\`
-You are a senior analyst writing an executive brief.
-Use only claims with confidence >= 7. Ignore flagged claims.
-Write a 3-paragraph brief: Context, Key Findings, Implications.
-Cite each claim inline as [claim_number].
-
-DATA: [paste step 2 output]
-\`\`\`
+ITEMS: {step_1_output}
 
 ---
 
-## Tips
+STEP 3 - SYNTHESISE
+You are a [synthesiser role].
+Using ONLY the verified data below, write [final output format].
 
-1. **Always specify the output format** in each step (JSON, bullet list, prose).
-   This makes the next step's input predictable.
-
-2. **Keep each step atomic.** If you find yourself writing "and then also…"
-   in a step, split it into two steps.
-
-3. **Log intermediate outputs.** When building pipelines, store each step's
-   output so you can debug where errors are introduced.
-
-4. **Use temperature 0** for extraction and verification steps (you want
-   determinism). Use higher temperature for the synthesis/writing step.
+VERIFIED DATA: {step_2_output}
 
 ---
+
+## Temperature by Step Role
+
+| Step Role              | Temperature |
+|------------------------|-------------|
+| Extraction             | 0.0         |
+| Classification         | 0.0         |
+| Verification / scoring | 0.0-0.2     |
+| Analysis               | 0.2-0.4     |
+| Writing / synthesis    | 0.5-0.8     |
+
+---
+
+## JSON Contract Pattern
+
+Define schemas BEFORE writing prompts.
+Include the full schema verbatim in the system prompt.
+Parse AND validate JSON at every step boundary (schema + business rules).
+Strip markdown code fences before parsing if needed.
+
+Example schema:
+{
+  "claims": [
+    {
+      "text":         "Claim in one sentence",
+      "type":         "fact | statistic | opinion | insight",
+      "source_quote": "Verbatim phrase from source",
+      "importance":   1-5
+    }
+  ]
+}
+
+---
+
+## Parallel Branch Pattern
+
+Run independent branches simultaneously with asyncio.gather():
+
+facts, sentiment, actions = await asyncio.gather(
+    llm_async('Extract facts as JSON', document),
+    llm_async('Analyse sentiment as JSON', document),
+    llm_async('List action items as JSON', document),
+)
+
+Result: wall-clock time = longest branch, not sum of all.
+
+---
+
+## Conditional Branching Pattern
+
+raw = await llm_async("Classify input. Return JSON: {type: question|task|feedback}")
+input_type = json.loads(raw)["type"]
+
+if input_type == "question":
+    return await handle_question(message)
+elif input_type == "task":
+    return await handle_task(message)
+
+---
+
+## Error Handling: Retry with Corrective Prompt
+
+On JSON parse failure, append to user turn and retry:
+"PREVIOUS ATTEMPT FAILED: {error}
+Return ONLY valid JSON matching the required schema. No other text."
+
+Retry up to 3 times. Use exponential backoff for API errors.
+
+---
+
+## Research to Article Pipeline
+
+STEP 1: EXTRACT
+Extract every factual claim, statistic, opinion, or insight.
+Return JSON: {"claims": [{"text":"...", "type":"fact|statistic|opinion|insight",
+"source_quote":"...", "importance":1-5}]}
+
+STEP 2A (parallel): SCORE CONFIDENCE
+Rate each claim confidence 0-10. Add: {"confidence": 8, "needs_source": false}
+
+STEP 2B (parallel): DEDUPLICATE
+Remove duplicates. Keep the clearest wording of each idea.
+
+STEP 3: OUTLINE
+Create 4-6 section outline.
+Return JSON: {"title":"...", "sections":[{"heading":"...","angle":"...","claims":[0,3,7]}]}
+
+STEP 4: DRAFT
+Write full article following outline. Use only provided claims.
+No filler. Active voice. Cite claims as (claim_id).
+
+STEP 5: POLISH
+Improve clarity, flow, consistency. Do not change facts or citations.
+
+---
+
+## Common Failure Checklist
+
+- [ ] Every inter-step output has a defined JSON schema?
+- [ ] JSON parsed AND validated (schema + business rules) at each boundary?
+- [ ] Failed steps fail fast rather than propagating bad data?
+- [ ] Temperature set per step role (0 for extract, 0.7 for write)?
+- [ ] Late steps receive only what they need, not full upstream history?
+- [ ] Retry logic with corrective prompts on format failures?
+- [ ] State persisted to DB for long or human-in-loop chains?
+
+---
+
+See the full guide: https://ai.quantummerlin.com/skills/prompt-chaining.html
 
 *Downloaded from Aether Intel — https://ai.quantummerlin.com*
 `
       },
-
       'few-shot-prompting': {
         filename: 'few-shot-prompting-templates.md',
         content: `# Few-Shot Prompting Templates
