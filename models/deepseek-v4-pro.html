@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepSeek V4 Pro — MoE Flagship Review &amp; Benchmarks | Aether Intel</title>
+  <meta name="description" content="DeepSeek V4 Pro review: $0.43/$0.87 per 1M tokens, 1M context, 1.6T parameter MoE, visible reasoning. The most cost-efficient frontier model for long-context tasks.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/deepseek-v4-pro.html">
+  <meta property="og:title" content="DeepSeek V4 Pro — MoE Flagship Review &amp; Benchmarks | Aether Intel">
+  <meta property="og:description" content="DeepSeek V4 Pro review: $0.43/$0.87 per 1M tokens, 1M context, 1.6T parameter MoE, visible reasoning. The most cost-efficient frontier model for long-context tasks.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/deepseek-v4-pro.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/deepseek-v4-pro-hero.png">
+  <meta property="article:published_time" content="2026-05-15">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeepSeek V4 Pro — MoE Flagship Review &amp; Benchmarks | Aether Intel">
+  <meta name="twitter:description" content="DeepSeek V4 Pro review: $0.43/$0.87 per 1M tokens, 1M context, 1.6T parameter MoE, visible reasoning.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/deepseek-v4-pro-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ─── Model article extras ─── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .spec-value {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-value.sv-green  { color: #34d399; }
+    .spec-value.sv-cyan   { color: #22d3ee; }
+    .spec-value.sv-indigo { color: var(--neon-indigo); }
+    .spec-value.sv-gold   { color: var(--neon-gold); }
+
+    /* Provider accent highlight */
+    .provider-accent {
+      color: #1c7afd;
+    }
+
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card h4 {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .use-case-card p {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Benchmark display */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+    }
+    .benchmark-cost-badge {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: #22d3ee;
+      background: rgba(34,211,238,.1);
+      border: 1px solid rgba(34,211,238,.3);
+      border-radius: 7px;
+      padding: 4px 12px;
+    }
+    .benchmark-prompt-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-prompt-text {
+      background: rgba(7,7,15,.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .benchmark-response-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-response-text {
+      font-size: .88rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    .benchmark-response-text p { margin: 0 0 12px; }
+    .benchmark-response-text p:last-child { margin: 0; }
+    .benchmark-response-text h3 {
+      font-family: var(--font-heading);
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 16px 0 8px;
+    }
+    .benchmark-response-text ul,
+    .benchmark-response-text ol {
+      margin: 0 0 12px;
+      padding-left: 1.4em;
+    }
+    .benchmark-response-text li {
+      margin-bottom: 5px;
+    }
+    .benchmark-response-text strong {
+      color: var(--text-primary);
+    }
+    .benchmark-response-text hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    /* Sample prompt block */
+    .sample-prompt-block {
+      background: rgba(7,7,15,.6);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    /* Visible reasoning variant — cyan accent */
+    .sample-prompt-block.reasoning-block {
+      border-left-color: #22d3ee;
+      background: rgba(34,211,238,.04);
+    }
+    .sample-prompt-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 6px;
+    }
+    .sample-prompt-block.reasoning-block .sample-prompt-label {
+      color: #22d3ee;
+    }
+    .sample-prompt-text {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Try it CTA */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(28,122,253,.08), rgba(34,211,238,.04));
+      border: 1px solid rgba(28,122,253,.25);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .try-it-band p {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      margin: 0;
+    }
+
+    /* Highlight row for current model in comparison table */
+    .highlight-row td {
+      background: rgba(28,122,253,.07);
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr; }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- ── HERO ── -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/models/deepseek-v4-pro-hero.png"
+             alt="DeepSeek V4 Pro — AI model overview"
+             class="article-hero-img" loading="eager"
+             onerror="this.style.background='linear-gradient(135deg,rgba(28,122,253,0.18),rgba(34,211,238,0.06))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/models.html">Models</a>
+            <span>&#x203a;</span>
+            <span>DeepSeek V4 Pro</span>
+          </nav>
+          <span class="badge badge-research">DeepSeek</span>
+          <h1 class="article-hero-title">DeepSeek V4 Pro</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 15, 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">8 min read</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">Benchmark tested</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <div class="article-layout">
+      <div class="article-body">
+
+        <p>DeepSeek V4 Pro is a large-scale Mixture-of-Experts model from DeepSeek with 1.6T total parameters and 49B activated parameters, supporting a 1M-token context window. At <strong>$0.43 input / $0.87 output per 1M tokens</strong>, it is the most cost-efficient frontier-class model available for long-context tasks — roughly 12&times; cheaper on input than GPT-5.5 and less than half the price of DeepSeek R1. For teams running high-volume pipelines, agent loops, or long-document workflows, V4 Pro changes the economics of what is feasible.</p>
+
+        <!-- QUICK SPECS -->
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Input /1M tokens</div>
+            <div class="spec-value sv-indigo">$0.43</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output /1M tokens</div>
+            <div class="spec-value sv-indigo">$0.87</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Context window</div>
+            <div class="spec-value">~1M</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Benchmark cost</div>
+            <div class="spec-value sv-cyan">$0.000457</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Modality</div>
+            <div class="spec-value">Text only</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">OpenRouter ID</div>
+            <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary)">deepseek/deepseek-v4-pro</div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT IS -->
+        <h2 class="article-h2">What is DeepSeek V4 Pro?</h2>
+        <p>DeepSeek V4 Pro is built on a Mixture-of-Experts (MoE) architecture with 1.6 trillion total parameters, of which only 49 billion are activated per forward pass. This design is the key to its price-performance story: rather than running all parameters for every token — as a dense model would — V4 Pro routes each token through a specialised subset of experts. The result is inference costs comparable to a 49B dense model while retaining the representational capacity of a 1.6T system. For developers, this translates directly into frontier-quality reasoning at a price tier that was previously reserved for much smaller, less capable models.</p>
+        <p>V4 Pro builds meaningfully on DeepSeek V3 and V3.2. The headline addition is the full <strong>1,048,576-token (approximately 1M) context window</strong> — enabling genuine long-document and long-session reasoning rather than the 64K–128K windows typical of its predecessors. Equally notable for observability: DeepSeek V4 Pro surfaces its chain-of-thought reasoning as <strong>visible text</strong> in the <code>reasoning</code> field, not as encrypted or hidden tokens. This puts it in the same class as DeepSeek R1 rather than models like GPT-5.5 or o3, where reasoning is opaque. Teams building explainable AI pipelines or auditable decision systems will find this transparency operationally valuable.</p>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT EXCELS AT -->
+        <h2 class="article-h2">What V4 Pro Excels At</h2>
+        <p>The combination of a 1M context window, MoE efficiency, and sub-$1 per-million-token pricing opens up workloads that were previously impractical at scale. Here are the four areas where V4 Pro has the strongest cost-capability advantage.</p>
+
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>Cost-Efficient Long Context</h4>
+            <p>Process entire codebases, lengthy reports, or massive datasets at ~1/30th the cost of GPT-5.5. The 1M context window makes RAG optional for many tasks.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>MoE-Powered Reasoning</h4>
+            <p>1.6T total parameters with 49B activated means frontier reasoning quality without the inference cost of a dense model of comparable scale.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Extended Agent Pipelines</h4>
+            <p>Tool-heavy agents accumulate context rapidly. At $0.43/$0.87 per 1M, V4 Pro lets you run deep multi-step pipelines without budget anxiety.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Code Generation at Scale</h4>
+            <p>Ingest entire repositories, generate tests, refactor architecture, and maintain consistency across files — all within a single context pass.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- BENCHMARK -->
+        <h2 class="article-h2">Benchmark Response</h2>
+        <p>We ran our standard 650-token technical exchange through DeepSeek V4 Pro via OpenRouter to give you a real sense of response quality and cost. The prompt asks for a technical explanation of LLM context windows — a good proxy for reasoning depth and communication clarity. Notably, V4 Pro returned <strong>visible chain-of-thought reasoning</strong> (1,603 reasoning tokens) in the <code>reasoning</code> field before generating the final response — an excerpt of that thinking appears below.</p>
+
+        <div class="benchmark-block">
+          <div class="benchmark-block-header">
+            <span class="benchmark-block-title">Benchmark Test — 650 Token Exchange</span>
+            <span class="benchmark-cost-badge">Cost: $0.000457</span>
+          </div>
+
+          <div class="benchmark-prompt-label">Prompt (250 tokens)</div>
+          <div class="benchmark-prompt-text">
+            Explain how context windows work in large language models. Cover: what a context window is, why the size matters for memory and multi-step tasks, how token pricing scales with window usage, and what a developer should consider when choosing between a 128K model and a 1M context model for a production app. Be practical and specific.
+          </div>
+
+          <!-- Visible reasoning excerpt -->
+          <div class="sample-prompt-block reasoning-block">
+            <div class="sample-prompt-label">Visible Reasoning (excerpt)</div>
+            <div class="sample-prompt-text">
+              DeepSeek V4 Pro's thinking was visible — here is a short excerpt from its chain-of-thought before generating the response above:<br><br>
+              <em>"I'll craft an explanation: define context window (the number of tokens the model can process at once, including input and output). Then discuss why size matters: limited memory for conversation history, documents, multi-step reasoning. Larger windows let you include entire codebases, long conversations, etc., avoiding need to truncate or summarise. But they have trade-offs: compute, latency, cost. Then talk about token pricing: LLM pricing is per token (input and output)..."</em>
+            </div>
+          </div>
+
+          <div class="benchmark-response-label">DeepSeek V4 Pro Response (~400 tokens)</div>
+          <div class="benchmark-response-text">
+            <p>A context window is the maximum number of tokens (words, sub-words, punctuation, etc.) an LLM can "see" at one time. It covers <strong>everything</strong>: your prompt, conversation history, uploaded documents, tool outputs, and the model's own generated tokens. Once the window is full, older content is dropped (or you must manually truncate). Think of it as the model's working memory — it can only reason about information inside that boundary.</p>
+
+            <hr>
+
+            <h3>Why the size matters: memory and multi-step tasks</h3>
+            <p>A larger context window directly extends the model's short-term memory. This affects two major areas:</p>
+            <p><strong>Long conversations / agent loops</strong> — In a chatbot or an agent that calls tools over dozens of turns, the full dialogue and every tool result consume tokens rapidly. With a small window, you must aggressively summarise or delete older turns, which often leads to lost context — the agent "forgets" earlier user instructions, decisions, or data. A bigger window lets you keep the entire history, preserving coherence in multi-step reasoning without the brittleness of manual summary.</p>
+            <p><strong>Large-document understanding</strong> — For use cases like analysing a 300-page contract, an entire codebase, or years of support tickets, a narrow window forces you to split the content into chunks and process them independently. That works for simple extraction, but breaks when the task requires cross-part reasoning (e.g., "Does the indemnity clause in Section 2 conflict with the payment terms in Section 8?"). A window large enough to hold the full document lets the model synthesise information holistically.</p>
+
+            <hr>
+
+            <h3>How token pricing scales with window usage</h3>
+            <p>LLM pricing is typically <strong>per token</strong>, split into input (your prompt + history) and output (model's response). You pay for the tokens you <em>send</em>, not the window size itself. A 1M-context model that receives only 10K tokens costs exactly the same as a 128K model receiving 10K tokens, <strong>if their per-token prices are equal</strong>.</p>
+            <p>Three pricing nuances come into play when you actually use very long inputs:</p>
+            <ol>
+              <li><strong>Linear cost growth</strong> — Input pricing is flat per token. Sending a 500K-token prompt costs 50&times; what a 10K-token prompt costs. Large windows encourage you to include entire datasets, so costs can balloon without discipline.</li>
+              <li><strong>Tiered pricing for long context</strong> — Some providers charge a higher per-token rate above a threshold (e.g. Gemini 1.5 Pro doubles its input rate above 128K tokens). Always check the pricing page before assuming the per-token rate is flat.</li>
+              <li><strong>Caching benefits</strong> — Many providers offer prompt-caching discounts (up to 90% off) for repeated prefixes. If your system prompt or large document is static, caching can dramatically reduce long-context costs.</li>
+            </ol>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- PRICING DEEP DIVE -->
+        <h2 class="article-h2">Pricing Breakdown</h2>
+        <p>DeepSeek V4 Pro is priced at <strong>$0.43 per 1M input tokens and $0.87 per 1M output tokens</strong> via OpenRouter. For a model with 1M-token context and frontier reasoning capability, this sits in a category of its own — cheaper than DeepSeek R1 on input, and less than one-tenth the cost of GPT-5.5. At 1,000 benchmark-length exchanges per day, your daily spend is under $0.50.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Input tokens /1M</td><td>$0.43</td><td>Charged per token sent to the model</td></tr>
+              <tr><td>Output tokens /1M</td><td>$0.87</td><td>Approx. 2&times; the input rate</td></tr>
+              <tr><td>Context window</td><td>1,048,576 tokens (~1M)</td><td>Max tokens in one conversation</td></tr>
+              <tr><td>Benchmark exchange</td><td>$0.000457</td><td>250 in + 400 out tokens</td></tr>
+              <tr><td>Est. 1,000 req/day</td><td>$0.46 / day</td><td>Estimated daily cost at volume</td></tr>
+              <tr><td>Est. 10,000 req/day</td><td>$4.57 / day</td><td>Production-scale estimate</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ADSENSE MID -->
+        <ins class="adsbygoogle" style="display:block;margin:28px 0"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="auto" data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+        <hr class="article-divider">
+
+        <!-- SAMPLE PROMPTS -->
+        <h2 class="article-h2">Sample Prompts That Work Well</h2>
+        <p>V4 Pro's 1M context window and MoE reasoning engine are best exploited with prompts that feed it large, complex inputs in a single pass. The following prompts are designed to stress-test the model's strengths — use them as starting points for your own production workflows.</p>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Cost-Efficient Long Context</div>
+          <div class="sample-prompt-text">"Ingest this 200,000-token codebase. Identify dead code, circular dependencies, and security issues. Output a structured JSON report."</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Extended Agent Pipelines</div>
+          <div class="sample-prompt-text">"You have access to 5 years of customer support tickets (provided). Identify the top 20 recurring issues, categorise by severity, and draft resolution templates for each."</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: MoE-Powered Reasoning</div>
+          <div class="sample-prompt-text">"Analyse this regulatory filing against the company's stated policies. Flag every inconsistency, classify each by risk level, and suggest remediation language."</div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- VS COMPARISON -->
+        <h2 class="article-h2">How It Compares</h2>
+        <p>The table below places DeepSeek V4 Pro against three natural alternatives: its reasoning-focused sibling DeepSeek R1, Anthropic's capable mid-tier Claude Haiku 4.5, and OpenAI's premium GPT-5.5. V4 Pro's advantage is stark: it is cheaper than every competitor on both input and output, matches GPT-5.5 on context window, and delivers a benchmark cost less than 4% of GPT-5.5's.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Model</th><th>Input /1M</th><th>Output /1M</th><th>Context</th><th>Benchmark</th></tr>
+            </thead>
+            <tbody>
+              <tr class="highlight-row">
+                <td><strong>DeepSeek V4 Pro</strong></td>
+                <td>$0.43</td>
+                <td>$0.87</td>
+                <td>~1M</td>
+                <td><span style="color:#22d3ee;font-weight:700">$0.000457</span></td>
+              </tr>
+              <tr>
+                <td>DeepSeek R1</td>
+                <td>$0.70</td>
+                <td>$2.50</td>
+                <td>64K</td>
+                <td>$0.001175</td>
+              </tr>
+              <tr>
+                <td>Claude Haiku 4.5</td>
+                <td>$1.00</td>
+                <td>$5.00</td>
+                <td>200K</td>
+                <td>$0.002250</td>
+              </tr>
+              <tr>
+                <td>GPT-5.5</td>
+                <td>$5.00</td>
+                <td>$30.00</td>
+                <td>~1M</td>
+                <td>$0.013250</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- TRY IT BAND -->
+        <div class="try-it-band">
+          <div>
+            <h3>Try DeepSeek V4 Pro with Your Own Key</h3>
+            <p>Connect your OpenRouter API key and test V4 Pro directly in the Aether Intel playground — no signup required, your key stays in your browser.</p>
+          </div>
+          <a href="/tools/playground.html" class="btn btn-primary">Open Playground &rarr;</a>
+        </div>
+
+        <!-- TAKEAWAYS -->
+        <div class="article-takeaways">
+          <h3 class="takeaways-title">Key Takeaways</h3>
+          <ul>
+            <li>At $0.43/$0.87 per 1M tokens, DeepSeek V4 Pro is the most affordable 1M-context frontier model available — roughly 12&times; cheaper on input than GPT-5.5.</li>
+            <li>The MoE architecture (1.6T total / 49B activated parameters) delivers frontier reasoning quality at inference costs closer to a 49B dense model.</li>
+            <li>V4 Pro surfaces visible chain-of-thought reasoning in the <code>reasoning</code> field — 1,603 reasoning tokens were returned in our benchmark, making it auditable and suitable for explainable AI pipelines.</li>
+            <li>The 1,048,576-token context window makes RAG optional for many long-document, codebase, and agent pipeline tasks, simplifying architecture and reducing operational overhead.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RELATED MODELS ── -->
+    <section class="article-related">
+      <h2 class="related-title">Related Models</h2>
+      <div class="article-grid">
+        <a class="article-card" href="/models/deepseek-r1.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/deepseek-r1-hero.png"
+                 alt="DeepSeek R1"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(28,122,253,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-research">DeepSeek</span>
+            <h3 class="article-card-title">DeepSeek R1</h3>
+            <p class="article-card-excerpt">Chain-of-thought reasoning at low cost.</p>
+          </div>
+        </a>
+        <a class="article-card" href="/models/gpt-4o.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/gpt-4o-hero.png"
+                 alt="GPT-4o"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(116,170,156,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">OpenAI</span>
+            <h3 class="article-card-title">GPT-4o</h3>
+            <p class="article-card-excerpt">OpenAI's versatile multimodal flagship.</p>
+          </div>
+        </a>
+        <a class="article-card" href="/models/gemini-2-5-flash.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/gemini-2-5-flash-hero.png"
+                 alt="Gemini 2.5 Flash"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(66,133,244,0.15),rgba(52,168,83,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Google</span>
+            <h3 class="article-card-title">Gemini 2.5 Flash</h3>
+            <p class="article-card-excerpt">Google's fastest production model.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </article>
+</main>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>

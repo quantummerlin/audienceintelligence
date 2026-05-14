@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Opus 4.7 — Anthropic's Frontier Agent Model | Aether Intel</title>
+  <meta name="description" content="Claude Opus 4.7 review: real benchmark data, pricing ($5/$25 per 1M), 1M context window, and use cases. Anthropic's flagship for long-running agentic workflows.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/claude-opus-4-7.html">
+  <meta property="og:title" content="Claude Opus 4.7 — Capabilities, Costs &amp; Benchmark">
+  <meta property="og:description" content="Claude Opus 4.7 review: real benchmark data, pricing ($5/$25 per 1M), 1M context window, and use cases. Anthropic's flagship for long-running agentic workflows.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/claude-opus-4-7.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/claude-opus-4-7-hero.png">
+  <meta property="article:published_time" content="2026-05-15">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Opus 4.7 — Capabilities, Costs &amp; Benchmark">
+  <meta name="twitter:description" content="Claude Opus 4.7 review: real benchmark data, pricing ($5/$25 per 1M), 1M context window, and use cases.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/claude-opus-4-7-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ─── Model article extras ─── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .spec-value {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-value.sv-green  { color: #34d399; }
+    .spec-value.sv-indigo { color: var(--neon-indigo); }
+    .spec-value.sv-gold   { color: var(--neon-gold); }
+    .spec-value.sv-orange { color: #f97316; }
+
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card h4 {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .use-case-card p {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Benchmark display */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+    }
+    .benchmark-cost-badge {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      background: rgba(249,115,22,.12);
+      border: 1px solid rgba(249,115,22,.3);
+      border-radius: 7px;
+      padding: 4px 12px;
+      color: #f97316;
+    }
+    .benchmark-prompt-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-prompt-text {
+      background: rgba(7,7,15,.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .benchmark-response-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-response-text {
+      font-size: .88rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    .benchmark-response-text p { margin: 0 0 12px; }
+    .benchmark-response-text p:last-child { margin: 0; }
+    .benchmark-response-text h3 {
+      font-family: var(--font-heading);
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 16px 0 6px;
+    }
+    .benchmark-response-text ul {
+      margin: 6px 0 12px 18px;
+      padding: 0;
+    }
+    .benchmark-response-text li {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+    .benchmark-response-text strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    /* Sample prompt block */
+    .sample-prompt-block {
+      background: rgba(7,7,15,.6);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .sample-prompt-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 6px;
+    }
+    .sample-prompt-text {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Try it CTA */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(204,120,92,.08), rgba(249,115,22,.04));
+      border: 1px solid rgba(204,120,92,.25);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .try-it-band p {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      margin: 0;
+    }
+
+    /* Provider accent stripe on hero */
+    .article-hero {
+      --provider-accent: #cc785c;
+    }
+
+    @media (max-width: 600px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr; }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- ── HERO ── -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/models/claude-opus-4-7-hero.png"
+             alt="Claude Opus 4.7 — AI model overview"
+             class="article-hero-img" loading="eager"
+             onerror="this.style.background='linear-gradient(135deg,rgba(204,120,92,0.2),rgba(249,115,22,0.08))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/models.html">Models</a>
+            <span>&#x203a;</span>
+            <span>Claude Opus 4.7</span>
+          </nav>
+          <span class="badge badge-tools">Anthropic</span>
+          <h1 class="article-hero-title">Claude Opus 4.7</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 15, 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">8 min read</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">Benchmark tested</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <div class="article-layout">
+      <div class="article-body">
+
+        <p>Claude Opus 4.7 is Anthropic's next-generation flagship model, purpose-built for long-running, asynchronous agentic workflows. With a 1M-token context window, strong performance on complex multi-step tasks, and a pricing structure designed for serious production use, Opus 4.7 pushes the frontier of what an AI agent can accomplish in a single uninterrupted session — without summaries, truncation, or lost context.</p>
+
+        <!-- QUICK SPECS -->
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Input /1M tokens</div>
+            <div class="spec-value sv-indigo">$5.00</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output /1M tokens</div>
+            <div class="spec-value sv-indigo">$25.00</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Context window</div>
+            <div class="spec-value">1M tokens</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Benchmark cost</div>
+            <div class="spec-value sv-orange">$0.011250</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Modality</div>
+            <div class="spec-value">Text + Vision + File</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">OpenRouter ID</div>
+            <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary)">anthropic/claude-opus-4.7</div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT IS -->
+        <h2 class="article-h2">What is Claude Opus 4.7?</h2>
+        <p>Claude Opus 4.7 is the fourth-generation entry in Anthropic's Opus family, launched in April 2026 as the company's most capable model for complex, long-horizon tasks. It builds directly on the coding and agentic strengths of Opus 4.6 while adding extended architectural improvements that make the full 1M-token context window genuinely usable — not just a headline number. The model accepts text, vision, and file inputs, making it viable for document-heavy pipelines such as contract review, audit analysis, and research synthesis. Its 5:25 input-to-output pricing ratio reflects its positioning as a premium reasoning model intended for tasks where depth of output matters more than throughput cost.</p>
+        <p>Within Anthropic's current lineup, Opus 4.7 sits at the top of the capability hierarchy. Claude Sonnet 4.5 offers a faster, cheaper middle-ground option ($3/$15 per 1M) for everyday generation tasks, while Claude Haiku 4.5 handles high-volume, latency-sensitive workloads at the lowest cost. Opus 4.7 is the right choice when task complexity, context length, or multi-step reasoning quality is the binding constraint — particularly for asynchronous agent pipelines that run for minutes or hours, accumulate large amounts of intermediate state, and require the model to retain every detail from start to finish without degradation.</p>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT EXCELS AT -->
+        <h2 class="article-h2">What Opus 4.7 Excels At</h2>
+        <p>Opus 4.7 is optimised for depth over speed. These four use cases represent the workflows where its combination of extended context, strong reasoning, and agentic architecture create a meaningful advantage over lighter models.</p>
+
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>Long-running Agents</h4>
+            <p>Multi-hour agentic workflows with tool use, planning, and retry loops. Opus 4.7's 1M context holds the full task history without summarisation.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Complex Coding</h4>
+            <p>Deep code review, architecture design, and debugging across large codebases where context and reasoning depth both matter.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Extended Research</h4>
+            <p>Synthesising information across hundreds of pages of documents, papers, or reports in a single coherent pass.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Document Analysis</h4>
+            <p>Reviewing and cross-referencing long-form documents — contracts, audits, legal filings — where every detail must be retained.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- BENCHMARK -->
+        <h2 class="article-h2">Benchmark Response</h2>
+        <p>We ran our standard 650-token technical exchange through Claude Opus 4.7 via OpenRouter to give you a real sense of response quality and cost. The prompt asks for a technical explanation of LLM context windows — a good proxy for reasoning depth and communication clarity.</p>
+
+        <div class="benchmark-block">
+          <div class="benchmark-block-header">
+            <span class="benchmark-block-title">Benchmark Test — 650 Token Exchange</span>
+            <span class="benchmark-cost-badge">Cost: $0.011250</span>
+          </div>
+          <div class="benchmark-prompt-label">Prompt (250 tokens)</div>
+          <div class="benchmark-prompt-text">
+            Explain how context windows work in large language models. Cover: what a context window is, why the size matters for memory and multi-step tasks, how token pricing scales with window usage, and what a developer should consider when choosing between a 128K model and a 1M context model for a production app. Be practical and specific.
+          </div>
+          <div class="benchmark-response-label">Claude Opus 4.7 Response (~400 tokens)</div>
+          <div class="benchmark-response-text">
+            <h3>Context Windows in Large Language Models</h3>
+            <h3>What a Context Window Is</h3>
+            <p>A context window is the maximum amount of text (measured in tokens) an LLM can consider in a single forward pass. It includes <strong>everything</strong>: system prompt, conversation history, retrieved documents, tool definitions, the user's current message, and the model's output. A token is roughly 4 characters or 0.75 words in English &mdash; so 128K tokens &asymp; 96,000 words, and 1M tokens &asymp; 750,000 words (about 8 average novels).</p>
+            <p>The model has no memory outside this window. When you call the API again, the model sees only what you send in that request. "Memory" in chat apps is an illusion created by replaying prior turns on each call.</p>
+            <h3>Why Size Matters</h3>
+            <p><strong>For memory:</strong> Longer windows let you cram in more conversation history, user profile data, or session state without summarization or retrieval tricks. In a coding assistant, a 1M window can hold an entire mid-sized codebase; a 128K window typically holds 5&ndash;15 files plus context.</p>
+            <p><strong>For multi-step tasks:</strong> Agents that plan, call tools, reflect, and retry accumulate context fast. A single agent run with 20 tool calls and verbose outputs can easily consume 50K&ndash;200K tokens. Once you exceed the window, you must truncate or summarize, which causes:</p>
+            <ul>
+              <li>Lost intermediate reasoning</li>
+              <li>Forgotten constraints from the original prompt</li>
+              <li>"Goldfish" failures where the agent re-does completed work</li>
+            </ul>
+            <p><strong>The catch &mdash; effective context &ne; advertised context.</strong> Most models exhibit a "lost in the middle" effect: recall is strong at the beginning and end of the window but degrades in the middle. Benchmarks like RULER and needle-in-a-haystack tests show that a 1M model often performs at 128K-model levels once you exceed 200&ndash;400K tokens of actual use. Always test with your real workload.</p>
+            <h3>How Pricing Scales</h3>
+            <p>Pricing is typically per-token, split between input and output, with output costing 3&ndash;5&times; more than input. Input costs every token you send &mdash; system prompt, history, documents &mdash; while output costs only generated tokens. The practical implication: stuffing a 200K-token document into every request multiplies your costs far faster than increasing output length.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- PRICING DEEP DIVE -->
+        <h2 class="article-h2">Pricing Breakdown</h2>
+        <p>At $5.00 per million input tokens and $25.00 per million output tokens, Claude Opus 4.7 sits at the premium end of the frontier model market. The 5:1 output-to-input ratio is in line with other top-tier reasoning models. For agentic workflows that generate long, structured outputs — code, reports, plans — budget planning should weight output tokens heavily. The table below shows real-world cost estimates at various request volumes.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Input tokens /1M</td><td>$5.00</td><td>Charged per token sent to the model</td></tr>
+              <tr><td>Output tokens /1M</td><td>$25.00</td><td>Usually 3&ndash;5&times; the input rate</td></tr>
+              <tr><td>Context window</td><td>1,000,000 tokens (1M)</td><td>Max tokens in one conversation</td></tr>
+              <tr><td>Benchmark exchange</td><td>$0.011250</td><td>250 in + 400 out tokens</td></tr>
+              <tr><td>1,000 exchanges/day</td><td>$11.25 / day</td><td>Estimated daily cost at volume</td></tr>
+              <tr><td>10,000 exchanges/day</td><td>$112.50 / day</td><td>Production-scale estimate</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ADSENSE MID -->
+        <ins class="adsbygoogle" style="display:block;margin:28px 0"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="auto" data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+        <hr class="article-divider">
+
+        <!-- SAMPLE PROMPTS -->
+        <h2 class="article-h2">Sample Prompts That Work Well</h2>
+        <p>Opus 4.7 responds best to prompts that demand sustained reasoning, large context handling, or multi-step structured output. The following examples are designed to exploit the model's strengths — use them as starting points for your own workflows.</p>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Advanced Code Review</div>
+          <div class="sample-prompt-text">"You are a senior engineer. Review this codebase for security vulnerabilities, architectural issues, and performance bottlenecks. Provide a prioritised remediation plan."</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Research Synthesis</div>
+          <div class="sample-prompt-text">"Analyse these 50 research papers and synthesise the key findings, methodological trends, and open questions in the field. Identify where papers agree and disagree."</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Agentic Architecture</div>
+          <div class="sample-prompt-text">"I need to build a multi-agent pipeline that monitors a data source, identifies anomalies, and automatically drafts incident reports. Design the architecture and write the orchestrator."</div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- VS COMPARISON -->
+        <h2 class="article-h2">How It Compares</h2>
+        <p>Claude Opus 4.7 competes in the premium segment of the frontier model market. Its closest Anthropic sibling is Claude Sonnet 4.5, which offers 40% lower input and output costs for workflows where the full reasoning depth of Opus isn't required. Against cross-vendor competitors, GPT-5.5 offers similar input pricing but costs 20% more on output; DeepSeek V4 Pro undercuts significantly on price but targets different use cases. Opus 4.7 is the clear choice when context scale and agentic reliability matter more than per-token cost.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Model</th><th>Input /1M</th><th>Output /1M</th><th>Context</th><th>Benchmark</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Claude Opus 4.7</strong></td>
+                <td>$5.00</td>
+                <td>$25.00</td>
+                <td>1M</td>
+                <td style="color:#f97316;font-weight:700">$0.01125</td>
+              </tr>
+              <tr>
+                <td>Claude Sonnet 4.5</td>
+                <td>$3.00</td>
+                <td>$15.00</td>
+                <td>1M</td>
+                <td>$0.00675</td>
+              </tr>
+              <tr>
+                <td>GPT-5.5</td>
+                <td>$5.00</td>
+                <td>$30.00</td>
+                <td>1M</td>
+                <td>$0.01325</td>
+              </tr>
+              <tr>
+                <td>DeepSeek V4 Pro</td>
+                <td>$0.43</td>
+                <td>$0.87</td>
+                <td>1M</td>
+                <td>$0.000457</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- TRY IT BAND -->
+        <div class="try-it-band">
+          <div>
+            <h3>Try Claude Opus 4.7 with Your Own Key</h3>
+            <p>Connect your OpenRouter API key and test Claude Opus 4.7 directly in the Aether Intel playground — no signup, your key stays in your browser.</p>
+          </div>
+          <a href="/tools/playground.html" class="btn btn-primary">Open Playground →</a>
+        </div>
+
+        <!-- TAKEAWAYS -->
+        <div class="article-takeaways">
+          <h3 class="takeaways-title">Key Takeaways</h3>
+          <ul>
+            <li>Claude Opus 4.7 is Anthropic's flagship for long-running agentic workflows, with a genuine 1M-token context window that eliminates the need to summarise or truncate mid-task.</li>
+            <li>At $5.00/$25.00 per 1M tokens, it sits at the premium end of the market — best deployed when task complexity and output quality justify the cost over cheaper Sonnet or Haiku alternatives.</li>
+            <li>The benchmark cost of $0.011250 per 650-token exchange places it in the bc-prem tier; at scale, 10,000 exchanges per day runs approximately $112.50.</li>
+            <li>Its combination of text, vision, and file modalities makes it well suited to document-heavy pipelines such as contract review, audit analysis, multi-paper research synthesis, and large codebase analysis.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RELATED MODELS ── -->
+    <section class="article-related">
+      <h2 class="related-title">Related Models</h2>
+      <div class="article-grid">
+
+        <a class="article-card" href="/models/claude-sonnet-4-5.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/claude-sonnet-4-5-hero.png"
+                 alt="Claude Sonnet 4.5"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Anthropic</span>
+            <h3 class="article-card-title">Claude Sonnet 4.5</h3>
+            <p class="article-card-excerpt">The sweet spot — frontier intelligence at mid-tier cost.</p>
+          </div>
+        </a>
+
+        <a class="article-card" href="/models/claude-haiku-4-5.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/claude-haiku-4-5-hero.png"
+                 alt="Claude Haiku 4.5"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Anthropic</span>
+            <h3 class="article-card-title">Claude Haiku 4.5</h3>
+            <p class="article-card-excerpt">Blazing fast for high-volume production tasks.</p>
+          </div>
+        </a>
+
+        <a class="article-card" href="/models/deepseek-r1.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/deepseek-r1-hero.png"
+                 alt="DeepSeek R1"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-research">Research</span>
+            <h3 class="article-card-title">DeepSeek R1</h3>
+            <p class="article-card-excerpt">Exceptional chain-of-thought reasoning at low cost.</p>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </article>
+</main>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
