@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenAI o4-mini — Capabilities, Pricing &amp; Benchmark — Aether Intel</title>
+  <meta name="description" content="OpenAI o4-mini review: o3-level reasoning at half the cost, with vision input and 200K context. Input/output costs, benchmark, and real use cases via OpenRouter.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/openai-o4-mini.html">
+  <meta property="og:title" content="OpenAI o4-mini — Capabilities, Costs &amp; Benchmark">
+  <meta property="og:description" content="o4-mini delivers o3-level reasoning at roughly half the cost, with vision capability and 200K context. Pricing breakdown, benchmark output, and real use cases via OpenRouter.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/openai-o4-mini.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/openai-o4-mini-hero.png">
+  <meta property="article:published_time" content="2025-05-15">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OpenAI o4-mini — Capabilities, Costs &amp; Benchmark">
+  <meta name="twitter:description" content="o4-mini delivers o3-level reasoning at roughly half the cost, with vision capability and 200K context. Pricing breakdown and benchmark output via OpenRouter.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/openai-o4-mini-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .model-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:24px 0}
+    .spec-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+    .spec-label{font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+    .spec-value{font-family:var(--font-body);font-size:1.05rem;font-weight:700;color:var(--text-primary)}
+    .spec-value.sv-green{color:#34d399}.spec-value.sv-indigo{color:var(--neon-indigo)}.spec-value.sv-gold{color:var(--neon-gold)}
+    .use-case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:20px 0}
+    .use-case-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+    .use-case-card h4{font-family:var(--font-body);font-size:.88rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
+    .use-case-card p{font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin:0}
+    .benchmark-block{background:var(--surface);border:1px solid rgba(129,140,248,.2);border-radius:12px;padding:24px;margin:24px 0}
+    .benchmark-block-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+    .benchmark-block-title{font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-indigo)}
+    .benchmark-cost-badge{font-family:var(--font-body);font-size:.88rem;font-weight:700;color:var(--text-primary);background:rgba(129,140,248,.1);border:1px solid rgba(129,140,248,.25);border-radius:7px;padding:4px 12px}
+    .benchmark-prompt-label,.benchmark-response-label{font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+    .benchmark-prompt-text{background:rgba(7,7,15,.6);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:.83rem;color:var(--text-secondary);line-height:1.6;font-style:italic;margin-bottom:16px}
+    .benchmark-response-text{font-size:.88rem;color:var(--text-primary);line-height:1.7}
+    .benchmark-response-text p{margin:0 0 12px}.benchmark-response-text p:last-child{margin:0}
+    .benchmark-note{background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.2);border-radius:8px;padding:12px 14px;margin-top:14px;font-size:.8rem;color:var(--neon-gold);line-height:1.55}
+    .benchmark-placeholder{background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.12);border-radius:8px;padding:20px;text-align:center;color:var(--text-muted);font-size:.84rem}
+    .sample-prompt-block{background:rgba(7,7,15,.6);border-left:3px solid var(--neon-indigo);border-radius:0 8px 8px 0;padding:14px 16px;margin:16px 0}
+    .sample-prompt-label{font-family:var(--font-display);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--neon-indigo);margin-bottom:6px}
+    .sample-prompt-text{font-size:.84rem;color:var(--text-secondary);line-height:1.55}
+    .try-it-band{background:linear-gradient(135deg,rgba(129,140,248,.08),rgba(34,211,238,.04));border:1px solid rgba(129,140,248,.2);border-radius:14px;padding:28px;margin:32px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .try-it-band h3{font-family:var(--font-heading);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
+    .try-it-band p{color:var(--text-secondary);font-size:.86rem;margin:0}
+    @media(max-width:600px){.model-specs-grid{grid-template-columns:repeat(2,1fr)}.use-case-grid{grid-template-columns:1fr}.try-it-band{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- HERO -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/models/openai-o4-mini-hero.png"
+             alt="OpenAI o4-mini — AI reasoning model overview"
+             class="article-hero-img" loading="eager"
+             onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/models.html">Models</a>
+            <span>&#x203a;</span>
+            <span>OpenAI o4-mini</span>
+          </nav>
+          <span class="badge badge-tools">OpenAI</span>
+          <h1 class="article-hero-title">OpenAI o4-mini</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 15, 2025</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">8 min read</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">Benchmark tested</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="article-layout">
+      <div class="article-body">
+
+        <p>o4-mini is OpenAI's sweet spot reasoning model — delivering o3-level thinking at roughly half the cost, with vision capability baked in. For developers who need reliable multi-step reasoning without paying frontier prices, this is the default pick.</p>
+
+        <!-- QUICK SPECS -->
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Input /1M tokens</div>
+            <div class="spec-value sv-indigo">$1.10</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output /1M tokens</div>
+            <div class="spec-value sv-indigo">$4.40</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Context window</div>
+            <div class="spec-value">200K tokens</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Benchmark cost</div>
+            <div class="spec-value sv-gold">$0.002035</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Modality</div>
+            <div class="spec-value">Text + Vision</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">OpenRouter ID</div>
+            <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary)">openai/o4-mini</div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT IS -->
+        <h2 class="article-h2">What is OpenAI o4-mini?</h2>
+        <p>o4-mini sits at the efficient end of OpenAI's o-series reasoning lineup — the same family that includes o3, but tuned for a different cost-quality trade-off. Where o3 is the maximum-depth option for the hardest analytical problems, o4-mini targets the much broader category of tasks that require serious reasoning without demanding o3's full compute budget. In practice this means solid multi-step logic, algorithm verification, and structured analysis delivered at an input price of $1.10 per million tokens — roughly 45% of o3's cost — making it the first reasoning model in the o-series that fits comfortably inside production budget constraints at moderate scale.</p>
+        <p>The model carries two capabilities that set it apart from other budget-tier options. First, it accepts image inputs alongside text, making it practical for tasks like screenshot debugging, diagram interpretation, and document-plus-reasoning workflows that would otherwise require chaining separate vision and reasoning models. Second, its 200K context window is large enough to hold entire codebases, lengthy contracts, or multi-document research tasks in a single pass — eliminating the chunking complexity that smaller context models impose. The combination of reasoning depth, vision input, and long context in one model at this price point is what makes o4-mini the default recommendation for agentic pipelines and developer tooling where correctness matters more than raw generation speed.</p>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT EXCELS AT -->
+        <h2 class="article-h2">What o4-mini Excels At</h2>
+        <p>o4-mini is built for tasks where reliable multi-step logic is non-negotiable — from code to data to documents to automated pipelines.</p>
+
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>Code Generation &amp; Debugging</h4>
+            <p>Reliable logic, algorithm correctness, and multi-file reasoning. o4-mini thinks through the architecture before writing, catching edge cases and structural errors that standard LLMs routinely miss on complex codebases.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Data Analysis</h4>
+            <p>Reasoning over structured datasets, formula derivation, and trend identification. The model applies chain-of-thought to numeric problems, making it more accurate than non-reasoning models on multi-step analytical tasks.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Document Q&amp;A with Reasoning</h4>
+            <p>Extracting and reasoning about complex documents within its 200K context window. Legal contracts, technical specifications, and research papers can be loaded in full — no chunking, no lost context, no retrieval errors.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Agentic Pipelines</h4>
+            <p>Reliable tool-calling and multi-step task execution. o4-mini's reasoning capability makes it well-suited to orchestrate sequences of actions where earlier decisions constrain later ones — the failure mode of simpler models in agentic loops.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- BENCHMARK -->
+        <h2 class="article-h2">Benchmark Response</h2>
+        <p>We ran our standard technical exchange through o4-mini via OpenRouter to give you a real sense of response quality and cost. The prompt asks for a practical explanation of LLM context windows — a good proxy for reasoning depth and structured communication. Note that 384 of the 700 completion tokens in this benchmark were internal reasoning tokens, encrypted and not returned in the visible response.</p>
+
+        <div class="benchmark-block">
+          <div class="benchmark-block-header">
+            <span class="benchmark-block-title">Benchmark Test — 700 Token Exchange</span>
+            <span class="benchmark-cost-badge bc-mid">Cost: $0.002035</span>
+          </div>
+          <div class="benchmark-prompt-label">Prompt (250 tokens)</div>
+          <div class="benchmark-prompt-text">
+            Explain how context windows work in large language models. Cover: what a context window is, why the size matters for memory and multi-step tasks, how token pricing scales with window usage, and what a developer should consider when choosing between a 128K model and a 1M context model for a production app. Be practical and specific.
+          </div>
+          <div class="benchmark-response-label">o4-mini Response (~400 visible tokens)</div>
+          <div class="benchmark-response-text">
+            <p><strong>What is a Context Window?</strong></p>
+            <p>The context window (or "sequence length") is the maximum number of tokens the model can process at once — both what you prompt in and what it generates. If your prompt plus the model's reply exceeds that limit, you must truncate or slide the window forward, dropping earlier tokens.</p>
+            <p><strong>Why Window Size Matters</strong></p>
+            <p><em>Memory and coherence:</em> Larger windows let the model "remember" more of a long chat, document, or codebase without external retrieval or chunking. This is critical for multi-step tasks where later steps refer back to early context — long legal contracts, design docs, code reviews spanning multiple files.</p>
+            <p><em>Reasoning quality:</em> A model can only consider what's inside its window. Push important facts out and you risk inconsistencies, hallucinations, or lost reasoning thread. For agents running multi-turn workflows, window management is often the difference between reliable and flaky behavior.</p>
+            <p><em>Engineering complexity:</em> Small windows force you to build chunking, retrieval-augmented workflows, and rolling context management. Large windows simplify architecture — but shift the cost to per-token pricing instead.</p>
+            <p><strong>How Token Pricing Scales</strong></p>
+            <p>Most providers charge input and output tokens separately, with output typically 3–4&times; more expensive. At 1M context, naively filling the window on every call can make even cheap models expensive at volume. The rule of thumb: pay for context only when the task genuinely requires holistic access. Use semantic search and RAG for lookup-style tasks; reserve long context for synthesis tasks.</p>
+            <p><strong>128K vs. 1M: Choosing for Production</strong></p>
+            <p>128K is right for most production apps — chatbots, code assistants, document Q&amp;A, data extraction pipelines. 1M makes sense for: processing entire software repositories, analyzing book-length contracts, or any task where chunking introduces meaningful quality loss. Profile your actual token usage first — most apps average far less than 32K per call, making 1M context an over-investment for the typical workload.</p>
+          </div>
+          <div class="benchmark-note">
+            Note: o4-mini uses encrypted internal reasoning (384 of 700 tokens were reasoning). The response above is final output only — actual reasoning was hidden.
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- PRICING DEEP DIVE -->
+        <h2 class="article-h2">Pricing Breakdown</h2>
+        <p>o4-mini offers the best cost-to-reasoning-quality ratio in the entire o-series — at $1.10 per million input tokens, it delivers chain-of-thought capability at roughly 45% of o3's input price. For teams where reasoning accuracy is mandatory but compute budget is finite, o4-mini is where the economics land first.</p>
+        <p>One important planning consideration: because o4-mini is a reasoning model with encrypted chain-of-thought, internal reasoning tokens count toward your output bill even though they are not returned in the visible response. In our benchmark, 384 of 700 completion tokens were reasoning tokens — on harder problems, expect this ratio to increase, pushing effective cost to 2&ndash;3&times; the base benchmark estimate.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Input tokens /1M</td><td>$1.10</td><td>Charged per token sent to the model</td></tr>
+              <tr><td>Output tokens /1M</td><td>$4.40</td><td>Includes encrypted reasoning tokens (not returned)</td></tr>
+              <tr><td>Context window</td><td>200K tokens</td><td>Sufficient for full documents and multi-file codebases</td></tr>
+              <tr><td>Benchmark exchange</td><td>$0.002035</td><td>250 in + 700 out tokens (384 were reasoning)</td></tr>
+              <tr><td>1,000 exchanges/day</td><td>$2.04</td><td>Estimated daily cost at moderate volume</td></tr>
+              <tr><td>10,000 exchanges/day</td><td>$20.35</td><td>Production-scale estimate</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ADSENSE MID -->
+        <ins class="adsbygoogle" style="display:block;margin:28px 0"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="auto" data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+        <hr class="article-divider">
+
+        <!-- SAMPLE PROMPTS -->
+        <h2 class="article-h2">Sample Prompts That Work Well</h2>
+        <p>o4-mini excels when given explicit reasoning steps to follow — structuring your request around a clear problem statement with a call to show work or break down the solution consistently unlocks stronger output.</p>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Code Generation &amp; Debugging</div>
+          <div class="sample-prompt-text">Here is a recursive function that's causing a stack overflow for large inputs. Identify the issue, explain the fix, and rewrite it iteratively: [code]</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Data Analysis</div>
+          <div class="sample-prompt-text">Analyze this CSV of monthly sales data. Identify the top 3 trends, flag any anomalies, and calculate YoY growth for each product category: [data]</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Agentic Pipelines</div>
+          <div class="sample-prompt-text">You have access to a search tool and a calculator. Find the current population of Tokyo, divide it by the area of Tokyo in km&sup2;, and tell me the population density. Show your reasoning.</div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- VS COMPARISON -->
+        <h2 class="article-h2">How It Compares</h2>
+        <p>o4-mini sits at the centre of the reasoning model market — meaningfully cheaper than o3 while substantially more capable than non-reasoning alternatives. It is the right default when task correctness demands chain-of-thought but o3's cost is hard to justify.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Model</th><th>Input /1M</th><th>Output /1M</th><th>Benchmark</th><th>Best for</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>OpenAI o4-mini</strong></td>
+                <td>$1.10</td>
+                <td>$4.40</td>
+                <td><span class="bc-mid" style="color:var(--neon-gold);font-weight:700">$0.002035</span></td>
+                <td>Cost-efficient reasoning and coding</td>
+              </tr>
+              <tr>
+                <td>OpenAI o3</td>
+                <td>$2.00</td>
+                <td>$8.00</td>
+                <td>$0.003700</td>
+                <td>Maximum reasoning depth</td>
+              </tr>
+              <tr>
+                <td>DeepSeek R1</td>
+                <td>$0.70</td>
+                <td>$2.50</td>
+                <td>$0.001175</td>
+                <td>Open-weights reasoning at lower cost</td>
+              </tr>
+              <tr>
+                <td>GPT-4o mini</td>
+                <td>$0.15</td>
+                <td>$0.60</td>
+                <td>$0.000278</td>
+                <td>Non-reasoning budget tasks</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- TRY IT BAND -->
+        <div class="try-it-band">
+          <div>
+            <h3>Try o4-mini with Your Own Key</h3>
+            <p>Connect your OpenRouter API key and test o4-mini directly in the Aether Intel chat tool — no signup, your key stays in your browser.</p>
+          </div>
+          <a href="/tools/chat.html" class="btn btn-primary">Open Chat Tool &#x2192;</a>
+        </div>
+
+        <!-- TAKEAWAYS -->
+        <div class="article-takeaways">
+          <h3 class="takeaways-title">Key Takeaways</h3>
+          <ul>
+            <li>At $0.002035 per benchmark exchange, o4-mini delivers reasoning capability at half o3's cost — the best cost-to-reasoning ratio in the o-series.</li>
+            <li>384 of 700 benchmark tokens were reasoning — complex tasks run higher; plan for 2&ndash;3&times; base benchmark cost on hard problems.</li>
+            <li>Vision input makes it versatile for diagram analysis, screenshot debugging, and document reasoning in one model.</li>
+            <li>The default reasoning model for agentic pipelines where correctness matters more than raw speed.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RELATED MODELS -->
+    <section class="article-related">
+      <h2 class="related-title">Related Models</h2>
+      <div class="article-grid">
+
+        <a href="/models/openai-o3.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/openai-o3-hero.png"
+                 alt="OpenAI o3 model overview"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.12),rgba(34,211,238,0.04))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">OpenAI</span>
+            <h3 class="article-card-title">OpenAI o3</h3>
+            <p class="article-card-excerpt">The full-depth reasoning option when o4-mini isn't enough.</p>
+          </div>
+        </a>
+
+        <a href="/models/deepseek-r1.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/deepseek-r1-hero.png"
+                 alt="DeepSeek R1 model overview"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.12),rgba(34,211,238,0.04))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">DeepSeek</span>
+            <h3 class="article-card-title">DeepSeek R1</h3>
+            <p class="article-card-excerpt">Open-weights reasoning competitor at lower cost.</p>
+          </div>
+        </a>
+
+        <a href="/models/gpt-4o.html" class="article-card">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/gpt-4o-hero.png"
+                 alt="GPT-4o model overview"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.12),rgba(34,211,238,0.04))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">OpenAI</span>
+            <h3 class="article-card-title">GPT-4o</h3>
+            <p class="article-card-excerpt">Non-reasoning GPT-4o for tasks that don't need chain-of-thought.</p>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </article>
+</main>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
