@@ -155,11 +155,15 @@
           </div>
           <div class="benchmark-response-label">Response</div>
           <div class="benchmark-response-text">
-            <p><strong>Frontend:</strong> React with TypeScript, using Yjs as the conflict-free replicated data type (CRDT) library for document state. Yjs handles offline edits and merge conflicts deterministically without a central arbiter, which is critical for a collaborative editor. Pair with TipTap or Lexical as the rich-text editor framework — both have native Yjs bindings and active communities.</p>
-            <p><strong>Real-Time Sync:</strong> Hocuspocus (a Yjs-native WebSocket server) for document sync, sitting behind a load balancer with sticky sessions. At 50K DAU you will need horizontal scaling — use Redis pub/sub to propagate awareness updates (cursors, presence) across Hocuspocus instances. This keeps your sync layer stateless at the application level.</p>
-            <p><strong>Backend API:</strong> Node.js with Fastify for the REST/GraphQL layer handling auth, permissions, and document metadata. Fastify's lower overhead matters when you are also running WebSocket connections on the same fleet. Use PostgreSQL (via Supabase or RDS) for durable document snapshots and user/workspace data.</p>
-            <p><strong>Storage:</strong> Document content stored as Yjs binary snapshots in S3 (or R2 for egress cost), with periodic compaction to prevent unbounded growth. Full-text search via Typesense or Meilisearch — Postgres full-text is viable early but degrades under heavy document volume.</p>
-            <p><strong>Trade-offs to flag:</strong> Hocuspocus simplifies CRDT sync but adds operational complexity around WebSocket scaling — evaluate Liveblocks or PartyKit as managed alternatives if the team's bandwidth is tight. PostgreSQL is the safe choice for ACID guarantees, but if write throughput spikes unexpectedly, you may need read replicas sooner than planned. Budget around two engineers for the first six months just for the sync and persistence layers — collaborative editing infrastructure is deceptively deep.</p>
+            <p><strong>What is a Context Window?</strong></p>
+<p>In large language models, a context window refers to the amount of text (measured in tokens) that the model can consider at one time. Tokens are units of text — often words, parts of words, or characters. The context window size determines how much information the model can process to generate predictions or responses.</p>
+<p><strong>Why Context Window Size Matters</strong></p>
+<p>A larger context window allows the model to remember and utilize more prior information when generating text — critical for tasks requiring understanding of long documents or conversation history. For multi-step tasks or those requiring logical reasoning over multiple steps, a larger window lets the model track the chain of logic more effectively. In dialogue systems, larger windows maintain coherence and consistency by considering more previous exchanges.</p>
+<p><strong>Token Pricing and Scaling</strong></p>
+<p>Models are priced based on tokens processed. Larger context windows mean more tokens per query, increasing cost per inference. The cost scales with both window size and usage frequency. Developers must balance the need for broader context with associated costs — strategies like chunking input text or selectively focusing on relevant sections help control expenses.</p>
+<p><strong>Choosing Between 128K and 1M Context</strong></p>
+<p><em>128K Model:</em> Best for applications where necessary context is relatively short or can be segmented without loss of meaning. Ideal for chatbots, Q&A, or scenarios where real-time processing is prioritized. Performance is predictable and latency is lower.</p>
+<p><em>1M Context Model:</em> Preferred for complex tasks requiring extensive context — analyzing large documents, comprehensive multi-turn dialogue, or deep historical context. Evaluate the cost of processing larger windows against the performance benefit before committing. Latency increases significantly, and infrastructure requirements scale up accordingly. Start with 128K unless you have a verified need for the additional context.</p>
           </div>
         </div>
         <p class="section-note" style="font-size:.8rem;color:var(--text-muted);">Benchmark uses 250 input tokens + 400 output tokens. Cost = 250&times;$2.50/1M + 400&times;$10.00/1M = <strong>$0.004625</strong>.</p>
@@ -271,7 +275,7 @@
                 <td>Gemini 2.5 Pro</td>
                 <td>$1.25</td>
                 <td>$10.00</td>
-                <td>$0.004313</td>
+                <td>$0.00431</td>
                 <td>Long-context tasks</td>
               </tr>
             </tbody>

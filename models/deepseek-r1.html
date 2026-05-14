@@ -97,19 +97,19 @@
         <div class="model-specs-grid">
           <div class="spec-card">
             <div class="spec-label">Input /1M tokens</div>
-            <div class="spec-value sv-indigo">$0.55</div>
+            <div class="spec-value sv-indigo">$0.70</div>
           </div>
           <div class="spec-card">
             <div class="spec-label">Output /1M tokens</div>
-            <div class="spec-value sv-indigo">$2.19</div>
+            <div class="spec-value sv-indigo">$2.50</div>
           </div>
           <div class="spec-card">
             <div class="spec-label">Context window</div>
-            <div class="spec-value">128K tokens</div>
+            <div class="spec-value">64K tokens</div>
           </div>
           <div class="spec-card">
             <div class="spec-label">Benchmark cost</div>
-            <div class="spec-value sv-green">$0.001013</div>
+            <div class="spec-value sv-green">$0.001175</div>
           </div>
           <div class="spec-card">
             <div class="spec-label">Modality</div>
@@ -126,7 +126,7 @@
         <!-- WHAT IT IS -->
         <h2 class="article-h2">What is DeepSeek R1?</h2>
         <p>DeepSeek R1 is a large language model trained using reinforcement learning to explicitly reason before answering — a technique that produces visible chain-of-thought tokens the model works through step by step before arriving at its final response. Unlike standard LLMs that generate answers directly, R1 exposes its internal deliberation process, letting you follow the logic trail from premise to conclusion. This approach, pioneered publicly by OpenAI's o1 series, was widely assumed to require proprietary scale — until DeepSeek published R1 with open weights in January 2025, triggering a wave of industry reassessment about the cost of frontier reasoning capability.</p>
-        <p>The release had an outsized impact for two reasons. First, R1 matched o1-level performance on competitive math, coding, and scientific reasoning benchmarks despite coming from a lab with far fewer disclosed resources than OpenAI or Anthropic. Second, DeepSeek open-sourced the model weights, meaning developers can self-host the full model and run inference at zero API cost at scale. For teams using R1 through OpenRouter, the economics are equally striking — at $0.55 per million input tokens and $2.19 per million output tokens, it competes directly with models costing ten to forty times as much. When prompting R1, the key strategic shift is to ask explicitly for step-by-step reasoning: the model is trained to reward thorough deliberation, so prompts that frame problems as multi-step derivations or analysis tasks consistently outperform terse, single-answer requests.</p>
+        <p>The release had an outsized impact for two reasons. First, R1 matched o1-level performance on competitive math, coding, and scientific reasoning benchmarks despite coming from a lab with far fewer disclosed resources than OpenAI or Anthropic. Second, DeepSeek open-sourced the model weights, meaning developers can self-host the full model and run inference at zero API cost at scale. For teams using R1 through OpenRouter, the economics are equally striking — at $0.70 per million input tokens and $2.50 per million output tokens, it competes directly with models costing several times as much. When prompting R1, the key strategic shift is to ask explicitly for step-by-step reasoning: the model is trained to reward thorough deliberation, so prompts that frame problems as multi-step derivations or analysis tasks consistently outperform terse, single-answer requests.</p>
 
         <hr class="article-divider">
 
@@ -162,7 +162,7 @@
         <div class="benchmark-block">
           <div class="benchmark-block-header">
             <span class="benchmark-block-title">Benchmark Test — 650 Token Exchange</span>
-            <span class="benchmark-cost-badge">Cost: $0.001013</span>
+            <span class="benchmark-cost-badge">Cost: $0.001175</span>
           </div>
           <div class="benchmark-prompt-label">Prompt (250 tokens)</div>
           <div class="benchmark-prompt-text">
@@ -170,10 +170,14 @@
           </div>
           <div class="benchmark-response-label">DeepSeek R1 Response (~400 tokens)</div>
           <div class="benchmark-response-text">
-            <div class="benchmark-placeholder">
-              Benchmark response will be added after live testing via OpenRouter.<br>
-              Run the prompt above through <strong>deepseek/deepseek-r1</strong> and paste the output here.
-            </div>
+            <p><strong>What is a Context Window?</strong></p>
+<p>The context window is the <strong>maximum number of tokens</strong> (words, parts of words, punctuation) that an LLM can consider at one time when generating a response — the model's "working memory" for a single interaction. It includes your current query, the system message, conversation history, and any documents provided. Critically, the model <strong>cannot</strong> reference information outside this window; tokens that fall beyond it are truncated.</p>
+<p><strong>Memory and Multi-Step Reasoning</strong></p>
+<p>A small window (e.g., 4K tokens) struggles with long conversations — after a few exchanges, the model "forgets" the start, leading to repetitive responses. A 128K window allows coherent dialogues spanning thousands of turns. For document analysis, you need enough context to hold significant portions of the document; small windows force chunking, losing the holistic view. For multi-step instructions, all relevant information must fit simultaneously — information from step 1 might be gone by step 3 without adequate context.</p>
+<p><strong>How Token Pricing Scales</strong></p>
+<p>Input tokens typically cost 2–5× less than output tokens. Processing a full 1M context window per request can cost $1–$30+ depending on the model — unsustainable for high-volume apps. Smart developers minimize context by pruning stale conversation turns, using RAG to retrieve only relevant chunks, and reserving large windows for tasks that genuinely require them.</p>
+<p><strong>128K vs. 1M: The Practical Decision</strong></p>
+<p>Start with 128K unless you have a verified need: most production apps (chatbots, code review, document Q&A) fit comfortably within 128K. The 80/20 rule applies — 128K handles 90%+ of use cases at a fraction of the latency and cost of 1M models. Reserve 1M context for extreme-recall tasks: full codebase analysis, book-length document comparison, or complex legal review spanning hundreds of pages. At scale, the cost difference between 128K and 1M context is the difference between a viable product and an unshippable one.</p>
           </div>
         </div>
 
@@ -181,7 +185,7 @@
 
         <!-- PRICING DEEP DIVE -->
         <h2 class="article-h2">Pricing Breakdown</h2>
-        <p>DeepSeek R1's pricing represents one of the most disruptive value propositions in the reasoning model category — at $0.55 per million input tokens, it undercuts OpenAI o3 by roughly 18x on input alone. For high-volume applications that previously made reasoning models economically impractical, R1 changes the calculation entirely.</p>
+        <p>DeepSeek R1's pricing represents one of the most disruptive value propositions in the reasoning model category — at $0.70 per million input tokens, it undercuts OpenAI o3 by roughly 3x on input alone and delivers reasoning quality at 32% of GPT-4o's cost. For high-volume applications that previously made reasoning models economically impractical, R1 changes the calculation entirely.</p>
 
         <div class="table-wrap">
           <table class="article-table">
@@ -189,12 +193,12 @@
               <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
             </thead>
             <tbody>
-              <tr><td>Input tokens /1M</td><td>$0.55</td><td>Charged per token sent to the model</td></tr>
-              <tr><td>Output tokens /1M</td><td>$2.19</td><td>Includes visible chain-of-thought reasoning tokens</td></tr>
-              <tr><td>Context window</td><td>128K tokens</td><td>Supports long documents and multi-turn sessions</td></tr>
-              <tr><td>Benchmark exchange</td><td>$0.001013</td><td>250 in + 400 out tokens</td></tr>
-              <tr><td>1,000 exchanges/day</td><td>$1.01</td><td>Estimated daily cost at moderate volume</td></tr>
-              <tr><td>10,000 exchanges/day</td><td>$10.13</td><td>Production-scale estimate</td></tr>
+              <tr><td>Input tokens /1M</td><td>$0.70</td><td>Charged per token sent to the model</td></tr>
+              <tr><td>Output tokens /1M</td><td>$2.50</td><td>Includes visible chain-of-thought reasoning tokens</td></tr>
+              <tr><td>Context window</td><td>64K tokens</td><td>Supports long documents and multi-turn sessions</td></tr>
+              <tr><td>Benchmark exchange</td><td>$0.001175</td><td>250 in + 400 out tokens</td></tr>
+              <tr><td>1,000 exchanges/day</td><td>$1.18</td><td>Estimated daily cost at moderate volume</td></tr>
+              <tr><td>10,000 exchanges/day</td><td>$11.75</td><td>Production-scale estimate</td></tr>
             </tbody>
           </table>
         </div>
@@ -239,24 +243,24 @@
             <tbody>
               <tr>
                 <td><strong>DeepSeek R1</strong></td>
-                <td>$0.55</td>
-                <td>$2.19</td>
-                <td><span class="bc-cheap" style="color:#22d3ee;font-weight:700">$0.001013</span></td>
+                <td>$0.70</td>
+                <td>$2.50</td>
+                <td><span class="bc-cheap" style="color:#22d3ee;font-weight:700">$0.001175</span></td>
                 <td>Reasoning &amp; math at low cost</td>
               </tr>
               <tr>
                 <td>OpenAI o3</td>
-                <td>$10.00</td>
-                <td>$40.00</td>
-                <td>$0.01850</td>
+                <td>$2.00</td>
+                <td>$8.00</td>
+                <td>$0.00370</td>
                 <td>Maximum reasoning tasks</td>
               </tr>
               <tr>
-                <td>Qwen3 235B (free)</td>
-                <td>Free</td>
-                <td>Free</td>
-                <td>$0.00</td>
-                <td>Free reasoning alternative</td>
+                <td>Qwen3 235B</td>
+                <td>$0.455</td>
+                <td>$1.82</td>
+                <td>$0.000842</td>
+                <td>Free tier available</td>
               </tr>
               <tr>
                 <td>Claude Sonnet 4.5</td>
@@ -284,7 +288,7 @@
         <div class="article-takeaways">
           <h3 class="takeaways-title">Key Takeaways</h3>
           <ul>
-            <li>At $0.001013 per benchmark exchange, R1 delivers o1-class reasoning for under 6% of OpenAI o3's cost.</li>
+            <li>At $0.001175 per benchmark exchange, R1 delivers o1-class reasoning at 32% of GPT-4o's cost, delivering reasoning quality at a fraction of the price.</li>
             <li>Visible chain-of-thought reasoning helps you debug and verify the model's logic step by step.</li>
             <li>Open weights available — can be self-hosted for zero API cost at scale.</li>
             <li>Best suited for tasks where accuracy and reasoning depth matter more than speed.</li>

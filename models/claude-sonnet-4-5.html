@@ -104,7 +104,7 @@
           </div>
           <div class="spec-card">
             <div class="spec-label">Context window</div>
-            <div class="spec-value">200K tokens</div>
+            <div class="spec-value">1M tokens</div>
           </div>
           <div class="spec-card">
             <div class="spec-label">Benchmark cost</div>
@@ -116,7 +116,7 @@
           </div>
           <div class="spec-card">
             <div class="spec-label">OpenRouter ID</div>
-            <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary)">anthropic/claude-sonnet-4-5</div>
+            <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary)">anthropic/claude-sonnet-4.5</div>
           </div>
         </div>
 
@@ -169,10 +169,16 @@
           </div>
           <div class="benchmark-response-label">Sonnet 4.5 Response (~400 tokens)</div>
           <div class="benchmark-response-text">
-            <div class="benchmark-placeholder">
-              Benchmark response will be added after live testing via OpenRouter.<br>
-              Run the prompt above through <strong>anthropic/claude-sonnet-4-5</strong> and paste the output here.
-            </div>
+            <p><strong>What is a Context Window?</strong></p>
+<p>A context window is the maximum amount of text a language model can "see" and process at once, measured in tokens (roughly 0.75 words per token in English). Think of it as the model's working memory — everything outside this window simply doesn't exist for that particular request.</p>
+<p>When you send a prompt to an LLM, the context window contains: your system instructions, the conversation history, any documents or data you've included, the user's current question, and the model's generated response (which consumes tokens as it's created).</p>
+<p><strong>Why Context Window Size Matters</strong></p>
+<p>Short windows (4K–8K tokens) forget earlier conversation quickly, can only reference ~3–6 pages of text, and require frequent summarization or truncation. Long windows (128K–1M tokens) maintain entire conversation threads, process full codebases or reports, and retain context across complex multi-turn interactions.</p>
+<p>Context windows become critical for complex workflows. Code review across multiple files: a 4K window might fit only one file, while 128K can hold your entire module with dependencies. Research synthesis: analyzing 50 research papers requires either a 1M window to load them all, or a complex RAG system with smaller windows. Customer support bots with 4K windows lose context after ~10 exchanges; with 128K, they remember the entire session.</p>
+<p><strong>Token Pricing and Window Usage</strong></p>
+<p>You pay for every token you send, every time. If you naively stuff your entire context window with documentation on every request, costs spiral fast. Smart apps use retrieval strategies (RAG) to pull only relevant context, keeping per-request token counts manageable even when the underlying knowledge base is huge.</p>
+<p><strong>128K vs 1M Context: Which Should You Choose?</strong></p>
+<p>Choose 128K when: most inputs fit comfortably (codebases, documents, reports under ~100K words), you need lower latency, and cost per call matters at volume. Choose 1M context when: you're processing entire software repositories, full book manuscripts, or complex multi-document legal analysis — and the accuracy gain justifies the cost premium. For most production apps, 128K is the practical default; 1M is a specialized tool for extreme-context use cases.</p>
           </div>
         </div>
 
@@ -190,7 +196,7 @@
             <tbody>
               <tr><td>Input tokens /1M</td><td>$3.00</td><td>Charged per token sent to the model</td></tr>
               <tr><td>Output tokens /1M</td><td>$15.00</td><td>Usually 3–5× the input rate</td></tr>
-              <tr><td>Context window</td><td>200K tokens</td><td>Max tokens in one conversation</td></tr>
+              <tr><td>Context window</td><td>1M tokens</td><td>Max tokens in one conversation</td></tr>
               <tr><td>Benchmark exchange</td><td>$0.00675</td><td>250 in + 400 out tokens</td></tr>
               <tr><td>1,000 exchanges/day</td><td>$6.75</td><td>Estimated daily cost at volume</td></tr>
               <tr><td>10,000 exchanges/day</td><td>$67.50</td><td>Production-scale estimate</td></tr>
@@ -237,9 +243,9 @@
             </thead>
             <tbody>
               <tr><td><strong>Sonnet 4.5</strong></td><td>$3.00</td><td>$15.00</td><td>$0.00675</td><td>Balanced everyday AI tasks</td></tr>
-              <tr><td>Claude Haiku 4.5</td><td>$0.80</td><td>$4.00</td><td>$0.00180</td><td>Budget-speed tasks</td></tr>
+              <tr><td>Claude Haiku 4.5</td><td>$1.00</td><td>$5.00</td><td>$0.00225</td><td>Budget-speed tasks</td></tr>
               <tr><td>GPT-4o</td><td>$2.50</td><td>$10.00</td><td>$0.00463</td><td>General reasoning</td></tr>
-              <tr><td>Gemini 2.5 Flash</td><td>$0.15</td><td>$0.60</td><td>$0.000278</td><td>Cost-efficient tasks</td></tr>
+              <tr><td>Gemini 2.5 Flash</td><td>$0.30</td><td>$2.50</td><td>$0.00108</td><td>Cost-efficient tasks</td></tr>
             </tbody>
           </table>
         </div>
@@ -260,7 +266,7 @@
           <h3 class="takeaways-title">Key Takeaways</h3>
           <ul>
             <li>Benchmark cost of $0.00675 per exchange makes it practical for apps with moderate volume</li>
-            <li>200K context window handles book-length documents, codebases, and long conversations</li>
+            <li>1M context window handles book-length documents, codebases, and long conversations</li>
             <li>Vision input lets it analyze screenshots, diagrams, and PDFs without conversion</li>
             <li>Strong code generation and reasoning make it the default choice for dev workflows</li>
           </ul>
