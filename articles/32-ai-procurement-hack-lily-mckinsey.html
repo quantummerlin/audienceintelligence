@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The $20 Hack That Broke Every AI Procurement Checklist | Aether Intel</title>
+  <meta name="description" content="A security researcher spent $20 and two hours to get full read-write access to Lily — the AI platform used by 70% of McKinsey's 40,000 consultants. The vulnerabilities weren't exotic. They were textbook.">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Article shell ── */
+    .article-hero {
+      width: 100%;
+      max-height: 520px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .article-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* ── Meta bar ── */
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .article-meta .badge {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .28rem .7rem;
+      border-radius: 4px;
+    }
+    .badge-dev { background: rgba(59,130,246,.18); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
+    .article-meta .cat  { font-size: .82rem; color: var(--text-muted,#8892a4); }
+    .article-meta .dot  { color: var(--text-muted,#8892a4); }
+    .article-meta time  { font-size: .82rem; color: var(--text-muted,#8892a4); }
+
+    /* ── Typography ── */
+    .article-wrap h1 {
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      margin: 0 0 1.25rem;
+      color: #f0f4ff;
+    }
+    .article-deck {
+      font-size: 1.18rem;
+      line-height: 1.65;
+      color: #a8b4c8;
+      margin: 0 0 2.5rem;
+      border-left: 3px solid #3b82f6;
+      padding-left: 1.1rem;
+    }
+    .article-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #c8d4e4;
+    }
+    .article-body h2 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #e8eeff;
+      margin: 2.8rem 0 1rem;
+      letter-spacing: -.01em;
+    }
+    .article-body h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #d0dcf0;
+      margin: 2rem 0 .6rem;
+    }
+    .article-body p { margin: 0 0 1.4rem; }
+    .article-body a { color: #60a5fa; text-decoration: none; border-bottom: 1px solid rgba(96,165,250,.3); }
+    .article-body a:hover { border-color: #60a5fa; }
+
+    /* ── Pull quote ── */
+    .pull-quote {
+      margin: 2.5rem 0;
+      padding: 1.5rem 1.75rem;
+      background: rgba(59,130,246,.07);
+      border-left: 4px solid #3b82f6;
+      border-radius: 0 8px 8px 0;
+    }
+    .pull-quote p {
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #d0e4ff;
+      margin: 0 0 .5rem;
+      font-style: italic;
+    }
+    .pull-quote cite {
+      font-size: .85rem;
+      color: #6b7c99;
+      font-style: normal;
+    }
+
+    /* ── Stat callout ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .stat-card {
+      background: rgba(15,20,40,.6);
+      border: 1px solid rgba(59,130,246,.2);
+      border-radius: 10px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+    }
+    .stat-card .num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #60a5fa;
+      line-height: 1;
+      display: block;
+      margin-bottom: .3rem;
+    }
+    .stat-card .label {
+      font-size: .78rem;
+      color: #6b7c99;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    /* ── Code block ── */
+    .code-block {
+      background: #0a0d1a;
+      border: 1px solid rgba(239,68,68,.25);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .88rem;
+      color: #ef4444;
+      line-height: 1.6;
+    }
+    .code-block .comment { color: #4b5563; }
+    .code-block .string  { color: #f59e0b; }
+
+    /* ── Timeline ── */
+    .timeline {
+      margin: 2rem 0;
+      border-left: 2px solid rgba(59,130,246,.25);
+      padding-left: 1.5rem;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.85rem;
+      top: .35rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: 2px solid #0d1020;
+    }
+    .timeline-item .time-label {
+      font-size: .78rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: #3b82f6;
+      margin-bottom: .2rem;
+    }
+    .timeline-item p { margin: 0; font-size: .95rem; }
+
+    /* ── Warning box ── */
+    .warn-box {
+      background: rgba(239,68,68,.07);
+      border: 1px solid rgba(239,68,68,.25);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+    }
+    .warn-box .warn-label {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #ef4444;
+      margin-bottom: .5rem;
+    }
+    .warn-box p { margin: 0; font-size: .95rem; color: #c8d4e4; }
+
+    /* ── Footer ── */
+    .article-footer {
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,.08);
+      font-size: .85rem;
+      color: #4b5a70;
+    }
+
+    @media(max-width:640px) {
+      .article-wrap { padding: 2rem 1rem 4rem; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body class="standalone-nav">
+  <script src="/js/main.js"></script>
+
+  <img
+    src="/images/articles/32-ai-procurement-hack-lily-mckinsey-hero.png"
+    alt="SQL terminal overlay on a building blueprint — dark background with neon green query strings and crimson warning alerts"
+    class="article-hero"
+  >
+
+  <main>
+    <div class="article-wrap">
+
+      <div class="article-meta">
+        <span class="badge badge-dev">Security</span>
+        <span class="cat">Enterprise AI</span>
+        <span class="dot">·</span>
+        <time datetime="2026-05-15">May 15, 2026</time>
+      </div>
+
+      <h1>The $20 Hack That Broke Every AI Procurement Checklist</h1>
+
+      <p class="article-deck">
+        A security researcher spent $20 and two hours to get full read-write access to the AI platform used by 70% of McKinsey's 40,000 consultants. The vulnerabilities weren't exotic. They were textbook. And the procurement checklist that approved Lily never asked the right questions.
+      </p>
+
+      <div class="article-body">
+
+        <p>
+          Lily is McKinsey's internal AI assistant — the platform that tens of thousands of the world's most powerful consultants use every day to synthesize research, draft deliverables, and access proprietary client intelligence. It had been running in production for more than two years. It had passed whatever internal review processes one of the world's most sophisticated professional services firms uses to vet enterprise software. And it had a SQL injection vulnerability that a security researcher cracked open for the cost of a dinner.
+        </p>
+
+        <p>
+          The exploit wasn't novel. SQL injection was first formally documented in 1998. Every developer learns about it. Every security certification covers it. Every procurement checklist at every major enterprise has a checkbox that says something like "application security review completed." Lily had apparently checked that box and still shipped 22 unauthenticated endpoints out of 200.
+        </p>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <span class="num">$20</span>
+            <span class="label">Total cost of the exploit</span>
+          </div>
+          <div class="stat-card">
+            <span class="num">2 hrs</span>
+            <span class="label">Time to full read/write access</span>
+          </div>
+          <div class="stat-card">
+            <span class="num">22/200</span>
+            <span class="label">Endpoints with no auth</span>
+          </div>
+          <div class="stat-card">
+            <span class="num">2+ yrs</span>
+            <span class="label">Lily in production before discovery</span>
+          </div>
+        </div>
+
+        <h2>What Lily Was</h2>
+
+        <p>
+          McKinsey &amp; Company built Lily as the firm's enterprise AI knowledge platform — a proprietary system trained on internal research, case studies, and methodologies accumulated over decades of consulting work. For a firm that sells intellectual capital, Lily wasn't just a productivity tool. It was the vault.
+        </p>
+
+        <p>
+          Approximately 70% of the firm's 40,000 consultants had access. They used it to pull relevant frameworks for engagements, surface past project learnings, draft client-facing documents, and query the accumulated knowledge of one of the densest concentrations of business intelligence on the planet. The platform had been running since at least 2023, refined, iterated, and depended upon.
+        </p>
+
+        <p>
+          What it hadn't been was properly secured at the API layer.
+        </p>
+
+        <h2>The Attack: Slower Than a Coffee Break</h2>
+
+        <p>
+          The researcher's account of the breach reads like a security textbook chapter on what not to do — except the subject is a real platform at a real company with real clients whose sensitive information was potentially exposed.
+        </p>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="time-label">Hour 0 — Reconnaissance</div>
+            <p>Basic endpoint enumeration against Lily's API surface. 200 endpoints discovered. Standard stuff — any intermediate developer could do this with freely available tooling. Cost so far: $0.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="time-label">Hour 0.5 — First vulnerability</div>
+            <p>22 of those 200 endpoints returned data without any authentication challenge. No token required. No session validation. Just... data. Cost: still $0.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="time-label">Hour 1 — SQL injection confirmed</div>
+            <p>Standard SQL injection test strings against input fields. The database responded. The payload worked. This technique has been publicly known for 28 years. Approximate cost of research: $0.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="time-label">Hour 2 — Full access</div>
+            <p>Read and write access to the underlying database — the one storing the intellectual capital of McKinsey's engagements, the research, the frameworks, potentially client data. Total spend to reach this point: roughly $20, accounting for the API calls used in testing. Two years of production deployment: breached.</p>
+          </div>
+        </div>
+
+        <div class="pull-quote">
+          <p>"$20, two hours to get full read and write access to the AI platform that 70% of McKinsey's 40,000 consultants use every single day."</p>
+          <cite>— Security researcher's account of the Lily breach</cite>
+        </div>
+
+        <h2>Why This Is Bigger Than McKinsey</h2>
+
+        <p>
+          McKinsey isn't unusual here. That's the problem. The firm's security failure is notable because of its scale and because of who they are — a company whose entire value proposition is sophisticated analysis and judgment. But the pattern of vulnerabilities Lily exhibited is endemic across the enterprise AI deployment wave of 2023 through 2025.
+        </p>
+
+        <p>
+          Enterprises rushed AI platforms into production under board and CEO pressure to "show AI progress." Developer teams integrated LLMs into existing systems without corresponding security reviews. Procurement checklists were written for traditional SaaS software and never updated to account for AI-specific attack surfaces: prompt injection, retrieval-augmented generation data poisoning, agentic tool misuse, and — as Lily demonstrated — the prosaic failure of just not requiring authentication on API endpoints.
+        </p>
+
+        <div class="warn-box">
+          <div class="warn-label">⚠ The Procurement Gap</div>
+          <p>Standard enterprise procurement checklists were designed for traditional software. They check for SOC 2 compliance, penetration test reports, and data processing agreements. They don't ask: "What happens when an attacker can write to your AI's knowledge base?" or "Are your retrieval endpoints authenticated?" The Lily breach is what the gap between those two frameworks looks like in practice.</p>
+        </div>
+
+        <h2>The Unauthenticated Endpoint Problem</h2>
+
+        <p>
+          Twenty-two unauthenticated endpoints out of 200 sounds like a development oversight — a few endpoints an engineer forgot to wire up to the auth middleware. In practice, it's a systems and culture failure. In a properly structured development environment with security reviews, mandatory authentication is a default enforced at the framework level, not something individual developers opt into per-route.
+        </p>
+
+        <p>
+          For AI platforms specifically, the stakes of unauthenticated endpoints are compounded. Traditional software endpoints might return user profile data or transaction records — sensitive, but bounded. An AI platform's retrieval endpoints potentially return synthesized intelligence drawn from the full corpus of proprietary knowledge the system was trained on. Unauthenticated access to a retrieval endpoint isn't a data leak — it's a library door left unlocked.
+        </p>
+
+        <div class="code-block">
+          <pre><span class="comment">-- Classic SQL injection, circa 1998</span>
+<span class="comment">-- Still working on production AI platforms in 2025</span>
+
+SELECT * FROM documents
+WHERE title = '<span style="color:#ef4444">'; DROP TABLE sessions; --</span>'
+
+<span class="comment">-- Or, more practically for data exfiltration:</span>
+
+GET /api/v1/knowledge/search?q=<span style="color:#ef4444">'+UNION+SELECT+*+FROM+users--</span>
+<span class="comment">-- No auth token required. 22 endpoints like this. In production.</span></pre>
+        </div>
+
+        <h2>The AI Agentic Surface Makes It Worse</h2>
+
+        <p>
+          Lily's vulnerability was exploited at the data layer — SQL injection against the underlying database. But the attack surface for enterprise AI platforms has expanded dramatically as agentic capabilities have been added. Modern enterprise AI tools don't just retrieve and synthesize — they take actions: sending emails, editing documents, calling APIs, scheduling meetings, submitting forms.
+        </p>
+
+        <p>
+          The implication is that the attack surface isn't just the knowledge base anymore. An unauthenticated endpoint on an agentic AI platform with write-back capabilities is a remote code execution vulnerability dressed in product clothing. An attacker who can inject into the retrieval layer doesn't just read your data — they can potentially control what the agent does next.
+        </p>
+
+        <p>
+          Security researchers have demonstrated prompt injection attacks where malicious content embedded in retrieved documents hijacks agent behavior. Combine that with the authentication failures Lily exhibited and you have a platform where an external attacker can read proprietary data <em>and</em> potentially influence the downstream actions the AI takes on behalf of consultants.
+        </p>
+
+        <h2>What Procurement Missed</h2>
+
+        <p>
+          The Lily breach happened despite McKinsey presumably having enterprise-grade procurement processes. The firm advises clients on risk management for a living. If Lily slipped through their review processes, it's not because McKinsey is careless — it's because the review processes weren't built for what Lily actually is.
+        </p>
+
+        <p>
+          A traditional enterprise software procurement review looks for:
+        </p>
+
+        <ul style="margin: 0 0 1.4rem 1.5rem; line-height: 2;">
+          <li>SOC 2 Type II certification</li>
+          <li>Penetration test reports (typically annual)</li>
+          <li>Data processing agreements and GDPR/CCPA compliance</li>
+          <li>Single sign-on integration</li>
+          <li>Role-based access controls</li>
+          <li>Vendor security questionnaires (often 200+ questions)</li>
+        </ul>
+
+        <p>
+          None of those checklist items would have caught 22 unauthenticated API endpoints that weren't tested in the annual pentest scope. None of them ask specifically about SQL injection defenses on LLM retrieval pipelines. None of them evaluate what an AI agent can do with write access to a knowledge base it shouldn't have write access to.
+        </p>
+
+        <p>
+          The procurement checklist that approved Lily wasn't wrong. It was built for a different class of software. And the industry has been deploying a fundamentally new class of software using checklists that don't know what questions to ask.
+        </p>
+
+        <h2>The Two-Year Gap</h2>
+
+        <p>
+          Perhaps the most significant number in the Lily breach isn't $20 or 22 — it's the two-plus years the platform ran in production before the vulnerabilities were discovered by an outside researcher. Enterprise AI platforms deployed in 2023 have had two years to accumulate data, expand their capabilities, integrate with more internal systems, and deepen their access to proprietary information. The attack surface has grown. The discovery mechanism was an external researcher who decided to look.
+        </p>
+
+        <p>
+          How many enterprise AI platforms deployed in the 2023-2025 wave have similar vulnerabilities that simply haven't been found yet? The honest answer is: we don't know, because most of them haven't been tested by anyone with the intent and capability to look.
+        </p>
+
+        <h2>What Actually Needs to Change</h2>
+
+        <p>
+          The Lily breach points to three specific gaps that procurement and security teams need to close before the next round of enterprise AI deployments:
+        </p>
+
+        <p>
+          <strong>1. AI-specific security reviews.</strong> Standard penetration tests need explicit scope inclusions for LLM attack surfaces: prompt injection, retrieval layer authentication, vector database access controls, and agentic tool permission boundaries. These are not covered by default in most security testing frameworks built before 2023.
+        </p>
+
+        <p>
+          <strong>2. Authentication-as-default enforcement.</strong> Development frameworks for AI platforms should make unauthenticated endpoints impossible by default, not opt-in. The 22 unauthenticated Lily endpoints represent a default-insecure development posture that framework-level enforcement would have prevented.
+        </p>
+
+        <p>
+          <strong>3. Continuous monitoring, not annual audits.</strong> A one-time penetration test conducted at deployment doesn't catch vulnerabilities introduced in subsequent updates. AI platforms are updated continuously — security review cadences need to match that velocity.
+        </p>
+
+        <div class="pull-quote">
+          <p>"SQL injection was first formally documented in 1998. It's been 28 years. If your AI platform is still vulnerable to it, the problem isn't the attacker's sophistication — it's the deployment process."</p>
+          <cite>— Security analysis of the Lily incident</cite>
+        </div>
+
+        <h2>The Quiet Risk in Every AI Deployment</h2>
+
+        <p>
+          Lily is notable because McKinsey is notable. But the enterprise AI deployment patterns it represents — fast deployment under executive pressure, procurement processes not updated for AI-specific attack surfaces, reliance on annual security reviews rather than continuous monitoring — are standard across the industry.
+        </p>
+
+        <p>
+          Every major consultancy, law firm, financial institution, and healthcare system that deployed an enterprise AI platform in 2023 and 2024 faces some version of the same question: did the security review process that approved this platform actually understand what it was approving?
+        </p>
+
+        <p>
+          For Lily, the answer was no. The researcher who spent $20 to find out knew what questions to ask. The procurement process that approved a two-year production run didn't.
+        </p>
+
+        <p>
+          That's not primarily a McKinsey problem. It's an industry-wide gap between how fast AI is being deployed and how well the security infrastructure surrounding that deployment has kept pace. The $20 question is: how many more Lilys are running right now, untested, in environments with the same assumptions and none of the scrutiny?
+        </p>
+
+      </div><!-- /.article-body -->
+
+      <footer class="article-footer">
+        <p>Aether Intel covers artificial intelligence developments with a focus on technical accuracy and real-world implications. Research sourced from public security disclosures, researcher accounts, and industry analysis.</p>
+      </footer>
+
+    </div><!-- /.article-wrap -->
+  </main>
+
+</body>
+</html>
