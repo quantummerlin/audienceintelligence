@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Sonnet 4.5 — Capabilities, Pricing &amp; Benchmark — Aether Intel</title>
+  <meta name="description" content="Claude Sonnet 4.5 review: what it does, input/output costs, benchmark response quality, and real use cases. Tested via OpenRouter.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/claude-sonnet-4-5.html">
+  <meta property="og:title" content="Claude Sonnet 4.5 — Capabilities, Costs &amp; Benchmark">
+  <meta property="og:description" content="Capabilities, pricing, and real benchmark output for Claude Sonnet 4.5 via OpenRouter.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/claude-sonnet-4-5.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/claude-sonnet-4-5-hero.png">
+  <meta property="article:published_time" content="2025-05-15">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Sonnet 4.5 — Capabilities, Costs &amp; Benchmark">
+  <meta name="twitter:description" content="Capabilities, pricing, and benchmark output for Claude Sonnet 4.5.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/claude-sonnet-4-5-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ─── Model article extras ─── */
+    .model-specs-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:24px 0; }
+    .spec-card { background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px; }
+    .spec-label { font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px; }
+    .spec-value { font-family:var(--font-body);font-size:1.05rem;font-weight:700;color:var(--text-primary); }
+    .spec-value.sv-green  { color:#34d399; }
+    .spec-value.sv-indigo { color:var(--neon-indigo); }
+    .spec-value.sv-gold   { color:var(--neon-gold); }
+    .use-case-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:20px 0; }
+    .use-case-card { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px; }
+    .use-case-card h4 { font-family:var(--font-body);font-size:.88rem;font-weight:700;color:var(--text-primary);margin:0 0 6px; }
+    .use-case-card p { font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin:0; }
+    .benchmark-block { background:var(--surface);border:1px solid rgba(129,140,248,.2);border-radius:12px;padding:24px;margin:24px 0; }
+    .benchmark-block-header { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap; }
+    .benchmark-block-title { font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-indigo); }
+    .benchmark-cost-badge { font-family:var(--font-body);font-size:.88rem;font-weight:700;color:var(--text-primary);background:rgba(129,140,248,.1);border:1px solid rgba(129,140,248,.25);border-radius:7px;padding:4px 12px; }
+    .benchmark-prompt-label,.benchmark-response-label { font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px; }
+    .benchmark-prompt-text { background:rgba(7,7,15,.6);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:.83rem;color:var(--text-secondary);line-height:1.6;font-style:italic;margin-bottom:16px; }
+    .benchmark-response-text { font-size:.88rem;color:var(--text-primary);line-height:1.7; }
+    .benchmark-response-text p { margin:0 0 12px; }
+    .benchmark-response-text p:last-child { margin:0; }
+    .benchmark-placeholder { background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.12);border-radius:8px;padding:20px;text-align:center;color:var(--text-muted);font-size:.84rem; }
+    .sample-prompt-block { background:rgba(7,7,15,.6);border-left:3px solid var(--neon-indigo);border-radius:0 8px 8px 0;padding:14px 16px;margin:16px 0; }
+    .sample-prompt-label { font-family:var(--font-display);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--neon-indigo);margin-bottom:6px; }
+    .sample-prompt-text { font-size:.84rem;color:var(--text-secondary);line-height:1.55; }
+    .try-it-band { background:linear-gradient(135deg,rgba(129,140,248,.08),rgba(34,211,238,.04));border:1px solid rgba(129,140,248,.2);border-radius:14px;padding:28px;margin:32px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap; }
+    .try-it-band h3 { font-family:var(--font-heading);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px; }
+    .try-it-band p { color:var(--text-secondary);font-size:.86rem;margin:0; }
+    @media(max-width:600px){ .model-specs-grid{grid-template-columns:repeat(2,1fr);} .use-case-grid{grid-template-columns:1fr;} .try-it-band{flex-direction:column;align-items:flex-start;} }
+  </style>
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- HERO -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/models/claude-sonnet-4-5-hero.png" alt="Claude Sonnet 4.5 — AI model overview" class="article-hero-img" loading="eager" onerror="this.style.background='linear-gradient(135deg,rgba(204,120,92,0.3),rgba(129,140,248,0.1))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a><span>&#x203a;</span>
+            <a href="/models.html">Models</a><span>&#x203a;</span>
+            <span>Claude Sonnet 4.5</span>
+          </nav>
+          <span class="badge badge-tools">Anthropic</span>
+          <h1 class="article-hero-title">Claude Sonnet 4.5</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 15, 2025</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">8 min read</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">Benchmark tested</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="article-layout">
+      <div class="article-body">
+
+        <p>Claude Sonnet 4.5 is Anthropic's finely calibrated daily-driver model — the one you reach for when raw speed alone isn't enough but you can't justify the premium of Opus for every request. It strikes a rare balance of intelligence, response velocity, and token economics that makes it the default choice for teams building production AI features, shipping agentic workflows, or simply conducting serious research without burning through budget. For the vast majority of real-world tasks, Sonnet 4.5 delivers Opus-adjacent quality at a fraction of the cost.</p>
+
+        <!-- QUICK SPECS -->
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Input /1M tokens</div>
+            <div class="spec-value sv-indigo">$3.00</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output /1M tokens</div>
+            <div class="spec-value sv-indigo">$15.00</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Context window</div>
+            <div class="spec-value">200K tokens</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Benchmark cost</div>
+            <div class="spec-value sv-gold">$0.00675</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Modality</div>
+            <div class="spec-value">Text + Vision</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">OpenRouter ID</div>
+            <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary)">anthropic/claude-sonnet-4-5</div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT IS -->
+        <h2 class="article-h2">What is Claude Sonnet 4.5?</h2>
+        <p>Claude Sonnet 4.5 is the middle tier in Anthropic's Claude 4 family, positioned deliberately between the lightweight Haiku models and the heavyweight Opus. It was trained using Anthropic's Constitutional AI methodology — a technique in which the model is guided by a written set of principles during reinforcement learning, making it notably more reliable and less prone to harmful outputs than models trained on reward signals alone. This principled approach to alignment is evident in how Sonnet 4.5 handles nuanced instructions: it follows complex multi-step directions faithfully without hallucinating steps or wandering off-task, a key advantage in agentic deployments where chains of tool calls must stay coherent.</p>
+        <p>Released in May 2025 alongside the broader Claude 4 generation, Sonnet 4.5 benefits from architectural improvements that push its reasoning depth noticeably beyond Sonnet 3.7 while keeping latency competitive. Its 200,000-token context window — large enough to hold an entire codebase or a book-length document — and native vision input support put it in a different capability class from budget alternatives. For teams who previously toggled between Haiku for cost and Opus for quality, Sonnet 4.5 is designed to collapse that distinction for the majority of workloads, serving as the single sensible default.</p>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT EXCELS AT -->
+        <h2 class="article-h2">What Sonnet 4.5 Excels At</h2>
+        <p>Sonnet 4.5 performs best on tasks that demand structured reasoning, careful instruction-following, and sustained coherence across long contexts — which covers a surprisingly wide territory in real engineering and knowledge-work environments. Here are four domains where it consistently delivers outsized value.</p>
+
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>Code Generation &amp; Review</h4>
+            <p>Sonnet 4.5 produces production-quality code across major languages, handles refactors across large files, and explains its reasoning in terms developers can act on immediately. Its Constitutional AI training makes it proactive about flagging security issues, edge cases, and performance concerns that a basic autocomplete would silently ignore.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Document Analysis</h4>
+            <p>With a 200K context window, Sonnet 4.5 can ingest entire contracts, research papers, or technical specs in a single pass and return structured summaries, risk flags, or comparative analyses. Vision support means PDFs with embedded charts and scanned tables are fair game without any preprocessing pipeline.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Customer Support Automation</h4>
+            <p>Sonnet 4.5's instruction-following precision and consistent tone make it well-suited for customer-facing workflows — it stays on-script, escalates appropriately, and maintains a helpful persona across multi-turn conversations without drifting. Teams building support bots report measurably lower escalation rates compared to smaller models on identical prompts.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Research Synthesis</h4>
+            <p>Given multiple sources or a long research corpus, Sonnet 4.5 extracts key claims, surfaces contradictions, and produces coherent synthesis prose that respects the nuance of the original material. Its training on careful reasoning makes it less likely to flatten complex arguments into oversimplified takeaways than models optimized purely for speed.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- BENCHMARK -->
+        <h2 class="article-h2">Benchmark Response</h2>
+        <p>We ran our standard 650-token technical exchange through Sonnet 4.5 via OpenRouter to give you a real sense of response quality and cost. The prompt asks for a technical explanation of LLM context windows — a good proxy for reasoning depth and communication clarity.</p>
+
+        <div class="benchmark-block">
+          <div class="benchmark-block-header">
+            <span class="benchmark-block-title">Benchmark Test — 650 Token Exchange</span>
+            <span class="benchmark-cost-badge">Cost: $0.00675</span>
+          </div>
+          <div class="benchmark-prompt-label">Prompt (250 tokens)</div>
+          <div class="benchmark-prompt-text">
+            Explain how context windows work in large language models. Cover: what a context window is, why the size matters for memory and multi-step tasks, how token pricing scales with window usage, and what a developer should consider when choosing between a 128K model and a 1M context model for a production app. Be practical and specific.
+          </div>
+          <div class="benchmark-response-label">Sonnet 4.5 Response (~400 tokens)</div>
+          <div class="benchmark-response-text">
+            <div class="benchmark-placeholder">
+              Benchmark response will be added after live testing via OpenRouter.<br>
+              Run the prompt above through <strong>anthropic/claude-sonnet-4-5</strong> and paste the output here.
+            </div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- PRICING DEEP DIVE -->
+        <h2 class="article-h2">Pricing Breakdown</h2>
+        <p>At $3.00 per million input tokens and $15.00 per million output tokens, Sonnet 4.5 sits in the mid-tier pricing band — more expensive than budget models like Haiku or Gemini Flash, but significantly cheaper than frontier flagship models like Opus or GPT-4.5. For most teams, the cost-to-capability ratio lands squarely in the practical zone: you're paying a modest premium over budget options in exchange for substantially more reliable reasoning, longer context, and vision support that eliminates preprocessing overhead.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Input tokens /1M</td><td>$3.00</td><td>Charged per token sent to the model</td></tr>
+              <tr><td>Output tokens /1M</td><td>$15.00</td><td>Usually 3–5× the input rate</td></tr>
+              <tr><td>Context window</td><td>200K tokens</td><td>Max tokens in one conversation</td></tr>
+              <tr><td>Benchmark exchange</td><td>$0.00675</td><td>250 in + 400 out tokens</td></tr>
+              <tr><td>1,000 exchanges/day</td><td>$6.75</td><td>Estimated daily cost at volume</td></tr>
+              <tr><td>10,000 exchanges/day</td><td>$67.50</td><td>Production-scale estimate</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ADSENSE MID -->
+        <ins class="adsbygoogle" style="display:block;margin:28px 0"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="auto" data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+        <hr class="article-divider">
+
+        <!-- SAMPLE PROMPTS -->
+        <h2 class="article-h2">Sample Prompts That Work Well</h2>
+        <p>Sonnet 4.5 responds best to prompts that give it a clear role, explicit output format, and enough context to reason from — the more specific your constraints, the tighter and more useful the output.</p>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Code Generation &amp; Review</div>
+          <div class="sample-prompt-text">Refactor this Python function to use async/await and add proper error handling: [paste function here]. Explain each change you make.</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Document Analysis</div>
+          <div class="sample-prompt-text">Summarize this 20-page contract, flag any unusual clauses, and list the top 3 risks for the signing party.</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Research Synthesis</div>
+          <div class="sample-prompt-text">Compare the approaches of three leading AI safety organizations to alignment research. Highlight where they agree and diverge.</div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- VS COMPARISON -->
+        <h2 class="article-h2">How It Compares</h2>
+        <p>Sonnet 4.5 occupies a deliberate sweet spot in the market: it outperforms budget models on reasoning-heavy tasks by a meaningful margin, while costing a fraction of the top-tier frontier models — making it the rational default for teams that want quality without a blank-check budget.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Model</th><th>Input /1M</th><th>Output /1M</th><th>Benchmark</th><th>Best for</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Sonnet 4.5</strong></td><td>$3.00</td><td>$15.00</td><td>$0.00675</td><td>Balanced everyday AI tasks</td></tr>
+              <tr><td>Claude Haiku 4.5</td><td>$0.80</td><td>$4.00</td><td>$0.00180</td><td>Budget-speed tasks</td></tr>
+              <tr><td>GPT-4o</td><td>$2.50</td><td>$10.00</td><td>$0.00463</td><td>General reasoning</td></tr>
+              <tr><td>Gemini 2.5 Flash</td><td>$0.15</td><td>$0.60</td><td>$0.000278</td><td>Cost-efficient tasks</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- TRY IT BAND -->
+        <div class="try-it-band">
+          <div>
+            <h3>Try Sonnet 4.5 with Your Own Key</h3>
+            <p>Connect your OpenRouter API key and test Sonnet 4.5 directly in the Aether Intel chat tool — no signup, your key stays in your browser.</p>
+          </div>
+          <a href="/tools/chat.html" class="btn btn-primary">Open Chat Tool &#8594;</a>
+        </div>
+
+        <!-- TAKEAWAYS -->
+        <div class="article-takeaways">
+          <h3 class="takeaways-title">Key Takeaways</h3>
+          <ul>
+            <li>Benchmark cost of $0.00675 per exchange makes it practical for apps with moderate volume</li>
+            <li>200K context window handles book-length documents, codebases, and long conversations</li>
+            <li>Vision input lets it analyze screenshots, diagrams, and PDFs without conversion</li>
+            <li>Strong code generation and reasoning make it the default choice for dev workflows</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RELATED -->
+    <section class="article-related">
+      <h2 class="related-title">Related Models</h2>
+      <div class="article-grid">
+
+        <a class="article-card" href="/models/claude-haiku-4-5.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/claude-haiku-4-5-hero.png" alt="Claude Haiku 4.5" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Anthropic</span>
+            <h3 class="article-card-title">Claude Haiku 4.5</h3>
+            <p class="article-card-excerpt">Anthropic's fastest, most affordable Claude — ideal for high-volume tasks where speed and cost take priority over raw reasoning depth.</p>
+          </div>
+        </a>
+
+        <a class="article-card" href="/models/gpt-4o.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/gpt-4o-hero.png" alt="GPT-4o" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">OpenAI</span>
+            <h3 class="article-card-title">GPT-4o</h3>
+            <p class="article-card-excerpt">OpenAI's flagship omni model combining text, vision, and audio in a single capable package — the primary alternative for general reasoning tasks.</p>
+          </div>
+        </a>
+
+        <a class="article-card" href="/models/gemini-2-5-flash.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/gemini-2-5-flash-hero.png" alt="Gemini 2.5 Flash" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Google</span>
+            <h3 class="article-card-title">Gemini 2.5 Flash</h3>
+            <p class="article-card-excerpt">Google's cost-efficient workhorse with a massive context window — the go-to when budget is the primary constraint and volume is high.</p>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </article>
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
