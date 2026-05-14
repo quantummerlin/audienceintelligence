@@ -4,13 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Models — Aether Intel</title>
-  <meta name="description" content="Browse 200+ AI models via OpenRouter. Compare context windows, pricing, and capabilities. Updated live. Free, paid, and open-weight models.">
+  <meta name="description" content="Browse 360+ AI models via OpenRouter. Compare capabilities, input/output costs, and benchmark performance. Text, vision, image, audio and video models.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ai.quantummerlin.com/models.html">
   <meta property="og:title" content="AI Models — Aether Intel">
-  <meta property="og:description" content="Browse 200+ AI models live via OpenRouter. Context windows, pricing, and capabilities compared.">
+  <meta property="og:description" content="Every AI model on OpenRouter — capabilities, pricing, and real benchmark costs compared.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ai.quantummerlin.com/models.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/14-openrouter-guide-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI Models — Aether Intel">
+  <meta name="twitter:description" content="Every AI model on OpenRouter — capabilities, pricing, and benchmark costs.">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
@@ -19,9 +23,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <style>
-    /* ── Page Header ── */
+    /* ═══════════════════════════════════════════
+       PAGE HEADER
+    ═══════════════════════════════════════════ */
     .models-page-header {
-      padding: 48px 32px 36px;
+      padding: 40px 32px 28px;
       border-bottom: 1px solid var(--border);
     }
     .models-page-eyebrow {
@@ -38,7 +44,7 @@
       border: 1px solid rgba(34,211,238,.18);
       border-radius: 100px;
       padding: 4px 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .models-page-eyebrow-dot {
       width: 5px; height: 5px; border-radius: 50%;
@@ -47,20 +53,20 @@
     }
     .models-page-title {
       font-family: var(--font-heading);
-      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
       font-weight: 900;
       letter-spacing: -.03em;
       line-height: 1.1;
       color: var(--text-primary);
-      margin: 0 0 12px;
+      margin: 0 0 10px;
     }
     .models-page-title span { color: var(--neon-indigo); }
     .models-page-sub {
       color: var(--text-secondary);
-      font-size: .95rem;
+      font-size: .93rem;
       line-height: 1.65;
-      max-width: 560px;
-      margin: 0 0 28px;
+      max-width: 600px;
+      margin: 0 0 22px;
     }
     .models-meta-row {
       display: flex;
@@ -73,30 +79,213 @@
       align-items: center;
       gap: 6px;
       font-family: var(--font-display);
-      font-size: .7rem;
+      font-size: .68rem;
       font-weight: 600;
       color: var(--text-muted);
       letter-spacing: .06em;
     }
-    .models-meta-item strong { color: var(--text-primary); font-size: .9rem; }
+    .models-meta-item strong {
+      color: var(--text-primary);
+      font-size: .88rem;
+      font-family: var(--font-body);
+    }
 
-    /* ── Filter Bar ── */
+    /* ═══════════════════════════════════════════
+       BENCHMARK EXPLAINER STRIP
+    ═══════════════════════════════════════════ */
+    .benchmark-strip {
+      margin: 0 32px;
+      background: linear-gradient(135deg, rgba(129,140,248,.06), rgba(34,211,238,.03));
+      border: 1px solid rgba(129,140,248,.18);
+      border-radius: 10px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .benchmark-strip-icon {
+      width: 28px; height: 28px;
+      background: rgba(129,140,248,.12);
+      border: 1px solid rgba(129,140,248,.25);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .benchmark-strip-icon svg {
+      width: 14px; height: 14px;
+      stroke: var(--neon-indigo);
+      fill: none;
+    }
+    .benchmark-strip-text {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+    .benchmark-strip-text strong {
+      color: var(--text-primary);
+    }
+
+    /* ═══════════════════════════════════════════
+       NEW MODELS SLIDESHOW
+    ═══════════════════════════════════════════ */
+    .new-models-section {
+      padding: 28px 32px 0;
+    }
+    .new-models-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .new-models-label-text {
+      font-family: var(--font-display);
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+    }
+    .new-models-label-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .slideshow-outer {
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+    .slideshow-track {
+      display: flex;
+      gap: 16px;
+      transition: transform .5s cubic-bezier(.4,0,.2,1);
+      will-change: transform;
+    }
+    .slide-card {
+      flex: 0 0 calc(33.33% - 11px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 20px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color .2s;
+      cursor: default;
+    }
+    .slide-card:hover { border-color: rgba(129,140,248,.4); }
+    .slide-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .slide-card-provider {
+      font-family: var(--font-display);
+      font-size: .63rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .slide-badge-new {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(129,140,248,.12);
+      color: var(--neon-indigo);
+      border: 1px solid rgba(129,140,248,.3);
+    }
+    .slide-card-name {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.25;
+    }
+    .slide-card-desc {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .slide-card-stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .slide-stat {
+      font-family: var(--font-body);
+      font-size: .72rem;
+      color: var(--text-muted);
+    }
+    .slide-stat span { color: var(--text-secondary); font-weight: 600; }
+    .slide-card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      text-decoration: none;
+      margin-top: 4px;
+      transition: opacity .15s;
+    }
+    .slide-card-cta:hover { opacity: .7; }
+    .slideshow-nav {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding-bottom: 4px;
+    }
+    .slideshow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background .2s, width .2s;
+    }
+    .slideshow-dot.active {
+      background: var(--neon-indigo);
+      width: 18px;
+      border-radius: 3px;
+    }
+
+    /* ═══════════════════════════════════════════
+       FILTER BAR
+    ═══════════════════════════════════════════ */
     .models-filter-bar {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 16px 32px;
+      padding: 14px 32px;
       border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
-      background: rgba(13,13,26,.6);
+      background: rgba(7,7,15,.85);
+      backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 20;
+      margin-top: 24px;
     }
     .filter-search-wrap {
       flex: 1;
       min-width: 200px;
-      max-width: 340px;
+      max-width: 300px;
       position: relative;
     }
     .filter-search-wrap svg {
@@ -104,9 +293,9 @@
       left: 11px;
       top: 50%;
       transform: translateY(-50%);
-      width: 15px;
-      height: 15px;
+      width: 14px; height: 14px;
       stroke: var(--text-muted);
+      fill: none;
     }
     #modelSearch {
       width: 100%;
@@ -115,148 +304,317 @@
       border-radius: 8px;
       color: var(--text-primary);
       font-family: var(--font-body);
-      font-size: .85rem;
-      padding: 8px 12px 8px 34px;
+      font-size: .84rem;
+      padding: 8px 12px 8px 33px;
       outline: none;
-      transition: border-color .2s, box-shadow .2s;
+      transition: border-color .2s;
     }
-    #modelSearch:focus {
-      border-color: rgba(129,140,248,.45);
-      box-shadow: 0 0 0 3px rgba(129,140,248,.08);
-    }
+    #modelSearch:focus { border-color: rgba(129,140,248,.45); }
     #modelSearch::placeholder { color: var(--text-muted); }
+    .filter-group-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
     .filter-btn-group {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       flex-wrap: wrap;
     }
     .filter-btn {
       font-family: var(--font-display);
-      font-size: .68rem;
+      font-size: .66rem;
       font-weight: 700;
       letter-spacing: .06em;
       text-transform: uppercase;
       color: var(--text-muted);
-      background: rgba(255,255,255,.04);
+      background: rgba(255,255,255,.03);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 6px 13px;
+      padding: 5px 11px;
       cursor: pointer;
       transition: all .18s;
       white-space: nowrap;
     }
-    .filter-btn:hover { color: var(--text-secondary); border-color: var(--border-bright); }
+    .filter-btn:hover { color: var(--text-secondary); border-color: rgba(255,255,255,.15); }
     .filter-btn.active { color: var(--neon-indigo); background: rgba(129,140,248,.1); border-color: rgba(129,140,248,.4); }
+    .filter-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
     .models-count-tag {
       font-family: var(--font-display);
-      font-size: .68rem;
+      font-size: .66rem;
       font-weight: 700;
       color: var(--text-muted);
       letter-spacing: .06em;
       margin-left: auto;
+      white-space: nowrap;
     }
     #visibleCount { color: var(--neon-indigo); }
 
-    /* ── Models Grid ── */
+    /* ═══════════════════════════════════════════
+       MODELS GRID
+    ═══════════════════════════════════════════ */
     .models-grid-section {
-      padding: 28px 32px 40px;
+      padding: 24px 32px 40px;
     }
     .models-full-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
     }
     .model-full-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      cursor: default;
-      transition: border-color .2s, transform .18s, box-shadow .2s;
+      border-radius: 14px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 0;
+      transition: border-color .2s, transform .18s, box-shadow .2s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .model-full-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity .2s;
     }
     .model-full-card:hover {
       border-color: rgba(129,140,248,.35);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,.3);
+      box-shadow: 0 10px 28px rgba(0,0,0,.3);
     }
+    .model-full-card:hover::before { opacity: 1; }
+    .model-full-card.card-anthropic::before { background: linear-gradient(90deg, #cc785c, #e8957a); }
+    .model-full-card.card-openai::before { background: linear-gradient(90deg, #74aa9c, #a8d5c8); }
+    .model-full-card.card-google::before { background: linear-gradient(90deg, #4285f4, #34a853, #fbbc04, #ea4335); }
+    .model-full-card.card-meta-llama::before { background: linear-gradient(90deg, #0081fb, #00b4ff); }
+    .model-full-card.card-deepseek::before { background: linear-gradient(90deg, #536dfe, #03dac6); }
+    .model-full-card.card-x-ai::before { background: linear-gradient(90deg, #fff, #aaa); }
+    .model-full-card.card-mistralai::before { background: linear-gradient(90deg, #ff7000, #ffaa00); }
+    .model-full-card.card-qwen::before { background: linear-gradient(90deg, #7b2d8b, #e040fb); }
+    .model-full-card.card-default::before { background: linear-gradient(90deg, var(--neon-indigo), var(--neon-cyan)); }
     .model-full-card.hidden { display: none; }
-    .model-full-card-top {
+
+    /* Card: top row */
+    .model-card-top {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
-    .model-full-name {
+    .model-card-name {
       font-family: var(--font-body);
-      font-size: .88rem;
+      font-size: .92rem;
       font-weight: 700;
       color: var(--text-primary);
       line-height: 1.3;
       flex: 1;
       min-width: 0;
     }
-    .model-full-badge {
+    .model-card-badges {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .mcb {
       font-family: var(--font-display);
-      font-size: .58rem;
+      font-size: .56rem;
       font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
       padding: 2px 7px;
       border-radius: 4px;
-      flex-shrink: 0;
     }
-    .mfb-free { background: rgba(52,211,153,.12); color: #34d399; border: 1px solid rgba(52,211,153,.25); }
-    .mfb-new  { background: rgba(129,140,248,.12); color: var(--neon-indigo); border: 1px solid rgba(129,140,248,.25); }
-    .mfb-pro  { background: rgba(245,158,11,.08); color: var(--neon-gold); border: 1px solid rgba(245,158,11,.2); }
-    .model-full-provider {
+    .mcb-free { background: rgba(52,211,153,.12); color: #34d399; border: 1px solid rgba(52,211,153,.25); }
+    .mcb-new  { background: rgba(129,140,248,.12); color: var(--neon-indigo); border: 1px solid rgba(129,140,248,.25); }
+    .mcb-pro  { background: rgba(245,158,11,.08); color: var(--neon-gold); border: 1px solid rgba(245,158,11,.2); }
+    .mcb-vision { background: rgba(34,211,238,.08); color: var(--neon-cyan); border: 1px solid rgba(34,211,238,.2); }
+    .mcb-audio { background: rgba(249,115,22,.08); color: #f97316; border: 1px solid rgba(249,115,22,.2); }
+    .mcb-video { background: rgba(244,63,94,.08); color: #f43f5e; border: 1px solid rgba(244,63,94,.2); }
+
+    /* Card: provider */
+    .model-card-provider {
       font-family: var(--font-display);
-      font-size: .68rem;
+      font-size: .65rem;
       font-weight: 600;
-      letter-spacing: .05em;
+      letter-spacing: .07em;
       color: var(--text-muted);
       text-transform: uppercase;
+      margin-bottom: 10px;
     }
-    .model-full-meta {
+
+    /* Card: description */
+    .model-card-desc {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Card: good-for chips */
+    .model-card-good {
       display: flex;
-      gap: 10px;
       flex-wrap: wrap;
-      margin-top: 4px;
+      gap: 5px;
+      margin-bottom: 14px;
     }
-    .model-full-meta-item {
-      font-family: var(--font-body);
+    .good-chip {
       font-size: .72rem;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 2px 8px;
+      white-space: nowrap;
+    }
+
+    /* Card: pricing row */
+    .model-card-pricing {
+      display: flex;
+      gap: 16px;
+      padding: 10px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .pricing-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .pricing-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
       color: var(--text-muted);
+    }
+    .pricing-value {
+      font-family: var(--font-body);
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .pricing-value.price-free { color: #34d399; }
+    .pricing-context {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    /* Card: benchmark */
+    .model-card-benchmark {
+      margin-bottom: 14px;
+    }
+    .benchmark-row {
       display: flex;
       align-items: center;
-      gap: 4px;
+      justify-content: space-between;
+      margin-bottom: 5px;
     }
-    .model-full-meta-item span { color: var(--text-secondary); }
-    .model-full-try {
+    .benchmark-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .benchmark-cost {
+      font-family: var(--font-body);
+      font-size: .82rem;
+      font-weight: 700;
+    }
+    .benchmark-cost.bc-free  { color: #34d399; }
+    .benchmark-cost.bc-cheap { color: var(--neon-cyan); }
+    .benchmark-cost.bc-mid   { color: var(--neon-gold); }
+    .benchmark-cost.bc-prem  { color: #f97316; }
+    .benchmark-bar-track {
+      height: 4px;
+      background: rgba(255,255,255,.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .benchmark-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width .4s ease;
+    }
+    .benchmark-bar-fill.bc-free  { background: #34d399; }
+    .benchmark-bar-fill.bc-cheap { background: var(--neon-cyan); }
+    .benchmark-bar-fill.bc-mid   { background: var(--neon-gold); }
+    .benchmark-bar-fill.bc-prem  { background: #f97316; }
+
+    /* Card: action row */
+    .model-card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+    .model-btn {
+      flex: 1;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 5px;
       font-family: var(--font-display);
-      font-size: .63rem;
+      font-size: .62rem;
       font-weight: 700;
       letter-spacing: .07em;
       text-transform: uppercase;
+      border-radius: 7px;
+      padding: 7px 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all .18s;
+      border: none;
+      white-space: nowrap;
+    }
+    .model-btn-try {
+      color: var(--text-secondary);
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+    }
+    .model-btn-try:hover { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.2); color: var(--text-primary); }
+    .model-btn-article {
       color: var(--neon-indigo);
       background: rgba(129,140,248,.08);
-      border: 1px solid rgba(129,140,248,.2);
-      border-radius: 6px;
-      padding: 5px 11px;
-      text-decoration: none;
-      margin-top: 6px;
-      transition: all .18s;
-      width: fit-content;
+      border: 1px solid rgba(129,140,248,.25);
     }
-    .model-full-try:hover { background: rgba(129,140,248,.16); border-color: rgba(129,140,248,.4); }
+    .model-btn-article:hover { background: rgba(129,140,248,.15); border-color: rgba(129,140,248,.45); }
+    .model-btn-article.btn-coming {
+      color: var(--text-muted);
+      background: rgba(255,255,255,.02);
+      border-color: var(--border);
+      cursor: default;
+      opacity: .6;
+    }
 
-    /* ── Loading / Error ── */
+    /* ═══════════════════════════════════════════
+       LOADING / ERROR
+    ═══════════════════════════════════════════ */
     .models-loading {
       display: flex;
       align-items: center;
@@ -265,6 +623,7 @@
       padding: 80px 32px;
       color: var(--text-muted);
       font-size: .9rem;
+      grid-column: 1 / -1;
     }
     .models-loading-spinner {
       width: 22px; height: 22px;
@@ -279,10 +638,13 @@
       text-align: center;
       color: var(--text-muted);
       font-size: .9rem;
+      grid-column: 1 / -1;
     }
     .models-error-msg a { color: var(--neon-indigo); }
 
-    /* ── Provider Article CTA ── */
+    /* ═══════════════════════════════════════════
+       GUIDE BAND
+    ═══════════════════════════════════════════ */
     .models-guide-band {
       margin: 0 32px 32px;
       background: linear-gradient(135deg, rgba(129,140,248,.07), rgba(34,211,238,.04));
@@ -297,68 +659,118 @@
     }
     .models-guide-band-text h3 {
       font-family: var(--font-heading);
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--text-primary);
-      margin: 0 0 6px;
+      margin: 0 0 5px;
     }
     .models-guide-band-text p {
       color: var(--text-secondary);
-      font-size: .85rem;
+      font-size: .84rem;
       margin: 0;
     }
 
-    /* ── Responsive ── */
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 1100px) {
+      .slide-card { flex: 0 0 calc(50% - 8px); }
+    }
     @media (max-width: 900px) {
-      .models-page-header { padding: 32px 20px 24px; }
+      .models-page-header, .new-models-section { padding-left: 20px; padding-right: 20px; }
       .models-filter-bar { padding: 12px 20px; }
       .models-grid-section { padding: 20px 16px 32px; }
-      .models-full-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+      .models-full-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
       .models-guide-band { margin: 0 16px 24px; }
+      .benchmark-strip { margin: 16px 20px 0; }
     }
-    @media (max-width: 600px) {
-      .models-full-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      .filter-search-wrap { max-width: 100%; width: 100%; }
+    @media (max-width: 700px) {
+      .slide-card { flex: 0 0 calc(100% - 0px); }
+      .models-full-grid { grid-template-columns: 1fr; }
+      .filter-divider { display: none; }
+      .filter-group-label { display: none; }
+    }
+    @media (max-width: 480px) {
+      .models-full-grid { grid-template-columns: 1fr; gap: 10px; }
     }
   </style>
 </head>
 <body>
 <main>
 
-  <!-- ── Page Header ── -->
+  <!-- ══════════════ PAGE HEADER ══════════════ -->
   <div class="models-page-header">
     <div class="models-page-eyebrow">
       <span class="models-page-eyebrow-dot"></span>
       Live via OpenRouter
     </div>
     <h1 class="models-page-title">AI <span>Models</span></h1>
-    <p class="models-page-sub">Browse every model available via OpenRouter — from free open-weight releases to frontier closed models. Updated live from the OpenRouter API.</p>
+    <p class="models-page-sub">Every model on OpenRouter — capabilities, real input/output costs, and a benchmark gauge so you can compare what each model actually costs to run.</p>
     <div class="models-meta-row">
-      <div class="models-meta-item"><strong id="totalCount">—</strong>&nbsp;Models available</div>
-      <div class="models-meta-item"><strong id="freeCount">—</strong>&nbsp;Free models</div>
-      <div class="models-meta-item"><strong id="newCount">—</strong>&nbsp;Added in last 30 days</div>
+      <div class="models-meta-item"><strong id="totalCount">—</strong>&nbsp;Models</div>
+      <div class="models-meta-item"><strong id="freeCount">—</strong>&nbsp;Free</div>
+      <div class="models-meta-item"><strong id="newCount">—</strong>&nbsp;New (30 days)</div>
+      <div class="models-meta-item"><strong id="visionCount">—</strong>&nbsp;Vision</div>
     </div>
   </div>
 
-  <!-- ── Filter Bar ── -->
+  <!-- ══════════════ BENCHMARK EXPLAINER ══════════════ -->
+  <div class="benchmark-strip">
+    <div class="benchmark-strip-icon">
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    </div>
+    <div class="benchmark-strip-text">
+      <strong>Benchmark cost</strong> = a single 650-token technical Q&amp;A exchange (250 tokens in, 400 tokens out). Use it as a quick gauge — multiply by your daily volume to estimate real costs.
+    </div>
+  </div>
+
+  <!-- ══════════════ NEW MODELS SLIDESHOW ══════════════ -->
+  <div class="new-models-section">
+    <div class="new-models-label">
+      <span class="new-models-label-text">New on OpenRouter</span>
+      <span class="new-models-label-line"></span>
+    </div>
+    <div class="slideshow-outer">
+      <div id="slideshowTrack" class="slideshow-track">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+    <div id="slideshowNav" class="slideshow-nav">
+      <!-- Dots populated by JS -->
+    </div>
+  </div>
+
+  <!-- ══════════════ FILTER BAR ══════════════ -->
   <div class="models-filter-bar">
     <div class="filter-search-wrap">
-      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="modelSearch" placeholder="Search models…" autocomplete="off">
     </div>
-    <div class="filter-btn-group">
+    <div class="filter-divider"></div>
+    <span class="filter-group-label">Provider</span>
+    <div class="filter-btn-group" id="providerFilters">
       <button class="filter-btn active" data-filter="all">All</button>
       <button class="filter-btn" data-filter="free">Free</button>
       <button class="filter-btn" data-filter="new">New</button>
-      <button class="filter-btn" data-filter="openai">OpenAI</button>
       <button class="filter-btn" data-filter="anthropic">Anthropic</button>
+      <button class="filter-btn" data-filter="openai">OpenAI</button>
       <button class="filter-btn" data-filter="google">Google</button>
-      <button class="filter-btn" data-filter="meta">Meta</button>
+      <button class="filter-btn" data-filter="meta-llama">Meta</button>
+      <button class="filter-btn" data-filter="deepseek">DeepSeek</button>
+    </div>
+    <div class="filter-divider"></div>
+    <span class="filter-group-label">Modality</span>
+    <div class="filter-btn-group" id="modalityFilters">
+      <button class="filter-btn" data-modality="vision">Vision</button>
+      <button class="filter-btn" data-modality="audio">Audio</button>
+      <button class="filter-btn" data-modality="video">Video</button>
     </div>
     <div class="models-count-tag"><span id="visibleCount">—</span> shown</div>
   </div>
 
-  <!-- ── Models Grid ── -->
+  <!-- ══════════════ MODELS GRID ══════════════ -->
   <div class="models-grid-section">
     <div id="modelsFullGrid" class="models-full-grid">
       <div class="models-loading">
@@ -368,16 +780,16 @@
     </div>
   </div>
 
-  <!-- ── Guide CTA ── -->
+  <!-- ══════════════ GUIDE CTA ══════════════ -->
   <div class="models-guide-band">
     <div class="models-guide-band-text">
       <h3>New to OpenRouter?</h3>
-      <p>One API key, 200+ models, unified billing. Our guide explains how to set it up in 10 minutes.</p>
+      <p>One API key, 360+ models, unified billing. Our guide explains how to set it up in 10 minutes.</p>
     </div>
     <a href="/articles/14-openrouter-guide.html" class="btn btn-primary">Read the Guide →</a>
   </div>
 
-  <!-- ── AdSense ── -->
+  <!-- ══════════════ ADSENSE ══════════════ -->
   <div style="padding:0 32px 32px">
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
@@ -386,156 +798,544 @@
 </main>
 
 <script>
-(function() {
+(function () {
   'use strict';
 
-  var allModels = [];
-  var currentFilter = 'all';
-  var searchQuery = '';
+  /* ─── Benchmark: 250 prompt tokens + 400 completion tokens = 650 total ─── */
+  var BENCH_IN  = 250;
+  var BENCH_OUT = 400;
 
-  function formatContext(num) {
-    if (!num || isNaN(num)) return null;
-    if (num >= 1000000) return Math.round(num / 1000000) + 'M ctx';
-    if (num >= 1000) return Math.round(num / 1000) + 'K ctx';
-    return num + ' ctx';
-  }
+  /* ─── Curated enrichment for the models people actually care about ─── */
+  var MODEL_META = {
+    'anthropic/claude-opus-4-5': {
+      tagline: 'Anthropic\'s most capable model — deep reasoning, 200K context, complex tasks',
+      good: ['Complex reasoning', 'Research & analysis', 'Long documents', 'Code review'],
+      article: '/models/claude-opus-4-5.html'
+    },
+    'anthropic/claude-opus-4.7': {
+      tagline: 'Claude Opus 4.7 — enhanced frontier reasoning and extended-thinking capability',
+      good: ['Advanced reasoning', 'Research', 'Long-form tasks', 'Agentic workflows'],
+      article: null
+    },
+    'anthropic/claude-opus-4.7-fast': {
+      tagline: 'Claude Opus 4.7 in fast mode — frontier capability with reduced latency',
+      good: ['Fast frontier tasks', 'Agentic pipelines', 'Complex Q&A', 'Code'],
+      article: null
+    },
+    'anthropic/claude-sonnet-4-5': {
+      tagline: 'The sweet spot — frontier intelligence at mid-tier cost, fast and capable',
+      good: ['Writing & editing', 'Data analysis', 'Coding', 'General tasks'],
+      article: '/models/claude-sonnet-4-5.html'
+    },
+    'anthropic/claude-haiku-4-5-20251001': {
+      tagline: 'Blazing fast and cheap — ideal for high-volume production tasks',
+      good: ['Fast responses', 'High-volume tasks', 'Classification', 'Data extraction'],
+      article: '/models/claude-haiku-4-5.html'
+    },
+    'openai/gpt-4o': {
+      tagline: 'OpenAI\'s flagship multimodal — versatile, battle-tested across every task type',
+      good: ['Multimodal tasks', 'Creative writing', 'Function calling', 'Coding'],
+      article: '/models/gpt-4o.html'
+    },
+    'openai/gpt-4o-mini': {
+      tagline: 'GPT-4 level quality at a fraction of the cost — ideal for production apps',
+      good: ['Budget tasks', 'Structured output', 'Classification', 'Drafting'],
+      article: '/models/gpt-4o-mini.html'
+    },
+    'openai/o3': {
+      tagline: 'OpenAI\'s advanced reasoning model for science, math, and hard multi-step problems',
+      good: ['Math & science', 'Complex coding', 'Multi-step reasoning', 'Research'],
+      article: '/models/openai-o3.html'
+    },
+    'openai/o4-mini': {
+      tagline: 'Fast, affordable reasoning — o3-level thinking at o4-mini cost',
+      good: ['Code generation', 'Math', 'Fast reasoning', 'Agentic tasks'],
+      article: null
+    },
+    'google/gemini-2.5-pro': {
+      tagline: 'Google\'s frontier model — massive context, deep multimodal reasoning',
+      good: ['Multimodal tasks', 'Code generation', 'Long documents', 'Complex analysis'],
+      article: '/models/gemini-2-5-pro.html'
+    },
+    'google/gemini-2.5-flash': {
+      tagline: 'Google\'s fastest production model — exceptional speed-to-capability ratio',
+      good: ['High-speed tasks', 'Structured output', 'Summarisation', 'Multimodal chat'],
+      article: '/models/gemini-2-5-flash.html'
+    },
+    'google/gemini-2.5-flash:thinking': {
+      tagline: 'Gemini Flash with extended thinking — harder problems, same efficiency base',
+      good: ['Reasoning tasks', 'Math', 'Coding challenges', 'Analysis'],
+      article: null
+    },
+    'google/gemini-3.1-flash-lite': {
+      tagline: 'Gemini 3.1 Flash Lite — Google\'s ultra-efficient multimodal at near-zero cost',
+      good: ['Ultra-cheap tasks', 'Multimodal routing', 'Mobile apps', 'High volume'],
+      article: null
+    },
+    'meta-llama/llama-3.3-70b-instruct': {
+      tagline: 'Meta\'s best open-weight model — self-hostable, private, highly capable',
+      good: ['Self-hosting', 'Privacy-first', 'General chat', 'Coding'],
+      article: '/models/llama-3-3-70b.html'
+    },
+    'meta-llama/llama-4-maverick': {
+      tagline: 'Llama 4 Maverick — Meta\'s multimodal frontier open-source release',
+      good: ['Multimodal', 'Open source', 'Self-hosting', 'Research'],
+      article: null
+    },
+    'deepseek/deepseek-r1': {
+      tagline: 'Chinese frontier model — exceptional at chain-of-thought reasoning and coding',
+      good: ['Math & reasoning', 'Code generation', 'Chain of thought', 'Research tasks'],
+      article: '/models/deepseek-r1.html'
+    },
+    'deepseek/deepseek-chat-v3-0324': {
+      tagline: 'DeepSeek V3 — GPT-4o-level quality at open-source prices',
+      good: ['General coding', 'Analysis', 'Writing', 'Cost-efficient tasks'],
+      article: '/models/deepseek-v3.html'
+    },
+    'deepseek/deepseek-prover-v2': {
+      tagline: 'Specialised for formal mathematics and theorem proving',
+      good: ['Formal proofs', 'Math', 'Logic', 'Research'],
+      article: null
+    },
+    'x-ai/grok-3': {
+      tagline: 'Grok 3 — Elon\'s flagship with real-time web access and sharp reasoning',
+      good: ['Current events', 'Web search', 'Research', 'Creative tasks'],
+      article: '/models/grok-3.html'
+    },
+    'x-ai/grok-3-mini': {
+      tagline: 'Grok Mini — fast, cheap reasoning at a fraction of Grok 3\'s cost',
+      good: ['Fast reasoning', 'Math', 'Code', 'Budget frontier tasks'],
+      article: null
+    },
+    'x-ai/grok-4.3': {
+      tagline: 'Grok 4.3 — latest xAI release with improved reasoning and instruction-following',
+      good: ['Reasoning', 'Coding', 'Real-time info', 'Instruction following'],
+      article: null
+    },
+    'mistralai/mistral-large-2411': {
+      tagline: 'Mistral\'s flagship — strong multilingual, function calling, European data sovereignty',
+      good: ['Multilingual', 'Function calling', 'Legal & financial', 'Coding'],
+      article: '/models/mistral-large.html'
+    },
+    'mistralai/mistral-small-3.1-24b-instruct': {
+      tagline: 'Mistral Small — fast, efficient, great for RAG pipelines and structured tasks',
+      good: ['Fast tasks', 'Classification', 'RAG pipelines', 'European data'],
+      article: null
+    },
+    'mistralai/mistral-medium-3-5': {
+      tagline: 'Mistral Medium 3.5 — balanced capability and speed from the Mistral lineup',
+      good: ['Balanced tasks', 'Coding', 'Multilingual', 'Analysis'],
+      article: null
+    },
+    'qwen/qwen-2.5-72b-instruct': {
+      tagline: 'Alibaba\'s best open-weight — top-tier for coding and multilingual tasks',
+      good: ['Code generation', 'Chinese & multilingual', 'Analysis', 'Structured output'],
+      article: '/models/qwen-2-5-72b.html'
+    },
+    'qwen/qwen3-235b-a22b:free': {
+      tagline: 'Qwen3\'s flagship MoE model on free tier — frontier capability at zero cost',
+      good: ['Free to use', 'Complex reasoning', 'Code', 'Long context'],
+      article: null
+    },
+    'nousresearch/hermes-3-llama-3.1-405b': {
+      tagline: 'Nous Research\'s flagship agent model — built for persistent memory and agentic workflows',
+      good: ['AI agents', 'Persistent memory', 'Tool use', 'Long-horizon tasks'],
+      article: '/models/hermes-3-405b.html'
+    },
+    'perplexity/sonar-pro': {
+      tagline: 'Perplexity\'s search-grounded model — real-time web access in every response',
+      good: ['Web research', 'Current events', 'Fact-checking', 'Live data'],
+      article: null
+    },
+    'nvidia/llama-3.1-nemotron-ultra-253b-v1:free': {
+      tagline: 'NVIDIA\'s massive free-tier instruction model — frontier scale at no cost',
+      good: ['Free to use', 'Instruction following', 'General tasks', 'Research'],
+      article: null
+    }
+  };
 
-  function formatPrice(priceStr) {
+  /* ─── Articles that exist and can be linked ─── */
+  var ARTICLE_MAP = {};
+  Object.keys(MODEL_META).forEach(function (id) {
+    if (MODEL_META[id].article) ARTICLE_MAP[id] = MODEL_META[id].article;
+  });
+
+  /* ─── Helpers ─── */
+  function fmt1M(priceStr) {
     var p = parseFloat(priceStr);
     if (!p || isNaN(p)) return null;
-    // price is per token — convert to per 1M tokens
-    var per1M = p * 1000000;
-    if (per1M < 0.01) return '<$0.01/M';
-    if (per1M < 1) return '$' + per1M.toFixed(2) + '/M';
-    return '$' + per1M.toFixed(2) + '/M';
+    var pm = p * 1e6;
+    if (pm < 0.001) return '<$0.001';
+    if (pm < 1)     return '$' + pm.toFixed(3);
+    return '$' + pm.toFixed(2);
   }
 
-  function getBadge(model) {
-    if (model.pricing &&
-        parseFloat(model.pricing.prompt) === 0 &&
-        parseFloat(model.pricing.completion) === 0) return 'FREE';
-    if (model.created) {
-      var ageMs = Date.now() - model.created * 1000;
-      if (ageMs < 30 * 24 * 60 * 60 * 1000) return 'NEW';
+  function fmtCtx(n) {
+    if (!n) return null;
+    if (n >= 1e6) return (n / 1e6).toFixed(0) + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(0) + 'K';
+    return '' + n;
+  }
+
+  function getBadge(m) {
+    var pIn  = parseFloat(m.pricing && m.pricing.prompt      || 0);
+    var pOut = parseFloat(m.pricing && m.pricing.completion   || 0);
+    if (pIn === 0 && pOut === 0) return 'free';
+    if (m.created && (Date.now() - m.created * 1000) < 30 * 86400000) return 'new';
+    return 'pro';
+  }
+
+  function getProvider(m) {
+    return (m.id || '').split('/')[0].toLowerCase();
+  }
+
+  function getModalities(m) {
+    var arch = m.architecture || {};
+    var inp  = arch.input_modalities  || [];
+    var out  = arch.output_modalities || [];
+    var tags = [];
+    if (inp.indexOf('image') > -1 || inp.indexOf('video') > -1) tags.push('vision');
+    if (inp.indexOf('audio') > -1 || out.indexOf('audio') > -1)  tags.push('audio');
+    if (inp.indexOf('video') > -1 || out.indexOf('video') > -1)  tags.push('video');
+    return tags;
+  }
+
+  function benchCost(m) {
+    if (!m.pricing) return 0;
+    var pIn  = parseFloat(m.pricing.prompt     || 0);
+    var pOut = parseFloat(m.pricing.completion || 0);
+    return BENCH_IN * pIn + BENCH_OUT * pOut;
+  }
+
+  function benchClass(cost) {
+    if (cost === 0)      return 'bc-free';
+    if (cost < 0.001)    return 'bc-cheap';
+    if (cost < 0.01)     return 'bc-mid';
+    return 'bc-prem';
+  }
+
+  function fmtBench(cost) {
+    if (cost === 0)      return 'Free';
+    if (cost < 0.00001)  return '<$0.00001';
+    if (cost < 0.001)    return '$' + cost.toFixed(5);
+    if (cost < 0.1)      return '$' + cost.toFixed(4);
+    return '$' + cost.toFixed(3);
+  }
+
+  function getGoodFor(m) {
+    var meta = MODEL_META[m.id];
+    if (meta && meta.good) return meta.good.slice(0, 3);
+    /* auto-derive from description + modalities */
+    var desc  = (m.description || '').toLowerCase();
+    var mods  = getModalities(m);
+    var chips = [];
+    if (mods.indexOf('vision') > -1) chips.push('Vision');
+    if (mods.indexOf('audio')  > -1) chips.push('Audio');
+    if (mods.indexOf('video')  > -1) chips.push('Video');
+    if (/code|coding|developer|programming/.test(desc))  chips.push('Coding');
+    if (/reason|math|logic|proof/.test(desc))             chips.push('Reasoning');
+    if (/multilingual|language/.test(desc))               chips.push('Multilingual');
+    if (/fast|speed|efficient|lightweight/.test(desc))    chips.push('Fast & efficient');
+    if (getBadge(m) === 'free') chips.push('Free to use');
+    if (chips.length === 0) chips.push('General purpose');
+    return chips.slice(0, 3);
+  }
+
+  function getTagline(m) {
+    var meta = MODEL_META[m.id];
+    if (meta && meta.tagline) return meta.tagline;
+    var desc = (m.description || '').replace(/[\[\]]/g, '').trim();
+    if (!desc) return 'Available via OpenRouter.';
+    return desc.length > 130 ? desc.slice(0, 127) + '…' : desc;
+  }
+
+  /* ─── Build a full model card ─── */
+  var MAX_BENCH = 0.1; // scale bar max
+
+  function buildCard(m) {
+    var badge    = getBadge(m);
+    var provider = getProvider(m);
+    var name     = m.name || m.id;
+    var mods     = getModalities(m);
+    var tagline  = getTagline(m);
+    var goodFor  = getGoodFor(m);
+    var cost     = benchCost(m);
+    var bClass   = benchClass(cost);
+    var barPct   = Math.min(cost / MAX_BENCH * 100, 100).toFixed(1);
+    var article  = ARTICLE_MAP[m.id] || null;
+
+    var ctx = fmtCtx(m.context_length);
+    var pIn  = fmt1M(m.pricing && m.pricing.prompt);
+    var pOut = fmt1M(m.pricing && m.pricing.completion);
+    var pFree = badge === 'free';
+
+    /* badge pills */
+    var badgePills = '';
+    if (badge === 'free') badgePills += '<span class="mcb mcb-free">Free</span>';
+    else if (badge === 'new') badgePills += '<span class="mcb mcb-new">New</span>';
+    if (mods.indexOf('vision') > -1) badgePills += '<span class="mcb mcb-vision">Vision</span>';
+    if (mods.indexOf('audio')  > -1) badgePills += '<span class="mcb mcb-audio">Audio</span>';
+    if (mods.indexOf('video')  > -1) badgePills += '<span class="mcb mcb-video">Video</span>';
+
+    /* good-for chips */
+    var goodHtml = goodFor.map(function (g) {
+      return '<span class="good-chip">' + g + '</span>';
+    }).join('');
+
+    /* pricing */
+    var pricingHtml = '';
+    if (pFree) {
+      pricingHtml = '<div class="pricing-item"><div class="pricing-label">Cost</div><div class="pricing-value price-free">Free</div></div>';
+    } else {
+      if (pIn)  pricingHtml += '<div class="pricing-item"><div class="pricing-label">Input /1M</div><div class="pricing-value">' + pIn  + '</div></div>';
+      if (pOut) pricingHtml += '<div class="pricing-item"><div class="pricing-label">Output /1M</div><div class="pricing-value">' + pOut + '</div></div>';
     }
-    return 'PRO';
-  }
+    if (ctx) pricingHtml += '<div class="pricing-item pricing-context"><div class="pricing-label">Context</div><div class="pricing-value">' + ctx + ' tok</div></div>';
 
-  function getProvider(model) {
-    if (!model.id) return 'unknown';
-    return model.id.split('/')[0].toLowerCase();
-  }
+    /* benchmark */
+    var benchHtml = pFree
+      ? '<div class="model-card-benchmark"><div class="benchmark-row"><span class="benchmark-label">Benchmark (650 tok)</span><span class="benchmark-cost bc-free">Free</span></div><div class="benchmark-bar-track"><div class="benchmark-bar-fill bc-free" style="width:2%"></div></div></div>'
+      : '<div class="model-card-benchmark"><div class="benchmark-row"><span class="benchmark-label">Benchmark (650 tok)</span><span class="benchmark-cost ' + bClass + '">' + fmtBench(cost) + '</span></div><div class="benchmark-bar-track"><div class="benchmark-bar-fill ' + bClass + '" style="width:' + barPct + '%"></div></div></div>';
 
-  function buildCard(model) {
-    var badge = getBadge(model);
-    var provider = getProvider(model);
-    var ctx = formatContext(model.context_length);
-    var price = model.pricing ? formatPrice(model.pricing.prompt) : null;
-    var name = model.name || model.id || 'Unknown';
-    var badgeClass = badge === 'FREE' ? 'mfb-free' : (badge === 'NEW' ? 'mfb-new' : 'mfb-pro');
+    /* action buttons */
+    var articleBtn = article
+      ? '<a href="' + article + '" class="model-btn model-btn-article">Read Article →</a>'
+      : '<span class="model-btn model-btn-article btn-coming">Article Coming</span>';
 
-    var metaHtml = '';
-    if (ctx) metaHtml += '<div class="model-full-meta-item">ctx&nbsp;<span>' + ctx + '</span></div>';
-    if (price) metaHtml += '<div class="model-full-meta-item">in&nbsp;<span>' + price + '</span></div>';
+    var cardClass = 'model-full-card card-' + (
+      ['anthropic','openai','google','meta-llama','deepseek','x-ai','mistralai','qwen'].indexOf(provider) > -1
+        ? provider : 'default'
+    );
 
     return [
-      '<div class="model-full-card" data-badge="' + badge.toLowerCase() + '" data-provider="' + provider + '" data-name="' + name.toLowerCase() + '">',
-      '  <div class="model-full-card-top">',
-      '    <div class="model-full-name" title="' + name + '">' + name + '</div>',
-      '    <div class="model-full-badge ' + badgeClass + '">' + badge + '</div>',
+      '<div class="' + cardClass + '"',
+      '  data-badge="'    + badge         + '"',
+      '  data-provider="' + provider      + '"',
+      '  data-modality="' + mods.join(' ') + '"',
+      '  data-name="'     + name.toLowerCase() + '"',
+      '>',
+      '  <div class="model-card-top">',
+      '    <div class="model-card-name" title="' + name + '">' + name + '</div>',
+      '    <div class="model-card-badges">' + badgePills + '</div>',
       '  </div>',
-      '  <div class="model-full-provider">' + provider + '</div>',
-      '  <div class="model-full-meta">' + metaHtml + '</div>',
-      '  <a href="/tools/chat.html" class="model-full-try">Try in Playground →</a>',
+      '  <div class="model-card-provider">' + provider + '</div>',
+      '  <div class="model-card-desc">' + tagline + '</div>',
+      '  <div class="model-card-good">' + goodHtml + '</div>',
+      '  <div class="model-card-pricing">' + pricingHtml + '</div>',
+      benchHtml,
+      '  <div class="model-card-actions">',
+      '    <a href="/tools/chat.html" class="model-btn model-btn-try">Try in Chat</a>',
+      '    ' + articleBtn,
+      '  </div>',
       '</div>'
-    ].join('');
+    ].join('\n');
   }
+
+  /* ─── Build a slideshow card for newest models ─── */
+  function buildSlideCard(m) {
+    var name     = m.name || m.id;
+    var provider = getProvider(m);
+    var tagline  = getTagline(m);
+    var pIn      = fmt1M(m.pricing && m.pricing.prompt);
+    var pOut     = fmt1M(m.pricing && m.pricing.completion);
+    var ctx      = fmtCtx(m.context_length);
+    var cost     = benchCost(m);
+    var mods     = getModalities(m);
+    var article  = ARTICLE_MAP[m.id] || '/tools/chat.html';
+
+    var statsHtml = '';
+    if (pIn && parseFloat(m.pricing && m.pricing.prompt || 0) === 0) {
+      statsHtml += '<div class="slide-stat">Cost <span>Free</span></div>';
+    } else {
+      if (pIn)  statsHtml += '<div class="slide-stat">In <span>' + pIn  + '/M</span></div>';
+      if (pOut) statsHtml += '<div class="slide-stat">Out <span>' + pOut + '/M</span></div>';
+    }
+    if (ctx) statsHtml += '<div class="slide-stat">Ctx <span>' + ctx + '</span></div>';
+    statsHtml += '<div class="slide-stat">Benchmark <span>' + fmtBench(cost) + '</span></div>';
+
+    var modBadges = '';
+    if (mods.indexOf('vision') > -1) modBadges += ' · Vision';
+    if (mods.indexOf('audio')  > -1) modBadges += ' · Audio';
+    if (mods.indexOf('video')  > -1) modBadges += ' · Video';
+
+    return [
+      '<div class="slide-card">',
+      '  <div class="slide-card-top">',
+      '    <span class="slide-card-provider">' + provider + (modBadges ? modBadges : '') + '</span>',
+      '    <span class="slide-badge-new">NEW</span>',
+      '  </div>',
+      '  <div class="slide-card-name">' + name + '</div>',
+      '  <div class="slide-card-desc">' + tagline + '</div>',
+      '  <div class="slide-card-stats">' + statsHtml + '</div>',
+      '  <a href="' + article + '" class="slide-card-cta">Explore model →</a>',
+      '</div>'
+    ].join('\n');
+  }
+
+  /* ─── Slideshow logic ─── */
+  var slidePage = 0;
+  var slideTotal = 0;
+  var slidePerPage = 3;
+  var slideInterval = null;
+
+  function getSlidesPerPage() {
+    if (window.innerWidth < 700)  return 1;
+    if (window.innerWidth < 1100) return 2;
+    return 3;
+  }
+
+  function updateSlideshow() {
+    var track = document.getElementById('slideshowTrack');
+    if (!track) return;
+    slidePerPage = getSlidesPerPage();
+    slideTotal = Math.ceil(track.children.length / slidePerPage);
+    if (slidePage >= slideTotal) slidePage = 0;
+    var offset = slidePage * slidePerPage * (100 / track.children.length);
+    track.style.transform = 'translateX(-' + offset + '%)';
+    /* dots */
+    var nav = document.getElementById('slideshowNav');
+    if (nav) {
+      nav.innerHTML = '';
+      for (var i = 0; i < slideTotal; i++) {
+        var dot = document.createElement('button');
+        dot.className = 'slideshow-dot' + (i === slidePage ? ' active' : '');
+        dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+        (function(idx) {
+          dot.addEventListener('click', function () {
+            slidePage = idx;
+            updateSlideshow();
+            resetInterval();
+          });
+        })(i);
+        nav.appendChild(dot);
+      }
+    }
+  }
+
+  function nextSlide() {
+    var track = document.getElementById('slideshowTrack');
+    if (!track || track.children.length === 0) return;
+    slideTotal = Math.ceil(track.children.length / getSlidesPerPage());
+    slidePage = (slidePage + 1) % slideTotal;
+    updateSlideshow();
+  }
+
+  function resetInterval() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(nextSlide, 5000);
+  }
+
+  function buildSlideshowSection(models) {
+    var newest = models.slice(0, 9); /* top 9 = 3 pages of 3 */
+    var track = document.getElementById('slideshowTrack');
+    if (!track) return;
+    track.innerHTML = newest.map(buildSlideCard).join('');
+    setTimeout(function() { updateSlideshow(); resetInterval(); }, 0);
+  }
+
+  /* ─── Filtering ─── */
+  var currentProvider = 'all';
+  var currentModality = '';
+  var searchQuery = '';
 
   function applyFilters() {
     var cards = document.querySelectorAll('.model-full-card');
     var q = searchQuery.trim().toLowerCase();
     var visible = 0;
-
-    cards.forEach(function(card) {
-      var matchFilter = true;
-      var matchSearch = true;
-
-      if (currentFilter !== 'all') {
-        if (currentFilter === 'free') matchFilter = card.dataset.badge === 'free';
-        else if (currentFilter === 'new') matchFilter = card.dataset.badge === 'new';
-        else matchFilter = card.dataset.provider === currentFilter;
-      }
-
-      if (q) {
-        matchSearch = card.dataset.name.includes(q) || card.dataset.provider.includes(q);
-      }
-
-      var show = matchFilter && matchSearch;
+    cards.forEach(function (card) {
+      var matchP = true;
+      var matchM = true;
+      var matchS = true;
+      if (currentProvider === 'free') matchP = card.dataset.badge === 'free';
+      else if (currentProvider === 'new') matchP = card.dataset.badge === 'new';
+      else if (currentProvider !== 'all') matchP = card.dataset.provider === currentProvider;
+      if (currentModality) matchM = (card.dataset.modality || '').indexOf(currentModality) > -1;
+      if (q) matchS = (card.dataset.name || '').indexOf(q) > -1 || (card.dataset.provider || '').indexOf(q) > -1;
+      var show = matchP && matchM && matchS;
       card.classList.toggle('hidden', !show);
       if (show) visible++;
     });
-
-    var countEl = document.getElementById('visibleCount');
-    if (countEl) countEl.textContent = visible;
+    var el = document.getElementById('visibleCount');
+    if (el) el.textContent = visible;
   }
 
+  /* ─── Render everything ─── */
   function renderModels(models) {
-    var grid = document.getElementById('modelsFullGrid');
-    if (!grid) return;
-
     var sorted = models
-      .filter(function(m) { return m && m.id; })
-      .sort(function(a, b) { return (b.created || 0) - (a.created || 0); });
+      .filter(function (m) { return m && m.id; })
+      .sort(function (a, b) { return (b.created || 0) - (a.created || 0); });
 
-    allModels = sorted;
+    var free    = sorted.filter(function (m) { return getBadge(m) === 'free'; }).length;
+    var newM    = sorted.filter(function (m) { return getBadge(m) === 'new';  }).length;
+    var vision  = sorted.filter(function (m) { return getModalities(m).indexOf('vision') > -1; }).length;
 
-    var free = sorted.filter(function(m) { return getBadge(m) === 'FREE'; }).length;
-    var newM = sorted.filter(function(m) { return getBadge(m) === 'NEW'; }).length;
+    var elT = document.getElementById('totalCount');
+    var elF = document.getElementById('freeCount');
+    var elN = document.getElementById('newCount');
+    var elV = document.getElementById('visionCount');
+    if (elT) elT.textContent = sorted.length;
+    if (elF) elF.textContent = free;
+    if (elN) elN.textContent = newM;
+    if (elV) elV.textContent = vision;
 
-    var totalEl = document.getElementById('totalCount');
-    var freeEl = document.getElementById('freeCount');
-    var newEl = document.getElementById('newCount');
-    if (totalEl) totalEl.textContent = sorted.length;
-    if (freeEl) freeEl.textContent = free;
-    if (newEl) newEl.textContent = newM;
+    buildSlideshowSection(sorted);
 
-    grid.innerHTML = sorted.map(buildCard).join('');
-    applyFilters();
+    var grid = document.getElementById('modelsFullGrid');
+    if (grid) {
+      grid.innerHTML = sorted.map(buildCard).join('');
+      applyFilters();
+    }
   }
 
-  function init() {
-    // Filter buttons
-    document.querySelectorAll('.filter-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  /* ─── Event listeners ─── */
+  function initFilters() {
+    document.querySelectorAll('#providerFilters .filter-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('#providerFilters .filter-btn').forEach(function (b) { b.classList.remove('active'); });
         btn.classList.add('active');
-        currentFilter = btn.dataset.filter;
+        currentProvider = btn.dataset.filter;
         applyFilters();
       });
     });
-
-    // Search
-    var searchInput = document.getElementById('modelSearch');
-    if (searchInput) {
-      searchInput.addEventListener('input', function() {
-        searchQuery = searchInput.value;
+    document.querySelectorAll('#modalityFilters .filter-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var same = btn.classList.contains('active');
+        document.querySelectorAll('#modalityFilters .filter-btn').forEach(function (b) { b.classList.remove('active'); });
+        if (!same) { btn.classList.add('active'); currentModality = btn.dataset.modality; }
+        else currentModality = '';
+        applyFilters();
+      });
+    });
+    var searchEl = document.getElementById('modelSearch');
+    if (searchEl) {
+      searchEl.addEventListener('input', function () {
+        searchQuery = searchEl.value;
         applyFilters();
       });
     }
+    /* pause slideshow on hover */
+    var outer = document.querySelector('.slideshow-outer');
+    if (outer) {
+      outer.addEventListener('mouseenter', function () { clearInterval(slideInterval); });
+      outer.addEventListener('mouseleave', resetInterval);
+    }
+    /* recalc slides on resize */
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateSlideshow, 200);
+    });
+  }
 
-    // Fetch models
+  /* ─── Bootstrap ─── */
+  function init() {
+    initFilters();
     fetch('https://openrouter.ai/api/v1/models')
-      .then(function(res) {
-        if (!res.ok) throw new Error('fetch failed');
-        return res.json();
-      })
-      .then(function(data) {
-        var models = Array.isArray(data) ? data : (data.data || []);
-        renderModels(models);
-      })
-      .catch(function() {
-        var grid = document.getElementById('modelsFullGrid');
-        if (grid) grid.innerHTML = '<div class="models-error-msg">Could not load models. <a href="https://openrouter.ai/models" target="_blank" rel="noopener">Browse on OpenRouter →</a></div>';
+      .then(function (r) { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
+      .then(function (d) { renderModels(Array.isArray(d) ? d : (d.data || [])); })
+      .catch(function () {
+        var g = document.getElementById('modelsFullGrid');
+        if (g) g.innerHTML = '<div class="models-error-msg">Could not load models. <a href="https://openrouter.ai/models" target="_blank" rel="noopener">Browse on OpenRouter directly →</a></div>';
       });
   }
 

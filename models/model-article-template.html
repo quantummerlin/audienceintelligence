@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{MODEL_NAME}} — Capabilities, Pricing & Benchmark — Aether Intel</title>
+  <meta name="description" content="{{MODEL_NAME}} review: what it does, input/output costs, benchmark response quality, and real use cases. Tested via OpenRouter.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/{{SLUG}}.html">
+  <meta property="og:title" content="{{MODEL_NAME}} — Capabilities, Costs &amp; Benchmark">
+  <meta property="og:description" content="Capabilities, pricing, and real benchmark output for {{MODEL_NAME}} via OpenRouter.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/{{SLUG}}.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/{{SLUG}}-hero.png">
+  <meta property="article:published_time" content="{{DATE}}">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{MODEL_NAME}} — Capabilities, Costs &amp; Benchmark">
+  <meta name="twitter:description" content="Capabilities, pricing, and benchmark output for {{MODEL_NAME}}.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/{{SLUG}}-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ─── Model article extras ─── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .spec-value {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-value.sv-green  { color: #34d399; }
+    .spec-value.sv-indigo { color: var(--neon-indigo); }
+    .spec-value.sv-gold   { color: var(--neon-gold); }
+
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card h4 {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .use-case-card p {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Benchmark display */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+    }
+    .benchmark-cost-badge {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      background: rgba(129,140,248,.1);
+      border: 1px solid rgba(129,140,248,.25);
+      border-radius: 7px;
+      padding: 4px 12px;
+    }
+    .benchmark-prompt-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-prompt-text {
+      background: rgba(7,7,15,.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .benchmark-response-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-response-text {
+      font-size: .88rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    .benchmark-response-text p { margin: 0 0 12px; }
+    .benchmark-response-text p:last-child { margin: 0; }
+    .benchmark-placeholder {
+      background: rgba(255,255,255,.02);
+      border: 1px dashed rgba(255,255,255,.12);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: .84rem;
+    }
+
+    /* Sample prompt block */
+    .sample-prompt-block {
+      background: rgba(7,7,15,.6);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .sample-prompt-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 6px;
+    }
+    .sample-prompt-text {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Try it CTA */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(129,140,248,.08), rgba(34,211,238,.04));
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .try-it-band p {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      margin: 0;
+    }
+
+    /* Media section for image/audio/video models */
+    .model-output-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .output-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .output-card img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+    .output-card-caption {
+      padding: 10px 12px;
+      font-size: .78rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+    .output-placeholder {
+      aspect-ratio: 16/9;
+      background: rgba(129,140,248,.05);
+      border: 1px dashed rgba(129,140,248,.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: .82rem;
+    }
+
+    @media (max-width: 600px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr; }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- ── HERO ── -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/models/{{SLUG}}-hero.png"
+             alt="{{MODEL_NAME}} — AI model overview"
+             class="article-hero-img" loading="eager"
+             onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/models.html">Models</a>
+            <span>&#x203a;</span>
+            <span>{{MODEL_NAME}}</span>
+          </nav>
+          <span class="badge badge-tools">{{PROVIDER}}</span>
+          <h1 class="article-hero-title">{{MODEL_NAME}}</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">{{DATE}}</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">{{READ_TIME}} read</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">Benchmark tested</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <div class="article-layout">
+      <div class="article-body">
+
+        <p>{{INTRO_PARAGRAPH}}</p>
+
+        <!-- QUICK SPECS -->
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Input /1M tokens</div>
+            <div class="spec-value sv-indigo">{{PRICE_IN}}</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output /1M tokens</div>
+            <div class="spec-value sv-indigo">{{PRICE_OUT}}</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Context window</div>
+            <div class="spec-value">{{CONTEXT}}</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Benchmark cost</div>
+            <div class="spec-value sv-green">{{BENCH_COST}}</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Modality</div>
+            <div class="spec-value">{{MODALITY}}</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">OpenRouter ID</div>
+            <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary)">{{OPENROUTER_ID}}</div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT IS -->
+        <h2 class="article-h2">What is {{MODEL_NAME}}?</h2>
+        <p>{{WHAT_IT_IS}}</p>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT EXCELS AT -->
+        <h2 class="article-h2">What {{MODEL_NAME_SHORT}} Excels At</h2>
+        <p>{{EXCELS_INTRO}}</p>
+
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>{{USE_CASE_1_TITLE}}</h4>
+            <p>{{USE_CASE_1_DESC}}</p>
+          </div>
+          <div class="use-case-card">
+            <h4>{{USE_CASE_2_TITLE}}</h4>
+            <p>{{USE_CASE_2_DESC}}</p>
+          </div>
+          <div class="use-case-card">
+            <h4>{{USE_CASE_3_TITLE}}</h4>
+            <p>{{USE_CASE_3_DESC}}</p>
+          </div>
+          <div class="use-case-card">
+            <h4>{{USE_CASE_4_TITLE}}</h4>
+            <p>{{USE_CASE_4_DESC}}</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- BENCHMARK -->
+        <h2 class="article-h2">Benchmark Response</h2>
+        <p>We ran our standard 650-token technical exchange through {{MODEL_NAME_SHORT}} via OpenRouter to give you a real sense of response quality and cost. The prompt asks for a technical explanation of LLM context windows — a good proxy for reasoning depth and communication clarity.</p>
+
+        <div class="benchmark-block">
+          <div class="benchmark-block-header">
+            <span class="benchmark-block-title">Benchmark Test — 650 Token Exchange</span>
+            <span class="benchmark-cost-badge">Cost: {{BENCH_COST}}</span>
+          </div>
+          <div class="benchmark-prompt-label">Prompt (250 tokens)</div>
+          <div class="benchmark-prompt-text">
+            Explain how context windows work in large language models. Cover: what a context window is, why the size matters for memory and multi-step tasks, how token pricing scales with window usage, and what a developer should consider when choosing between a 128K model and a 1M context model for a production app. Be practical and specific.
+          </div>
+          <div class="benchmark-response-label">{{MODEL_NAME_SHORT}} Response (~400 tokens)</div>
+          <div class="benchmark-response-text">
+            <!-- FILL IN: paste the actual model response here -->
+            <div class="benchmark-placeholder">
+              Benchmark response will be added after live testing via OpenRouter.<br>
+              Run the prompt above through <strong>{{OPENROUTER_ID}}</strong> and paste the output here.
+            </div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- PRICING DEEP DIVE -->
+        <h2 class="article-h2">Pricing Breakdown</h2>
+        <p>{{PRICING_INTRO}}</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Input tokens /1M</td><td>{{PRICE_IN}}</td><td>Charged per token sent to the model</td></tr>
+              <tr><td>Output tokens /1M</td><td>{{PRICE_OUT}}</td><td>Usually 3-5x the input rate</td></tr>
+              <tr><td>Context window</td><td>{{CONTEXT}}</td><td>Max tokens in one conversation</td></tr>
+              <tr><td>Benchmark exchange</td><td>{{BENCH_COST}}</td><td>250 in + 400 out tokens</td></tr>
+              <tr><td>1,000 exchanges/day</td><td>{{BENCH_DAILY_1K}}</td><td>Estimated daily cost at volume</td></tr>
+              <tr><td>10,000 exchanges/day</td><td>{{BENCH_DAILY_10K}}</td><td>Production-scale estimate</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ADSENSE MID -->
+        <ins class="adsbygoogle" style="display:block;margin:28px 0"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="auto" data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+        <hr class="article-divider">
+
+        <!-- SAMPLE PROMPTS -->
+        <h2 class="article-h2">Sample Prompts That Work Well</h2>
+        <p>{{SAMPLE_PROMPTS_INTRO}}</p>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: {{USE_CASE_1_TITLE}}</div>
+          <div class="sample-prompt-text">{{SAMPLE_PROMPT_1}}</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: {{USE_CASE_2_TITLE}}</div>
+          <div class="sample-prompt-text">{{SAMPLE_PROMPT_2}}</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: {{USE_CASE_3_TITLE}}</div>
+          <div class="sample-prompt-text">{{SAMPLE_PROMPT_3}}</div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- VS COMPARISON -->
+        <h2 class="article-h2">How It Compares</h2>
+        <p>{{COMPARISON_INTRO}}</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Model</th><th>Input /1M</th><th>Output /1M</th><th>Benchmark</th><th>Best for</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>{{MODEL_NAME_SHORT}}</strong></td><td>{{PRICE_IN}}</td><td>{{PRICE_OUT}}</td><td>{{BENCH_COST}}</td><td>{{BEST_FOR}}</td></tr>
+              <!-- ADD 3-4 competitor rows here -->
+              <tr><td>{{COMP_1_NAME}}</td><td>{{COMP_1_IN}}</td><td>{{COMP_1_OUT}}</td><td>{{COMP_1_BENCH}}</td><td>{{COMP_1_FOR}}</td></tr>
+              <tr><td>{{COMP_2_NAME}}</td><td>{{COMP_2_IN}}</td><td>{{COMP_2_OUT}}</td><td>{{COMP_2_BENCH}}</td><td>{{COMP_2_FOR}}</td></tr>
+              <tr><td>{{COMP_3_NAME}}</td><td>{{COMP_3_IN}}</td><td>{{COMP_3_OUT}}</td><td>{{COMP_3_BENCH}}</td><td>{{COMP_3_FOR}}</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- TRY IT BAND -->
+        <div class="try-it-band">
+          <div>
+            <h3>Try {{MODEL_NAME_SHORT}} with Your Own Key</h3>
+            <p>Connect your OpenRouter API key and test {{MODEL_NAME_SHORT}} directly in the Aether Intel chat tool — no signup, your key stays in your browser.</p>
+          </div>
+          <a href="/tools/chat.html" class="btn btn-primary">Open Chat Tool →</a>
+        </div>
+
+        <!-- TAKEAWAYS -->
+        <div class="article-takeaways">
+          <h3 class="takeaways-title">Key Takeaways</h3>
+          <ul>
+            <li>{{TAKEAWAY_1}}</li>
+            <li>{{TAKEAWAY_2}}</li>
+            <li>{{TAKEAWAY_3}}</li>
+            <li>{{TAKEAWAY_4}}</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RELATED MODELS ── -->
+    <section class="article-related">
+      <h2 class="related-title">Related Models</h2>
+      <div class="article-grid">
+        <!-- ADD 3 related model cards here -->
+      </div>
+    </section>
+
+  </article>
+</main>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
