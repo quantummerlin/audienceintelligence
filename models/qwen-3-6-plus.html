@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qwen 3.6 Plus — Alibaba's Budget Thinking Model | Aether Intel</title>
+  <meta name="description" content="Qwen 3.6 Plus review: $0.325/$1.95 per 1M tokens, 1M context, visible reasoning chain, image &amp; video input. Alibaba's most capable affordable thinking model.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/qwen-3-6-plus.html">
+  <meta property="og:title" content="Qwen 3.6 Plus — Capabilities, Costs &amp; Benchmark">
+  <meta property="og:description" content="Qwen 3.6 Plus review: $0.325/$1.95 per 1M tokens, 1M context, visible reasoning chain, image &amp; video input. Alibaba's most capable affordable thinking model.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/qwen-3-6-plus.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/qwen-3-6-plus-hero.png">
+  <meta property="article:published_time" content="2026-05-15">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Qwen 3.6 Plus — Capabilities, Costs &amp; Benchmark">
+  <meta name="twitter:description" content="Qwen 3.6 Plus review: $0.325/$1.95 per 1M tokens, 1M context, visible reasoning chain, image &amp; video input.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/qwen-3-6-plus-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ─── Model article extras ─── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .spec-value {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-value.sv-green  { color: #34d399; }
+    .spec-value.sv-cyan   { color: #22d3ee; }
+    .spec-value.sv-indigo { color: var(--neon-indigo); }
+    .spec-value.sv-gold   { color: var(--neon-gold); }
+
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card h4 {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .use-case-card p {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Benchmark display */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+    }
+    .benchmark-cost-badge {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: #22d3ee;
+      background: rgba(34,211,238,.08);
+      border: 1px solid rgba(34,211,238,.25);
+      border-radius: 7px;
+      padding: 4px 12px;
+    }
+    .benchmark-prompt-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-prompt-text {
+      background: rgba(7,7,15,.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .benchmark-response-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-response-text {
+      font-size: .88rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    .benchmark-response-text p { margin: 0 0 12px; }
+    .benchmark-response-text p:last-child { margin: 0; }
+    .benchmark-response-text h3 {
+      font-family: var(--font-heading);
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 18px 0 8px;
+    }
+    .benchmark-response-text ul {
+      margin: 8px 0 12px 20px;
+      padding: 0;
+    }
+    .benchmark-response-text ul li {
+      margin-bottom: 4px;
+      color: var(--text-secondary);
+    }
+    .benchmark-response-text .article-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    /* Sample prompt block */
+    .sample-prompt-block {
+      background: rgba(7,7,15,.6);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .sample-prompt-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 6px;
+    }
+    .sample-prompt-text {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Visible thinking block — cyan accent */
+    .sample-prompt-block.thinking-excerpt {
+      border-left-color: #22d3ee;
+    }
+    .sample-prompt-block.thinking-excerpt .sample-prompt-label {
+      color: #22d3ee;
+    }
+
+    /* Try it CTA */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(129,140,248,.08), rgba(34,211,238,.04));
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .try-it-band p {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      margin: 0;
+    }
+
+    /* Provider accent highlight */
+    .provider-accent {
+      color: #9c27b0;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr; }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- ── HERO ── -->
+    <div class="article-hero">
+      <div class="article-hero-img-wrap">
+        <img src="/images/models/qwen-3-6-plus-hero.png"
+             alt="Qwen 3.6 Plus — AI model overview"
+             class="article-hero-img" loading="eager"
+             onerror="this.style.background='linear-gradient(135deg,rgba(156,39,176,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/models.html">Models</a>
+            <span>&#x203a;</span>
+            <span>Qwen 3.6 Plus</span>
+          </nav>
+          <span class="badge badge-research">Qwen / Alibaba</span>
+          <h1 class="article-hero-title">Qwen 3.6 Plus</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 15, 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">8 min read</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">Benchmark tested</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <div class="article-layout">
+      <div class="article-body">
+
+        <p>Qwen 3.6 Plus is <span class="provider-accent">Alibaba's</span> latest flagship from the Qwen series — a hybrid reasoning model that combines efficient linear attention with sparse mixture-of-experts routing to deliver one of the best cost-to-capability ratios among thinking models available today. At <strong>$0.325 input / $1.95 output per 1M tokens</strong> with a <strong>1M-token context window</strong>, image and video input, and a fully visible reasoning chain, it sits in a rare class: genuinely affordable, genuinely powerful, genuinely multimodal.</p>
+
+        <!-- QUICK SPECS -->
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Input /1M tokens</div>
+            <div class="spec-value sv-indigo">$0.325</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output /1M tokens</div>
+            <div class="spec-value sv-indigo">$1.95</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Context window</div>
+            <div class="spec-value">1M tokens</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Benchmark cost</div>
+            <div class="spec-value sv-cyan">$0.000861</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Modality</div>
+            <div class="spec-value" style="font-size:.85rem">Text + Vision + Video</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">OpenRouter ID</div>
+            <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary)">qwen/qwen3.6-plus</div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT IS -->
+        <h2 class="article-h2">What is Qwen 3.6 Plus?</h2>
+        <p>Qwen 3.6 Plus builds on a hybrid architecture that combines efficient linear attention with sparse mixture-of-experts routing, enabling strong scalability and high-performance inference. Unlike dense transformers, the sparse MoE design activates only a subset of parameters per forward pass, dramatically reducing compute cost without sacrificing capability. The linear attention component complements this by handling very long sequences more efficiently than standard quadratic self-attention, which is what makes the 1M-token context window practical rather than theoretical. The result is a model that can reason across book-length documents, sprawling codebases, or hours of video input at a fraction of what comparable dense models charge.</p>
+        <p>Compared to the 3.5 series, Qwen 3.6 Plus delivers significant improvements in reasoning, coding, and instruction following. One of its most distinctive features is a <strong>visible reasoning chain</strong> — similar to DeepSeek R1 — where the model's thinking tokens are exposed before the final answer. In the benchmark run below, 2,155 reasoning tokens were visible, letting developers inspect how the model deconstructs a problem before committing to a response. This is a meaningful engineering advantage in production: you can log and audit the chain-of-thought, tune prompts based on where reasoning drifts, and debug failure modes systematically. Add full image and video input support, strong bilingual Chinese-English capability, and a launch price well under $1 for a thousand typical exchanges, and Qwen 3.6 Plus becomes a compelling default for a wide range of workloads.</p>
+
+        <hr class="article-divider">
+
+        <!-- WHAT IT EXCELS AT -->
+        <h2 class="article-h2">What Qwen 3.6 Plus Excels At</h2>
+        <p>The combination of 1M context, sub-$0.001 benchmark cost, visible reasoning, and multimodal input makes Qwen 3.6 Plus well-suited to a specific set of high-value use cases where other affordable models fall short.</p>
+
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>Budget Long-Context Reasoning</h4>
+            <p>1M context at $0.325/$1.95 per 1M makes Qwen 3.6 Plus one of the most affordable thinking models for document-scale tasks.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Multilingual Tasks</h4>
+            <p>Built by Alibaba, Qwen 3.6 Plus has exceptional Chinese-English bilingual capability and strong support for dozens of languages, ideal for global products.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Multimodal Pipelines</h4>
+            <p>Accepts image and video input alongside text. Useful for content moderation, e-commerce product analysis, and visual QA pipelines.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Instruction Following at Scale</h4>
+            <p>The hybrid MoE architecture maintains strong instruction adherence across very long prompts — important for complex system prompts in production agents.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- BENCHMARK -->
+        <h2 class="article-h2">Benchmark Response</h2>
+        <p>We ran our standard 650-token technical exchange through Qwen 3.6 Plus via OpenRouter to give you a real sense of response quality and cost. The prompt asks for a technical explanation of LLM context windows — a good proxy for reasoning depth and communication clarity. Before the response, you can see a short excerpt from the model's 2,155-token visible reasoning chain — the thinking that happened before the final answer was produced.</p>
+
+        <div class="benchmark-block">
+          <div class="benchmark-block-header">
+            <span class="benchmark-block-title">Benchmark Test — 650 Token Exchange</span>
+            <span class="benchmark-cost-badge">Cost: $0.000861</span>
+          </div>
+
+          <div class="benchmark-prompt-label">Prompt (250 tokens)</div>
+          <div class="benchmark-prompt-text">
+            Explain how context windows work in large language models. Cover: what a context window is, why the size matters for memory and multi-step tasks, how token pricing scales with window usage, and what a developer should consider when choosing between a 128K model and a 1M context model for a production app. Be practical and specific.
+          </div>
+
+          <!-- Visible reasoning excerpt -->
+          <div class="sample-prompt-block thinking-excerpt" style="margin-bottom:16px">
+            <div class="sample-prompt-label">Visible Thinking (excerpt)</div>
+            <div class="sample-prompt-text">
+              Qwen 3.6 Plus's thinking was visible — here is a short excerpt from its 2,155-token reasoning chain:<br><br>
+              <em>"Deconstruct the User Prompt: Topic: Context windows in large language models. Required Coverage: What a context window is, why size matters for memory and multi-step tasks, how token pricing scales, developer considerations 128K vs 1M for production. Tone/Style: Practical and specific.</em><br><br>
+              <em>Define 'Context Window': Technical definition — the maximum number of tokens an LLM can process in a single forward pass, encompassing both the input and output. Under the hood: Attention mechanism operates over all tokens in the window. KV cache stores representations to avoid recomputation. Key point: It's a hard limit, but effective context varies — models degrade near boundaries..."</em>
+            </div>
+          </div>
+
+          <div class="benchmark-response-label">Qwen 3.6 Plus Response (~400 tokens)</div>
+          <div class="benchmark-response-text">
+
+            <h3>1. What a Context Window Actually Is</h3>
+            <p>A <strong>context window</strong> is the maximum number of tokens an LLM can process in a single forward pass. It includes <strong>everything</strong> you send in the request (system prompt, user messages, injected files, tool outputs, conversation history) plus the tokens the model generates in response.</p>
+            <p><strong>Under the hood:</strong></p>
+            <ul>
+              <li>The transformer's self-attention mechanism computes relationships between every token in the window.</li>
+              <li>Models maintain a <strong>KV cache</strong> (key-value pairs of attention states) to avoid recomputing past tokens on each generation step.</li>
+              <li>Positional embeddings (RoPE, ALiBi, etc.) track token order so the model understands sequence structure.</li>
+            </ul>
+            <p><strong>Important reality:</strong> The advertised max context (e.g., 128K or 1M) is a hard architectural limit, not a guarantee of uniform attention quality. Effective context is usually 30&ndash;70% of the theoretical max due to attention dilution and positional encoding limits.</p>
+
+            <hr class="article-divider">
+
+            <h3>2. Why Window Size Matters: Memory &amp; Multi-Step Tasks</h3>
+            <p><strong>GPU/Inference Memory</strong><br>
+            KV cache scales roughly linearly with context length after modern optimisations (FlashAttention, PagedAttention). For a typical 70B model, each 1K context tokens adds ~2&ndash;4 GB of VRAM just for the cache. Larger windows increase <strong>Time-To-First-Token (TTFT)</strong> because the initial attention computation is heavier.</p>
+            <p><strong>Multi-Step &amp; Agentic Workflows</strong></p>
+            <ul>
+              <li><strong>State retention:</strong> Longer windows let you keep tool-call traces, reasoning chains, code diffs, or multi-document references in-context without manual state serialisation.</li>
+              <li><strong>Fewer round trips:</strong> Reduces the need to call external vector DBs mid-task for simple queries.</li>
+              <li><strong>Tradeoff:</strong> Attention is not uniform. Tokens near the beginning and end receive stronger focus; middle sections suffer "attention collapse." Critical context buried in the middle of a 500K-token prompt may be ignored.</li>
+            </ul>
+
+            <hr class="article-divider">
+
+            <h3>3. How Token Pricing Scales with Window Usage</h3>
+            <p>Pricing is <strong>strictly linear per token</strong>, split into input and output rates (input is usually cheaper, sometimes 3&ndash;5&times; less than output). You pay for the tokens you <em>send</em>, not the window size itself. Sending a 500K-token prompt costs 50&times; what a 10K-token prompt costs. Large windows encourage including entire datasets, so costs can balloon without discipline.</p>
+            <p><strong>Key optimisations:</strong> Use RAG for retrieval, sliding window summarisation for long conversations, and prompt caching (up to 90% off repeated prefixes on supported providers) to keep costs under control.</p>
+
+            <hr class="article-divider">
+
+            <h3>4. Choosing Between 128K and 1M for Production</h3>
+            <p><strong>Pick 128K when:</strong> running standard chatbots, RAG agents, coding assistants, or most production apps. 128K is well-optimised, lower latency, and cheaper per request.</p>
+            <p><strong>Pick 1M when:</strong> you need full-repository code analysis, massive log review, multi-document legal or contract analysis, or when retrieval overhead exceeds the cost of context stuffing.</p>
+            <p><strong>Hybrid strategy:</strong> 128K model + smart chunking + vector fallback typically delivers better ROI than naive 1M context stuffing.</p>
+
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- PRICING DEEP DIVE -->
+        <h2 class="article-h2">Pricing Breakdown</h2>
+        <p>The price story for Qwen 3.6 Plus is straightforward and compelling: at $0.325 per million input tokens and $1.95 per million output tokens, you're paying well under a dollar to run a thousand typical exchanges. For a thinking model with 1M context and multimodal input, that is genuinely hard to beat. The benchmark exchange — 250 input tokens plus ~400 output tokens — cost just $0.000861, placing it firmly in the cheap tier (under $0.001).</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Input tokens /1M</td><td>$0.325</td><td>Charged per token sent to the model</td></tr>
+              <tr><td>Output tokens /1M</td><td>$1.95</td><td>~6&times; the input rate</td></tr>
+              <tr><td>Context window</td><td>1,000,000 tokens (1M)</td><td>Max tokens in one conversation</td></tr>
+              <tr><td>Benchmark exchange</td><td>$0.000861</td><td>250 in + 400 out tokens</td></tr>
+              <tr><td>Est. 1,000 req/day</td><td>$0.86 / day</td><td>Estimated daily cost at volume</td></tr>
+              <tr><td>Est. 10,000 req/day</td><td>$8.61 / day</td><td>Production-scale estimate</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ADSENSE MID -->
+        <ins class="adsbygoogle" style="display:block;margin:28px 0"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="auto" data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+        <hr class="article-divider">
+
+        <!-- SAMPLE PROMPTS -->
+        <h2 class="article-h2">Sample Prompts That Work Well</h2>
+        <p>These prompts are designed to stress-test what Qwen 3.6 Plus genuinely brings to the table — multimodal input, long context, multilingual capability, and strong instruction adherence across complex system prompts.</p>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Visual Content Moderation</div>
+          <div class="sample-prompt-text">"Analyse these 200 product images and descriptions. Flag items that violate our content policy, categorise violations by type, and output a structured review queue."</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Multilingual Support</div>
+          <div class="sample-prompt-text">"You are a multilingual customer support agent. Respond to all incoming messages in their original language with consistent tone. Here is the full support history for context."</div>
+        </div>
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Long-Doc Extraction</div>
+          <div class="sample-prompt-text">"Review this 800-page technical specification document (provided). Extract all API endpoints, parameters, and error codes into a structured JSON schema."</div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- VS COMPARISON -->
+        <h2 class="article-h2">How It Compares</h2>
+        <p>Qwen 3.6 Plus sits in an interesting position in the market: it undercuts Gemini 2.5 Flash on input price while offering a comparable or lower benchmark cost, and it beats DeepSeek V4 Pro on output price despite both using MoE architectures. Its sibling, Qwen 3.6 Flash, is cheaper still but lacks the same reasoning depth. For most production thinking workloads where you need 1M context and can't afford the latency or cost of a premium flagship, Qwen 3.6 Plus is the natural choice.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Model</th><th>Input /1M</th><th>Output /1M</th><th>Context</th><th>Benchmark</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Qwen 3.6 Plus</strong> &#8592; this</td>
+                <td>$0.325</td>
+                <td>$1.95</td>
+                <td>1M</td>
+                <td>$0.000861</td>
+              </tr>
+              <tr>
+                <td>Qwen 3.6 Flash</td>
+                <td>$0.19</td>
+                <td>$1.12</td>
+                <td>1M</td>
+                <td>$0.000496</td>
+              </tr>
+              <tr>
+                <td>DeepSeek V4 Pro</td>
+                <td>$0.43</td>
+                <td>$0.87</td>
+                <td>1M</td>
+                <td>$0.000457</td>
+              </tr>
+              <tr>
+                <td>Gemini 2.5 Flash</td>
+                <td>$0.30</td>
+                <td>$2.50</td>
+                <td>1M</td>
+                <td>$0.001075</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- TRY IT BAND -->
+        <div class="try-it-band">
+          <div>
+            <h3>Try Qwen 3.6 Plus with Your Own Key</h3>
+            <p>Connect your OpenRouter API key and test Qwen 3.6 Plus directly in the Aether Intel playground — no signup, your key stays in your browser. Model ID: <code>qwen/qwen3.6-plus</code>.</p>
+          </div>
+          <a href="/tools/playground.html" class="btn btn-primary">Open Playground →</a>
+        </div>
+
+        <!-- TAKEAWAYS -->
+        <div class="article-takeaways">
+          <h3 class="takeaways-title">Key Takeaways</h3>
+          <ul>
+            <li>At $0.325/$1.95 per 1M tokens with a 1M context window, Qwen 3.6 Plus is one of the most affordable thinking models available — a benchmark exchange costs just $0.000861.</li>
+            <li>The hybrid linear-attention + sparse-MoE architecture makes the 1M context window practical: lower inference cost per token than dense models at this scale.</li>
+            <li>Visible reasoning (2,155 thinking tokens in the benchmark) works like DeepSeek R1's chain-of-thought exposure — useful for debugging, auditing, and prompt tuning in production.</li>
+            <li>Full image and video input support, combined with strong Chinese-English bilingual capability, makes it a strong default for global, multimodal, or document-heavy pipelines.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RELATED MODELS ── -->
+    <section class="article-related">
+      <h2 class="related-title">Related Models</h2>
+      <div class="article-grid">
+
+        <a class="article-card" href="/models/deepseek-v4-pro.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/deepseek-v4-pro-hero.png"
+                 alt="DeepSeek V4 Pro"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-research">DeepSeek</span>
+            <h3 class="article-card-title">DeepSeek V4 Pro</h3>
+            <p class="article-card-excerpt">MoE flagship at a comparable price range — strong reasoning with low output costs.</p>
+          </div>
+        </a>
+
+        <a class="article-card" href="/models/gemini-2-5-flash.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/gemini-2-5-flash-hero.png"
+                 alt="Gemini 2.5 Flash"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Google</span>
+            <h3 class="article-card-title">Gemini 2.5 Flash</h3>
+            <p class="article-card-excerpt">Fast multimodal at similar cost — Google's efficient Flash tier with strong vision support.</p>
+          </div>
+        </a>
+
+        <a class="article-card" href="/models/claude-haiku-4-5.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/claude-haiku-4-5-hero.png"
+                 alt="Claude Haiku 4.5"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Anthropic</span>
+            <h3 class="article-card-title">Claude Haiku 4.5</h3>
+            <p class="article-card-excerpt">Fast and cheap from Anthropic — strong instruction following with predictable output quality.</p>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </article>
+</main>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
