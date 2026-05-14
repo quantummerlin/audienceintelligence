@@ -61,18 +61,30 @@
   function injectAppShell() {
     const body = document.body;
 
-    // Article pages use .page-wrap + .standalone-nav instead of <main>.
-    // Wrap .page-wrap in a synthetic <main> so the shell can adopt it,
-    // and remove the minimal standalone-nav (sidebar replaces it).
-    if (!body.querySelector('main')) {
-      const standaloneNav = body.querySelector('.standalone-nav');
-      const pageWrap = body.querySelector('.page-wrap');
-      if (pageWrap) {
-        if (standaloneNav) standaloneNav.parentNode.removeChild(standaloneNav);
-        const syntheticMain = document.createElement('main');
-        syntheticMain.className = 'article-main';
-        pageWrap.parentNode.removeChild(pageWrap);
-        syntheticMain.appendChild(pageWrap);
+    // Article pages use a .standalone-nav + content wrapper (either .page-wrap
+    // or .article-hero/.article-wrap) instead of a <main> element.
+    // Collect all non-script body children, strip the standalone-nav,
+    // wrap the rest in a synthetic <main> so the app-shell can adopt it.
+    if (!body.querySelector('main') && body.querySelector('.standalone-nav')) {
+      var syntheticMain = document.createElement('main');
+      syntheticMain.className = 'article-main';
+
+      // Move every non-SCRIPT, non-NOSCRIPT body child into the synthetic main.
+      // Use a snapshot array because live HTMLCollections shift as we move nodes.
+      var toMove = Array.prototype.slice.call(body.childNodes).filter(function (n) {
+        return n.nodeName !== 'SCRIPT' && n.nodeName !== 'NOSCRIPT';
+      });
+      toMove.forEach(function (node) { syntheticMain.appendChild(node); });
+
+      // Remove the now-nested standalone-nav — the injected sidebar replaces it.
+      var navInMain = syntheticMain.querySelector('.standalone-nav');
+      if (navInMain) navInMain.parentNode.removeChild(navInMain);
+
+      // Insert the synthetic main before the first script tag (or append).
+      var firstScript = body.querySelector('script');
+      if (firstScript) {
+        body.insertBefore(syntheticMain, firstScript);
+      } else {
         body.appendChild(syntheticMain);
       }
     }
