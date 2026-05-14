@@ -459,6 +459,18 @@
       margin-bottom: 10px;
     }
 
+    /* Card: launch date */
+    .card-launch-dot {
+      color: var(--border);
+      margin: 0 1px;
+    }
+    .card-launch-date {
+      font-weight: 500;
+      color: var(--text-muted);
+      font-size: .62rem;
+      letter-spacing: .04em;
+    }
+
     /* Card: description */
     .model-card-desc {
       font-size: .82rem;
@@ -1047,6 +1059,13 @@
     return '$' + cost.toFixed(3);
   }
 
+  function fmtLaunchDate(ts) {
+    if (!ts) return null;
+    var d = new Date(ts * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return months[d.getUTCMonth()] + ' ' + d.getUTCFullYear();
+  }
+
   function getGoodFor(m) {
     var meta = MODEL_META[m.id];
     if (meta && meta.good) return meta.good.slice(0, 3);
@@ -1093,6 +1112,7 @@
     var pIn  = fmt1M(m.pricing && m.pricing.prompt);
     var pOut = fmt1M(m.pricing && m.pricing.completion);
     var pFree = badge === 'free';
+    var launchDate = fmtLaunchDate(m.created);
 
     /* badge pills */
     var badgePills = '';
@@ -1143,13 +1163,13 @@
       '    <div class="model-card-name" title="' + name + '">' + name + '</div>',
       '    <div class="model-card-badges">' + badgePills + '</div>',
       '  </div>',
-      '  <div class="model-card-provider">' + provider + '</div>',
+      '  <div class="model-card-provider">' + provider + (launchDate ? ' <span class="card-launch-dot">·</span> <span class="card-launch-date">' + launchDate + '</span>' : '') + '</div>',
       '  <div class="model-card-desc">' + tagline + '</div>',
       '  <div class="model-card-good">' + goodHtml + '</div>',
       '  <div class="model-card-pricing">' + pricingHtml + '</div>',
       benchHtml,
       '  <div class="model-card-actions">',
-      '    <a href="/tools/chat.html" class="model-btn model-btn-try">Try in Chat</a>',
+      '    <a href="/tools/playground.html" class="model-btn model-btn-try">Try in Playground</a>',
       '    ' + articleBtn,
       '  </div>',
       '</div>'
