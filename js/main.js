@@ -61,6 +61,22 @@
   function injectAppShell() {
     const body = document.body;
 
+    // Article pages use .page-wrap + .standalone-nav instead of <main>.
+    // Wrap .page-wrap in a synthetic <main> so the shell can adopt it,
+    // and remove the minimal standalone-nav (sidebar replaces it).
+    if (!body.querySelector('main')) {
+      const standaloneNav = body.querySelector('.standalone-nav');
+      const pageWrap = body.querySelector('.page-wrap');
+      if (pageWrap) {
+        if (standaloneNav) standaloneNav.parentNode.removeChild(standaloneNav);
+        const syntheticMain = document.createElement('main');
+        syntheticMain.className = 'article-main';
+        pageWrap.parentNode.removeChild(pageWrap);
+        syntheticMain.appendChild(pageWrap);
+        body.appendChild(syntheticMain);
+      }
+    }
+
     // Collect existing <main> element(s) — preserve them inside .main-content
     const existingMain = body.querySelector('main');
     const mainContent = document.createElement('div');
