@@ -655,6 +655,36 @@
     .models-error-msg a { color: var(--neon-indigo); }
 
     /* ═══════════════════════════════════════════
+       SORT BAR
+    ═══════════════════════════════════════════ */
+    .sort-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .sort-btn {
+      font-family: var(--font-display);
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 11px;
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+    }
+    .sort-btn:hover { color: var(--text-secondary); border-color: rgba(255,255,255,.15); }
+    .sort-btn.active { color: var(--neon-gold); background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.3); }
+
+    /* ═══════════════════════════════════════════
        GUIDE BAND
     ═══════════════════════════════════════════ */
     .models-guide-band {
@@ -779,6 +809,15 @@
       <button class="filter-btn" data-modality="audio">Audio</button>
       <button class="filter-btn" data-modality="video">Video</button>
     </div>
+    <div class="filter-divider"></div>
+    <span class="sort-label">Sort</span>
+    <div class="filter-btn-group">
+      <button class="sort-btn active" data-sort="newest">Newest</button>
+      <button class="sort-btn" data-sort="price_asc">Price ↑</button>
+      <button class="sort-btn" data-sort="price_desc">Price ↓</button>
+      <button class="sort-btn" data-sort="context">Context</button>
+      <button class="sort-btn" data-sort="az">A → Z</button>
+    </div>
     <div class="models-count-tag"><span id="visibleCount">—</span> shown</div>
   </div>
 
@@ -819,58 +858,111 @@
 
   /* ─── Curated enrichment for the models people actually care about ─── */
   var MODEL_META = {
-    'anthropic/claude-opus-4.5': {
-      tagline: 'Anthropic\'s most capable model — deep reasoning, 1M context, complex tasks',
-      good: ['Complex reasoning', 'Research & analysis', 'Long documents', 'Code review'],
-      article: '/models/claude-opus-4-5.html'
-    },
+    /* ── ANTHROPIC ─────────────────────────────── */
     'anthropic/claude-opus-4.7': {
-      tagline: 'Claude Opus 4.7 — enhanced frontier reasoning and extended-thinking capability',
-      good: ['Advanced reasoning', 'Research', 'Long-form tasks', 'Agentic workflows'],
+      tagline: 'Anthropic\'s current flagship — 1M context, frontier reasoning, extended-thinking capable',
+      good: ['Complex reasoning', 'Research & analysis', 'Long documents', 'Agentic tasks'],
       article: null
     },
     'anthropic/claude-opus-4.7-fast': {
-      tagline: 'Claude Opus 4.7 in fast mode — frontier capability with reduced latency',
-      good: ['Fast frontier tasks', 'Agentic pipelines', 'Complex Q&A', 'Code'],
+      tagline: 'Claude Opus 4.7 Fast — extended-thinking mode unlocked for the hardest multi-step problems',
+      good: ['Extended thinking', 'Hard reasoning', 'Complex coding', 'Multi-step planning'],
       article: null
     },
-    'anthropic/claude-sonnet-4.5': {
-      tagline: 'The sweet spot — frontier intelligence at mid-tier cost, fast and capable',
-      good: ['Writing & editing', 'Data analysis', 'Coding', 'General tasks'],
-      article: '/models/claude-sonnet-4-5.html'
+    'anthropic/claude-opus-4.6-fast': {
+      tagline: 'Claude Opus 4.6 Fast — previous extended-thinking variant, still premium frontier capability',
+      good: ['Extended thinking', 'Complex reasoning', 'Research', 'Agentic tasks'],
+      article: null
     },
     'anthropic/claude-sonnet-4.6': {
-      tagline: 'Claude Sonnet 4.6 — next-gen Sonnet with 1M context and enhanced reasoning',
+      tagline: 'Claude Sonnet 4.6 — next-gen Sonnet with 1M context and enhanced instruction following',
       good: ['Writing & editing', 'Data analysis', 'Coding', 'Long-context tasks'],
       article: null
     },
+    'anthropic/claude-sonnet-4.5': {
+      tagline: 'The sweet spot — frontier intelligence at mid-tier cost, fast and reliable',
+      good: ['Writing & editing', 'Data analysis', 'Coding', 'General tasks'],
+      article: '/models/claude-sonnet-4-5.html'
+    },
     'anthropic/claude-haiku-4.5': {
-      tagline: 'Blazing fast and cheap — ideal for high-volume production tasks',
+      tagline: 'Blazing fast and cheap — ideal for high-volume production workloads',
       good: ['Fast responses', 'High-volume tasks', 'Classification', 'Data extraction'],
       article: '/models/claude-haiku-4-5.html'
     },
+    '~anthropic/claude-opus-latest': {
+      tagline: 'Always resolves to the latest Claude Opus — auto-updates so your app stays current',
+      good: ['Auto-updated', 'Complex reasoning', 'Long documents', 'Research'],
+      article: null
+    },
+    '~anthropic/claude-sonnet-latest': {
+      tagline: 'Always resolves to the latest Claude Sonnet — great for production apps that stay current',
+      good: ['Auto-updated', 'Production apps', 'General tasks', 'Writing'],
+      article: null
+    },
+    '~anthropic/claude-haiku-latest': {
+      tagline: 'Always resolves to the latest Claude Haiku — fast, cheap, auto-updating',
+      good: ['Auto-updated', 'High-volume', 'Fast responses', 'Classification'],
+      article: null
+    },
+    /* ── OPENAI ─────────────────────────────────── */
+    'openai/gpt-5.5-pro': {
+      tagline: 'OpenAI\'s most powerful model — frontier reasoning, 1M context, maximum capability',
+      good: ['Complex reasoning', 'Research', 'Advanced coding', 'Long documents'],
+      article: null
+    },
+    'openai/gpt-5.5': {
+      tagline: 'GPT-5.5 — OpenAI\'s balanced flagship, powerful and versatile across all task types',
+      good: ['General tasks', 'Coding', 'Creative writing', 'Analysis'],
+      article: null
+    },
+    'openai/gpt-5': {
+      tagline: 'GPT-5 — significant capability leap over GPT-4, strong across coding, reasoning, and writing',
+      good: ['Coding', 'Analysis', 'Writing', 'Function calling'],
+      article: null
+    },
+    'openai/gpt-chat-latest': {
+      tagline: 'OpenAI latest chat alias — always points to the current best chat model',
+      good: ['Auto-updated', 'Chat apps', 'General tasks', 'Production'],
+      article: null
+    },
     'openai/gpt-4o': {
-      tagline: 'OpenAI\'s flagship multimodal — versatile, battle-tested across every task type',
+      tagline: 'OpenAI\'s multimodal flagship — versatile, battle-tested across every task type',
       good: ['Multimodal tasks', 'Creative writing', 'Function calling', 'Coding'],
       article: '/models/gpt-4o.html'
     },
     'openai/gpt-4o-mini': {
       tagline: 'GPT-4 level quality at a fraction of the cost — ideal for production apps',
       good: ['Budget tasks', 'Structured output', 'Classification', 'Drafting'],
-      article: '/models/gpt-4o-mini.html'
+      article: null
     },
     'openai/o3': {
-      tagline: 'OpenAI\'s advanced reasoning model for science, math, and hard multi-step problems',
+      tagline: 'OpenAI\'s advanced reasoning — built for science, math, and hard multi-step problems',
       good: ['Math & science', 'Complex coding', 'Multi-step reasoning', 'Research'],
       article: '/models/openai-o3.html'
     },
     'openai/o4-mini': {
-      tagline: 'Fast, affordable reasoning — o3-level thinking at o4-mini cost',
+      tagline: 'Fast, affordable reasoning — o3-level thinking at o4-mini price',
       good: ['Code generation', 'Math', 'Fast reasoning', 'Agentic tasks'],
+      article: '/models/openai-o4-mini.html'
+    },
+    '~openai/gpt-latest': {
+      tagline: 'OpenAI latest model alias — always resolves to the current GPT flagship',
+      good: ['Auto-updated', 'Production', 'General tasks', 'Coding'],
+      article: null
+    },
+    '~openai/gpt-mini-latest': {
+      tagline: 'OpenAI mini latest alias — auto-updates to the current fast/cheap GPT variant',
+      good: ['Auto-updated', 'Budget tasks', 'High-volume', 'Classification'],
+      article: null
+    },
+    /* ── GOOGLE ─────────────────────────────────── */
+    'google/gemini-3.1-flash-lite': {
+      tagline: 'Gemini 3.1 Flash Lite — ultra-efficient multimodal at $0.25/$1.50 per 1M, 1M context',
+      good: ['Ultra-cheap', 'High volume', 'Multimodal routing', 'Mobile apps'],
       article: null
     },
     'google/gemini-2.5-pro': {
-      tagline: 'Google\'s frontier model — massive context, deep multimodal reasoning',
+      tagline: 'Google\'s frontier model — massive context window, deep multimodal reasoning',
       good: ['Multimodal tasks', 'Code generation', 'Long documents', 'Complex analysis'],
       article: '/models/gemini-2-5-pro.html'
     },
@@ -879,48 +971,70 @@
       good: ['High-speed tasks', 'Structured output', 'Summarisation', 'Multimodal chat'],
       article: '/models/gemini-2-5-flash.html'
     },
-    'google/gemini-2.5-flash:thinking': {
-      tagline: 'Gemini Flash with extended thinking — harder problems, same efficiency base',
-      good: ['Reasoning tasks', 'Math', 'Coding challenges', 'Analysis'],
+    'google/gemini-2.5-flash-lite': {
+      tagline: 'Gemini 2.5 Flash Lite — lightest Gemini variant, lowest latency and cost',
+      good: ['Ultra-fast', 'Budget use cases', 'High throughput', 'Multimodal'],
       article: null
     },
-    'google/gemini-3.1-flash-lite': {
-      tagline: 'Gemini 3.1 Flash Lite — Google\'s ultra-efficient multimodal at near-zero cost',
-      good: ['Ultra-cheap tasks', 'Multimodal routing', 'Mobile apps', 'High volume'],
+    '~google/gemini-flash-latest': {
+      tagline: 'Always resolves to the latest Gemini Flash — fast auto-updating multimodal alias',
+      good: ['Auto-updated', 'Fast tasks', 'Multimodal', 'Production'],
       article: null
     },
-    'meta-llama/llama-3.3-70b-instruct': {
-      tagline: 'Meta\'s best open-weight model — self-hostable, private, highly capable',
-      good: ['Self-hosting', 'Privacy-first', 'General chat', 'Coding'],
-      article: '/models/llama-3-3-70b.html'
-    },
-    'meta-llama/llama-4-maverick': {
-      tagline: 'Llama 4 Maverick — Meta\'s multimodal frontier open-source release',
-      good: ['Multimodal', 'Open source', 'Self-hosting', 'Research'],
+    '~google/gemini-pro-latest': {
+      tagline: 'Always resolves to the latest Gemini Pro — frontier Google capability, auto-updating',
+      good: ['Auto-updated', 'Complex tasks', 'Multimodal', 'Long documents'],
       article: null
     },
-    'deepseek/deepseek-r1': {
-      tagline: 'Chinese frontier model — exceptional at chain-of-thought reasoning and coding',
-      good: ['Math & reasoning', 'Code generation', 'Chain of thought', 'Research tasks'],
-      article: '/models/deepseek-r1.html'
-    },
-    'deepseek/deepseek-chat-v3-0324': {
-      tagline: 'DeepSeek V3 March 2024 — GPT-4o-level quality at open-source prices',
-      good: ['General coding', 'Analysis', 'Writing', 'Cost-efficient tasks'],
-      article: '/models/deepseek-v3.html'
-    },
-    'deepseek/deepseek-v3.2': {
-      tagline: 'DeepSeek V3.2 — updated flagship with improved reasoning and lower cost',
+    /* ── DEEPSEEK ───────────────────────────────── */
+    'deepseek/deepseek-v4-pro': {
+      tagline: 'DeepSeek V4 Pro — MoE flagship with 1M context at incredible price-to-performance',
       good: ['General coding', 'Analysis', 'Long context', 'Cost-efficient tasks'],
       article: null
     },
+    'deepseek/deepseek-v4-flash': {
+      tagline: 'DeepSeek V4 Flash — blazing fast at $0.13/$0.25 per 1M, 1M context window',
+      good: ['Budget tasks', 'High volume', 'Fast inference', 'Classification'],
+      article: null
+    },
+    'deepseek/deepseek-v4-flash:free': {
+      tagline: 'DeepSeek V4 Flash free tier — frontier speed at zero cost with rate limits',
+      good: ['Free to use', 'Fast inference', 'Budget tasks', 'Testing'],
+      article: null
+    },
+    'deepseek/deepseek-r1': {
+      tagline: 'Chinese frontier reasoning — exceptional chain-of-thought, visible reasoning tokens',
+      good: ['Math & reasoning', 'Code generation', 'Chain of thought', 'Research tasks'],
+      article: '/models/deepseek-r1.html'
+    },
     'deepseek/deepseek-r1-0528': {
-      tagline: 'DeepSeek R1 (May 2025) — updated reasoning model with 163K context',
+      tagline: 'DeepSeek R1 (May 2025) — updated reasoning model with extended 163K context',
       good: ['Math & proofs', 'Complex coding', 'Chain of thought', 'Long-context reasoning'],
       article: null
     },
+    'deepseek/deepseek-chat-v3-0324': {
+      tagline: 'DeepSeek V3 — GPT-4o-level quality at a fraction of the price',
+      good: ['General coding', 'Analysis', 'Writing', 'Cost-efficient tasks'],
+      article: '/models/deepseek-v3.html'
+    },
+    /* ── X-AI / GROK ────────────────────────────── */
+    'x-ai/grok-4.20-multi-agent': {
+      tagline: 'Grok 4.20 Multi-Agent — 2M context built for complex multi-agent pipeline orchestration',
+      good: ['Agentic tasks', '2M context', 'Multi-step planning', 'Real-time info'],
+      article: null
+    },
+    'x-ai/grok-4.20': {
+      tagline: 'Grok 4.20 — xAI\'s latest with 2M context and real-time web grounding',
+      good: ['Real-time web', 'Long context', 'Research', 'Reasoning'],
+      article: null
+    },
+    'x-ai/grok-4.3': {
+      tagline: 'Grok 4.3 — updated xAI model with improved reasoning and instruction following',
+      good: ['Reasoning', 'Coding', 'Real-time info', 'Instruction following'],
+      article: null
+    },
     'x-ai/grok-3': {
-      tagline: 'Grok 3 — Elon\'s flagship with real-time web access and sharp reasoning',
+      tagline: 'Grok 3 — xAI flagship with real-time web access and sharp reasoning',
       good: ['Current events', 'Web search', 'Research', 'Creative tasks'],
       article: '/models/grok-3.html'
     },
@@ -929,9 +1043,57 @@
       good: ['Fast reasoning', 'Math', 'Code', 'Budget frontier tasks'],
       article: null
     },
-    'x-ai/grok-4.3': {
-      tagline: 'Grok 4.3 — latest xAI release with improved reasoning and instruction-following',
-      good: ['Reasoning', 'Coding', 'Real-time info', 'Instruction following'],
+    /* ── META ───────────────────────────────────── */
+    'meta-llama/llama-4-maverick': {
+      tagline: 'Llama 4 Maverick — Meta\'s multimodal frontier open-source release',
+      good: ['Multimodal', 'Open source', 'Self-hosting', 'Research'],
+      article: null
+    },
+    'meta-llama/llama-3.3-70b-instruct': {
+      tagline: 'Meta\'s best open-weight model — self-hostable, private, highly capable',
+      good: ['Self-hosting', 'Privacy-first', 'General chat', 'Coding'],
+      article: '/models/llama-3-3-70b.html'
+    },
+    /* ── QWEN ───────────────────────────────────── */
+    'qwen/qwen3.6-plus': {
+      tagline: 'Qwen 3.6 Plus — Alibaba\'s latest balanced model, 1M context at competitive price',
+      good: ['Code generation', 'Long context', 'Analysis', 'Multilingual'],
+      article: null
+    },
+    'qwen/qwen3.6-flash': {
+      tagline: 'Qwen 3.6 Flash — ultra-fast Qwen at near-zero cost, 1M context',
+      good: ['Fast inference', 'High volume', 'Budget tasks', 'Multilingual'],
+      article: null
+    },
+    'qwen/qwen3.6-max-preview': {
+      tagline: 'Qwen 3.6 Max Preview — Alibaba\'s most capable current model, frontier reasoning',
+      good: ['Complex reasoning', 'Code', 'Long context', 'Multilingual'],
+      article: null
+    },
+    'qwen/qwen3.6-27b': {
+      tagline: 'Qwen 3.6 27B — mid-sized Qwen with excellent price-to-capability ratio',
+      good: ['General tasks', 'Code', 'Multilingual', 'Cost-efficient'],
+      article: null
+    },
+    'qwen/qwen3-235b-a22b': {
+      tagline: 'Qwen3 235B — Alibaba\'s frontier MoE model with exceptional reasoning depth',
+      good: ['Complex reasoning', 'Code', 'Long context', 'Multilingual'],
+      article: null
+    },
+    'qwen/qwen3-235b-a22b:free': {
+      tagline: 'Qwen3 235B Free — frontier MoE capability at zero cost, rate limited',
+      good: ['Free to use', 'Complex reasoning', 'Code', 'Long context'],
+      article: null
+    },
+    'qwen/qwen-2.5-72b-instruct': {
+      tagline: 'Alibaba\'s best open-weight — top-tier for coding and multilingual tasks',
+      good: ['Code generation', 'Chinese & multilingual', 'Analysis', 'Structured output'],
+      article: '/models/qwen-2-5-72b.html'
+    },
+    /* ── MISTRAL ────────────────────────────────── */
+    'mistralai/mistral-medium-3-5': {
+      tagline: 'Mistral Medium 3.5 — balanced capability and speed from the European AI lab',
+      good: ['Balanced tasks', 'Coding', 'Multilingual', 'Analysis'],
       article: null
     },
     'mistralai/mistral-large': {
@@ -940,32 +1102,13 @@
       article: '/models/mistral-large.html'
     },
     'mistralai/mistral-small-3.1-24b-instruct': {
-      tagline: 'Mistral Small — fast, efficient, great for RAG pipelines and structured tasks',
+      tagline: 'Mistral Small — fast, efficient, great for RAG pipelines and structured extraction',
       good: ['Fast tasks', 'Classification', 'RAG pipelines', 'European data'],
       article: null
     },
-    'mistralai/mistral-medium-3.5': {
-      tagline: 'Mistral Medium 3.5 — balanced capability and speed from the Mistral lineup',
-      good: ['Balanced tasks', 'Coding', 'Multilingual', 'Analysis'],
-      article: null
-    },
-    'qwen/qwen-2.5-72b-instruct': {
-      tagline: 'Alibaba\'s best open-weight — top-tier for coding and multilingual tasks',
-      good: ['Code generation', 'Chinese & multilingual', 'Analysis', 'Structured output'],
-      article: '/models/qwen-2-5-72b.html'
-    },
-    'qwen/qwen3-235b-a22b': {
-      tagline: 'Qwen3 235B — Alibaba\'s frontier MoE model with exceptional reasoning',
-      good: ['Complex reasoning', 'Code', 'Long context', 'Multilingual'],
-      article: null
-    },
-    'qwen/qwen3-235b-a22b:free': {
-      tagline: 'Qwen3 235B on free tier — frontier MoE capability at zero cost',
-      good: ['Free to use', 'Complex reasoning', 'Code', 'Long context'],
-      article: null
-    },
+    /* ── OTHER NOTABLE ──────────────────────────── */
     'nousresearch/hermes-3-llama-3.1-405b': {
-      tagline: 'Nous Research\'s flagship agent model — built for persistent memory and agentic workflows',
+      tagline: 'Nous Research flagship agent model — built for persistent memory and agentic workflows',
       good: ['AI agents', 'Persistent memory', 'Tool use', 'Long-horizon tasks'],
       article: '/models/hermes-3-405b.html'
     },
@@ -975,18 +1118,8 @@
       article: null
     },
     'nvidia/llama-3.3-nemotron-super-49b-v1.5': {
-      tagline: 'NVIDIA Nemotron Super 49B — ultra-efficient reasoning model from NVIDIA',
+      tagline: 'NVIDIA Nemotron Super 49B — ultra-efficient reasoning from NVIDIA',
       good: ['Reasoning', 'Code', 'Instruction following', 'Research'],
-      article: null
-    },
-    'nvidia/nemotron-3-super-120b-a12b': {
-      tagline: 'NVIDIA Nemotron 120B — NVIDIA\'s flagship large MoE reasoning model',
-      good: ['Reasoning', 'Complex tasks', 'Research', 'Code generation'],
-      article: null
-    },
-    'nvidia/nemotron-3-super-120b-a12b:free': {
-      tagline: 'NVIDIA Nemotron 120B Free — frontier MoE scale at zero cost',
-      good: ['Free to use', 'Reasoning', 'Instruction following', 'Research'],
       article: null
     }
   };
@@ -1023,7 +1156,7 @@
   }
 
   function getProvider(m) {
-    return (m.id || '').split('/')[0].toLowerCase();
+    return (m.id || '').replace(/^~/, '').split('/')[0].toLowerCase();
   }
 
   function getModalities(m) {
@@ -1095,6 +1228,31 @@
 
   /* ─── Build a full model card ─── */
   var MAX_BENCH = 0.1; // scale bar max
+  var allModels  = [];
+  var currentSort = 'newest';
+
+  function sortModels(models) {
+    var s = models.slice();
+    if (currentSort === 'newest') {
+      s.sort(function (a, b) { return (b.created || 0) - (a.created || 0); });
+    } else if (currentSort === 'price_asc') {
+      s.sort(function (a, b) { return benchCost(a) - benchCost(b); });
+    } else if (currentSort === 'price_desc') {
+      s.sort(function (a, b) { return benchCost(b) - benchCost(a); });
+    } else if (currentSort === 'context') {
+      s.sort(function (a, b) { return (b.context_length || 0) - (a.context_length || 0); });
+    } else if (currentSort === 'az') {
+      s.sort(function (a, b) { return (a.name || a.id).localeCompare(b.name || b.id); });
+    }
+    return s;
+  }
+
+  function renderGrid() {
+    var grid = document.getElementById('modelsFullGrid');
+    if (!grid) return;
+    grid.innerHTML = sortModels(allModels).map(buildCard).join('');
+    applyFilters();
+  }
 
   function buildCard(m) {
     var badge    = getBadge(m);
@@ -1271,7 +1429,8 @@
   }
 
   function buildSlideshowSection(models) {
-    var newest = models.slice(0, 9); /* top 9 = 3 pages of 3 */
+    /* exclude ~ alias models — they're pointers, not actual new releases */
+    var newest = models.filter(function (m) { return !/^~/.test(m.id); }).slice(0, 9);
     var track = document.getElementById('slideshowTrack');
     if (!track) return;
     track.innerHTML = newest.map(buildSlideCard).join('');
@@ -1323,13 +1482,9 @@
     if (elN) elN.textContent = newM;
     if (elV) elV.textContent = vision;
 
+    allModels = sorted;
     buildSlideshowSection(sorted);
-
-    var grid = document.getElementById('modelsFullGrid');
-    if (grid) {
-      grid.innerHTML = sorted.map(buildCard).join('');
-      applyFilters();
-    }
+    renderGrid();
   }
 
   /* ─── Event listeners ─── */
@@ -1358,6 +1513,16 @@
         applyFilters();
       });
     }
+    /* sort buttons */
+    document.querySelectorAll('.sort-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.sort-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentSort = btn.dataset.sort;
+        renderGrid();
+      });
+    });
+
     /* pause slideshow on hover */
     var outer = document.querySelector('.slideshow-outer');
     if (outer) {
