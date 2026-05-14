@@ -686,7 +686,7 @@ concise 3-paragraph summary.</div>
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download Free
               </button>
-              <a href="/skills/content-pipeline.html" class="skill-guide-link coming">Guide Coming Soon</a>
+              <a href="/skills/content-pipeline.html" class="skill-guide-link">Read the Guide &rarr;</a>
             </div>
           </div>
         </div>
@@ -1905,118 +1905,381 @@ RESEARCH DATA:
 
 ---
 
-## The 5-Stage Pipeline
+## The 7-Stage Pipeline
 
-RESEARCH → DRAFT → VERIFY → OPTIMISE → PUBLISH
+INGEST → PROCESS → EXTRACT → DRAFT → QUALITY → REVIEW → PUBLISH
 
-Each stage is a separate prompt. Outputs are passed forward.
-Humans review at stages 3 and 5.
+Stages 1-3 and 7 run automatically.
+Human checkpoints at: Stage 3 (angle selection) and Stage 6 (pre-publish review).
 
 ---
 
-## Stage 1: Topic Research
+## Stage 1: Source Ingestion
 
-\`\`\`
+from youtube_transcript_api import YouTubeTranscriptApi
+from bs4 import BeautifulSoup
+from dataclasses import dataclass, field
+import re, httpx, json
+from datetime import datetime
+
+@dataclass
+class Source:
+    source_id: str
+    source_type: str          # "youtube" | "url" | "text"
+    raw_text: str
+    title: str = ""
+    url: str = ""
+    duration_seconds: int = 0
+    word_count: int = 0
+    ingested_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+
+def ingest_youtube(video_url: str) -> Source:
+    video_id = re.search(r"(?:v=|youtu\.be/)([\\w-]{11})", video_url).group(1)
+    transcript = YouTubeTranscriptApi.get_transcript(video_id)
+    text = " ".join(s["text"] for s in transcript)
+    duration = int(transcript[-1]["start"] + transcript[-1].get("duration", 0))
+    return Source(
+        source_id=video_id, source_type="youtube",
+        raw_text=text, url=video_url,
+        duration_seconds=duration, word_count=len(text.split())
+    )
+
+def ingest_url(url: str) -> Source:
+    resp = httpx.get(url, timeout=15, follow_redirects=True)
+    soup = BeautifulSoup(resp.text, "html.parser")
+    for tag in soup(["script","style","nav","footer","header"]): tag.decompose()
+    title = soup.find("title")
+    text = " ".join(soup.get_text(separator=" ").split())
+    return Source(
+        source_id=url, source_type="url", raw_text=text,
+        title=title.text.strip() if title else "",
+        url=url, word_count=len(text.split())
+    )
+
+---
+
+## Stage 2: Transcript Processing
+
+CLEANING PROMPT:
+You are a transcript editor.
+Clean the raw transcript below:
+1. Add punctuation where missing
+2. Fix obvious speech-to-text errors
+3. Remove filler words (um, uh, you know, like) and false starts
+4. Merge run-on sentences
+5. Do NOT remove content, reword ideas, or add commentary.
+Return ONLY the cleaned text.
+
+RAW TRANSCRIPT: {raw_text}
+
+---
+
+def chunk_text(text: str, max_words: int = 2500) -> list[str]:
+    words = text.split()
+    chunks, current = [], []
+    for word in words:
+        current.append(word)
+        if len(current) >= max_words and word.endswith((".", "!", "?")):
+            chunks.append(" ".join(current))
+            current = []
+    if current:
+        chunks.append(" ".join(current))
+    return chunks
+
+async def process_transcript(source: Source, llm) -> str:
+    if source.word_count < 2500:
+        return await llm(CLEANING_PROMPT.format(raw_text=source.raw_text))
+    chunks = chunk_text(source.raw_text)
+    cleaned = await asyncio.gather(*[
+        llm(CLEANING_PROMPT.format(raw_text=chunk)) for chunk in chunks
+    ])
+    return " ".join(cleaned)
+
+---
+
+## Stage 3: Insight Extraction
+
+EXTRACTION PROMPT:
+You are an AI research analyst.
+Extract every substantive claim, insight, or data point from the transcript below.
+
+For each insight return JSON:
+{
+  "id": "insight_1",
+  "text": "One-sentence summary",
+  "verbatim": "Exact quote from source (max 40 words)",
+  "type": "fact | statistic | opinion | prediction | technique",
+  "novelty": 1-5,      // 1=widely known, 5=cutting-edge or counterintuitive
+  "importance": 1-5    // 1=minor detail, 5=core claim
+}
+
+Return JSON: {"insights": [...]}
+
+TEXT: {processed_text}
+
+---
+
+def score_insight(insight: dict) -> float:
+    return (insight["novelty"] * 0.6) + (insight["importance"] * 0.4)
+
+def filter_insights(insights: list[dict], min_score: float = 3.0) -> list[dict]:
+    scored = [(i, score_insight(i)) for i in insights]
+    scored.sort(key=lambda x: x[1], reverse=True)
+    return [i for i, s in scored if s >= min_score]
+
+# HUMAN CHECKPOINT 1: Review filtered insights, select content angle
+# Pipeline pauses here. Resume with: resume_after_angle(state, chosen_angle)
+
+---
+
+## Stage 4: Drafting
+
+OUTLINE PROMPT (pass 1):
 You are a content strategist.
-Research the topic: [TOPIC]
-
-Output a structured brief with:
-1. ANGLE: The specific angle or thesis (not just "a guide to X")
-2. TARGET READER: Who this is for and what they already know
-3. KEY QUESTIONS: 5 questions this article must answer
-4. SOURCES TO CHECK: 5 authoritative sources to reference (URLs or publication names)
-5. COMPETING CONTENT: What already exists and how to differentiate
-6. WORD COUNT TARGET: Based on complexity (500/1000/2000/3000+)
-\`\`\`
+Using ONLY the insights below, create a 4-6 section article outline.
+Return JSON: {
+  "title": "...",
+  "hook": "Opening sentence or question",
+  "sections": [{"heading":"...", "angle":"...", "insight_ids":["insight_1","insight_3"]}],
+  "cta": "Closing call-to-action"
+}
+INSIGHTS: {filtered_insights_json}
 
 ---
 
-## Stage 2: Draft
+PROSE PROMPT (pass 2):
+You are a technology journalist.
+Write the full article following this outline. Use ONLY the provided insights.
+Rules:
+- No filler openers ("In today's world", "AI is transforming")
+- Cite each claim as (insight_N) inline
+- Active voice. Sub-600 word sections.
+- Readers are practitioners, not beginners.
 
-\`\`\`
-You are an expert writer in [NICHE].
-Write a [WORD COUNT] word article using the brief below.
-
-Structure:
-- Hook (first 2 sentences must compel continued reading)
-- H2 sections (use the Key Questions as a guide)
-- Concrete examples for every claim
-- Specific, actionable takeaways
-- No fluff, no filler, no generic advice
-
-BRIEF: [INSERT STAGE 1 OUTPUT]
-\`\`\`
+OUTLINE: {outline_json}
+INSIGHTS: {filtered_insights_json}
 
 ---
 
-## Stage 3: Fact Check (Human Review Point 1)
+## Stage 5: Quality Gates
 
-\`\`\`
-You are a fact-checker and editor.
-Review the draft below for:
-1. Factual accuracy — flag any claim you cannot verify
-2. Logical consistency — flag any contradictions
-3. Specificity — identify vague generalisations that need data or examples
-4. Tone — is it consistent and appropriate for [AUDIENCE]?
-
-For each issue found, provide a specific suggested fix.
-
-DRAFT: [INSERT STAGE 2 OUTPUT]
-\`\`\`
-
-→ HUMAN REVIEW: Check flagged issues before proceeding.
+| Gate | Check | Fail Action |
+|------|-------|-------------|
+| Length | 600-4000 words | Regenerate if <600 |
+| Citations | Every section cites ≥1 insight | Rewrite uncited sections |
+| Groundedness | LLM checks no facts added beyond insights | Rewrite failing sections |
+| Filler | No banned openers or clichés | Strip and rewrite opening |
+| Readability | Flesch-Kincaid grade ≤ 14 | Simplify complex sentences |
+| SEO | title, meta_description, slug present | Add missing fields |
 
 ---
 
-## Stage 4: SEO Optimise
+async def run_quality_gates(article: str, insights: list[dict]) -> dict:
+    checks = await asyncio.gather(
+        check_length(article),
+        check_citations(article, insights),
+        check_groundedness(article, insights, llm),
+        check_filler(article),
+        check_readability(article),
+        check_seo_metadata(article),
+    )
+    gates = ["length","citations","groundedness","filler","readability","seo"]
+    results = dict(zip(gates, checks))
+    failures = [k for k, v in results.items() if not v["passed"]]
+    return {"results": results, "failures": failures, "passed": len(failures) == 0}
 
-\`\`\`
-You are an SEO specialist.
-Optimise the article below for search without compromising readability.
-
-Tasks:
-1. Suggest a primary keyword (high intent, achievable difficulty for a new site)
-2. Suggest 3–5 secondary keywords / LSI terms to weave in naturally
-3. Rewrite the title for both SEO and click-through rate
-4. Write a meta description (150–160 chars, includes primary keyword)
-5. Suggest internal link opportunities (placeholder: [LINK TO: topic])
-6. Identify any heading structure improvements (H2/H3 hierarchy)
-
-Output the full optimised article + an SEO brief at the top.
-
-ARTICLE: [INSERT VERIFIED DRAFT]
-\`\`\`
-
----
-
-## Stage 5: Publish Prep
-
-\`\`\`
-Format the following article for [CMS: WordPress / Ghost / Webflow / etc.]
-
-Tasks:
-1. Convert to [Markdown / HTML / plain text]
-2. Suggest featured image description (for AI generation or stock photo search)
-3. Suggest 3 social media posts (Twitter/X, LinkedIn, one short-form)
-4. Generate schema markup (Article type) if applicable
-5. Suggest an email subject line for newsletter send
-
-ARTICLE: [INSERT OPTIMISED DRAFT]
-\`\`\`
-
-→ HUMAN REVIEW: Final check before publish.
+async def handle_gate_failures(article, insights, failures, llm):
+    if not failures:
+        return article
+    revision_prompt = build_revision_prompt(article, insights, failures)
+    revised = await llm(revision_prompt)
+    second_check = await run_quality_gates(revised, insights)
+    return revised if second_check["passed"] else article  # Return best attempt
 
 ---
 
-## Human-in-the-Loop Checkpoints
+## Stage 6: Human Review
 
-| Stage | Human Action |
-|-------|-------------|
-| After Stage 1 | Confirm angle and brief before writing begins |
-| After Stage 3 | Review flagged facts, make corrections |
-| After Stage 5 | Final approval before CMS upload |
+HUMAN CHECKPOINT 2: Editor review before publish.
+
+Editor checklist:
+- [ ] Headline is specific and interesting (not generic)
+- [ ] All insights accurately represented
+- [ ] No factual claims added beyond source material
+- [ ] CTA matches site goals
+- [ ] Images / screenshots needed?
+- [ ] Internal links identified
 
 ---
+
+import json, os, time
+from pathlib import Path
+
+QUEUE_DIR = Path("review_queue")
+QUEUE_DIR.mkdir(exist_ok=True)
+
+def submit_for_review(state: dict) -> str:
+    review_id = f"review_{int(time.time())}_{state['source_id']}"
+    path = QUEUE_DIR / f"{review_id}.json"
+    path.write_text(json.dumps({"review_id": review_id, "state": state,
+                                "status": "pending", "submitted_at": time.time()}))
+    return review_id
+
+def get_review_status(review_id: str) -> str:
+    path = QUEUE_DIR / f"{review_id}.json"
+    if not path.exists(): return "not_found"
+    data = json.loads(path.read_text())
+    return data.get("status", "pending")
+
+def approve_review(review_id: str, editor_notes: str = "") -> dict:
+    path = QUEUE_DIR / f"{review_id}.json"
+    data = json.loads(path.read_text())
+    data.update({"status": "approved", "editor_notes": editor_notes,
+                 "approved_at": time.time()})
+    path.write_text(json.dumps(data))
+    return data["state"]
+
+---
+
+## Stage 7: Publish
+
+SEO METADATA PROMPT:
+Based on the article below, return JSON:
+{
+  "slug": "url-safe-slug-max-6-words",
+  "title": "SEO-optimised headline (50-60 chars)",
+  "meta_description": "155-160 chars, primary keyword near start",
+  "primary_keyword": "...",
+  "tags": ["tag1","tag2","tag3"]
+}
+
+---
+
+SOCIAL COPY PROMPT:
+Write social distribution copy for this article:
+1. Twitter thread (5 tweets, first tweet = hook, last = link)
+2. LinkedIn post (200-250 words, insight-led, professional tone)
+3. Newsletter blurb (80-100 words, curiosity-driven)
+
+---
+
+import jwt, time, httpx
+
+def publish_to_ghost(article_html: str, seo: dict, ghost_url: str,
+                     admin_key: str) -> dict:
+    key_id, secret = admin_key.split(":")
+    payload = {"iat": int(time.time()), "exp": int(time.time()) + 300,
+               "aud": "/admin/"}
+    token = jwt.encode(payload, bytes.fromhex(secret),
+                       algorithm="HS256", headers={"kid": key_id})
+    post = {"title": seo["title"], "html": article_html,
+            "slug": seo["slug"], "status": "draft",
+            "meta_description": seo["meta_description"],
+            "tags": [{"name": t} for t in seo.get("tags", [])]}
+    resp = httpx.post(f"{ghost_url}/ghost/api/admin/posts/",
+                      json={"posts": [post]},
+                      headers={"Authorization": f"Ghost {token}"})
+    return resp.json()["posts"][0]
+
+---
+
+## Orchestration: PipelineState + Checkpoints
+
+from dataclasses import dataclass, field, asdict
+from typing import Optional
+import json
+from pathlib import Path
+
+@dataclass
+class PipelineState:
+    run_id: str
+    source_id: str
+    source: dict = field(default_factory=dict)
+    processed_text: str = ""
+    insights: list = field(default_factory=list)
+    filtered_insights: list = field(default_factory=list)
+    chosen_angle: str = ""
+    outline: dict = field(default_factory=dict)
+    draft: str = ""
+    quality_results: dict = field(default_factory=dict)
+    review_id: str = ""
+    seo: dict = field(default_factory=dict)
+    published_url: str = ""
+    stage: str = "init"
+    errors: list = field(default_factory=list)
+
+    def save(self):
+        path = Path(f"pipeline_state_{self.run_id}.json")
+        path.write_text(json.dumps(asdict(self)))
+
+    @classmethod
+    def load(cls, run_id: str) -> "PipelineState":
+        path = Path(f"pipeline_state_{run_id}.json")
+        return cls(**json.loads(path.read_text()))
+
+---
+
+async def run_pipeline(source_url: str, run_id: str = None) -> PipelineState:
+    """Stages 1-3. Pauses at HUMAN CHECKPOINT 1 (angle selection)."""
+    run_id = run_id or f"run_{int(time.time())}"
+    state = PipelineState(run_id=run_id, source_id=source_url)
+    state.source = asdict(ingest_youtube(source_url))
+    state.stage = "ingested"; state.save()
+    state.processed_text = await process_transcript(Source(**state.source), llm)
+    state.stage = "processed"; state.save()
+    raw = await llm(EXTRACTION_PROMPT.format(processed_text=state.processed_text))
+    all_insights = json.loads(raw)["insights"]
+    state.insights = all_insights
+    state.filtered_insights = filter_insights(all_insights)
+    state.stage = "extracted"; state.save()
+    print(f"CHECKPOINT 1: Review insights in state {run_id}")
+    print(f"Resume with: resume_after_angle('{run_id}', chosen_angle='...')")
+    return state
+
+async def resume_after_angle(run_id: str, chosen_angle: str) -> PipelineState:
+    """Stages 4-6. Pauses at HUMAN CHECKPOINT 2 (review queue)."""
+    state = PipelineState.load(run_id)
+    state.chosen_angle = chosen_angle
+    raw_outline = await llm(OUTLINE_PROMPT.format(...))
+    state.outline = json.loads(raw_outline)
+    state.draft = await llm(PROSE_PROMPT.format(...))
+    state.stage = "drafted"; state.save()
+    gates = await run_quality_gates(state.draft, state.filtered_insights)
+    if not gates["passed"]:
+        state.draft = await handle_gate_failures(state.draft, state.filtered_insights,
+                                                  gates["failures"], llm)
+    state.quality_results = gates; state.stage = "quality_checked"; state.save()
+    state.review_id = submit_for_review(asdict(state))
+    state.stage = "in_review"; state.save()
+    print(f"CHECKPOINT 2: Article in review queue — ID: {state.review_id}")
+    return state
+
+async def resume_after_approval(run_id: str) -> PipelineState:
+    """Stage 7. Publishes approved article."""
+    state = PipelineState.load(run_id)
+    approved_state = approve_review(state.review_id)
+    state.seo = json.loads(await llm(SEO_PROMPT.format(article=state.draft)))
+    result = publish_to_ghost(state.draft, state.seo, GHOST_URL, GHOST_ADMIN_KEY)
+    state.published_url = result["url"]
+    state.stage = "published"; state.save()
+    return state
+
+---
+
+## Common Failure Modes
+
+| Failure | Symptom | Fix |
+|---------|---------|-----|
+| Thin source | <20 insights extracted | Combine 2-3 sources before extracting |
+| Hallucinated stats | Numbers not in verbatim quotes | Enforce groundedness gate strictly |
+| No angle discipline | Generic articles every time | Force angle selection at checkpoint 1 |
+| Review backlog | Queue grows faster than reviews | Add reviewer, increase publish cadence |
+| Quality gate gaming | Model rewrites to pass gates trivially | Add semantic similarity check to gate |
+| No state persistence | Pipeline fails silently mid-run | Call state.save() after every stage |
+
+---
+
+See the full guide: https://ai.quantummerlin.com/skills/content-pipeline.html
 
 *Downloaded from Aether Intel — https://ai.quantummerlin.com*
 `
