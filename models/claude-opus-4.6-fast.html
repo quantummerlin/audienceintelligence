@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Opus 4.6 Fast Review — Anthropic's Prior-Gen Opus at Full Price | Aether Intel</title>
+  <meta name="description" content="Claude Opus 4.6 Fast reviewed: $30/$150/1M pricing, 200K context, vision, and engineer-grade structured output. The April 2026 Opus for teams that need proven API stability." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/claude-opus-4.6-fast/" />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+      --amber: #d97706;
+      --amber-glow: rgba(217,119,6,0.12);
+      --amber-border: rgba(217,119,6,0.35);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--neon-indigo); text-decoration: none; }
+    a:hover { color: var(--neon-cyan); }
+
+    img { max-width: 100%; display: block; }
+
+    /* ── Site Header ───────────────────────────────────────────── */
+    .site-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--neon-indigo);
+      letter-spacing: 0.04em;
+    }
+    .site-logo span { color: var(--neon-cyan); }
+    .site-nav { display: flex; gap: 28px; }
+    .site-nav a {
+      font-family: var(--font-body);
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color .2s;
+    }
+    .site-nav a:hover { color: var(--text-primary); }
+
+    /* ── Layout ────────────────────────────────────────────────── */
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── Breadcrumb ────────────────────────────────────────────── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 20px 0 8px;
+      font-size: .78rem;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+    }
+    .breadcrumb a { color: var(--text-muted); }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb .sep { color: var(--text-muted); opacity: .5; }
+    .breadcrumb .current { color: var(--text-secondary); }
+
+    /* ── Hero ──────────────────────────────────────────────────── */
+    .hero {
+      padding: 36px 0 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: .76rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+      font-family: var(--font-body);
+    }
+    .badge-provider {
+      background: rgba(217,119,6,0.12);
+      border: 1px solid rgba(217,119,6,0.35);
+      color: #d97706;
+    }
+    .badge-tag {
+      background: rgba(129,140,248,0.08);
+      border: 1px solid rgba(129,140,248,0.22);
+      color: var(--neon-indigo);
+    }
+    .badge-vision {
+      background: rgba(34,211,238,0.08);
+      border: 1px solid rgba(34,211,238,0.22);
+      color: var(--neon-cyan);
+    }
+    .badge-gen {
+      background: rgba(71,85,105,0.25);
+      border: 1px solid rgba(71,85,105,0.5);
+      color: var(--text-secondary);
+    }
+
+    h1.model-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+    h1.model-title .accent { color: #d97706; }
+
+    .hero-lead {
+      font-size: 1.08rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin-bottom: 20px;
+      font-family: var(--font-body);
+    }
+
+    .hero-highlight {
+      background: rgba(217,119,6,0.07);
+      border-left: 3px solid #d97706;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 18px;
+      font-size: .92rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-family: var(--font-body);
+    }
+    .hero-highlight strong { color: var(--text-primary); }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
+    .hero-meta span strong { color: var(--text-secondary); }
+
+    /* ── Section ───────────────────────────────────────────────── */
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+    h2.section-title .accent { color: #d97706; }
+
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 22px 0 8px;
+    }
+
+    p.body-copy {
+      font-size: .97rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      line-height: 1.75;
+    }
+    p.body-copy strong { color: var(--text-primary); }
+    p.body-copy code {
+      background: rgba(129,140,248,0.1);
+      border: 1px solid rgba(129,140,248,0.15);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: .88em;
+      color: var(--neon-indigo);
+      font-family: 'Courier New', monospace;
+    }
+
+    ul.body-list {
+      margin: 0 0 16px 0;
+      padding-left: 20px;
+    }
+    ul.body-list li {
+      font-size: .97rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      line-height: 1.65;
+    }
+    ul.body-list li strong { color: var(--text-primary); }
+
+    /* ── Spec Cards ────────────────────────────────────────────── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 12px;
+      margin: 22px 0;
+    }
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-card .spec-label {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      font-family: var(--font-body);
+    }
+    .spec-card .spec-value {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+    }
+    .spec-card .spec-value.amber { color: #d97706; }
+    .spec-card .spec-note {
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Benchmark Cost Badge ──────────────────────────────────── */
+    .benchmark-cost-badge {
+      display: inline-block;
+      font-family: var(--font-body);
+    }
+    .benchmark-cost-badge.bc-prem {
+      color: #f97316;
+      background: rgba(249,115,22,.08);
+      border: 1px solid rgba(249,115,22,.3);
+      border-radius: 7px;
+      padding: 4px 12px;
+      font-weight: 700;
+      font-size: .82rem;
+    }
+
+    /* ── Benchmark Block ───────────────────────────────────────── */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin: 20px 0;
+    }
+    .benchmark-block .bm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .benchmark-block .bm-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .benchmark-prompt-text {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-style: italic;
+      line-height: 1.6;
+    }
+    .benchmark-response-text {
+      font-size: .9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .benchmark-response-text strong { color: var(--text-primary); }
+
+    /* ── Schema Diagram ────────────────────────────────────────── */
+    .schema-diagram {
+      background: rgba(7,7,15,.8);
+      border: 1px solid rgba(217,119,6,0.2);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: .78rem;
+      color: #94a3b8;
+      overflow-x: auto;
+      margin: 14px 0;
+      line-height: 1.6;
+    }
+
+    /* ── Token Stats Strip ─────────────────────────────────────── */
+    .token-stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .token-stat {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: .8rem;
+      font-family: var(--font-body);
+    }
+    .token-stat .ts-label {
+      color: var(--text-muted);
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .token-stat .ts-value {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+    .token-stat .ts-value.amber { color: #d97706; }
+    .token-stat .ts-value.orange { color: #f97316; }
+
+    /* ── Info Callout ──────────────────────────────────────────── */
+    .info-callout {
+      background: rgba(129,140,248,0.06);
+      border: 1px solid rgba(129,140,248,0.18);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .info-callout .ic-label {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--neon-indigo);
+      margin-bottom: 6px;
+    }
+    .info-callout p {
+      font-size: .91rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .info-callout p strong { color: var(--text-primary); }
+
+    .amber-callout {
+      background: rgba(217,119,6,0.07);
+      border: 1px solid rgba(217,119,6,0.25);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .amber-callout .ic-label {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #d97706;
+      margin-bottom: 6px;
+    }
+    .amber-callout p {
+      font-size: .91rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .amber-callout p strong { color: var(--text-primary); }
+
+    /* ── Use Case Grid ─────────────────────────────────────────── */
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card .uc-icon {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+    .use-case-card .uc-title {
+      font-family: var(--font-heading);
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+    }
+    .use-case-card .uc-desc {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ── Fit Grid ──────────────────────────────────────────────── */
+    .fit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 18px 0;
+    }
+    @media (max-width: 560px) { .fit-grid { grid-template-columns: 1fr; } }
+    .fit-card {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .fit-card.fit-yes { border: 1px solid rgba(34,197,94,0.25); }
+    .fit-card.fit-no  { border: 1px solid rgba(239,68,68,0.2); }
+    .fit-card .fc-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-size: .9rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .fit-card.fit-yes .fc-header { color: #4ade80; }
+    .fit-card.fit-no  .fc-header { color: #f87171; }
+    .fit-card ul {
+      padding-left: 16px;
+      margin: 0;
+    }
+    .fit-card ul li {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+      line-height: 1.5;
+    }
+
+    /* ── Pricing Table ─────────────────────────────────────────── */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-family: var(--font-body);
+      font-size: .88rem;
+    }
+    .pricing-table th {
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-size: .72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .pricing-table td strong { color: var(--text-primary); }
+    .pricing-table tr:last-child td { border-bottom: none; }
+    .pricing-table .price-value {
+      font-weight: 700;
+      color: #d97706;
+      font-size: .95rem;
+    }
+    .pricing-table td.note-cell {
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Comparison Table ──────────────────────────────────────── */
+    .comparison-table-wrap {
+      overflow-x: auto;
+      margin: 18px 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-body);
+      font-size: .85rem;
+    }
+    .comparison-table th {
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-size: .7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      padding: 10px 14px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .comparison-table td {
+      padding: 11px 14px;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .comparison-table td strong { color: var(--text-primary); }
+    .comparison-table .this-model td {
+      border-left: 3px solid #d97706;
+      background: rgba(217,119,6,0.04);
+    }
+    .comparison-table .this-model td:first-child {
+      color: #d97706;
+      font-weight: 700;
+    }
+    .comparison-table .tag-this {
+      display: inline-block;
+      background: rgba(217,119,6,0.15);
+      border: 1px solid rgba(217,119,6,0.3);
+      color: #d97706;
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: .68rem;
+      font-weight: 700;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .comparison-table .badge-yes {
+      color: #4ade80;
+      font-weight: 700;
+    }
+    .comparison-table .badge-no {
+      color: var(--text-muted);
+    }
+
+    /* ── Try-it Band ───────────────────────────────────────────── */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(217,119,6,0.1) 0%, rgba(217,119,6,0.04) 100%);
+      border: 1px solid rgba(217,119,6,0.3);
+      border-radius: 14px;
+      padding: 28px 30px;
+      margin: 36px 0;
+      text-align: center;
+    }
+    .try-it-band .tb-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .try-it-band .tb-sub {
+      font-size: .9rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .try-it-band .tb-id {
+      font-family: 'Courier New', monospace;
+      font-size: .8rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .btn-try {
+      display: inline-block;
+      background: #d97706;
+      color: #07070f;
+      font-family: var(--font-heading);
+      font-size: .95rem;
+      font-weight: 700;
+      padding: 12px 32px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      text-decoration: none;
+    }
+    .btn-try:hover {
+      background: #b45309;
+      color: #07070f;
+      transform: translateY(-1px);
+    }
+
+    /* ── AdSense Mid ───────────────────────────────────────────── */
+    .adsense-mid {
+      margin: 32px 0;
+      text-align: center;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      font-size: .78rem;
+      color: var(--text-muted);
+    }
+    .site-footer a { color: var(--text-muted); }
+    .site-footer a:hover { color: var(--neon-indigo); }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .site-nav { gap: 16px; }
+      .site-nav a:nth-child(n+3) { display: none; }
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .benchmark-block .bm-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="site-logo">AETHER<span>INTEL</span></div>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/models/">Models</a>
+      <a href="/benchmarks/">Benchmarks</a>
+      <a href="/compare/">Compare</a>
+      <a href="/news/">News</a>
+    </nav>
+  </header>
+
+  <!-- Page Wrap -->
+  <div class="page-wrap">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep">/</span>
+      <a href="/models/">Models</a>
+      <span class="sep">/</span>
+      <a href="/models/anthropic/">Anthropic</a>
+      <span class="sep">/</span>
+      <span class="current">Claude Opus 4.6 Fast</span>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-badges">
+        <span class="badge badge-provider">Anthropic</span>
+        <span class="badge badge-tag">Opus Class</span>
+        <span class="badge badge-vision">Vision</span>
+        <span class="badge badge-gen">Prior Generation</span>
+        <span class="badge badge-tag">200K Context</span>
+      </div>
+
+      <h1 class="model-title">
+        Claude <span class="accent">Opus 4.6</span> Fast
+      </h1>
+
+      <p class="hero-lead">
+        Anthropic's prior-generation flagship on the fast inference tier. The same
+        $30 / $150 per million token pricing as the newer 4.7 Fast, with an April 2026 release
+        date, 200K context, and full vision support — chosen by production teams that
+        value API stability over cutting-edge generation.
+      </p>
+
+      <div class="hero-highlight">
+        <strong>Prior generation, full premium pricing.</strong> Claude Opus 4.6 Fast
+        carries identical pricing to the May 2026 Opus 4.7 Fast. Teams that still select
+        it are betting on a documented behavior profile, locked integration tests, and
+        a model that has shipped in production for weeks. It is not the discount path — it
+        is the stable path.
+      </div>
+
+      <div class="hero-meta">
+        <span><strong>Provider:</strong> Anthropic (direct)</span>
+        <span><strong>OpenRouter ID:</strong> <code style="background:none;border:none;padding:0;font-size:.8rem;color:var(--text-muted);">anthropic/claude-opus-4.6-fast</code></span>
+        <span><strong>Model date:</strong> 20260407</span>
+        <span><strong>Published:</strong> May 16, 2026</span>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- Quick Specs -->
+    <section>
+      <h2 class="section-title">At a Glance</h2>
+
+      <div class="model-specs-grid">
+        <div class="spec-card">
+          <div class="spec-label">Input Price</div>
+          <div class="spec-value amber">$30.00</div>
+          <div class="spec-note">per 1M tokens</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Output Price</div>
+          <div class="spec-value amber">$150.00</div>
+          <div class="spec-note">per 1M tokens</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Context Window</div>
+          <div class="spec-value">200K</div>
+          <div class="spec-note">200,000 tokens</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Vision</div>
+          <div class="spec-value" style="color:#22d3ee;">Yes</div>
+          <div class="spec-note">Text + Image input</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Reasoning Tokens</div>
+          <div class="spec-value">None</div>
+          <div class="spec-note">Standard generation</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Architecture</div>
+          <div class="spec-value" style="font-size:.88rem;">Dense Transformer</div>
+          <div class="spec-note">Claude 4.6 Opus class</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Released</div>
+          <div class="spec-value" style="font-size:.88rem;">April 2026</div>
+          <div class="spec-note">Preceded 4.7 by ~1 month</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Benchmark Cost</div>
+          <div class="spec-value" style="font-size:.88rem;">
+            <span class="benchmark-cost-badge bc-prem">$0.345</span>
+          </div>
+          <div class="spec-note">bc-prem tier (≥$0.05)</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- What It Is -->
+    <section>
+      <h2 class="section-title">What Is Claude <span class="accent">Opus 4.6</span> Fast?</h2>
+
+      <p class="body-copy">
+        Claude Opus 4.6 Fast is the fast-inference variant of Anthropic's April 2026 Opus
+        release — the generation immediately preceding Claude Opus 4.7. It sits in the same
+        product tier as the newer model, carrying identical pricing, but represents the
+        prior architectural revision with its own distinct behavior, capability profile, and
+        training data cutoff.
+      </p>
+
+      <p class="body-copy">
+        The "Fast" designation refers to Anthropic's optimized serving tier: lower latency,
+        higher throughput, and no reasoning token overhead. You get the full weight of
+        Opus-class intelligence without the additional cost and latency that extended thinking
+        would introduce. Every token in the response is a direct generation token, billed
+        at the standard output rate.
+      </p>
+
+      <p class="body-copy">
+        Under OpenRouter, the model is routed as <code>anthropic/claude-opus-4.6-fast</code>
+        and the actual model returned is <code>anthropic/claude-4.6-opus-fast-20260407</code>,
+        confirming the April 7, 2026 checkpoint. Anthropic serves this directly — there is no
+        intermediary hosting tier.
+      </p>
+
+      <div class="info-callout">
+        <div class="ic-label">Architecture Note</div>
+        <p>
+          Claude Opus 4.6 Fast uses a <strong>dense transformer architecture</strong> in the
+          Opus 4.6 class. It predates Claude Opus 4.7 by approximately one month. Unlike
+          some frontier models of this period, it does not expose visible chain-of-thought or
+          reasoning tokens — its intelligence is implicit in the generation, not surfaced
+          as scratchpad output.
+        </p>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- Pricing Section -->
+    <section>
+      <h2 class="section-title">Pricing: Premium Tier, No Discount</h2>
+
+      <p class="body-copy">
+        At <strong>$30.00 per million input tokens</strong> and <strong>$150.00 per million
+        output tokens</strong>, Claude Opus 4.6 Fast is priced identically to Claude Opus 4.7 Fast.
+        This is intentional: Anthropic does not mark down prior-generation Opus models the way
+        some providers discount older revisions. If you are using 4.6, you are paying the
+        same as someone using 4.7 — the difference is capability generation, not cost.
+      </p>
+
+      <p class="body-copy">
+        For context, this places it <strong>10x above Claude Sonnet 4.6</strong> on input
+        ($3/1M) and <strong>12x above Sonnet</strong> on output ($12.50–$15/1M). If you are
+        evaluating Anthropic models purely on cost efficiency, Sonnet-class is the obvious
+        path. Opus pricing buys you the full depth of Anthropic's most capable generation —
+        premium structured reasoning, richer technical synthesis, and stronger instruction
+        adherence on complex, long-horizon tasks.
+      </p>
+
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Value</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Input</strong></td>
+            <td class="price-value">$30.00 / 1M</td>
+            <td class="note-cell">Per token charged at ingestion</td>
+          </tr>
+          <tr>
+            <td><strong>Output</strong></td>
+            <td class="price-value">$150.00 / 1M</td>
+            <td class="note-cell">Every generated token billed here</td>
+          </tr>
+          <tr>
+            <td><strong>Reasoning overhead</strong></td>
+            <td>None</td>
+            <td class="note-cell">No hidden thinking tokens</td>
+          </tr>
+          <tr>
+            <td><strong>Benchmark cost (bc-prem)</strong></td>
+            <td><span class="benchmark-cost-badge bc-prem">$0.345</span></td>
+            <td class="note-cell">1,500 input + 2,000 output tokens</td>
+          </tr>
+          <tr>
+            <td><strong>Benchmark formula</strong></td>
+            <td>$0.045 + $0.300</td>
+            <td class="note-cell">1,500 × $30/1M + 2,000 × $150/1M</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="amber-callout">
+        <div class="ic-label">Cost Reality Check</div>
+        <p>
+          At $150/1M output, every 100,000 words of model output costs roughly <strong>$22–25</strong>
+          (assuming ~130 tokens per 100 words). For high-volume applications, that bill grows
+          fast. Opus 4.6 Fast is not a model you route commodity traffic through — it is for
+          workloads where the quality delta justifies the cost.
+        </p>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- Context & Vision -->
+    <section>
+      <h2 class="section-title">200K Context and Vision Support</h2>
+
+      <p class="body-copy">
+        The 200,000-token context window places Claude Opus 4.6 Fast in the top tier of
+        available models by raw context capacity. While Gemini 2.5 Pro and some Anthropic
+        Sonnet variants push to 1M+ tokens, 200K is sufficient for full codebase analysis
+        (medium-sized repos), ingestion of complete legal or financial documents, multi-chapter
+        manuscript review, and long research synthesis sessions where earlier exchanges must
+        remain visible throughout the task.
+      </p>
+
+      <h3 class="sub-title">What fits in 200K tokens</h3>
+      <ul class="body-list">
+        <li><strong>~150,000 words of prose</strong> — a full novel or multi-hundred-page report</li>
+        <li><strong>A medium software repo</strong> — backend service plus tests plus config, all in context at once</li>
+        <li><strong>Stack of financial filings</strong> — multiple 10-K sections concatenated for cross-document analysis</li>
+        <li><strong>Extended multi-turn conversations</strong> — long agent sessions without context compression losses</li>
+      </ul>
+
+      <h3 class="sub-title">Vision: Image Input</h3>
+      <p class="body-copy">
+        Claude Opus 4.6 Fast accepts <strong>text and image inputs</strong> with text-only output.
+        This means you can submit screenshots, diagrams, charts, UI mockups, or document
+        scans alongside a text prompt and receive a fully structured text response. Use cases
+        range from UI review ("critique this interface against accessibility guidelines") to
+        chart interpretation ("what trend is visible in this quarterly earnings slide?") to
+        technical diagram parsing.
+      </p>
+
+      <p class="body-copy">
+        Vision support at the Opus class typically yields more thorough and technically precise
+        image descriptions than lower-tier models — a relevant advantage when parsing complex
+        system architecture diagrams or dense data visualizations.
+      </p>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- AdSense Mid -->
+    <div class="adsense-mid">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-3480541530392777"
+           data-ad-slot="auto"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- Benchmark Section -->
+    <section>
+      <h2 class="section-title">Live Benchmark: The Schema Diagram Test</h2>
+
+      <p class="body-copy">
+        We ran Claude Opus 4.6 Fast through our standard bc-prem benchmark prompt with a
+        600-token output cap. The result returned a finish reason of <strong>length</strong> —
+        the model ran up against the limit mid-section, confirming it had more to say.
+        What it produced before the cutoff is what matters.
+      </p>
+
+      <div class="benchmark-block">
+        <div class="bm-header">
+          <div class="bm-title">Benchmark Prompt</div>
+          <span class="benchmark-cost-badge bc-prem">$0.091 actual cost</span>
+        </div>
+        <div class="benchmark-prompt-text">
+          "Explain the key trade-offs between SQL and NoSQL databases. When would you choose each?
+          Give me a concrete example of a system that suits each approach."
+        </div>
+
+        <div class="token-stats-strip">
+          <div class="token-stat">
+            <span class="ts-label">Prompt Tokens</span>
+            <span class="ts-value">40</span>
+          </div>
+          <div class="token-stat">
+            <span class="ts-label">Completion</span>
+            <span class="ts-value">599</span>
+          </div>
+          <div class="token-stat">
+            <span class="ts-label">Total</span>
+            <span class="ts-value">639</span>
+          </div>
+          <div class="token-stat">
+            <span class="ts-label">Reasoning Tokens</span>
+            <span class="ts-value">0</span>
+          </div>
+          <div class="token-stat">
+            <span class="ts-label">Finish Reason</span>
+            <span class="ts-value orange">length</span>
+          </div>
+          <div class="token-stat">
+            <span class="ts-label">Inference Tier</span>
+            <span class="ts-value amber">fast</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-title">What the Model Produced</h3>
+
+      <p class="body-copy">
+        The response opened with <strong><code># SQL vs NoSQL: Key Trade-offs</code></strong>
+        as a top-level heading — immediately signaling a structured, document-grade answer
+        rather than conversational prose. It then dropped a one-liner under
+        <strong><code>## The Core Tension</code></strong>, giving a distilled summary before
+        expanding into specifics. This mirrors how a senior engineer would actually write
+        internal documentation: lead with the tension, then unpack it.
+      </p>
+
+      <p class="body-copy">
+        Under <strong><code>## SQL (Relational Databases)</code></strong>, the model used
+        labeled bullet groups — <strong>What you gain:</strong> and <strong>What you pay:</strong>
+        — to structure the trade-off cleanly. The NoSQL section followed the same pattern.
+        But what separated this response from every other model in our benchmark series was
+        the inclusion of a <strong>text-based schema diagram</strong> for the SQL banking example:
+      </p>
+
+      <div class="benchmark-response-text">
+        The model produced the following schema under its SQL banking system example:
+      </div>
+
+      <pre class="schema-diagram">accounts         transactions            ledger_entries
+--------         ------------            --------------
+id (PK)          id (PK)                 id (PK)
+user_id (FK)     from_account (FK)       transaction_id (FK)
+balance          to_account (FK)         account_id (FK)
+currency         amount                  debit/credit
+                 status                  running_balance</pre>
+
+      <p class="body-copy">
+        <strong>No other model in our bc-prem benchmark series produced actual table structure.</strong>
+        Text schema diagrams are what engineers write on whiteboards and in design docs — not
+        what language models typically emit unprompted in a 600-token window. The model used
+        roughly 60 of its available tokens on the diagram alone, which means it prioritized
+        a concrete technical artifact over additional prose explanation. That is an editorial
+        choice that signals Opus-class developer intuition.
+      </p>
+
+      <div class="info-callout">
+        <div class="ic-label">Benchmark Observation</div>
+        <p>
+          The response ended mid-sentence inside the NoSQL section — the model had more to say
+          and was simply clipped by the 600-token cap. This is typical behavior for Opus-class
+          models on structured technical prompts: they generate dense, structured content
+          that runs long, which is a feature in production (thorough answers) and a cost
+          consideration to manage (more tokens billed).
+        </p>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- 4.6 vs 4.7 -->
+    <section>
+      <h2 class="section-title">Claude Opus 4.6 vs 4.7 Fast: The Stability Argument</h2>
+
+      <p class="body-copy">
+        The central question for any team evaluating Claude Opus 4.6 Fast today is simple:
+        why not use the newer 4.7 Fast at the same price? The answer is rarely about raw
+        capability — 4.7 is the newer, incrementally improved generation — and almost always
+        about production operational factors.
+      </p>
+
+      <h3 class="sub-title">Why teams stay on 4.6</h3>
+      <ul class="body-list">
+        <li>
+          <strong>API and output stability.</strong> Systems that parse or route Opus responses
+          were built against 4.6 behavior. Format changes, subtle shifts in list structure, or
+          revised verbosity in 4.7 can break downstream parsers without a new model version
+          being treated as a major release.
+        </li>
+        <li>
+          <strong>Regression testing passed on 4.6.</strong> Production teams that ran extensive
+          regression suites in April 2026 have validated results for this model. Migrating to 4.7
+          means re-running those suites — a non-trivial cost for teams with large evaluation sets.
+        </li>
+        <li>
+          <strong>Documented behavior profile.</strong> Weeks of production traffic generate
+          institutional knowledge about edge cases, failure modes, and prompt sensitivity. That
+          knowledge does not transfer automatically to 4.7.
+        </li>
+        <li>
+          <strong>No pricing incentive to migrate.</strong> With identical costs, there is no
+          financial pressure to switch. Teams migrate when there is a clear capability requirement
+          that 4.6 cannot meet, not simply because 4.7 exists.
+        </li>
+      </ul>
+
+      <div class="amber-callout">
+        <div class="ic-label">Recommendation</div>
+        <p>
+          <strong>New projects starting today should default to Claude Opus 4.7 Fast</strong>
+          — you get the newer generation at no additional cost. Claude Opus 4.6 Fast is the
+          right choice if your team has existing production systems on 4.6, has validated
+          behavior you depend on, or has specific contractual or compliance reasons to pin
+          to a known model checkpoint.
+        </p>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- Use Cases -->
+    <section>
+      <h2 class="section-title">Use Cases</h2>
+
+      <p class="body-copy">
+        Claude Opus 4.6 Fast's combination of Opus-class quality, 200K context, vision support,
+        and fast inference makes it well-suited for a specific class of high-value, latency-sensitive
+        professional workloads.
+      </p>
+
+      <div class="use-case-grid">
+        <div class="use-case-card">
+          <div class="uc-icon">&#128187;</div>
+          <div class="uc-title">Senior Engineer Pair Programming</div>
+          <div class="uc-desc">
+            Full codebase in context. Produces actual schema diagrams, system designs,
+            and implementation plans with engineer-grade precision.
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">&#128196;</div>
+          <div class="uc-title">Long-Document Analysis</div>
+          <div class="uc-desc">
+            200K context handles complete contracts, research papers, or regulatory filings.
+            Summarize, cross-reference, and extract structured data from full-length documents.
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">&#128202;</div>
+          <div class="uc-title">Technical Architecture Review</div>
+          <div class="uc-desc">
+            Submit diagrams via vision input alongside documentation text.
+            Opus-class analysis for identifying gaps, trade-offs, and improvement paths.
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">&#9878;&#65039;</div>
+          <div class="uc-title">Premium AI Chat Products</div>
+          <div class="uc-desc">
+            Consumer or enterprise chat interfaces requiring top-tier response quality
+            at fast latency. Users notice the depth of Opus-class answers versus Sonnet.
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">&#9878;&#65039;</div>
+          <div class="uc-title">Research Synthesis</div>
+          <div class="uc-desc">
+            Load multiple papers or reports simultaneously. Generate structured syntheses,
+            identify contradictions, and draft literature reviews across long context.
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">&#128203;</div>
+          <div class="uc-title">Production Systems on 4.6</div>
+          <div class="uc-desc">
+            The explicit use case for teams with validated 4.6 deployments: continuity,
+            stability, and regression-safe operation without model migration overhead.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- When to Use / Avoid -->
+    <section>
+      <h2 class="section-title">When to Use — and When to Avoid</h2>
+
+      <div class="fit-grid">
+        <div class="fit-card fit-yes">
+          <div class="fc-header">&#9989; Good Fit</div>
+          <ul>
+            <li>Existing production systems validated on 4.6 behavior</li>
+            <li>High-stakes technical tasks where Opus-class precision matters</li>
+            <li>Long-document analysis requiring 200K+ token ingestion</li>
+            <li>Vision workflows where image interpretation quality is paramount</li>
+            <li>Premium chat products where user quality perception drives retention</li>
+            <li>Teams with compliance or audit requirements to pin to a known model</li>
+          </ul>
+        </div>
+        <div class="fit-card fit-no">
+          <div class="fc-header">&#10060; Poor Fit</div>
+          <ul>
+            <li>New projects — start on Opus 4.7 Fast at the same price</li>
+            <li>High-volume, commodity traffic — Sonnet is dramatically cheaper</li>
+            <li>Reasoning-heavy tasks that benefit from extended thinking chains</li>
+            <li>Budget-sensitive applications with unpredictable output lengths</li>
+            <li>Simple Q&amp;A or extraction tasks that don't require Opus capability</li>
+            <li>Teams needing context beyond 200K — look at 1M-context alternatives</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- Comparison Table -->
+    <section>
+      <h2 class="section-title">Model Comparison</h2>
+
+      <p class="body-copy">
+        How Claude Opus 4.6 Fast sits against the current landscape of frontier and
+        near-frontier models across the dimensions that matter most for deployment decisions.
+      </p>
+
+      <div class="comparison-table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Input / 1M</th>
+              <th>Output / 1M</th>
+              <th>Context</th>
+              <th>Vision</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="this-model">
+              <td>Claude Opus 4.6 Fast <span class="tag-this">THIS</span></td>
+              <td>$30.00</td>
+              <td>$150.00</td>
+              <td>200K</td>
+              <td class="badge-yes">Yes</td>
+              <td>April 2026, production stable</td>
+            </tr>
+            <tr>
+              <td><strong>Claude Opus 4.7 Fast</strong></td>
+              <td>$30.00</td>
+              <td>$150.00</td>
+              <td>200K</td>
+              <td class="badge-yes">Yes</td>
+              <td>Newer generation (May 2026)</td>
+            </tr>
+            <tr>
+              <td><strong>Claude Sonnet 4.6</strong></td>
+              <td>$3.00</td>
+              <td>$15.00</td>
+              <td>1M</td>
+              <td class="badge-yes">Yes</td>
+              <td>More affordable, same lineage</td>
+            </tr>
+            <tr>
+              <td><strong>GPT-4o</strong></td>
+              <td>$2.50</td>
+              <td>$10.00</td>
+              <td>128K</td>
+              <td class="badge-yes">Yes</td>
+              <td>OpenAI alternative</td>
+            </tr>
+            <tr>
+              <td><strong>Gemini 2.5 Pro</strong></td>
+              <td>$1.25</td>
+              <td>$10.00</td>
+              <td>1M</td>
+              <td class="badge-yes">Yes</td>
+              <td>Multimodal frontier, large context</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="body-copy" style="margin-top:12px;">
+        The competitive picture is stark on cost: Claude Opus 4.6 Fast is <strong>12x more
+        expensive per output token</strong> than Gemini 2.5 Pro and 15x above GPT-4o. The
+        justification is pure capability — you are paying for Anthropic's most capable
+        generation, fast delivery, and Anthropic-direct serving with no intermediary layer.
+      </p>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- Try It Band -->
+    <div class="try-it-band">
+      <div class="tb-title">Try Claude Opus 4.6 Fast</div>
+      <div class="tb-sub">Run it with your own API key — no subscription required.</div>
+      <div class="tb-id">anthropic/claude-opus-4.6-fast</div>
+      <a
+        href="#"
+        class="btn-try"
+        onclick="event.preventDefault(); if(window.byok){ window.byok.openByokModal && window.byok.openByokModal('anthropic/claude-opus-4.6-fast','Claude Opus 4.6 Fast'); } else { window.location.href='/models/'; }"
+      >
+        Open in Playground
+      </a>
+    </div>
+
+    <!-- Final Analysis -->
+    <section>
+      <h2 class="section-title">Final Analysis</h2>
+
+      <p class="body-copy">
+        Claude Opus 4.6 Fast is not a value play. At $30 input / $150 output per million tokens —
+        the same as its successor — it makes no economic sense as a new project choice when
+        Claude Opus 4.7 Fast exists at identical pricing. The model earns its place in the
+        market through a different logic: <strong>production reliability for teams already on 4.6</strong>.
+      </p>
+
+      <p class="body-copy">
+        What the benchmark confirmed is that Opus-class quality is real and measurable.
+        The unprompted schema diagram — a concrete technical artifact in a 600-token response
+        window — is not a trick. It reflects the kind of engineering intuition that Opus-class
+        models develop: when to show structure instead of just describing it. That is
+        valuable in a senior engineer pair programming context, in a technical writing assistant,
+        in an architecture review tool.
+      </p>
+
+      <p class="body-copy">
+        The 200K context and vision support are fully production-ready features, not edge
+        capabilities. Full-codebase loading, document analysis across multi-hundred-page inputs,
+        image-annotated technical review — these are the tasks where the per-token cost becomes
+        defensible because the alternative is human analyst time.
+      </p>
+
+      <p class="body-copy">
+        <strong>Bottom line:</strong> If your systems are already running on Claude Opus 4.6,
+        you have no immediate cost incentive to migrate and real operational reasons to stay.
+        If you are starting fresh, default to 4.7. Either way, you are getting Anthropic's
+        top-tier model at Anthropic's top-tier price — the question is only which generation's
+        behavior profile you need.
+      </p>
+    </section>
+
+  </div><!-- /page-wrap -->
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <p>
+      &copy; 2026 <a href="/">Aether Intel</a> — AI news and model reviews at
+      <a href="https://ai.quantummerlin.com">ai.quantummerlin.com</a>.
+      Prices and specs reflect data as of May 16, 2026.
+      Model data sourced from provider APIs and OpenRouter.
+    </p>
+  </footer>
+
+</body>
+</html>

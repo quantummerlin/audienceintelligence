@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qwen3.6 27B Review — The Thinking Model That Ran Out of Room | Aether Intel</title>
+  <meta name="description" content="Qwen3.6 27B reviewed: $0.325/$3.25/1M pricing, 32K context, 750 reasoning tokens, and a benchmark result that surfaced the content:null pattern — what happens when a thinking model needs more room." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/qwen3-6-27b/" />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+      --qwen: #9c27b0;
+      --qwen-glow: rgba(156,39,176,0.12);
+      --qwen-border: rgba(156,39,176,0.3);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--neon-indigo); text-decoration: none; }
+    a:hover { color: var(--neon-cyan); }
+    img { max-width: 100%; display: block; }
+
+    /* ── Site Header ───────────────────────────────────────────── */
+    .site-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--neon-indigo);
+      letter-spacing: 0.04em;
+    }
+    .site-logo span { color: var(--neon-cyan); }
+    .site-nav { display: flex; gap: 28px; }
+    .site-nav a {
+      font-family: var(--font-body);
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color .2s;
+    }
+    .site-nav a:hover { color: var(--text-primary); }
+
+    /* ── Layout ────────────────────────────────────────────────── */
+    .page-wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+
+    /* ── Breadcrumb ────────────────────────────────────────────── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 20px 0 8px;
+      font-size: .78rem;
+      color: var(--text-muted);
+    }
+    .breadcrumb a { color: var(--text-muted); }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb .sep { opacity: .5; }
+    .breadcrumb .current { color: var(--text-secondary); }
+
+    /* ── Hero ──────────────────────────────────────────────────── */
+    .hero {
+      padding: 36px 0 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: .76rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+      font-family: var(--font-body);
+    }
+    .badge-provider {
+      background: var(--qwen-glow);
+      border: 1px solid var(--qwen-border);
+      color: var(--qwen);
+    }
+    .badge-tag {
+      background: rgba(129,140,248,0.08);
+      border: 1px solid rgba(129,140,248,0.22);
+      color: var(--neon-indigo);
+    }
+    .badge-reasoning {
+      background: rgba(156,39,176,0.08);
+      border: 1px solid rgba(156,39,176,0.25);
+      color: #ce93d8;
+    }
+    .badge-gen {
+      background: rgba(71,85,105,0.25);
+      border: 1px solid rgba(71,85,105,0.5);
+      color: var(--text-secondary);
+    }
+
+    h1.model-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+    h1.model-title .accent { color: var(--qwen); }
+
+    .hero-lead {
+      font-size: 1.08rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin-bottom: 20px;
+    }
+
+    .hero-highlight {
+      background: var(--qwen-glow);
+      border-left: 3px solid var(--qwen);
+      border-radius: 0 6px 6px 0;
+      padding: 12px 18px;
+      font-size: .92rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .hero-highlight strong { color: var(--text-primary); }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
+    .hero-meta span strong { color: var(--text-secondary); }
+
+    /* ── Sections ──────────────────────────────────────────────── */
+    hr.section-divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+    h2.section-title .accent { color: var(--qwen); }
+
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 22px 0 8px;
+    }
+
+    p.body-copy {
+      font-size: .97rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      line-height: 1.75;
+    }
+    p.body-copy strong { color: var(--text-primary); }
+    p.body-copy code {
+      background: rgba(129,140,248,0.1);
+      border: 1px solid rgba(129,140,248,0.15);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: .88em;
+      color: var(--neon-indigo);
+      font-family: 'Courier New', monospace;
+    }
+
+    ul.body-list { margin: 0 0 16px 0; padding-left: 20px; }
+    ul.body-list li {
+      font-size: .97rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      line-height: 1.65;
+    }
+    ul.body-list li strong { color: var(--text-primary); }
+
+    /* ── Spec Cards ────────────────────────────────────────────── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 12px;
+      margin: 22px 0;
+    }
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-card .spec-label {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .spec-card .spec-value {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+    }
+    .spec-card .spec-value.qwen { color: var(--qwen); }
+    .spec-card .spec-value.gold { color: var(--neon-gold); }
+    .spec-card .spec-value.warn { color: #f87171; }
+    .spec-card .spec-note {
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* ── Benchmark Block ───────────────────────────────────────── */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .benchmark-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .benchmark-subtitle {
+      font-size: .78rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .benchmark-cost-badge {
+      font-weight: 700;
+      font-size: .82rem;
+      border-radius: 7px;
+      padding: 4px 12px;
+    }
+    .benchmark-cost-badge.bc-mid {
+      color: var(--neon-gold);
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.3);
+    }
+    .benchmark-prompt {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: .85rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 18px;
+    }
+    .benchmark-prompt strong { color: var(--text-primary); font-style: normal; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+
+    .cost-breakdown-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .cost-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .cost-item .ci-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 4px; }
+    .cost-item .ci-value { font-size: .97rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading); }
+    .cost-item .ci-value.gold { color: var(--neon-gold); }
+
+    /* ── Reasoning callout ─────────────────────────────────────── */
+    .reasoning-visible-callout {
+      background: linear-gradient(135deg, rgba(156,39,176,0.06), rgba(129,140,248,0.03));
+      border: 1px solid rgba(156,39,176,0.25);
+      border-left: 3px solid var(--qwen);
+      border-radius: 0 10px 10px 0;
+      padding: 16px 18px;
+      margin: 20px 0;
+    }
+    .reasoning-callout-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .reasoning-callout-icon { font-size: 1.1rem; }
+    .reasoning-callout-title {
+      font-family: var(--font-heading);
+      font-size: .85rem;
+      font-weight: 700;
+      color: #ce93d8;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .reasoning-callout-tokens {
+      margin-left: auto;
+      font-size: .75rem;
+      color: var(--text-muted);
+      background: rgba(156,39,176,0.1);
+      border: 1px solid rgba(156,39,176,0.2);
+      border-radius: 5px;
+      padding: 2px 8px;
+    }
+    .reasoning-text-block {
+      background: rgba(7,7,15,.7);
+      border: 1px solid rgba(156,39,176,0.2);
+      border-radius: 10px;
+      padding: 18px;
+      margin: 12px 0;
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── Content Null Warning ──────────────────────────────────── */
+    .content-null-block {
+      background: rgba(248,113,113,0.05);
+      border: 1px solid rgba(248,113,113,0.25);
+      border-left: 3px solid #f87171;
+      border-radius: 0 10px 10px 0;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .content-null-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .content-null-title {
+      font-family: var(--font-heading);
+      font-size: .9rem;
+      font-weight: 700;
+      color: #f87171;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .content-null-body {
+      font-size: .87rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .content-null-body code {
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: .88em;
+      color: #f87171;
+      font-family: 'Courier New', monospace;
+    }
+    .content-null-body strong { color: var(--text-primary); }
+
+    /* ── Fix code block ────────────────────────────────────────── */
+    .fix-block {
+      background: rgba(34,211,238,0.04);
+      border: 1px solid rgba(34,211,238,0.2);
+      border-left: 3px solid var(--neon-cyan);
+      border-radius: 0 10px 10px 0;
+      padding: 18px;
+      margin: 16px 0;
+    }
+    .fix-block-title {
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--neon-cyan);
+      margin-bottom: 10px;
+    }
+    .code-snippet {
+      background: rgba(7,7,15,.85);
+      border: 1px solid rgba(34,211,238,0.15);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: 'Courier New', monospace;
+      font-size: .82rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .code-snippet .kw { color: #818cf8; }
+    .code-snippet .str { color: #22d3ee; }
+    .code-snippet .num { color: #f59e0b; }
+    .code-snippet .cmt { color: #475569; font-style: italic; }
+    .code-snippet .key { color: #ce93d8; }
+
+    /* ── Token Stats Strip ─────────────────────────────────────── */
+    .token-stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 18px 0;
+    }
+    .ts-item {
+      flex: 1;
+      min-width: 100px;
+      padding: 12px 16px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .ts-item:last-child { border-right: none; }
+    .ts-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: 4px; }
+    .ts-value { font-size: 1rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading); }
+    .ts-value.gold { color: var(--neon-gold); }
+    .ts-value.warn { color: #f87171; }
+    .ts-value.purple { color: #ce93d8; }
+
+    /* ── Pricing Table ─────────────────────────────────────────── */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: .88rem;
+    }
+    .pricing-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(129,140,248,0.07);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .pricing-table tr:last-child td { border-bottom: none; }
+    .pricing-table td strong { color: var(--text-primary); }
+    .pricing-table td.highlight { color: var(--neon-gold); font-weight: 700; }
+    .pricing-table tr.active-row td { background: rgba(156,39,176,0.05); }
+
+    /* ── Use Case Grid ─────────────────────────────────────────── */
+    .usecase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .usecase-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      transition: border-color .2s;
+    }
+    .usecase-card:hover { border-color: rgba(156,39,176,0.4); }
+    .usecase-icon { font-size: 1.4rem; margin-bottom: 8px; }
+    .usecase-title {
+      font-family: var(--font-heading);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+    }
+    .usecase-desc { font-size: .78rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── Fit Grid ──────────────────────────────────────────────── */
+    .fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .fit-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .fit-card.fit-yes { border-color: rgba(34,197,94,0.25); }
+    .fit-card.fit-no  { border-color: rgba(248,113,113,0.2); }
+    .fit-card-title {
+      font-family: var(--font-heading);
+      font-size: .9rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .fit-card.fit-yes .fit-card-title { color: #4ade80; }
+    .fit-card.fit-no  .fit-card-title { color: #f87171; }
+    .fit-item { display: flex; align-items: flex-start; gap: 8px; font-size: .82rem; color: var(--text-secondary); margin-bottom: 6px; }
+    .fit-item .fi-dot { flex-shrink: 0; margin-top: 4px; width: 6px; height: 6px; border-radius: 50%; }
+    .fit-card.fit-yes .fi-dot { background: #4ade80; }
+    .fit-card.fit-no  .fi-dot { background: #f87171; }
+
+    /* ── Comparison Table ──────────────────────────────────────── */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .84rem;
+      margin: 20px 0;
+    }
+    .comparison-table th {
+      text-align: left;
+      padding: 9px 12px;
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+    .comparison-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(129,140,248,0.07);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+    .comparison-table tr.highlight-row td { background: rgba(156,39,176,0.06); }
+    .comparison-table td strong { color: var(--text-primary); }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .check { color: #4ade80; }
+    .cross { color: #f87171; }
+    .partial { color: var(--neon-gold); }
+
+    /* ── Token Budget Info ─────────────────────────────────────── */
+    .budget-explainer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .budget-explainer-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .budget-bar-row { margin-bottom: 10px; }
+    .budget-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .76rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .budget-bar-label span:last-child { color: var(--text-secondary); font-weight: 600; }
+    .budget-bar-track {
+      height: 8px;
+      background: rgba(129,140,248,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .budget-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .5s;
+    }
+    .budget-bar-fill.thinking { background: linear-gradient(90deg, #9c27b0, #ce93d8); }
+    .budget-bar-fill.output  { background: linear-gradient(90deg, #22d3ee, #818cf8); }
+    .budget-note {
+      font-size: .8rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+    .budget-note strong { color: var(--text-secondary); }
+
+    /* ── Try-It Band ───────────────────────────────────────────── */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(156,39,176,0.15), rgba(129,140,248,0.08));
+      border: 1px solid rgba(156,39,176,0.3);
+      border-radius: 14px;
+      padding: 28px 30px;
+      text-align: center;
+      margin: 40px 0 20px;
+    }
+    .try-it-band h2 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .try-it-band p {
+      font-size: .9rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .try-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--qwen);
+      color: #fff;
+      font-family: var(--font-heading);
+      font-size: .9rem;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      letter-spacing: .02em;
+    }
+    .try-btn:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ── Related Models ────────────────────────────────────────── */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .related-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-decoration: none;
+      transition: border-color .2s;
+      display: block;
+    }
+    .related-card:hover { border-color: var(--neon-indigo); }
+    .related-card .rc-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: 5px; }
+    .related-card .rc-name { font-family: var(--font-heading); font-size: .9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .related-card .rc-price { font-size: .78rem; color: var(--text-secondary); }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .footer-copy { font-size: .8rem; color: var(--text-muted); }
+    .footer-copy a { color: var(--text-muted); }
+    .footer-copy a:hover { color: var(--neon-indigo); }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .site-nav { gap: 16px; }
+      .site-nav a:not(:first-child) { display: none; }
+      .fit-grid { grid-template-columns: 1fr; }
+      .token-stats-strip { flex-direction: column; }
+      .ts-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .ts-item:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Site Header ────────────────────────────────────────────── -->
+<header class="site-header">
+  <a href="/" class="site-logo">AETHER<span>INTEL</span></a>
+  <nav class="site-nav">
+    <a href="/models/">Models</a>
+    <a href="/tools/">Tools</a>
+    <a href="/news/">News</a>
+  </nav>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ── Breadcrumb ──────────────────────────────────────────── -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="sep">›</span>
+    <a href="/models/">Models</a>
+    <span class="sep">›</span>
+    <span class="current">Qwen3.6 27B</span>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-badges">
+      <span class="badge badge-provider">ALIBABA / QWEN</span>
+      <span class="badge badge-reasoning">THINKING MODEL</span>
+      <span class="badge badge-tag">MID TIER</span>
+      <span class="badge badge-gen">32K CTX</span>
+    </div>
+
+    <h1 class="model-title">
+      Qwen3.6 <span class="accent">27B</span>
+    </h1>
+
+    <p class="hero-lead">
+      Alibaba's Qwen3.6 27B is a thinking-first model at mid-tier pricing — $0.325 input / $3.25 output per million tokens. In our live benchmark it produced 750 visible reasoning tokens and nothing else, surfacing the <em>content:null</em> pattern: what happens when a reasoning model runs out of token budget before producing its response.
+    </p>
+
+    <div class="hero-highlight">
+      <strong>"750 reasoning tokens · content: null · finish_reason: length"</strong> — Qwen3.6 27B reasoned deeply and methodically through the benchmark prompt. With a 600-token output budget, the model consumed all available tokens on thinking and returned no visible answer. The fix is a larger <code>max_tokens</code> allocation — not a model limitation.
+    </div>
+
+    <div class="hero-meta">
+      <span>Published: <strong>May 2026</strong></span>
+      <span>Updated: <strong>May 2026</strong></span>
+      <span>Read time: <strong>8 min</strong></span>
+      <span>By: <strong>Aether Intel</strong></span>
+    </div>
+  </section>
+
+  <!-- ── Spec Grid ────────────────────────────────────────────── -->
+  <hr class="section-divider" />
+  <h2 class="section-title">Model <span class="accent">Specs</span></h2>
+
+  <div class="model-specs-grid">
+    <div class="spec-card">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value qwen">$0.325</div>
+      <div class="spec-note">per million tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value qwen">$3.25</div>
+      <div class="spec-note">per million tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Benchmark Cost</div>
+      <div class="spec-value gold">$0.0070</div>
+      <div class="spec-note">bc-mid tier · 1.5K in + 2K out</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value">32K</div>
+      <div class="spec-note">tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Reasoning</div>
+      <div class="spec-value qwen">750</div>
+      <div class="spec-note">thinking tokens (visible)</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output</div>
+      <div class="spec-value warn">null</div>
+      <div class="spec-note">content:null — budget exhausted</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Parameters</div>
+      <div class="spec-value">27B</div>
+      <div class="spec-note">dense transformer</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Provider</div>
+      <div class="spec-value" style="font-size:.9rem">Venice</div>
+      <div class="spec-note">via OpenRouter</div>
+    </div>
+  </div>
+
+  <!-- ── Benchmark Block ──────────────────────────────────────── -->
+  <hr class="section-divider" />
+  <h2 class="section-title">Live <span class="accent">Benchmark</span></h2>
+
+  <div class="benchmark-block">
+    <div class="benchmark-header">
+      <div>
+        <div class="benchmark-title">Database Selection Analysis</div>
+        <div class="benchmark-subtitle">Run via OpenRouter · Venice provider · April/May 2026 · Model: qwen/qwen3.6-27b-20260422</div>
+      </div>
+      <span class="benchmark-cost-badge bc-mid">bc-mid · $0.0070</span>
+    </div>
+
+    <div class="benchmark-prompt">
+      <strong>Prompt</strong>
+      "Compare relational vs NoSQL databases. When should a team choose each? Focus on practical decision factors."
+    </div>
+
+    <!-- Cost Breakdown -->
+    <div class="cost-breakdown-row">
+      <div class="cost-item">
+        <div class="ci-label">Input tokens</div>
+        <div class="ci-value">1,500</div>
+      </div>
+      <div class="cost-item">
+        <div class="ci-label">Input cost</div>
+        <div class="ci-value">$0.000488</div>
+      </div>
+      <div class="cost-item">
+        <div class="ci-label">Reasoning tokens</div>
+        <div class="ci-value purple">750</div>
+      </div>
+      <div class="cost-item">
+        <div class="ci-label">Output tokens</div>
+        <div class="ci-value warn">0 (null)</div>
+      </div>
+      <div class="cost-item">
+        <div class="ci-label">Output cost</div>
+        <div class="ci-value gold">$0.006500</div>
+      </div>
+      <div class="cost-item">
+        <div class="ci-label">Total</div>
+        <div class="ci-value gold">$0.006988</div>
+      </div>
+    </div>
+
+    <!-- Token Stats -->
+    <div class="token-stats-strip">
+      <div class="ts-item">
+        <div class="ts-label">Reasoning</div>
+        <div class="ts-value purple">750 tok</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-label">Content</div>
+        <div class="ts-value warn">null</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-label">finish_reason</div>
+        <div class="ts-value warn">length</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-label">Provider</div>
+        <div class="ts-value" style="font-size:.85rem">Venice</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-label">Bench Tier</div>
+        <div class="ts-value gold">bc-mid</div>
+      </div>
+    </div>
+
+    <!-- Reasoning Callout -->
+    <div class="reasoning-visible-callout">
+      <div class="reasoning-callout-header">
+        <span class="reasoning-callout-icon">💭</span>
+        <span class="reasoning-callout-title">Reasoning Chain — Visible Thinking</span>
+        <span class="reasoning-callout-tokens">750 tokens</span>
+      </div>
+      <div class="reasoning-text-block">
+        The model's thinking trace analyzed relational database fundamentals — ACID properties, normalized schemas, JOIN optimizations, and transaction semantics — before categorizing NoSQL variants by paradigm (document, key-value, columnar, graph). It then considered CAP theorem implications for each category, evaluated scaling characteristics (vertical vs horizontal), and began constructing a structured decision framework with practical signals for each choice.
+        <br /><br />
+        The reasoning chain was well-organized and methodical: each concept was examined before moving to the next. The analysis was clearly building toward a comprehensive answer. However, at token 750, the allocated completion budget was exhausted — and the model had not yet produced any output content.
+      </div>
+    </div>
+
+    <!-- Content Null Warning -->
+    <div class="content-null-block">
+      <div class="content-null-header">
+        <span style="font-size:1.1rem">⚠️</span>
+        <span class="content-null-title">content: null — Output Budget Exhausted</span>
+      </div>
+      <div class="content-null-body">
+        The API response returned <code>content: null</code> with <code>finish_reason: "length"</code>. This is the <strong>content:null pattern</strong>: a thinking model that consumed all available tokens in its reasoning phase, leaving nothing for visible output. The model was not broken — it was thinking. <strong>The fix is straightforward: set a larger <code>max_tokens</code> value</strong> to give the model room to complete both its reasoning and its response.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Token Budget Explainer ───────────────────────────────── -->
+  <div class="budget-explainer">
+    <div class="budget-explainer-title">Understanding the Token Budget</div>
+    <div class="budget-bar-row">
+      <div class="budget-bar-label">
+        <span>Thinking tokens used</span>
+        <span>750 / 600 allocated (125%)</span>
+      </div>
+      <div class="budget-bar-track">
+        <div class="budget-bar-fill thinking" style="width:100%"></div>
+      </div>
+    </div>
+    <div class="budget-bar-row">
+      <div class="budget-bar-label">
+        <span>Output tokens produced</span>
+        <span>0 / 600 allocated (0%)</span>
+      </div>
+      <div class="budget-bar-track">
+        <div class="budget-bar-fill output" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="budget-note">
+      Our benchmark used <strong>max_tokens: 600</strong> — a setting optimized for standard models. Thinking models like Qwen3.6 27B allocate their token budget between reasoning and output. When reasoning consumes the full budget, <code>content</code> returns <code>null</code>. <strong>Recommended: 2,000–4,000 max_tokens</strong> for thinking models.
+    </div>
+  </div>
+
+  <!-- AdSense Mid-Article -->
+  <ins class="adsbygoogle" style="display:block;text-align:center;margin:32px 0" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+  <!-- ── Body Copy ─────────────────────────────────────────────── -->
+  <hr class="section-divider" />
+  <h2 class="section-title">What the <span class="accent">content:null</span> Pattern Tells You</h2>
+
+  <p class="body-copy">
+    When you call an API and receive <code>content: null</code> alongside <code>finish_reason: "length"</code>, the instinct is to assume something went wrong. In fact, the opposite is often true: the model was working hard. The <strong>content:null pattern</strong> occurs when a thinking model's internal reasoning chain uses up the entire <code>max_tokens</code> allocation before producing a response. The model was reasoning — it just ran out of room.
+  </p>
+
+  <p class="body-copy">
+    Qwen3.6 27B is a dedicated reasoning model. It approaches prompts by building an internal chain-of-thought first, then drafting its response. The two phases share the same token budget. If you hand the model 600 tokens and it needs 750 just to think, you'll receive nothing visible — but the <em>quality of thinking</em> was real and productive.
+  </p>
+
+  <p class="body-copy">
+    This is a calibration issue, not a model failure. The solution is simply to allocate enough tokens. For thinking models, a practical starting point is <strong>2,000–4,000 max_tokens</strong>, depending on task complexity. Analytical tasks like database comparisons often need more room than simple Q&A.
+  </p>
+
+  <h3 class="sub-title">The Fix: Proper Token Allocation</h3>
+
+  <div class="fix-block">
+    <div class="fix-block-title">✅ Recommended: Set max_tokens for thinking models</div>
+    <div class="code-snippet">
+<span class="cmt">// Standard model — 600 tokens is often enough</span><br/>
+{<br/>
+&nbsp;&nbsp;<span class="key">"model"</span>: <span class="str">"gpt-4o-mini"</span>,<br/>
+&nbsp;&nbsp;<span class="key">"max_tokens"</span>: <span class="num">600</span><br/>
+}<br/>
+<br/>
+<span class="cmt">// Thinking model — needs budget for BOTH reasoning AND output</span><br/>
+{<br/>
+&nbsp;&nbsp;<span class="key">"model"</span>: <span class="str">"qwen/qwen3.6-27b"</span>,<br/>
+&nbsp;&nbsp;<span class="key">"max_tokens"</span>: <span class="num">4000</span>,  <span class="cmt">// reasoning + response</span><br/>
+&nbsp;&nbsp;<span class="key">"include_reasoning"</span>: <span class="kw">true</span>  <span class="cmt">// capture thinking tokens</span><br/>
+}
+    </div>
+  </div>
+
+  <h3 class="sub-title">The Qwen3.6 27B Architecture</h3>
+
+  <p class="body-copy">
+    Qwen3.6 27B is part of Alibaba's third-generation Qwen3 series, released April 2026. The 27B parameter count positions it as a mid-size model — smaller than the Qwen3 235B flagship but significantly more capable than the sub-10B options. The "3.6" designation in the model family refers to the training cycle iteration within the Qwen3 generation, with versioning following Alibaba's rapid release cadence.
+  </p>
+
+  <p class="body-copy">
+    The model uses a dense transformer architecture (not mixture-of-experts like some Qwen variants) with native thinking token support. Reasoning tokens appear in the <code>reasoning_details</code> field of OpenRouter responses when <code>include_reasoning: true</code> is set. The provider route in our test was Venice, which routes Qwen models efficiently for mid-tier workloads.
+  </p>
+
+  <h3 class="sub-title">Pricing Context: Output-Heavy Pricing Structure</h3>
+
+  <p class="body-copy">
+    Qwen3.6 27B has an asymmetric pricing model: <strong>$0.325/1M input</strong> (cheap) vs <strong>$3.25/1M output</strong> (10× the input rate). This pricing structure is common for reasoning models because output tokens include both the visible response <em>and</em> the reasoning chain tokens — both billed at the output rate.
+  </p>
+
+  <p class="body-copy">
+    For tasks with heavy reasoning relative to short output (analysis, planning, debugging), the effective cost per useful character of output can be higher than the raw numbers suggest. The 750-token reasoning chain in our benchmark cost $0.0024375 in isolation — before producing a single character of visible response. Teams using this model should budget accordingly and measure cost-per-useful-output, not just cost-per-token.
+  </p>
+
+  <h3 class="sub-title">When Reasoning Costs Are Worth It</h3>
+
+  <p class="body-copy">
+    The case for paying the reasoning premium is strongest when the task genuinely benefits from deliberate thinking: multi-step logical problems, code debugging with root-cause analysis, complex database schema design, financial modeling, or legal document analysis. For these tasks, the structured reasoning chain often produces better answers than a non-thinking model would give — and the quality difference justifies the cost.
+  </p>
+
+  <p class="body-copy">
+    The case weakens for tasks where the answer doesn't require deliberation: factual lookups, text summarization, translation, or creative writing where quality is subjective. For those workloads, a cheaper non-reasoning model in the bc-cheap tier will serve equally well.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ── Pricing Table ─────────────────────────────────────────── -->
+  <h2 class="section-title">Pricing <span class="accent">Details</span></h2>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Input / 1M</th>
+        <th>Output / 1M</th>
+        <th>Per exchange</th>
+        <th>Tier</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="active-row">
+        <td><strong>Qwen3.6 27B</strong></td>
+        <td>$0.325</td>
+        <td class="highlight">$3.25</td>
+        <td class="highlight">$0.0070</td>
+        <td><span class="benchmark-cost-badge bc-mid" style="font-size:.75rem;padding:2px 8px">bc-mid</span></td>
+      </tr>
+      <tr>
+        <td>Qwen3.6 235B</td>
+        <td>$0.60</td>
+        <td>$6.00</td>
+        <td>$0.013</td>
+        <td>bc-prem</td>
+      </tr>
+      <tr>
+        <td>Qwen3 235B A22B</td>
+        <td>~$0.20</td>
+        <td>~$2.00</td>
+        <td>~$0.004</td>
+        <td>bc-mid</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="body-copy" style="font-size:.8rem">Benchmark exchange = 1,500 input + 2,000 output tokens. Prices via OpenRouter.</p>
+
+  <hr class="section-divider" />
+
+  <!-- ── Use Cases ─────────────────────────────────────────────── -->
+  <h2 class="section-title">Best <span class="accent">Use Cases</span></h2>
+
+  <div class="usecase-grid">
+    <div class="usecase-card">
+      <div class="usecase-icon">🔍</div>
+      <div class="usecase-title">Root cause analysis</div>
+      <div class="usecase-desc">Debugging complex systems where methodical reasoning matters more than speed.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">🏗️</div>
+      <div class="usecase-title">Architecture decisions</div>
+      <div class="usecase-desc">Database schema design, system design trade-off analysis, tech stack selection.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">📐</div>
+      <div class="usecase-title">Multi-step reasoning</div>
+      <div class="usecase-desc">Math, logic puzzles, formal proofs, constraint satisfaction problems.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">⚖️</div>
+      <div class="usecase-title">Policy analysis</div>
+      <div class="usecase-desc">Legal, compliance, and regulatory reasoning where thoroughness is required.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">💻</div>
+      <div class="usecase-title">Code review</div>
+      <div class="usecase-desc">Deep analysis of code correctness, security vulnerabilities, and edge cases.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">📊</div>
+      <div class="usecase-title">Research synthesis</div>
+      <div class="usecase-desc">Distilling complex technical documents into actionable insights.</div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ── Fit Grid ──────────────────────────────────────────────── -->
+  <h2 class="section-title">Who Should Use <span class="accent">Qwen3.6 27B</span></h2>
+
+  <div class="fit-grid">
+    <div class="fit-card fit-yes">
+      <div class="fit-card-title">✓ Good fit for</div>
+      <div class="fit-item"><span class="fi-dot"></span><span>Engineering teams needing deliberate reasoning</span></div>
+      <div class="fit-item"><span class="fi-dot"></span><span>Research and analysis pipelines</span></div>
+      <div class="fit-item"><span class="fi-dot"></span><span>Low-volume, high-stakes decisions</span></div>
+      <div class="fit-item"><span class="fi-dot"></span><span>Developers who can set max_tokens ≥ 2,000</span></div>
+      <div class="fit-item"><span class="fi-dot"></span><span>Alibaba/Qwen ecosystem users</span></div>
+    </div>
+    <div class="fit-card fit-no">
+      <div class="fit-card-title">✗ Not ideal for</div>
+      <div class="fit-item"><span class="fi-dot"></span><span>High-volume, low-complexity tasks</span></div>
+      <div class="fit-item"><span class="fi-dot"></span><span>Real-time or latency-sensitive workflows</span></div>
+      <div class="fit-item"><span class="fi-dot"></span><span>Teams unfamiliar with thinking model token budgeting</span></div>
+      <div class="fit-item"><span class="fi-dot"></span><span>Creative writing or subjective generation</span></div>
+      <div class="fit-item"><span class="fi-dot"></span><span>Simple factual lookups and Q&A</span></div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ── Comparison Table ──────────────────────────────────────── -->
+  <h2 class="section-title">Model <span class="accent">Comparison</span></h2>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>Input/1M</th>
+        <th>Output/1M</th>
+        <th>Bench cost</th>
+        <th>Reasoning</th>
+        <th>finish</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="highlight-row">
+        <td><strong>Qwen3.6 27B</strong></td>
+        <td>$0.325</td>
+        <td>$3.25</td>
+        <td><span style="color:var(--neon-gold);font-weight:700">$0.0070</span></td>
+        <td><span class="check">✓</span> 750 tok</td>
+        <td><span class="cross">length</span></td>
+      </tr>
+      <tr>
+        <td>Qwen3 235B</td>
+        <td>$0.20</td>
+        <td>$2.00</td>
+        <td>$0.0043</td>
+        <td><span class="check">✓</span> 975 tok</td>
+        <td><span class="cross">length</span></td>
+      </tr>
+      <tr>
+        <td>Mistral Small 3.1</td>
+        <td>$0.35</td>
+        <td>$0.55</td>
+        <td>$0.0016</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="partial">error</span></td>
+      </tr>
+      <tr>
+        <td>DeepSeek V4 Flash :free</td>
+        <td>$0.00</td>
+        <td>$0.00</td>
+        <td>$0.00</td>
+        <td><span class="check">✓</span> 458 tok</td>
+        <td><span class="check">stop</span></td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.6 Fast</td>
+        <td>$30</td>
+        <td>$150</td>
+        <td>$0.345</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">length</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- AdSense Second -->
+  <ins class="adsbygoogle" style="display:block;text-align:center;margin:32px 0" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+  <hr class="section-divider" />
+
+  <!-- ── Try-It Band ───────────────────────────────────────────── -->
+  <div class="try-it-band">
+    <h2>Try Qwen3.6 27B — Bring Your Own Key</h2>
+    <p>Connect your OpenRouter API key and test Qwen3.6 27B directly. Remember to set <code>max_tokens ≥ 2000</code> for best results with thinking models.</p>
+    <button class="try-btn" onclick="window.byok?.openByokModal('qwen/qwen3.6-27b', 'Qwen3.6 27B')">
+      ⚡ Try with BYOK
+    </button>
+  </div>
+
+  <!-- ── Related Models ────────────────────────────────────────── -->
+  <hr class="section-divider" />
+  <h2 class="section-title">Related <span class="accent">Models</span></h2>
+
+  <div class="related-grid">
+    <a href="/models/qwen3-235b/" class="related-card">
+      <div class="rc-label">Qwen · Larger</div>
+      <div class="rc-name">Qwen3 235B</div>
+      <div class="rc-price">$0.20 / $2.00 · bc-mid</div>
+    </a>
+    <a href="/models/deepseek-v4-flash-free/" class="related-card">
+      <div class="rc-label">DeepSeek · Free</div>
+      <div class="rc-name">DeepSeek V4 Flash Free</div>
+      <div class="rc-price">$0.00 · bc-free</div>
+    </a>
+    <a href="/models/mistral-small-3-1/" class="related-card">
+      <div class="rc-label">Mistral · Cheaper</div>
+      <div class="rc-name">Mistral Small 3.1 24B</div>
+      <div class="rc-price">$0.35 / $0.55 · bc-cheap</div>
+    </a>
+    <a href="/models/deepseek-v4-flash/" class="related-card">
+      <div class="rc-label">DeepSeek · Similar Tier</div>
+      <div class="rc-name">DeepSeek V4 Flash</div>
+      <div class="rc-price">bc-cheap · paid tier</div>
+    </a>
+  </div>
+
+</div><!-- /.page-wrap -->
+
+<!-- ── Footer ─────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="page-wrap">
+    <p class="footer-copy">© 2026 Aether Intel · <a href="/privacy/">Privacy</a> · <a href="/about/">About</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
