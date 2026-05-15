@@ -51,6 +51,161 @@
 
       <p>Compare that to the alternatives. Routing peak workloads through Claude Opus via API runs $300 to $400 per month for serious usage. A human junior research assistant costs $3,000 to $6,000 per month at minimum. The $8 figure is not a toy scenario — it reflects intelligent model routing, where a single demo session might cost 20 cents total: 12 cents to Minimax for heavy lifting, two cents to Kimi K2.6, one cent to Kimi K2.5 for lighter tasks. Model selection alone creates up to a 30x difference in cost for equivalent output. The architecture is doing real work. The economics are simply not comparable to anything that came before it.</p>
 
+      <style>
+        .depth-table-wrap { overflow-x: auto; margin: 32px 0; }
+        .depth-table {
+          width: 100%; border-collapse: collapse;
+          font-size: .82rem; line-height: 1.5;
+          background: var(--surface, #12151f);
+          border: 1px solid var(--border, rgba(255,255,255,.08));
+          border-radius: 10px; overflow: hidden;
+        }
+        .depth-table th {
+          background: rgba(129,140,248,.10);
+          color: var(--neon-indigo, #818cf8);
+          font-family: var(--font-display, 'IBM Plex Mono', monospace);
+          font-size: .65rem; letter-spacing: .1em; text-transform: uppercase;
+          padding: 11px 14px; text-align: left; white-space: nowrap;
+        }
+        .depth-table td {
+          padding: 10px 14px;
+          border-top: 1px solid var(--border, rgba(255,255,255,.06));
+          color: var(--text-secondary, #94a3b8);
+          vertical-align: top;
+        }
+        .depth-table tr:hover td { background: rgba(129,140,248,.04); }
+        .depth-table .row-highlight td { color: var(--text-primary, #e2e8f0); font-weight: 600; }
+        .dt-green { color: #34d399; }
+        .dt-red   { color: #f87171; }
+        .dt-muted { color: var(--text-muted, #64748b); }
+        .depth-label {
+          font-family: var(--font-display, 'IBM Plex Mono', monospace);
+          font-size: .62rem; font-weight: 700; letter-spacing: .14em;
+          text-transform: uppercase; color: var(--neon-indigo, #818cf8);
+          margin: 40px 0 12px;
+        }
+        /* Checklist */
+        .setup-checklist { list-style: none; padding: 0; margin: 24px 0 32px; }
+        .setup-checklist li {
+          display: flex; gap: 14px; padding: 12px 16px;
+          border: 1px solid var(--border, rgba(255,255,255,.08));
+          border-radius: 8px; margin-bottom: 8px;
+          background: var(--surface, #12151f);
+          font-size: .875rem; line-height: 1.55;
+          color: var(--text-secondary, #94a3b8);
+          transition: border-color .2s;
+        }
+        .setup-checklist li:hover { border-color: rgba(129,140,248,.3); }
+        .checklist-num {
+          flex-shrink: 0; width: 24px; height: 24px;
+          background: rgba(129,140,248,.15);
+          border: 1px solid rgba(129,140,248,.3);
+          border-radius: 50%; display: flex; align-items: center; justify-content: center;
+          font-family: var(--font-display, monospace); font-size: .65rem;
+          font-weight: 700; color: var(--neon-indigo, #818cf8); margin-top: 1px;
+        }
+        .checklist-item-title { font-weight: 600; color: var(--text-primary, #e2e8f0); display: block; margin-bottom: 3px; }
+        .checklist-code {
+          display: inline-block; background: rgba(0,0,0,.35);
+          border: 1px solid rgba(255,255,255,.08); border-radius: 4px;
+          padding: 1px 7px; font-family: var(--font-display, monospace);
+          font-size: .78rem; color: #a5b4fc; margin: 2px 0;
+        }
+        /* Pillar cards */
+        .pillar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 24px 0 32px; }
+        .pillar-card {
+          background: var(--surface, #12151f);
+          border: 1px solid var(--border, rgba(255,255,255,.08));
+          border-radius: 10px; padding: 20px;
+          transition: border-color .2s, box-shadow .2s;
+        }
+        .pillar-card:hover { border-color: rgba(129,140,248,.35); box-shadow: 0 0 18px rgba(129,140,248,.07); }
+        .pillar-number {
+          font-family: var(--font-display, monospace); font-size: .6rem;
+          font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+          color: var(--neon-indigo, #818cf8); margin-bottom: 6px;
+        }
+        .pillar-name {
+          font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+          font-size: 1rem; font-weight: 700; margin-bottom: 10px;
+          color: var(--text-primary, #e2e8f0);
+        }
+        .pillar-steps { list-style: none; padding: 0; margin: 0; }
+        .pillar-steps li {
+          font-size: .8rem; color: var(--text-secondary, #94a3b8);
+          padding: 5px 0; border-top: 1px solid rgba(255,255,255,.05);
+          line-height: 1.5; display: flex; gap: 8px;
+        }
+        .pillar-steps li:first-child { border-top: none; }
+        .pillar-steps .step-arrow { color: var(--neon-indigo, #818cf8); flex-shrink: 0; }
+      </style>
+
+      <p class="depth-label">Cost Comparison</p>
+      <div class="depth-table-wrap">
+        <table class="depth-table">
+          <thead>
+            <tr>
+              <th>Setup</th>
+              <th>Monthly Cost</th>
+              <th>Runs 24/7</th>
+              <th>Self-improves</th>
+              <th>Model Flexibility</th>
+              <th>Time to Deploy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-highlight">
+              <td>Hermes + cheap models (Minimax/Kimi)</td>
+              <td><span class="dt-green">~$8–20</span></td>
+              <td><span class="dt-green">Yes</span></td>
+              <td><span class="dt-green">Yes</span></td>
+              <td><span class="dt-green">Full (30+ providers)</span></td>
+              <td><span class="dt-green">&lt;5 min</span></td>
+            </tr>
+            <tr>
+              <td>Hermes + Claude Opus API (power use)</td>
+              <td>~$300–400</td>
+              <td><span class="dt-green">Yes</span></td>
+              <td><span class="dt-green">Yes</span></td>
+              <td><span class="dt-green">Full</span></td>
+              <td><span class="dt-green">&lt;5 min</span></td>
+            </tr>
+            <tr>
+              <td>Claude.ai / ChatGPT Pro (manual)</td>
+              <td>$20</td>
+              <td><span class="dt-red">No</span></td>
+              <td><span class="dt-red">No</span></td>
+              <td><span class="dt-muted">Single model</span></td>
+              <td><span class="dt-green">Instant</span></td>
+            </tr>
+            <tr>
+              <td>OpenClaw (self-hosted)</td>
+              <td>~$10–50 + VPS</td>
+              <td><span class="dt-green">Yes</span></td>
+              <td>Partial</td>
+              <td>Full</td>
+              <td>30–60 min</td>
+            </tr>
+            <tr>
+              <td>Enterprise AI platform (SaaS)</td>
+              <td><span class="dt-red">$500–5,000+</span></td>
+              <td>Partial</td>
+              <td><span class="dt-red">No</span></td>
+              <td><span class="dt-muted">Locked-in</span></td>
+              <td><span class="dt-red">Weeks–months</span></td>
+            </tr>
+            <tr>
+              <td>Human junior research assistant</td>
+              <td><span class="dt-red">$3,000–6,000</span></td>
+              <td><span class="dt-red">No</span></td>
+              <td><span class="dt-green">Yes (slowly)</span></td>
+              <td>—</td>
+              <td><span class="dt-red">Weeks</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <h2>Five Pillars, Not One Feature</h2>
 
       <p>Understanding why Hermes behaves differently from a conventional AI assistant requires understanding its architecture — specifically, five interlocking components that most users never configure and therefore never benefit from.</p>
@@ -64,6 +219,60 @@
       <p>The fourth, and perhaps most consequential for the infrastructure argument, is <strong>scheduled automation</strong>. Hermes supports plain-English scheduling: "every morning at 6am, compile the top AI news and send a briefing." Each scheduled invocation runs in a fresh, isolated session — preventing state contamination across automated tasks. Nate Herk, whose agent deployment has become a frequently cited reference case, runs a full suite of autonomous cron jobs: daily AI news briefings, YouTube comment monitoring with automated responses, morning business summaries, server health checks, research reports, and follow-up reminders. None of these require manual invocation. They run whether or not anyone is at a keyboard.</p>
 
       <p>The fifth component is the <strong>self-improving loop</strong> that ties the others together. Task executed. Playbook triggered — or created. Updated based on feedback. Memory expanded. Searchable history compounded. The system does not merely persist; it improves through use. As Lueker observed: "It writes its own skills for anything that you do twice and it remembers all of the preferences across every single session... the longer you use it, the better and the faster it gets."</p>
+
+      <p class="depth-label">5-Pillar Implementation Guide</p>
+      <div class="pillar-grid">
+        <div class="pillar-card">
+          <div class="pillar-number">Pillar 01</div>
+          <div class="pillar-name">Memory</div>
+          <ul class="pillar-steps">
+            <li><span class="step-arrow">→</span> Create <span class="checklist-code">user.md</span> with your name, timezone, communication style, preferred output formats, and topics to avoid</li>
+            <li><span class="step-arrow">→</span> Create <span class="checklist-code">memory.md</span> with active projects, business context, current goals, and key relationships</li>
+            <li><span class="step-arrow">→</span> Enable SQLite session storage (on by default) — this makes every past conversation searchable</li>
+            <li><span class="step-arrow">→</span> Audit memory monthly: run "summarize and clean stale entries" to prevent context drift causing erratic agent behavior</li>
+          </ul>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-number">Pillar 02</div>
+          <div class="pillar-name">Skills (Playbooks)</div>
+          <ul class="pillar-steps">
+            <li><span class="step-arrow">→</span> Do a task manually twice — the agent will auto-generate the skill file. Review and approve it.</li>
+            <li><span class="step-arrow">→</span> Install pre-built skills from the community hub (520+ available) before writing custom ones</li>
+            <li><span class="step-arrow">→</span> Structure each custom skill with YAML front matter: name, trigger conditions, steps, output format</li>
+            <li><span class="step-arrow">→</span> Use the feedback loop: after any skill run, rate it — the agent refines the skill file automatically over time</li>
+          </ul>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-number">Pillar 03</div>
+          <div class="pillar-name">Soul</div>
+          <ul class="pillar-steps">
+            <li><span class="step-arrow">→</span> Create a <span class="checklist-code">soul.md</span> file defining tone, persona, response style, and operating rules</li>
+            <li><span class="step-arrow">→</span> Use different soul files per agent profile — research agents should be concise, creative agents warmer</li>
+            <li><span class="step-arrow">→</span> Include a "never do" section for hard constraints (e.g., never send without approval, never access X)</li>
+            <li><span class="step-arrow">→</span> Keep soul files short (&lt;300 words) — long personas cause inconsistency across sessions</li>
+          </ul>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-number">Pillar 04</div>
+          <div class="pillar-name">Cron Jobs</div>
+          <ul class="pillar-steps">
+            <li><span class="step-arrow">→</span> Start with one cron: a daily morning briefing. Let it run for a week before adding more.</li>
+            <li><span class="step-arrow">→</span> Write crons in plain English ("every weekday at 7am do X") — Hermes translates automatically</li>
+            <li><span class="step-arrow">→</span> Remember: each cron runs in a fresh, isolated session. Pass all required context explicitly in the cron definition — it does not inherit the parent conversation</li>
+            <li><span class="step-arrow">→</span> Route cron output to Telegram (recommended) for mobile visibility and approval buttons</li>
+          </ul>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-number">Pillar 05</div>
+          <div class="pillar-name">Self-Improving Loop</div>
+          <ul class="pillar-steps">
+            <li><span class="step-arrow">→</span> Enable auto-skill generation — the agent writes playbooks after repeated tasks without prompting</li>
+            <li><span class="step-arrow">→</span> Review auto-generated skills weekly. Some will be excellent; some will encode an error as a feature.</li>
+            <li><span class="step-arrow">→</span> Use <span class="checklist-code">lessons.md</span> to log permanent corrections — mistakes that recur belong here, not just in conversation</li>
+            <li><span class="step-arrow">→</span> Set up nightly GitHub backup for all agent state (memory, skills, soul, config) — full restore in minutes if the VPS is lost</li>
+          </ul>
+        </div>
+      </div>
 
       <h2>The Multi-Agent Office</h2>
 
@@ -87,6 +296,106 @@
       <p>Credentials live in environment files inside Docker containers — never surfacing in conversation history or logs. Each agent receives only the credentials its specific function requires. Herk's framing on this is characteristically direct: "Pretend this is an actual intern or a new employee. What access would you give them? You wouldn't just give them your credit card."</p>
 
       <p>Nightly automated jobs handle state backup — syncing all agent configuration and memory to a private repository — and run security sweeps. If a VPS is corrupted or compromised, recovery is complete and fast. Memory hygiene matters too: Herk flagged stale memory as "the number one cause of weird agent behavior," recommending periodic audits of what the agent has accumulated over time.</p>
+
+      <h2>Zero-to-Running: The Setup Checklist</h2>
+
+      <p>The full five-pillar stack takes roughly two to three hours to configure properly. This is the sequence that avoids the most common failure modes.</p>
+
+      <p class="depth-label">Infrastructure Setup</p>
+      <ol class="setup-checklist">
+        <li>
+          <span class="checklist-num">1</span>
+          <div>
+            <span class="checklist-item-title">Provision your VPS</span>
+            Hostinger KVM2 (~$8.99/month annual) is the community standard. For multi-agent setups with 3+ profiles running concurrently, step up to KVM4. Enable the Hostinger security firewall in the control panel before doing anything else.
+          </div>
+        </li>
+        <li>
+          <span class="checklist-num">2</span>
+          <div>
+            <span class="checklist-item-title">Install via one-line command</span>
+            SSH into your VPS and run the Hermes install script. The interactive wizard completes setup in under 3 minutes. Use Docker installation — each agent gets an isolated container with its own <span class="checklist-code">.env</span> file, preventing credential bleed between profiles.
+          </div>
+        </li>
+        <li>
+          <span class="checklist-num">3</span>
+          <div>
+            <span class="checklist-item-title">Configure your first API provider</span>
+            Start with OpenRouter — it gives access to 30+ models with one key, including Minimax, DeepSeek, Kimi, and Claude. Inject the key with <span class="checklist-code">hermes config set OPENROUTER_API_KEY [value]</span> — never paste keys into chat. Set DeepSeek as your default and Claude Opus as fallback for complex reasoning.
+          </div>
+        </li>
+        <li>
+          <span class="checklist-num">4</span>
+          <div>
+            <span class="checklist-item-title">Connect Telegram</span>
+            Create a bot via BotFather, copy the token, and link it in Hermes config. Telegram is the control interface for mobile access, cron monitoring, and approval flows. Test that messages arrive from the agent before configuring anything else.
+          </div>
+        </li>
+      </ol>
+
+      <p class="depth-label">Agent Configuration</p>
+      <ol class="setup-checklist">
+        <li>
+          <span class="checklist-num">5</span>
+          <div>
+            <span class="checklist-item-title">Write your memory files</span>
+            Create <span class="checklist-code">user.md</span> (who you are, how you work, what you care about) and <span class="checklist-code">memory.md</span> (current projects, business context, active goals). These are the agent's "resume" — the better they are, the faster it becomes useful.
+          </div>
+        </li>
+        <li>
+          <span class="checklist-num">6</span>
+          <div>
+            <span class="checklist-item-title">Define your soul</span>
+            Write a <span class="checklist-code">soul.md</span> covering communication tone, response style, hard constraints, and persona. Keep it under 300 words. If you're running multiple profiles later, each gets its own soul file.
+          </div>
+        </li>
+        <li>
+          <span class="checklist-num">7</span>
+          <div>
+            <span class="checklist-item-title">Install community skills relevant to your workflow</span>
+            Browse the 520+ community skills hub. Install only what you'll use in the first week — skill bloat causes the agent to over-trigger. Good starting points: web search, calendar access, email drafting, and a GitHub integration if you're technical.
+          </div>
+        </li>
+        <li>
+          <span class="checklist-num">8</span>
+          <div>
+            <span class="checklist-item-title">Set your first cron job</span>
+            Start simple: "Every weekday at 7am, pull the top 5 AI news stories from the last 24 hours and send a summary to Telegram." Run it for a week. After it works reliably, layer in more automation. Never start with 10 crons simultaneously.
+          </div>
+        </li>
+      </ol>
+
+      <p class="depth-label">Hardening &amp; Reliability</p>
+      <ol class="setup-checklist">
+        <li>
+          <span class="checklist-num">9</span>
+          <div>
+            <span class="checklist-item-title">Set up nightly backup cron</span>
+            Configure an automated nightly sync of your agent state (memory, skills, soul, config) to a private GitHub repository. If your VPS is ever corrupted, you recover in minutes. This is non-negotiable for any production deployment.
+          </div>
+        </li>
+        <li>
+          <span class="checklist-num">10</span>
+          <div>
+            <span class="checklist-item-title">Create a lessons.md file</span>
+            Every time the agent makes a repeatable mistake, document the permanent fix here. Include it in every session's context. This converts errors into institutional memory rather than recurring costs — the agent cannot repeat a documented mistake if the correction is always in scope.
+          </div>
+        </li>
+        <li>
+          <span class="checklist-num">11</span>
+          <div>
+            <span class="checklist-item-title">Apply least-privilege credentials</span>
+            Each agent profile gets only the API keys and permissions its specific function needs. A content agent gets web search and email drafting access. It does not get database credentials or payment APIs. Treat each Docker container as you would a new hire on their first day.
+          </div>
+        </li>
+        <li>
+          <span class="checklist-num">12</span>
+          <div>
+            <span class="checklist-item-title">Review auto-generated skills weekly</span>
+            Check what the agent has written for itself. Most will be accurate and useful. Some will encode an error as a repeatable procedure. Weekly review prevents compounding skill drift — where a subtle mistake in a skill file gets reinforced through repeated execution.
+          </div>
+        </li>
+      </ol>
 
       <h2>The Conceptual Shift</h2>
 
