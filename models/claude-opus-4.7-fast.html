@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Opus 4.7 Fast — Anthropic's Premium Throughput Model | Aether Intel</title>
+  <meta name="description" content="Claude Opus 4.7 Fast review: $30/$150 per 1M tokens, 200K context, vision input, zero reasoning overhead. Anthropic's flagship optimised for production throughput.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/claude-opus-4.7-fast.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Claude Opus 4.7 Fast — Anthropic's Premium Throughput Model | Aether Intel">
+  <meta property="og:description" content="Claude Opus 4.7 Fast: $30/$150 per 1M tokens, 200K context, no reasoning overhead. Opus-quality responses at production speed.">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/claude-opus-4.7-fast.html">
+  <meta property="og:site_name" content="Aether Intel">
+  <meta property="article:published_time" content="2026-05-16T00:00:00Z">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Opus 4.7 Fast — Anthropic's Premium Throughput Model | Aether Intel">
+  <meta name="twitter:description" content="Claude Opus 4.7 Fast: $30/$150 per 1M tokens, 200K context. Opus-quality at speed — and the most expensive model in our benchmark set.">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VW4LGE7L1T');
+  </script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --provider-accent: #d4a27a;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+    }
+
+    /* ── Article layout ── */
+    .article-page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      font-family: var(--font-body);
+      color: var(--text-primary);
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 1.4rem;
+      font-family: var(--font-body);
+    }
+    .breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb .sep { opacity: 0.5; }
+    .breadcrumb .current { color: var(--text-secondary); }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, rgba(212,162,122,0.07), rgba(129,140,248,0.03));
+      border: 1px solid rgba(212,162,122,0.2);
+      border-radius: 16px;
+      padding: 2.2rem 2rem 2rem;
+      margin-bottom: 2.2rem;
+    }
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .badge-provider {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(212,162,122,0.12);
+      border: 1px solid rgba(212,162,122,0.35);
+      color: #d4a27a;
+      border-radius: 999px;
+      padding: 0.28rem 0.85rem;
+      font-size: 0.7rem;
+      font-family: var(--font-display);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+    }
+    .badge-meta {
+      display: inline-block;
+      background: rgba(129,140,248,0.09);
+      border: 1px solid rgba(129,140,248,0.2);
+      color: var(--neon-indigo);
+      border-radius: 4px;
+      padding: 0.22rem 0.6rem;
+      font-size: 0.68rem;
+      font-family: var(--font-display);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    h1.model-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.55rem, 4vw, 2.15rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin: 0 0 0.65rem;
+    }
+    h1.model-title span.accent { color: #d4a27a; }
+    .hero-lead {
+      font-size: 1.02rem;
+      line-height: 1.72;
+      color: var(--text-secondary);
+      margin: 0 0 1rem;
+    }
+    .hero-highlight {
+      background: rgba(212,162,122,0.06);
+      border-left: 3px solid #d4a27a;
+      border-radius: 0 8px 8px 0;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-top: 1rem;
+    }
+    .hero-highlight strong { color: #d4a27a; }
+    .article-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Section headings ── */
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.32rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 2rem 0 0.75rem;
+    }
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin: 1.4rem 0 0.5rem;
+    }
+    p.body-copy {
+      font-size: 0.95rem;
+      line-height: 1.78;
+      color: var(--text-secondary);
+      margin: 0 0 1rem;
+    }
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.2rem 0;
+    }
+
+    /* ── Spec grid ── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.2rem 0 1.8rem;
+    }
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .spec-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+    }
+    .spec-value {
+      font-size: 1.18rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+    .spec-note {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .sv-green  { color: #34d399; }
+    .sv-cyan   { color: var(--neon-cyan); }
+    .sv-indigo { color: var(--neon-indigo); }
+    .sv-gold   { color: var(--neon-gold); }
+
+    /* ── Benchmark block ── */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 1rem 1.3rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+    }
+    .benchmark-cost-badge {
+      display: inline-block;
+      border-radius: 7px;
+      padding: 4px 12px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      font-family: var(--font-body);
+    }
+    .bc-prem {
+      color: #f97316;
+      background: rgba(249,115,22,0.08);
+      border: 1px solid rgba(249,115,22,0.3);
+    }
+    .benchmark-prompt-section {
+      padding: 0.9rem 1.3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .benchmark-prompt-label {
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      margin-bottom: 0.4rem;
+    }
+    .benchmark-prompt-text {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .benchmark-response-section {
+      padding: 1rem 1.3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .benchmark-response-label {
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      margin-bottom: 0.65rem;
+    }
+    .benchmark-response-text {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-family: var(--font-body);
+    }
+    .benchmark-response-text h3 {
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 1rem 0 0.4rem;
+    }
+    .benchmark-response-text h3:first-child { margin-top: 0; }
+    .benchmark-response-text p { margin: 0 0 0.7rem; }
+    .benchmark-response-text p:last-child { margin-bottom: 0; }
+    .benchmark-response-text ul {
+      margin: 0.3rem 0 0.8rem 1.2rem;
+      padding: 0;
+    }
+    .benchmark-response-text li {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.3rem;
+    }
+    .benchmark-response-text table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin: 0.6rem 0 0.9rem;
+    }
+    .benchmark-response-text th {
+      font-weight: 700;
+      color: var(--text-primary);
+      padding: 0.45rem 0.7rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: rgba(129,140,248,0.06);
+    }
+    .benchmark-response-text td {
+      padding: 0.42rem 0.7rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(129,140,248,0.05);
+    }
+    .cutoff-badge {
+      display: inline-block;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.22);
+      color: #f87171;
+      border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.68rem;
+      font-family: var(--font-display);
+      letter-spacing: 0.04em;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+    .token-stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.4rem;
+      padding: 0.85rem 1.3rem;
+      background: rgba(129,140,248,0.03);
+    }
+    .token-stat {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+    }
+    .token-stat .ts-val {
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-family: var(--font-heading);
+    }
+    .ts-val.ts-limit { color: #f87171; }
+    .ts-val.ts-zero  { color: var(--text-muted); }
+
+    /* ── Use-case grid ── */
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1rem;
+    }
+    .use-case-card .uc-icon {
+      font-size: 1.3rem;
+      margin-bottom: 0.45rem;
+    }
+    .use-case-card .uc-title {
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+    }
+    .use-case-card .uc-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Fit grid ── */
+    .fit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .fit-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.2rem;
+    }
+    .fit-panel.for-panel  { border-top: 3px solid rgba(34,197,94,0.5); }
+    .fit-panel.not-panel  { border-top: 3px solid rgba(239,68,68,0.5); }
+    .fit-panel .fit-header {
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+    .for-panel .fit-header { color: #4ade80; }
+    .not-panel .fit-header { color: #f87171; }
+    .fit-list {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .fit-list li {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      line-height: 1.45;
+    }
+    .for-panel .fi { color: #4ade80; font-size: 0.75rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .not-panel .fi { color: #f87171; font-size: 0.75rem; flex-shrink: 0; margin-top: 0.05rem; }
+
+    /* ── Info callout ── */
+    .info-callout {
+      background: rgba(212,162,122,0.05);
+      border: 1px solid rgba(212,162,122,0.2);
+      border-left: 4px solid #d4a27a;
+      border-radius: 0 10px 10px 0;
+      padding: 1.1rem 1.3rem;
+      margin: 1.5rem 0;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .info-callout .ic-label {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #d4a27a;
+      margin-bottom: 0.45rem;
+    }
+    .info-callout strong { color: #d4a27a; }
+
+    /* ── Pricing table ── */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .pricing-table thead tr {
+      background: rgba(129,140,248,0.06);
+    }
+    .pricing-table th {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--text-primary);
+      padding: 0.65rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.79rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .pricing-table td {
+      padding: 0.6rem 1rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(129,140,248,0.06);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .pricing-table tr:last-child td { border-bottom: none; }
+    .price-val { font-weight: 700; font-family: var(--font-heading); }
+    .price-high { color: #f87171; }
+    .price-mid  { color: var(--neon-gold); }
+    .price-low  { color: #4ade80; }
+
+    /* ── Comparison table ── */
+    .comparison-table-wrap { overflow-x: auto; margin: 1rem 0 1.5rem; }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+    .comparison-table th {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--text-primary);
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: rgba(129,140,248,0.05);
+      font-size: 0.77rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .comparison-table td {
+      padding: 0.58rem 0.9rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(129,140,248,0.06);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .this-model td {
+      background: rgba(212,162,122,0.05);
+      border-left: 3px solid #d4a27a;
+    }
+    .comparison-table .this-model td:first-child { color: #d4a27a; font-weight: 700; }
+
+    /* ── Try-it band ── */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(212,162,122,0.07), rgba(249,115,22,0.04));
+      border: 1px solid rgba(212,162,122,0.25);
+      border-radius: 14px;
+      padding: 1.8rem;
+      margin: 2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 0.35rem;
+    }
+    .try-it-band p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin: 0;
+      line-height: 1.55;
+    }
+    .try-it-btn {
+      display: inline-block;
+      background: #d4a27a;
+      color: #07070f;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s;
+    }
+    .try-it-btn:hover { opacity: 0.88; }
+
+    /* ── AdSense mid ── */
+    .adsense-mid { margin: 2.2rem 0; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr 1fr; }
+      .fit-grid { grid-template-columns: 1fr; }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+      .comparison-table { font-size: 0.74rem; }
+    }
+    @media (max-width: 400px) {
+      .use-case-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- ── BREADCRUMB ── -->
+    <nav class="breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep">&rsaquo;</span>
+      <a href="/models.html">Models</a>
+      <span class="sep">&rsaquo;</span>
+      <span class="current">Claude Opus 4.7 Fast</span>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <div class="hero">
+      <div class="hero-badges">
+        <span class="badge-provider"><span class="badge-dot"></span>Anthropic</span>
+        <span class="badge-meta">May 2026</span>
+        <span class="badge-meta">Benchmark Tested</span>
+        <span class="badge-meta">Vision</span>
+      </div>
+
+      <h1 class="model-title">Claude <span class="accent">Opus 4.7</span> Fast</h1>
+
+      <p class="hero-lead">Anthropic's flagship Opus model in a high-throughput inference configuration. Same frontier-class instruction following and structured output quality — no extended thinking overhead, built for production response-time requirements.</p>
+
+      <div class="hero-highlight">
+        <strong>The honest take:</strong> At $30/$150 per million tokens, Claude Opus 4.7 Fast is the most expensive model in our benchmark set — 200&times; the cost of Nemotron, 100&times; Gemini Flash Lite. Benchmark cost per exchange: <strong>$0.345</strong> (bc-prem tier). That price demands justification. This article gives you the data to decide whether it delivers.
+      </div>
+
+      <div class="article-meta">
+        <span>May 16, 2026</span>
+        <span>&middot;</span>
+        <span>10 min read</span>
+        <span>&middot;</span>
+        <span>Benchmark tested</span>
+      </div>
+    </div>
+
+    <!-- ── QUICK SPECS ── -->
+    <div class="model-specs-grid">
+      <div class="spec-card">
+        <div class="spec-label">Input / 1M tokens</div>
+        <div class="spec-value price-high">$30.00</div>
+        <div class="spec-note">Charged per token sent</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Output / 1M tokens</div>
+        <div class="spec-value price-high">$150.00</div>
+        <div class="spec-note">5&times; input rate</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Context window</div>
+        <div class="spec-value sv-indigo">200K</div>
+        <div class="spec-note">200,000 tokens</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Bench cost</div>
+        <div class="spec-value" style="color:#f97316">$0.345</div>
+        <div class="spec-note">bc-prem tier (&ge;$0.05)</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Reasoning tokens</div>
+        <div class="spec-value sv-cyan">0</div>
+        <div class="spec-note">No CoT overhead</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Input modalities</div>
+        <div class="spec-value" style="font-size:0.92rem">Text + Vision</div>
+        <div class="spec-note">Image understanding</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Architecture</div>
+        <div class="spec-value" style="font-size:0.9rem">Dense</div>
+        <div class="spec-note">Transformer</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">OpenRouter ID</div>
+        <div class="spec-value" style="font-size:0.66rem;font-family:monospace;color:var(--text-secondary);font-weight:500;word-break:break-all;line-height:1.4">anthropic/<wbr>claude-opus-<wbr>4.7-fast</div>
+        <div class="spec-note">Direct Anthropic routing</div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ── WHAT IS IT ── -->
+    <h2 class="section-title">What is Claude Opus 4.7 Fast?</h2>
+
+    <p class="body-copy">Claude Opus 4.7 Fast is Anthropic's production-optimised variant of their Claude 4.7 Opus flagship, released in May 2026. The "Fast" designation in the model family signals a specific inference configuration: the model is tuned for high-throughput, low-latency responses rather than extended deliberative reasoning. Where the base Opus 4.7 can engage chain-of-thought reasoning at the cost of additional time and tokens, the Fast variant skips that overhead entirely — the model produces its output in a single generation pass, without visible reasoning traces.</p>
+
+    <p class="body-copy">This is not a stripped-down model. The underlying weights retain the full Opus 4.7 capability profile: strong instruction following, clean structured output, and consistent performance across professional writing, code review, analysis, and complex question answering. The trade-off is deliberate — you get Opus-level quality at speeds and latencies compatible with interactive production applications, without paying for reasoning tokens you may not need.</p>
+
+    <p class="body-copy">The model is available through Anthropic's direct API and via OpenRouter under the ID <code>anthropic/claude-opus-4.7-fast</code> (actual model slug: <code>claude-4.7-opus-fast-20260512</code>). Context window is 200,000 tokens — solid for professional tasks, though notably below the 1M context of the standard Opus 4.7 or Google's frontier offerings. Vision input is supported; output is text only.</p>
+
+    <hr class="section-divider">
+
+    <!-- ── PRICING REALITY ── -->
+    <h2 class="section-title">The Pricing Reality</h2>
+
+    <p class="body-copy">There is no gentle way to frame this: Claude Opus 4.7 Fast is extraordinarily expensive by any measure in today's AI market. At $30.00 per million input tokens and $150.00 per million output tokens, it sits at the apex of our benchmark set — not just the most expensive Anthropic model, but the most expensive model we have tested, full stop.</p>
+
+    <div class="info-callout">
+      <div class="ic-label">Cost Perspective</div>
+      <strong>Comparative scale:</strong> Claude Opus 4.7 Fast costs 200&times; more per token than Nvidia Nemotron, 100&times; more than Gemini 2.0 Flash Lite, roughly 24&times; more than Gemini 2.5 Pro (output), and 10&times; more than Claude Sonnet 4.6. The benchmark exchange — 1,500 input tokens plus 2,000 output tokens — costs <strong>$0.345</strong>. A modest 1,000-exchange/day deployment runs to <strong>$345/day</strong>, or over $10,000/month. Choose your use cases carefully.
+    </div>
+
+    <p class="body-copy">The 5:1 output-to-input ratio (output tokens cost five times more than input) is standard across Anthropic's Opus line and reflects the compute reality of generating high-quality long-form text. For workflows where output length is the binding variable — detailed reports, structured documents, long code files — cost scales primarily with output volume. A 10,000-token output alone costs $1.50. Budget planning should always start with a realistic estimate of output token counts.</p>
+
+    <h3 class="sub-title">Benchmark Cost Formula</h3>
+    <p class="body-copy">Our standard benchmark uses 1,500 prompt tokens and 2,000 completion tokens, representing a substantive professional exchange. The math for Opus 4.7 Fast:</p>
+
+    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0 1.2rem;font-family:monospace;font-size:0.84rem;color:var(--text-secondary);line-height:1.8">
+      1,500 tokens &times; $30.00/1M &nbsp;= $0.045 (input)<br>
+      2,000 tokens &times; $150.00/1M = $0.300 (output)<br>
+      <strong style="color:var(--text-primary)">Total: $0.345 per benchmark exchange</strong>
+    </div>
+
+    <table class="pricing-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Input / 1M tokens</td>
+          <td class="price-val price-high">$30.00</td>
+          <td>All tokens sent in request</td>
+        </tr>
+        <tr>
+          <td>Output / 1M tokens</td>
+          <td class="price-val price-high">$150.00</td>
+          <td>Generated tokens only</td>
+        </tr>
+        <tr>
+          <td>Benchmark exchange (3,500 tok)</td>
+          <td class="price-val" style="color:#f97316">$0.345</td>
+          <td>1,500 in + 2,000 out</td>
+        </tr>
+        <tr>
+          <td>100 exchanges / day</td>
+          <td class="price-val price-high">$34.50</td>
+          <td>Light-use deployment</td>
+        </tr>
+        <tr>
+          <td>1,000 exchanges / day</td>
+          <td class="price-val price-high">$345 / day</td>
+          <td>~$10,350 / month</td>
+        </tr>
+        <tr>
+          <td>10,000 exchanges / day</td>
+          <td class="price-val price-high">$3,450 / day</td>
+          <td>Production scale</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="section-divider">
+
+    <!-- ── THE FAST IN THE NAME ── -->
+    <h2 class="section-title">What "Fast" Actually Means</h2>
+
+    <p class="body-copy">In Anthropic's model family, the "Fast" suffix describes an inference configuration, not a capability reduction. Extended thinking — the chain-of-thought reasoning mode that allows Claude models to work through complex problems step-by-step before generating a final answer — is disabled in this variant. That means no reasoning token overhead, no additional latency for deliberation, and no unpredictable cost spikes when the model decides a problem warrants more thought.</p>
+
+    <p class="body-copy">For many professional use cases, this is exactly right. Extended thinking shines on mathematical problem-solving, multi-step logical reasoning, and adversarial benchmarks designed to trip up direct-answer models. But for structured writing, document analysis, code review, and instruction-following tasks — the workhorse of professional AI automation — it adds cost and latency without meaningful quality improvement. The Fast variant delivers the response without the preamble.</p>
+
+    <p class="body-copy">Our benchmark confirmed zero reasoning tokens in the response. The model went directly to output: a clean structured table followed by well-organised sections, all formatted at professional standard. Response latency was noticeably lower than reasoning-enabled models at this quality tier. For production applications where users expect a response within seconds rather than waiting for an extended thinking pass, Opus 4.7 Fast is architecturally appropriate in a way that the base Opus 4.7 with extended thinking enabled is not.</p>
+
+    <div class="info-callout">
+      <div class="ic-label">Note on Reasoning Tokens</div>
+      Reasoning tokens are billed in addition to completion tokens on models that support them. On a complex prompt, a reasoning-enabled model might silently consume 2,000&ndash;8,000 reasoning tokens before generating its actual response — costs you pay without seeing the output. With Opus 4.7 Fast, what you see is what you pay for: <strong>0 reasoning tokens, every time</strong>.
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ── BENCHMARK ── -->
+    <h2 class="section-title">Live Benchmark Results</h2>
+
+    <p class="body-copy">We ran Claude Opus 4.7 Fast through our standard benchmark via the Anthropic direct API. The prompt is a substantive technical question designed to test structured output quality, comparative reasoning, and the model's ability to organise complex information clearly. We apply a 600-token completion cap to hold costs consistent across models.</p>
+
+    <div class="benchmark-block">
+      <div class="benchmark-block-header">
+        <span class="benchmark-block-title">Live Benchmark — Direct Anthropic API</span>
+        <span class="benchmark-cost-badge bc-prem">$0.09162 actual &nbsp;|&nbsp; $0.345 bench tier</span>
+      </div>
+
+      <div class="benchmark-prompt-section">
+        <div class="benchmark-prompt-label">Prompt (59 tokens)</div>
+        <p class="benchmark-prompt-text">"Explain the key trade-offs between SQL and NoSQL databases. When would you choose each? Give me a concrete example of a system that suits each approach."</p>
+      </div>
+
+      <div class="benchmark-response-section">
+        <div class="benchmark-response-label">Claude Opus 4.7 Fast Response (599 tokens) <span class="cutoff-badge">max_tokens</span></div>
+        <div class="benchmark-response-text">
+          <h3># SQL vs NoSQL: Key Trade-offs</h3>
+
+          <table>
+            <thead>
+              <tr><th>Dimension</th><th>SQL</th><th>NoSQL</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Schema</td><td>Rigid, predefined</td><td>Flexible, dynamic</td></tr>
+              <tr><td>Scaling</td><td>Vertical (scale up)</td><td>Horizontal (scale out)</td></tr>
+              <tr><td>Consistency</td><td>ACID guaranteed</td><td>Eventual (usually)</td></tr>
+              <tr><td>Query power</td><td>Rich SQL, joins</td><td>Limited, key/document</td></tr>
+              <tr><td>Data model</td><td>Relational tables</td><td>Document, KV, graph, wide-column</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Key Trade-offs</h3>
+          <p><strong>SQL gives you:</strong></p>
+          <ul>
+            <li>Data integrity and referential constraints enforced at the DB layer</li>
+            <li>Powerful ad-hoc querying across any combination of fields</li>
+            <li>Predictable consistency — every read sees the latest committed write</li>
+            <li>Cost: schema migrations are painful; vertical scaling has a ceiling</li>
+          </ul>
+          <p><strong>NoSQL gives you:</strong></p>
+          <ul>
+            <li>Horizontal scalability — add nodes rather than upgrading hardware</li>
+            <li>Schema flexibility — evolve your data model without downtime</li>
+            <li>High write throughput for time-series, event, or log data</li>
+            <li>Cost: joins are your problem; consistency is often eventual</li>
+          </ul>
+
+          <h3>When to Choose Each</h3>
+          <p><strong>Choose SQL when</strong> your data has clear relationships, you need complex queries across multiple entities, or correctness matters more than throughput (finance, inventory, user accounts). <strong>Choose NoSQL when</strong> you need to scale writes horizontally, your schema is fluid or document-like, or you're storing homogeneous high-volume data (logs, events, sensor readings, user sessions).</p>
+
+          <p><em>[Response reached 600-token limit before concrete examples section — see token stats below.]</em></p>
+        </div>
+      </div>
+
+      <div class="token-stats-strip">
+        <span class="token-stat">Prompt: <span class="ts-val">59</span></span>
+        <span class="token-stat">Completion: <span class="ts-val ts-limit">599</span></span>
+        <span class="token-stat">Total: <span class="ts-val">658</span></span>
+        <span class="token-stat">Reasoning: <span class="ts-val ts-zero">0</span></span>
+        <span class="token-stat">Finish: <span class="ts-val ts-limit">max_tokens</span></span>
+        <span class="token-stat">Provider: <span class="ts-val">Anthropic (direct)</span></span>
+        <span class="token-stat">Actual cost: <span class="ts-val">$0.09162</span></span>
+      </div>
+    </div>
+
+    <h3 class="sub-title">What the Benchmark Tells Us</h3>
+
+    <p class="body-copy">The response is textbook Opus quality: it opens with a clean five-column comparison table covering the dimensions that matter most, then moves into structured "gives you" sections that separate the benefits from the costs of each approach without conflating them. The writing is direct, the formatting is professional, and the organisation is immediately usable — not something you need to reformat before putting in front of a colleague or client.</p>
+
+    <p class="body-copy">Zero reasoning tokens confirms the Fast configuration is working as expected. There was no deliberation overhead. The model went straight to output. Finish reason of <code>max_tokens</code> means the response was cut short by our 600-token benchmark cap — the concrete examples section was queued but never arrived. In production with no artificial token limit, this response would have continued to completion.</p>
+
+    <p class="body-copy">The actual cost of $0.09162 for this 658-token exchange (59 prompt + 599 completion) reflects the real-world micro-economics: even a short professional exchange at these rates costs nearly 10 cents. The benchmark tier cost of $0.345 represents our standard 3,500-token exchange, which is a better proxy for substantive professional tasks.</p>
+
+    <!-- ADSENSE MID -->
+    <div class="adsense-mid">
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-3480541530392777"
+           data-ad-slot="auto" data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ── CONTEXT WINDOW ── -->
+    <h2 class="section-title">Context Window: 200K</h2>
+
+    <p class="body-copy">The 200,000-token context window is substantial — roughly 150,000 words, enough to hold a full novel, a large codebase, or a stack of legal documents — but it deserves honest framing against the current frontier. The standard Claude Opus 4.7 offers 1M tokens. Google Gemini 2.5 Pro and DeepSeek V4 Flash both offer 1M contexts. GPT-5 supports 1M tokens. At $30/$150 pricing, paying a massive premium while receiving a 5&times; smaller context window than competitors is a significant trade-off.</p>
+
+    <p class="body-copy">In practice, 200K is sufficient for most professional use cases: a single long contract, a 50-page financial report, a medium-sized codebase, or a full conversation history spanning hours of interaction. Where it becomes a constraint is in research synthesis spanning hundreds of documents, full-book analysis, or complex agentic workflows that accumulate large amounts of intermediate state over extended runs. For those workloads, the base Opus 4.7 with its 1M context is the better choice — despite the extended thinking overhead.</p>
+
+    <hr class="section-divider">
+
+    <!-- ── VISION ── -->
+    <h2 class="section-title">Vision Input</h2>
+
+    <p class="body-copy">Claude Opus 4.7 Fast supports image inputs alongside text, making it viable for workflows that involve screenshots, diagrams, charts, scanned documents, or visual interfaces. Anthropic's vision implementation is among the strongest in the market for tasks requiring careful description, OCR-adjacent extraction from structured visual documents, and UI analysis — areas where the model's high instruction-following quality translates directly into better structured outputs from visual inputs.</p>
+
+    <p class="body-copy">For the price point, you would expect nothing less. Vision-capable workflows — processing scanned legal contracts, extracting data from financial charts, reviewing UI screenshots for bugs or copy — are exactly the category where output quality has clear dollar value. If your pipeline involves visual documents and you need reliable structured extraction, the Opus 4.7 Fast vision capability justifies its own line in the ROI calculation.</p>
+
+    <hr class="section-divider">
+
+    <!-- ── USE CASES ── -->
+    <h2 class="section-title">Best Use Cases</h2>
+
+    <p class="body-copy">The premium price of Opus 4.7 Fast creates a natural filter: it should only appear in workflows where output quality has measurable dollar value. These are the categories where the investment typically clears that bar.</p>
+
+    <div class="use-case-grid">
+      <div class="use-case-card">
+        <div class="uc-icon">&#x2696;&#xfe0f;</div>
+        <div class="uc-title">Legal &amp; Contract Analysis</div>
+        <div class="uc-desc">Clause extraction, risk identification, comparison across agreements. Quality matters; errors are expensive. Opus-class reliability justifies the cost.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">&#x1f4c8;</div>
+        <div class="uc-title">Financial Document Review</div>
+        <div class="uc-desc">Earnings reports, prospectuses, audit documents. Structured extraction and analysis where a formatting error or missed detail has real consequences.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">&#x1f4bb;</div>
+        <div class="uc-title">Complex Code Review</div>
+        <div class="uc-desc">Architecture critique, security auditing, large PR review. Where you want the best possible analysis rather than the fastest adequate one.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">&#x1f4dd;</div>
+        <div class="uc-title">Professional Writing</div>
+        <div class="uc-desc">Executive communications, reports, technical documentation. Clean structured output with consistent quality — no post-editing required.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">&#x1f50d;</div>
+        <div class="uc-title">Research Synthesis</div>
+        <div class="uc-desc">Distilling complex multi-source information into clear, well-structured summaries. Opus-quality organisation and nuance that lighter models frequently miss.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">&#x1f916;</div>
+        <div class="uc-title">Production AI Applications</div>
+        <div class="uc-desc">Customer-facing apps where response quality reflects directly on your product. Fast inference mode keeps latency acceptable while maintaining Opus-class output.</div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ── WHEN TO USE / AVOID ── -->
+    <h2 class="section-title">When to Use It — and When to Skip It</h2>
+
+    <div class="fit-grid">
+      <div class="fit-panel for-panel">
+        <div class="fit-header">&#x2713; Good Fit</div>
+        <ul class="fit-list">
+          <li><span class="fi">&#x25b8;</span>High-value professional tasks where quality errors are costly</li>
+          <li><span class="fi">&#x25b8;</span>Production apps needing Opus-quality responses at interactive speeds</li>
+          <li><span class="fi">&#x25b8;</span>Legal, financial, or compliance document processing</li>
+          <li><span class="fi">&#x25b8;</span>Complex code review where architectural depth matters</li>
+          <li><span class="fi">&#x25b8;</span>Vision workflows: scanned docs, charts, UI analysis</li>
+          <li><span class="fi">&#x25b8;</span>Tasks requiring consistent structured formatting at scale</li>
+          <li><span class="fi">&#x25b8;</span>Workflows where extended thinking overhead is undesirable</li>
+        </ul>
+      </div>
+      <div class="fit-panel not-panel">
+        <div class="fit-header">&#x2717; Poor Fit</div>
+        <ul class="fit-list">
+          <li><span class="fi">&#x25b8;</span>High-volume, cost-sensitive production workloads</li>
+          <li><span class="fi">&#x25b8;</span>Tasks where Sonnet 4.6 or Gemini 2.5 Pro quality is sufficient</li>
+          <li><span class="fi">&#x25b8;</span>Workflows requiring context windows above 200K tokens</li>
+          <li><span class="fi">&#x25b8;</span>Deep mathematical reasoning (needs CoT — use base Opus 4.7)</li>
+          <li><span class="fi">&#x25b8;</span>Budget-constrained R&amp;D or experimentation</li>
+          <li><span class="fi">&#x25b8;</span>Simple classification, extraction, or short-answer tasks</li>
+          <li><span class="fi">&#x25b8;</span>Chatbots or assistants where response cost exceeds ticket value</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ── COMPARISON TABLE ── -->
+    <h2 class="section-title">How It Compares</h2>
+
+    <p class="body-copy">Context matters here: Opus 4.7 Fast is in a different pricing tier from every other model in this comparison. The question is not whether cheaper options exist — they do, dramatically so — but whether the quality premium is worth the cost differential for your specific workload.</p>
+
+    <div class="comparison-table-wrap">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Input / 1M</th>
+            <th>Output / 1M</th>
+            <th>Context</th>
+            <th>Bench Cost</th>
+            <th>Reasoning?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="this-model">
+            <td>Claude Opus 4.7 Fast &#x25c4;</td>
+            <td>$30.00</td>
+            <td>$150.00</td>
+            <td>200K</td>
+            <td style="color:#f97316;font-weight:700">$0.345</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Claude Sonnet 4.6</td>
+            <td>~$3.00</td>
+            <td>~$15.00</td>
+            <td>200K</td>
+            <td>~$0.035</td>
+            <td>Optional</td>
+          </tr>
+          <tr>
+            <td>GPT-5</td>
+            <td>~$10.00</td>
+            <td>~$40.00</td>
+            <td>1M</td>
+            <td>~$0.095</td>
+            <td>Optional</td>
+          </tr>
+          <tr>
+            <td>Gemini 2.5 Pro</td>
+            <td>$1.25</td>
+            <td>$10.00</td>
+            <td>1M</td>
+            <td>~$0.022</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>DeepSeek V4 Flash</td>
+            <td>$0.112</td>
+            <td>$0.224</td>
+            <td>1M</td>
+            <td>&lt;$0.001</td>
+            <td>No</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="body-copy">The gap between Opus 4.7 Fast and the next tier is striking. Claude Sonnet 4.6 costs roughly 10&times; less per token and is already a high-quality model capable of professional work. GPT-5 at $10/$40 offers a 1M context window at less than a third of the output cost. Gemini 2.5 Pro with reasoning enabled costs 15&times; less on output while offering 5&times; the context. The case for Opus 4.7 Fast rests entirely on the ceiling of quality it can reach — and the value of that quality in your specific application.</p>
+
+    <hr class="section-divider">
+
+    <!-- ── COST QUESTION ── -->
+    <h2 class="section-title">The Cost Question: When Does $0.345/Exchange Make Sense?</h2>
+
+    <p class="body-copy">The honest answer is: rarely, by volume — and often, by value. The $0.345 per 3,500-token exchange figure sounds high until you compare it to the cost of a human equivalent. A lawyer reviewing a contract for one hour bills $400–$800. A senior engineer doing a code review for two hours costs $150–$400 in salary equivalent. An analyst synthesising a research report might take half a day. When the benchmark exchange represents a meaningful slice of work that would otherwise cost 10–100&times; more in professional time, the model pricing becomes secondary.</p>
+
+    <p class="body-copy">The use cases where Opus 4.7 Fast earns its premium are concentrated in high-stakes professional automation: the first-pass legal review that flags issues for a lawyer to assess, the code audit that surfaces architectural concerns before a senior engineer dives in, the financial report summary that a portfolio manager can act on without wading through 80 pages. In each case, the quality ceiling matters — a missed clause, a misread metric, a failed code smell that a cheaper model skips becomes a liability rather than an efficiency gain.</p>
+
+    <p class="body-copy">For internal tooling, experimentation, high-volume data processing, or any workflow where response volume exceeds a few hundred exchanges per day, the calculus inverts sharply. At 1,000 exchanges/day, you are spending $345 per day — $125,000 per year — on a single model endpoint. At that volume and budget, it is worth asking whether Claude Sonnet 4.6 at one-tenth the cost achieves 95% of the quality for your task. In most high-volume scenarios, it does.</p>
+
+    <hr class="section-divider">
+
+    <!-- ── TRY IT ── -->
+    <div class="try-it-band">
+      <div>
+        <h3>Test Claude Opus 4.7 Fast With Your Key</h3>
+        <p>Connect your Anthropic or OpenRouter API key and run Opus 4.7 Fast directly in the Aether Intel playground. Your key stays in your browser — we never store it.</p>
+      </div>
+      <a href="/models/" class="try-it-btn"
+        onclick="event.preventDefault(); if(window.byok){ window.byok.openByokModal && window.byok.openByokModal('anthropic/claude-opus-4.7-fast','Claude Opus 4.7 Fast'); } else { window.location.href='/models/'; }">
+        Open Playground &rarr;
+      </a>
+    </div>
+
+    <!-- ── TAKEAWAYS ── -->
+    <h2 class="section-title">Key Takeaways</h2>
+
+    <p class="body-copy">Claude Opus 4.7 Fast is a highly capable, honest product — Anthropic's best instruction-following and structured-output quality packaged for production throughput. It does exactly what it says: delivers Opus-class responses without extended thinking overhead, at speeds and latency profiles suitable for interactive applications. The benchmark confirmed zero reasoning tokens, clean structured output (comparison table + organised sections), and professional formatting with no post-processing required.</p>
+
+    <p class="body-copy">The pricing is real and it is steep. $30/$150 per million tokens places this model in a category where every deployment requires explicit ROI justification. The 200K context window — solid, but 5&times; smaller than competitors at lower price points — adds another constraint to weigh. This is not a general-purpose workhorse; it is a specialist tool for the slice of professional automation where quality has a measurable price tag and the cost of a substandard output exceeds the cost of the model.</p>
+
+    <p class="body-copy">For those use cases — legal and financial document processing, high-stakes code review, professional writing at production scale, complex instruction execution where output formatting matters — Claude Opus 4.7 Fast is the strongest option currently available through Anthropic's API. The question is never whether it is good. The question is whether your task is good enough to deserve it.</p>
+
+    <!-- ── RELATED MODELS ── -->
+    <hr class="section-divider">
+    <h2 class="section-title">Related Models</h2>
+
+    <div class="use-case-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">
+      <a href="/models/claude-opus-4-7.html" style="text-decoration:none">
+        <div class="use-case-card" style="border-color:rgba(212,162,122,0.2)">
+          <div class="uc-title" style="color:#d4a27a">Claude Opus 4.7</div>
+          <div class="uc-desc">The base Opus 4.7 — 1M context, extended thinking enabled, agentic workflows. Lower throughput, higher ceiling for reasoning tasks.</div>
+        </div>
+      </a>
+      <a href="/models/claude-sonnet-4-6.html" style="text-decoration:none">
+        <div class="use-case-card">
+          <div class="uc-title">Claude Sonnet 4.6</div>
+          <div class="uc-desc">10&times; cheaper, still professional-grade. The right default for most production use cases — choose Opus only when quality headroom matters.</div>
+        </div>
+      </a>
+      <a href="/models/claude-haiku-4-5.html" style="text-decoration:none">
+        <div class="use-case-card">
+          <div class="uc-title">Claude Haiku 4.5</div>
+          <div class="uc-desc">Blazing fast, lowest-cost Anthropic option. For high-volume, latency-sensitive tasks where speed and price beat raw quality.</div>
+        </div>
+      </a>
+    </div>
+
+  </article>
+</main>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>

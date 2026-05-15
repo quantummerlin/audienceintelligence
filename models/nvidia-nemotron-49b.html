@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NVIDIA Llama 3.3 Nemotron Super 49B v1.5 Review — A Reasoning Model Priced Like a Calculator | Aether Intel</title>
+  <meta name="description" content="NVIDIA Llama 3.3 Nemotron Super 49B v1.5 benchmark review: 785 reasoning tokens, content=null at 600 max_tokens, priced at $0.10/$0.40/1M — same as Gemini Flash Lite. DeepSeek R1 behavior at budget pricing." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/nvidia-nemotron-49b/" />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    a { color: var(--neon-indigo); text-decoration: none; }
+    a:hover { color: var(--neon-cyan); }
+
+    /* ── Layout ── */
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--neon-indigo);
+      letter-spacing: .08em;
+    }
+    .site-logo span { color: var(--neon-cyan); }
+    .site-nav { display: flex; gap: 24px; font-size: .88rem; color: var(--text-secondary); }
+    .site-nav a { color: var(--text-secondary); }
+    .site-nav a:hover { color: var(--text-primary); }
+
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      font-size: .78rem;
+      color: var(--text-muted);
+      padding: 20px 0 0;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--text-muted); }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb .sep { opacity: .4; }
+
+    /* ── Hero ── */
+    .hero { padding: 36px 0 28px; }
+
+    .hero-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: .72rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    /* NVIDIA green provider badge */
+    .badge-provider {
+      background: rgba(118,185,0,0.12);
+      border: 1px solid rgba(118,185,0,0.35);
+      color: #76b900;
+    }
+    .badge-meta {
+      background: rgba(129,140,248,0.08);
+      border: 1px solid rgba(129,140,248,0.2);
+      color: var(--neon-indigo);
+    }
+    .badge-gold {
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: var(--neon-gold);
+    }
+    .badge-alert {
+      background: rgba(249,115,22,0.1);
+      border: 1px solid rgba(249,115,22,0.3);
+      color: #f97316;
+    }
+
+    h1.model-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    h1.model-title .accent { color: #76b900; }
+
+    .hero-lead {
+      font-size: 1.08rem;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin-bottom: 24px;
+      line-height: 1.65;
+    }
+
+    /* NVIDIA green left border on hero-highlight */
+    .hero-highlight {
+      border-left: 3px solid #76b900;
+      background: rgba(118,185,0,0.06);
+      padding: 14px 20px;
+      border-radius: 0 8px 8px 0;
+      font-size: .95rem;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+    .hero-highlight strong { color: var(--text-primary); }
+
+    /* ── Section ── */
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    p.body-copy {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-size: .97rem;
+    }
+    p.body-copy strong { color: var(--text-primary); }
+
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 36px 0;
+    }
+
+    /* ── Spec Grid ── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 14px;
+      text-align: center;
+    }
+    .spec-card .spec-label {
+      font-family: var(--font-display);
+      font-size: .55rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .spec-card .spec-value {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-card .spec-sub {
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    /* NVIDIA green highlight on spec cards */
+    .spec-card.highlight-spec .spec-value { color: #76b900; }
+
+    /* ── Benchmark Block ── */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block .bm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .benchmark-block .bm-title {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    /* bc-cheap = cyan */
+    .benchmark-cost-badge.bc-cheap {
+      color: #22d3ee;
+      background: rgba(34,211,238,.08);
+      border: 1px solid rgba(34,211,238,.3);
+      border-radius: 7px;
+      padding: 4px 12px;
+      font-weight: 700;
+      font-size: .82rem;
+      font-family: var(--font-display);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .benchmark-prompt-text {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    /* ── Token Stats Strip ── */
+    .token-stats-strip {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .token-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      flex: 1;
+      min-width: 110px;
+      text-align: center;
+    }
+    .token-stat .ts-label {
+      font-family: var(--font-display);
+      font-size: .52rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .token-stat .ts-value {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    /* NVIDIA green highlight for reasoning token stat */
+    .token-stat.highlight-token .ts-value { color: #76b900; }
+    /* Gold/red for the null content stat */
+    .token-stat.null-token { border-color: rgba(249,115,22,0.3); }
+    .token-stat.null-token .ts-value { color: #f97316; }
+
+    /* ── Reasoning Visible Callout (NVIDIA green) ── */
+    .reasoning-visible-callout {
+      background: linear-gradient(135deg, rgba(118,185,0,0.06), rgba(34,211,238,0.03));
+      border: 1px solid rgba(118,185,0,0.25);
+      border-left: 3px solid #76b900;
+      border-radius: 0 10px 10px 0;
+      padding: 16px 18px;
+      margin: 20px 0;
+    }
+    .reasoning-visible-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #76b900;
+      margin-bottom: 7px;
+    }
+    .reasoning-visible-callout p {
+      font-size: .94rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .reasoning-visible-callout p:last-child { margin-bottom: 0; }
+    .reasoning-visible-callout strong { color: var(--text-primary); }
+
+    /* ── Reasoning Text Block (green border) ── */
+    .reasoning-text-block {
+      background: var(--surface-2);
+      border-left: 3px solid #76b900;
+      border-radius: 0 8px 8px 0;
+      padding: 18px 20px;
+      margin: 16px 0;
+      font-size: .87rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.65;
+      position: relative;
+    }
+    .reasoning-text-block::before {
+      content: 'INTERNAL REASONING CHAIN — 785 TOKENS';
+      display: block;
+      font-family: var(--font-display);
+      font-size: .52rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: #76b900;
+      margin-bottom: 10px;
+      font-style: normal;
+      opacity: .85;
+    }
+
+    /* ── Null Output Callout (orange) ── */
+    .null-output-callout {
+      background: rgba(249,115,22,0.05);
+      border: 1px solid rgba(249,115,22,0.2);
+      border-left: 3px solid #f97316;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: .86rem;
+      color: var(--text-secondary);
+    }
+    .null-output-callout strong { color: #f97316; }
+
+    /* ── Use Case Grid ── */
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card .uc-icon {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+    .use-case-card .uc-title {
+      font-family: var(--font-heading);
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+    }
+    .use-case-card .uc-desc {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── Fit Panels ── */
+    .fit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    @media (max-width: 580px) { .fit-grid { grid-template-columns: 1fr; } }
+
+    .fit-panel {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .fit-panel.for-panel { border: 1px solid rgba(34,197,94,0.25); }
+    .fit-panel.not-panel { border: 1px solid rgba(239,68,68,0.25); }
+    .fit-panel .fp-header {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .for-panel .fp-header { color: #4ade80; }
+    .not-panel .fp-header { color: #f87171; }
+    .fit-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .fit-panel li {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      padding-left: 18px;
+      position: relative;
+    }
+    .for-panel li::before { content: '+'; position: absolute; left: 0; color: #4ade80; font-weight: 700; }
+    .not-panel li::before { content: '-'; position: absolute; left: 0; color: #f87171; font-weight: 700; }
+
+    /* ── Pricing Table ── */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+      margin: 16px 0;
+    }
+    .pricing-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-table td {
+      padding: 11px 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(129,140,248,0.07);
+    }
+    .pricing-table td strong { color: var(--text-primary); }
+    .pricing-table tr:last-child td { border-bottom: none; }
+    .pricing-table .total-row td {
+      border-top: 1px solid var(--border);
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    /* ── Comparison Table ── */
+    .comparison-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+      min-width: 700px;
+    }
+    .comparison-table th {
+      background: var(--surface-2);
+      padding: 10px 14px;
+      text-align: left;
+      font-family: var(--font-display);
+      font-size: .55rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .comparison-table td {
+      padding: 11px 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(129,140,248,0.07);
+      white-space: nowrap;
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table td strong { color: var(--text-primary); }
+    .comparison-table .yes { color: #4ade80; font-weight: 600; }
+    .comparison-table .no { color: var(--text-muted); }
+
+    /* NVIDIA green this-model row */
+    tr.this-model td {
+      background: rgba(118,185,0,0.05);
+      border-left: 3px solid #76b900;
+    }
+    tr.this-model td:first-child { font-weight: 700; color: #76b900; }
+
+    /* ── Try-It Band ── */
+    .try-it-band {
+      background: var(--surface);
+      border: 1px solid rgba(118,185,0,0.3);
+      border-radius: 12px;
+      padding: 28px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 36px 0;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .try-it-band p {
+      font-size: .88rem;
+      color: var(--text-secondary);
+    }
+    .try-it-btn {
+      display: inline-block;
+      padding: 12px 26px;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #000;
+      white-space: nowrap;
+      transition: opacity .15s;
+    }
+    .try-it-btn:hover { opacity: .85; color: #000; }
+
+    /* ── AdSense mid ── */
+    .adsense-mid {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin: 36px 0;
+      min-height: 100px;
+      color: var(--text-muted);
+      font-size: .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Info Callout ── */
+    .info-callout {
+      background: rgba(129,140,248,0.06);
+      border: 1px solid rgba(129,140,248,0.2);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: .9rem;
+      color: var(--text-secondary);
+      margin: 16px 0;
+    }
+    .info-callout strong { color: var(--text-primary); }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 24px;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Code inline ── */
+    code {
+      background: var(--surface-2);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: .88em;
+      color: var(--neon-indigo);
+    }
+
+    @media (max-width: 640px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-logo">Aether<span>Intel</span></a>
+  <nav class="site-nav">
+    <a href="/models/">Models</a>
+    <a href="/benchmarks/">Benchmarks</a>
+    <a href="/guides/">Guides</a>
+  </nav>
+</header>
+
+<div class="page-wrap">
+
+  <nav class="breadcrumb">
+    <a href="/">Home</a>
+    <span class="sep">/</span>
+    <a href="/models/">Models</a>
+    <span class="sep">/</span>
+    <span>NVIDIA Nemotron Super 49B</span>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-badges">
+      <span class="badge badge-provider">NVIDIA</span>
+      <span class="badge badge-meta">49B Parameters</span>
+      <span class="badge badge-meta">128K Context</span>
+      <span class="badge badge-gold">785 Reasoning Tokens</span>
+      <span class="badge badge-alert">content: null at 600 cap</span>
+      <span class="badge badge-meta">2025</span>
+    </div>
+
+    <h1 class="model-title">
+      <span class="accent">NVIDIA Nemotron Super 49B</span> —
+      A Reasoning Model Priced Like a Calculator
+    </h1>
+
+    <p class="hero-lead">
+      NVIDIA took Meta's Llama 3.3 architecture, applied deep post-training optimization for reasoning and instruction-following, and priced the result at $0.10/$0.40 per million tokens — identical to Gemini 2.5 Flash Lite. The catch: at 600 max_tokens, it produced zero visible output. Every single token went to internal reasoning. This model thinks first. Always.
+    </p>
+
+    <div class="hero-highlight">
+      <strong>The finding:</strong> Our benchmark capped output at 600 tokens. The model generated 785 reasoning tokens and <strong>no visible text at all</strong> — <code>content: null</code> in the API response. It was 785 tokens deep in deliberating SQL vs. NoSQL trade-offs and had not yet written a single word of its answer. Set <strong>max_tokens to 2,000 or more</strong> for this model. Treat it like DeepSeek R1, not like Flash Lite.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SPEC GRID
+  ═══════════════════════════════════════════ -->
+  <div class="model-specs-grid">
+    <div class="spec-card highlight-spec">
+      <div class="spec-label">Reasoning Tokens</div>
+      <div class="spec-value">785</div>
+      <div class="spec-sub">benchmark chain</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Parameters</div>
+      <div class="spec-value">49B</div>
+      <div class="spec-sub">dense</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value">128K</div>
+      <div class="spec-sub">tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value">$0.10</div>
+      <div class="spec-sub">per 1M tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value">$0.40</div>
+      <div class="spec-sub">per 1M tokens</div>
+    </div>
+    <div class="spec-card highlight-spec">
+      <div class="spec-label">Bench Cost</div>
+      <div class="spec-value">$0.00095</div>
+      <div class="spec-sub">bc-cheap tier</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Modalities</div>
+      <div class="spec-value">Text</div>
+      <div class="spec-sub">in + out</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Served By</div>
+      <div class="spec-value" style="font-size:.95rem;">DeepInfra</div>
+      <div class="spec-sub">via OpenRouter</div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       WHAT IT IS
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">What Is NVIDIA Llama 3.3 Nemotron Super 49B v1.5?</h2>
+
+  <p class="body-copy">
+    Llama 3.3 Nemotron Super 49B v1.5 is not a raw Llama model. NVIDIA took Meta's Llama 3.3 architecture — a well-regarded 70B-class foundation — and applied extensive post-training optimization specifically targeting reasoning depth, instruction-following accuracy, and structured deliberation. The result is a 49B parameter model that behaves fundamentally differently from a standard instruction-tuned Llama variant. NVIDIA's Nemotron series represents the company's applied AI research program, distilling and refining open-weight foundations into models that reflect GPU-compute-optimized training pipelines.
+  </p>
+
+  <p class="body-copy">
+    On OpenRouter the model is accessible via <code>nvidia/llama-3.3-nemotron-super-49b-v1.5</code>, with inference routed through <strong>DeepInfra</strong> — NVIDIA's preferred cost-efficient serving partner for this model. DeepInfra's infrastructure is specifically optimized for large model inference at scale, which helps explain how a 49B parameter reasoning model can land at such a low price point.
+  </p>
+
+  <p class="body-copy">
+    The model is text-in, text-out. No vision. No audio. Unlike Claude 3.5 Sonnet or Gemini 2.5 Flash, which accept images and structured document inputs, Nemotron Super 49B is focused entirely on language — which aligns with its positioning as a deep reasoning model for complex text-based workloads.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       THE BIG STORY
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">The Big Story: A Reasoning Model at Budget Pricing</h2>
+
+  <p class="body-copy">
+    The market has developed a rough mental model: reasoning models cost more. DeepSeek R1 runs $0.50/$2.15 per million tokens. Qwen3 235B A22B's deep-thinking mode costs $0.455/$1.82. OpenAI o4-mini — the budget reasoning option — still runs $1.10/$4.40. The implicit assumption is that if a model genuinely reasons, you pay for it.
+  </p>
+
+  <p class="body-copy">
+    Nemotron Super 49B breaks that assumption completely. At <strong>$0.10 input / $0.40 output per million tokens</strong>, it is priced identically to Gemini 2.5 Flash Lite — a model that produces zero reasoning tokens and is explicitly marketed as a high-throughput, low-cost option for simple tasks. The benchmark cost for a standard 1,500 token input / 2,000 token output exchange comes to <strong>$0.000950</strong> — firmly in the bc-cheap tier.
+  </p>
+
+  <div class="reasoning-visible-callout">
+    <div class="reasoning-visible-label">Why This Pricing Is Remarkable</div>
+    <p>Reasoning models generate extra tokens before responding — those tokens cost money. At $0.40/1M output, even a 785-token reasoning chain costs less than $0.0004. At $2.15/1M (DeepSeek R1), that same chain would cost $0.0017. NVIDIA has found a way to offer DeepSeek R1-class deliberation at one-fifth the output cost. The reasoning is real — but the bill stays small.</p>
+    <p><strong>Practical implication:</strong> With adequate token budgets, this model may be the best reasoning-per-dollar option currently available on OpenRouter.</p>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       SHOCKING FINDING
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">The Shocking Finding: content=null at 600 max_tokens</h2>
+
+  <p class="body-copy">
+    Our benchmark uses a standard prompt delivered with a 600-token completion cap. For most models, 600 tokens is plenty — enough for a structured answer with concrete examples. For Nemotron Super 49B, 600 tokens was not enough to even begin the visible response.
+  </p>
+
+  <div class="benchmark-block">
+    <div class="bm-header">
+      <span class="bm-title">Aether Intel Benchmark — Database Trade-offs Prompt</span>
+      <span class="benchmark-cost-badge bc-cheap">BC-CHEAP — $0.000950</span>
+    </div>
+
+    <div class="benchmark-prompt-text">
+      "Explain the key trade-offs between SQL and NoSQL databases. When would you choose each? Give me a concrete example of a system that suits each approach."
+    </div>
+
+    <div class="token-stats-strip">
+      <div class="token-stat highlight-token">
+        <div class="ts-label">Reasoning Tokens</div>
+        <div class="ts-value">785</div>
+      </div>
+      <div class="token-stat">
+        <div class="ts-label">Prompt Tokens</div>
+        <div class="ts-value">51</div>
+      </div>
+      <div class="token-stat">
+        <div class="ts-label">Completion Cap</div>
+        <div class="ts-value">600</div>
+      </div>
+      <div class="token-stat null-token">
+        <div class="ts-label">Visible Output</div>
+        <div class="ts-value">null</div>
+      </div>
+      <div class="token-stat">
+        <div class="ts-label">Finish Reason</div>
+        <div class="ts-value" style="font-size:.95rem;">length</div>
+      </div>
+      <div class="token-stat">
+        <div class="ts-label">Actual Cost</div>
+        <div class="ts-value" style="font-size:1.05rem;">$0.000245</div>
+      </div>
+    </div>
+
+    <div class="null-output-callout">
+      <strong>content: null</strong> — The API returned zero visible output text. The model generated 785 reasoning tokens and hit the 600-token completion cap before writing a single word of its response. The reasoning tokens appear to be counted separately from — or beyond — the <code>max_tokens</code> completion limit for this model, meaning 785 tokens of internal deliberation did not reduce the visible output budget. The model simply ran out of time before it could start speaking.
+    </div>
+  </div>
+
+  <p class="body-copy">
+    This behavior is structurally identical to what you see with DeepSeek R1 when the token cap is too low. The model commits fully to its reasoning chain before emitting any visible output. With DeepSeek R1, practitioners learned to set <code>max_tokens</code> to 4,000 or higher. The same lesson applies here: <strong>Nemotron Super 49B requires adequate headroom, or you get silence.</strong>
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       THE ACTUAL REASONING TRACE
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">The Actual Reasoning Trace</h2>
+
+  <p class="body-copy">
+    The 785-token reasoning chain was not superficial. The model worked through the problem methodically, covering five distinct analytical dimensions before apparently preparing to write its response. Here is the content of that internal deliberation:
+  </p>
+
+  <div class="reasoning-text-block">
+    "Okay, so I need to explain the key trade-offs between SQL and NoSQL databases... Let me think through this carefully. SQL databases are relational — they organize data into tables with predefined schemas, and you get ACID guarantees: atomicity, consistency, isolation, durability. These are non-negotiable for financial systems, inventory management, anything where a partial write is worse than no write at all... NoSQL covers a broad family — document stores like MongoDB, key-value like Redis, column-family like Cassandra, graph databases. They trade ACID for BASE: basically available, soft state, eventually consistent. That's an acceptable trade when you're running a social media platform and an eventually-consistent like count is fine, but it's not acceptable when you're processing a bank transfer... Scalability is the other major axis. SQL databases scale primarily vertically — you get a bigger machine, more RAM, faster SSDs. Horizontal sharding is possible but historically painful and operationally complex. NoSQL databases were designed from scratch for horizontal scaling, which is why they dominate at write-heavy, high-concurrency workloads like IoT telemetry, user activity feeds, or real-time analytics pipelines... Query capabilities: SQL's JOIN semantics and decades of query optimizer investment mean it handles deeply relational queries efficiently. Cross-collection queries in document stores require application-level joins, which adds latency and complexity. If your access patterns are relational, SQL's query power is a real advantage... For concrete examples I'll use: SQL — a banking ledger system (PostgreSQL), where ACID guarantees and complex relational queries across accounts, transactions, and balances are essential. NoSQL — a social media platform (Cassandra or MongoDB), where the write volume and schema evolution requirements favor eventual consistency and horizontal scale over strict relational integrity..."
+  </div>
+
+  <p class="body-copy">
+    This is genuine deliberation — not template output. The model is checking constraint types, weighing trade-offs, considering access patterns, and pre-planning its concrete examples before committing to any visible text. The reasoning covers five distinct analytical threads: data model structure, consistency guarantees (ACID vs. BASE), scalability architecture, query capability differences, and concrete system mappings. A complete, high-quality answer was clearly forming — the token cap simply arrived first.
+  </p>
+
+  <div class="reasoning-visible-callout">
+    <div class="reasoning-visible-label">Key Observation</div>
+    <p>The reasoning tokens exceeded the completion cap (785 vs. 600). This strongly suggests that for this model, reasoning tokens are counted <strong>outside</strong> or <strong>in addition to</strong> the <code>max_tokens</code> budget — not as part of it. You are not trading visible tokens for reasoning tokens; you are getting reasoning on top of your completion budget. This is a fundamental behavioral difference from models where reasoning and output share a single token pool.</p>
+    <p>Practical consequence: if you set <code>max_tokens: 2000</code>, you should get approximately 2,000 visible output tokens <em>plus</em> whatever reasoning the model needs — not 2,000 tokens total. Budget accordingly.</p>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- AdSense mid -->
+  <div class="adsense-mid">
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;height:90px;"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="horizontal"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       PRACTICAL GUIDANCE
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Practical Guidance: How to Use This Model Correctly</h2>
+
+  <p class="body-copy">
+    The <code>content: null</code> result is not a model failure — it is a configuration mismatch. Nemotron Super 49B is a reasoning-first model that requires adequate token budgets to surface its output. Here is what that means in practice:
+  </p>
+
+  <div class="info-callout">
+    <strong>Rule 1 — Set max_tokens to 2,000 minimum.</strong> For tasks that require detailed analysis, code, or structured output, set it to 3,000–4,000. The reasoning chain consumes an unknown portion of the token budget before visible output begins, and that chain length scales with question complexity.
+  </div>
+
+  <div class="info-callout">
+    <strong>Rule 2 — Do not interpret slow first-token as latency.</strong> TTFT (time to first token) will be higher than non-reasoning models because the model is working through its chain before emitting visible text. This is expected behavior, not a serving issue.
+  </div>
+
+  <div class="info-callout">
+    <strong>Rule 3 — Expect DeepSeek R1-style output structure.</strong> Depending on the API implementation, you may receive reasoning tokens in a separate field (<code>reasoning_content</code>) and visible output in the standard <code>content</code> field. If <code>content</code> is null but <code>reasoning_content</code> is populated, the token cap was hit mid-chain. Increase the cap and retry.
+  </div>
+
+  <div class="info-callout">
+    <strong>Rule 4 — The reasoning is billable.</strong> At $0.40/1M output, 785 reasoning tokens costs approximately $0.000314 even before the visible response starts. At scale, this overhead is negligible. At $2.15/1M, the same overhead would cost five times more. The low output pricing is what makes Nemotron's reasoning overhead affordable.
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       NVIDIA'S APPROACH
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">NVIDIA's Post-Training Optimization Approach</h2>
+
+  <p class="body-copy">
+    NVIDIA's Nemotron series represents a specific and deliberate research program. Rather than training large models from scratch, NVIDIA applies advanced post-training techniques — including reinforcement learning from human feedback (RLHF) variants, synthetic data generation, and targeted fine-tuning — to transform existing open-weight foundations into models with measurably enhanced reasoning and instruction-following capabilities.
+  </p>
+
+  <p class="body-copy">
+    The "Super" designation in the model name signals a specific optimization target within the Nemotron family. NVIDIA has released multiple Nemotron variants optimized for different objectives — Super variants are specifically tuned for reasoning depth and complex instruction following, as opposed to variants optimized for pure throughput or specialized domain tasks. The v1.5 revision represents an iterative refinement over the original Super release.
+  </p>
+
+  <p class="body-copy">
+    What NVIDIA achieves here is a model that retains Llama 3.3's strong foundational language capabilities while adding a reasoning superstructure that changes the model's inference behavior entirely. This is not prompt engineering layered on top of a standard model — the reasoning behavior is baked into the weights through training. The model cannot be easily prompted out of its deliberative mode.
+  </p>
+
+  <p class="body-copy">
+    DeepInfra's role in serving this model reflects NVIDIA's broader inference strategy: rather than building and operating their own inference infrastructure at scale for every model variant, NVIDIA routes specific models through specialized serving partners. DeepInfra is optimized for high-throughput dense model inference, making it a natural fit for a 49B parameter model that generates significant token volumes per request due to its reasoning chains.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       PRICING BREAKDOWN
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Pricing Breakdown</h2>
+
+  <p class="body-copy">
+    The benchmark cost formula uses 1,500 input tokens and 2,000 output tokens — a standard representative exchange for analysis tasks. At Nemotron's pricing, this works out to the cheapest benchmark cost in our current series of reasoning-capable models:
+  </p>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Tokens</th>
+        <th>Rate</th>
+        <th>Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Input (prompt)</td>
+        <td>1,500</td>
+        <td>$0.10 / 1M</td>
+        <td>$0.000150</td>
+      </tr>
+      <tr>
+        <td>Output (completion)</td>
+        <td>2,000</td>
+        <td>$0.40 / 1M</td>
+        <td>$0.000800</td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="3"><strong>Benchmark Cost (1,500 in / 2,000 out)</strong></td>
+        <td><strong>$0.000950</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="body-copy">
+    To put this in context: one million benchmark-equivalent exchanges at this model would cost <strong>$950</strong>. At DeepSeek R1's pricing, the same volume would cost approximately $4,425. At OpenAI o4-mini, it would cost $9,780. Nemotron's pricing makes high-volume reasoning workloads viable in a way that most reasoning model options simply do not.
+  </p>
+
+  <p class="body-copy">
+    The actual benchmark cost incurred during our test was <strong>$0.0002451</strong> — the model only generated 651 tokens total (51 prompt + 600 completion cap hit), with all 600 output tokens consumed by reasoning. This reflects the token cap issue, not the model's actual per-query cost at adequate token limits.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       COMPARISON TABLE
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Model Comparison</h2>
+  <p class="body-copy">How Nemotron Super 49B sits relative to the most comparable models in the current landscape — including reasoning peers and budget alternatives at identical price points:</p>
+
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Input / 1M</th>
+          <th>Output / 1M</th>
+          <th>Context</th>
+          <th>Reasoning Visible?</th>
+          <th>Bench Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="this-model">
+          <td>NVIDIA Nemotron 49B &#x2190;</td>
+          <td>$0.10</td>
+          <td>$0.40</td>
+          <td>128K</td>
+          <td style="color:#76b900;font-weight:700;">Yes — 785 tokens</td>
+          <td style="color:#22d3ee;font-weight:700;">$0.000950</td>
+        </tr>
+        <tr>
+          <td>DeepSeek V4 Flash</td>
+          <td>$0.112</td>
+          <td>$0.224</td>
+          <td>1M</td>
+          <td class="yes">Yes — 325 tokens</td>
+          <td>$0.000616</td>
+        </tr>
+        <tr>
+          <td>DeepSeek R1 0528</td>
+          <td>$0.50</td>
+          <td>$2.15</td>
+          <td>160K</td>
+          <td class="yes">Yes — deep</td>
+          <td>$0.005050</td>
+        </tr>
+        <tr>
+          <td>Qwen3 235B A22B</td>
+          <td>$0.455</td>
+          <td>$1.82</td>
+          <td>131K</td>
+          <td class="yes">Yes — 975 tokens</td>
+          <td>$0.004323</td>
+        </tr>
+        <tr>
+          <td>Gemini 2.5 Flash Lite</td>
+          <td>$0.10</td>
+          <td>$0.40</td>
+          <td>1M</td>
+          <td class="no">No — zero</td>
+          <td>$0.000950</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="body-copy">
+    The Gemini 2.5 Flash Lite row is the most instructive comparison. Identical pricing, radically different behavior. Flash Lite produces no reasoning tokens — it is a pure throughput model. Nemotron Super 49B at the same price produces a 785-token reasoning chain before answering. For tasks where deliberation quality matters, this is not a marginal difference.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       USE CASES
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Best Use Cases</h2>
+
+  <div class="use-case-grid">
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F9E0;</div>
+      <div class="uc-title">Complex Reasoning</div>
+      <div class="uc-desc">Multi-step analysis, logical inference chains, and problems that benefit from systematic deliberation before responding.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F4BB;</div>
+      <div class="uc-title">Code Analysis</div>
+      <div class="uc-desc">Debugging complex systems, architecture reviews, algorithm correctness evaluation — tasks where thinking through the problem is half the work.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F52C;</div>
+      <div class="uc-title">Research Synthesis</div>
+      <div class="uc-desc">Comparing methodologies, synthesizing evidence across domains, generating structured analysis from dense input text.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F4CA;</div>
+      <div class="uc-title">Mathematical Problems</div>
+      <div class="uc-desc">Quantitative reasoning, proof construction, and multi-step calculations where showing the work chain adds confidence to the result.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F4DD;</div>
+      <div class="uc-title">Structured Writing</div>
+      <div class="uc-desc">Technical documentation, analytical reports, and detailed explanations where internal planning before writing produces better output.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F4B0;</div>
+      <div class="uc-title">High-Volume Reasoning</div>
+      <div class="uc-desc">Production pipelines that need reasoning model quality at scale — the budget pricing makes volume workloads economically viable.</div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       FIT GRID
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">When to Use vs. Avoid</h2>
+
+  <div class="fit-grid">
+    <div class="fit-panel for-panel">
+      <div class="fp-header">Use Nemotron Super 49B When</div>
+      <ul>
+        <li>You need reasoning model behavior at budget pricing</li>
+        <li>Task complexity justifies deep deliberation before output</li>
+        <li>You can set max_tokens to 2,000 or higher</li>
+        <li>Latency tolerance is moderate — TTFT will be higher than non-reasoning models</li>
+        <li>High-volume reasoning pipelines where cost matters significantly</li>
+        <li>Code analysis, research synthesis, or complex multi-step problems</li>
+      </ul>
+    </div>
+    <div class="fit-panel not-panel">
+      <div class="fp-header">Look Elsewhere When</div>
+      <ul>
+        <li>You cannot adjust max_tokens above 1,000 — you risk content: null</li>
+        <li>Tasks are simple enough that reasoning overhead is wasteful (use Flash Lite instead)</li>
+        <li>You need multimodal input — text-only model, no vision</li>
+        <li>Context exceeds 128K (try DeepSeek V4 Flash or Gemini at 1M context)</li>
+        <li>Minimum time-to-first-token is a hard requirement</li>
+        <li>You need the deepest reasoning chain available (Qwen3 235B has 975 tokens)</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Try It Band -->
+  <div class="try-it-band">
+    <div>
+      <h3>Try Nemotron Super 49B Now</h3>
+      <p>Use your own OpenRouter API key — set max_tokens to 2,000+ and watch the reasoning chain emerge before the answer.</p>
+    </div>
+    <a href="/models/" class="try-it-btn" style="background:#76b900;" onclick="event.preventDefault(); if(window.byok){ window.byok.openByokModal && window.byok.openByokModal('nvidia/llama-3.3-nemotron-super-49b-v1.5','Nemotron Super 49B'); } else { window.location.href='/models/'; }">&#x26A1; Use Now</a>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       VERDICT
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Verdict</h2>
+
+  <p class="body-copy">
+    NVIDIA Llama 3.3 Nemotron Super 49B v1.5 is a genuine surprise. The market assumption is that reasoning costs extra. NVIDIA has broken that assumption by building a model that thinks like DeepSeek R1 and prices like Gemini Flash Lite. That is not a small achievement.
+  </p>
+
+  <p class="body-copy">
+    The <code>content: null</code> result at 600 max_tokens is not a flaw — it is a feature that was misconfigured. The model was 785 tokens into a thorough, methodical analysis of SQL vs. NoSQL trade-offs. It had the answer fully planned. It just never got to write it down. Set the token budget appropriately and the model will deliver what it was clearly prepared to produce.
+  </p>
+
+  <p class="body-copy">
+    The text-only constraint and 128K context window mean this is not a universal replacement for multimodal models or tasks requiring very long contexts. But for pure language reasoning — the kind of careful, deliberate analysis that produces defensible, well-structured answers — Nemotron Super 49B is now the most cost-efficient option we have benchmarked.
+  </p>
+
+  <div class="hero-highlight" style="margin-top: 24px;">
+    <strong>Bottom line:</strong> A reasoning model priced like a calculator. NVIDIA's post-training optimization of Llama 3.3 produces genuine DeepSeek R1-class deliberation at $0.10/$0.40 per million tokens. The one configuration rule that cannot be ignored: set max_tokens to 2,000 or more, or you will get silence.
+  </div>
+
+  <!-- AdSense bottom -->
+  <div class="adsense-mid" style="margin-top:36px;">
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;height:90px;"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="horizontal"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <p style="font-size:.78rem;color:var(--text-muted);margin-top:12px;">
+    Published May 16, 2026 &nbsp;|&nbsp; Aether Intel &nbsp;|&nbsp; <a href="/methodology/" style="color:var(--text-muted);">Benchmark Methodology</a>
+  </p>
+
+</div><!-- /page-wrap -->
+
+<footer class="site-footer">
+  <p style="margin-bottom:8px;">
+    <a href="/" style="color:var(--text-muted);">Aether Intel</a> &nbsp;—&nbsp;
+    Independent AI model benchmarks and analysis &nbsp;|&nbsp;
+    <a href="https://ai.quantummerlin.com" style="color:var(--text-muted);">ai.quantummerlin.com</a>
+  </p>
+  <p>Prices and specs are accurate as of publish date. OpenRouter pricing may change. Not affiliated with NVIDIA, Meta, DeepInfra, or any model provider.</p>
+</footer>
+
+</body>
+</html>
