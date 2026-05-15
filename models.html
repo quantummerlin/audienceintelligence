@@ -857,6 +857,67 @@
     .chat-send-btn:hover { background: rgba(129,140,248,.25); border-color: rgba(129,140,248,.55); }
     .chat-send-btn:disabled { opacity: .45; cursor: not-allowed; }
 
+    /* ─── Benchmark volume estimator ─── */
+    .bench-volume-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      flex-shrink: 0;
+      background: rgba(129,140,248,.07);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 8px;
+      padding: 6px 12px;
+    }
+    .bench-volume-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    #benchVolume {
+      width: 68px;
+      background: rgba(7,7,15,.6);
+      border: 1px solid rgba(129,140,248,.25);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: .86rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      outline: none;
+      text-align: center;
+      transition: border-color .2s;
+    }
+    #benchVolume:focus { border-color: rgba(129,140,248,.55); }
+    .bench-volume-unit {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .bench-volume-est {
+      margin-top: 9px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,.07);
+      font-size: .77rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .bench-volume-est strong {
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+    .bench-volume-est.bench-est-free strong {
+      color: #34d399;
+    }
+
     /* ═══════════════════════════════════════════
        RESPONSIVE
     ═══════════════════════════════════════════ */
@@ -906,7 +967,12 @@
       </svg>
     </div>
     <div class="benchmark-strip-text">
-      <strong>Benchmark cost</strong> = one realistic task: 1,500 input tokens (your prompt + context) and 2,000 output tokens (the response). Multiply by your daily volume to estimate real costs.
+      <strong>Benchmark cost</strong> = one realistic task: 1,500 input tokens (your prompt + context) and 2,000 output tokens (the response).
+    </div>
+    <div class="bench-volume-wrap">
+      <span class="bench-volume-label">Tasks / day</span>
+      <input type="number" id="benchVolume" value="100" min="1" max="1000000" autocomplete="off">
+      <span class="bench-volume-unit">→ daily &amp; monthly est.</span>
     </div>
   </div>
 
@@ -914,7 +980,7 @@
   <div class="models-filter-bar">
     <div class="filter-search-wrap">
       <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="modelSearch" placeholder="Search models..." autocomplete="off">
+      <input type="text" id="modelSearch" placeholder="Search models…" autocomplete="off">
     </div>
     <div class="filter-divider"></div>
     <span class="filter-group-label">Provider</span>
@@ -941,8 +1007,8 @@
     <span class="sort-label">Sort</span>
     <div class="filter-btn-group">
       <button class="sort-btn active" data-sort="newest">Newest</button>
-      <button class="sort-btn" data-sort="price_asc">Price &uarr;</button>
-      <button class="sort-btn" data-sort="price_desc">Price &darr;</button>
+      <button class="sort-btn" data-sort="price_asc">Price ↑</button>
+      <button class="sort-btn" data-sort="price_desc">Price ↓</button>
       <button class="sort-btn" data-sort="context">Context</button>
       <button class="sort-btn" data-sort="az">A → Z</button>
     </div>
@@ -954,7 +1020,7 @@
     <div id="modelsFullGrid" class="models-full-grid">
       <div class="models-loading">
         <div class="models-loading-spinner"></div>
-        Fetching models from OpenRouter...
+        Fetching models from OpenRouter…
       </div>
     </div>
   </div>
@@ -999,7 +1065,7 @@
       <div class="chat-messages" id="chatMessages"></div>
       <!-- Input row -->
       <div class="chat-input-row" id="chatInputRow" style="display:none">
-        <textarea id="chatInput" placeholder="Ask anything..." rows="1"></textarea>
+        <textarea id="chatInput" placeholder="Ask anything…" rows="1"></textarea>
         <button class="chat-send-btn" id="chatSendBtn">Send</button>
       </div>
     </div>
@@ -1381,6 +1447,26 @@
     return '$' + cost.toFixed(3);
   }
 
+  function fmtMoney(v) {
+    if (v <= 0)     return '$0';
+    if (v < 0.005)  return '$' + v.toFixed(4);
+    if (v < 1)      return '$' + v.toFixed(2);
+    if (v < 1000)   return '$' + v.toFixed(2);
+    if (v < 10000)  return '$' + (v / 1000).toFixed(1) + 'K';
+    return '$' + Math.round(v / 1000) + 'K';
+  }
+
+  function updateVolumeEstimates(tasksPerDay) {
+    var n = Math.max(1, Math.round(tasksPerDay || 100));
+    document.querySelectorAll('.bench-volume-est[data-cost]').forEach(function (el) {
+      var costPerTask = parseFloat(el.dataset.cost || '0');
+      if (!costPerTask) return;
+      var daily   = costPerTask * n;
+      var monthly = daily * 30;
+      el.innerHTML = '≈ <strong>' + fmtMoney(daily) + '</strong> / day &nbsp;·&nbsp; <strong>' + fmtMoney(monthly) + '</strong> / mo';
+    });
+  }
+
   function fmtLaunchDate(ts) {
     if (!ts) return null;
     var d = new Date(ts * 1000);
@@ -1454,6 +1540,8 @@
     if (!grid) return;
     grid.innerHTML = sortModels(allModels).map(buildCard).join('');
     applyFilters();
+    var volEl = document.getElementById('benchVolume');
+    updateVolumeEstimates(volEl ? parseInt(volEl.value, 10) || 100 : 100);
   }
 
   function buildCard(m) {
@@ -1510,9 +1598,12 @@
     /* benchmark — hero block */
     var tierLabels = { 'bc-free':'Free','bc-cheap':'Cheap','bc-mid':'Mid','bc-prem':'Premium' };
     var tierLabel  = tierLabels[bClass] || 'Mid';
+    var volEstHtml = pFree
+      ? '<div class="bench-volume-est bench-est-free"><strong>Always free</strong> — no cost per task</div>'
+      : '<div class="bench-volume-est" data-cost="' + cost.toFixed(10) + '">Calculating…</div>';
     var benchHtml = pFree
-      ? '<div class="model-card-benchmark bc-free"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 3,500 tokens</span><span class="benchmark-tier-badge">Free</span></div><div class="benchmark-cost-big">Free</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill bc-free" style="width:2%"></div></div></div>'
-      : '<div class="model-card-benchmark ' + bClass + '"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 3,500 tokens</span><span class="benchmark-tier-badge">' + tierLabel + '</span></div><div class="benchmark-cost-big">' + fmtBench(cost) + '</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill ' + bClass + '" style="width:' + barPct + '%"></div></div></div>';
+      ? '<div class="model-card-benchmark bc-free"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 3,500 tokens</span><span class="benchmark-tier-badge">Free</span></div><div class="benchmark-cost-big">Free</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill bc-free" style="width:2%"></div></div>' + volEstHtml + '</div>'
+      : '<div class="model-card-benchmark ' + bClass + '"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 3,500 tokens</span><span class="benchmark-tier-badge">' + tierLabel + '</span></div><div class="benchmark-cost-big">' + fmtBench(cost) + '</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill ' + bClass + '" style="width:' + barPct + '%"></div></div>' + volEstHtml + '</div>';
 
     /* article button */
     var articleBtn = article
@@ -1520,8 +1611,8 @@
       : '<span class="model-btn model-btn-article btn-coming">Article Coming</span>';
 
     /* safe ID/name for onclick */
-    var safeId   = m.id.replace(/'/g, "\\'" );
-    var safeName = name.replace(/'/g, "\\'" );
+    var safeId   = m.id.replace(/'/g, "\\'");
+    var safeName = name.replace(/'/g, "\\'");
 
     var cardClass = 'model-full-card card-' + (
       ['anthropic','openai','google','meta-llama','deepseek','x-ai','mistralai','qwen'].indexOf(provider) > -1
@@ -1546,7 +1637,7 @@
       '  <div class="model-card-pricing">' + pricingHtml + '</div>',
       benchHtml,
       '  <div class="model-card-actions">',
-      '    <button class="model-btn model-btn-use" onclick="openModelChat(\'\'' + safeId + '\'\',\'\'' + safeName + '\'\')">⚡ Use Now</button>',
+      '    <button class="model-btn model-btn-use" onclick="openModelChat(\'' + safeId + '\',\'' + safeName + '\')">⚡ Use Now</button>',
       '    ' + articleBtn,
       '  </div>',
       '</div>'
@@ -1644,6 +1735,14 @@
         renderGrid();
       });
     });
+    /* volume estimator */
+    var volEl = document.getElementById('benchVolume');
+    if (volEl) {
+      volEl.addEventListener('input', function () {
+        var v = parseInt(volEl.value, 10);
+        if (v > 0) updateVolumeEstimates(v);
+      });
+    }
   }
 
   /* ─── Bootstrap ─── */
