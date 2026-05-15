@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qwen 3.6 Max Preview — Alibaba's Frontier Reasoning Model | Aether Intel</title>
+  <meta name="description" content="Qwen 3.6 Max Preview review: ~1T parameter sparse MoE, $1.04/$6.24 per 1M tokens, 262K context, extended visible reasoning chains, text-only. Alibaba's deepest thinker in preview.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/qwen-3-6-max-preview.html">
+  <meta property="og:title" content="Qwen 3.6 Max Preview — Capabilities, Costs &amp; Benchmark">
+  <meta property="og:description" content="Qwen 3.6 Max Preview: ~1T parameter sparse MoE, deep reasoning chains, $1.04/$6.24 per 1M tokens, 262K context. Alibaba's most capable model in preview.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/qwen-3-6-max-preview.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/qwen-3-6-max-preview-hero.png">
+  <meta property="article:published_time" content="2026-05-15">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Qwen 3.6 Max Preview — Capabilities, Costs &amp; Benchmark">
+  <meta name="twitter:description" content="Qwen 3.6 Max Preview: ~1T params, deep reasoning, $1.04/$6.24 per 1M. Alibaba's frontier thinker.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/qwen-3-6-max-preview-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ─── Model article extras ─── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .spec-value {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-value.sv-green  { color: #34d399; }
+    .spec-value.sv-cyan   { color: #22d3ee; }
+    .spec-value.sv-indigo { color: var(--neon-indigo); }
+    .spec-value.sv-gold   { color: var(--neon-gold); }
+    .spec-value.sv-orange { color: #fb923c; }
+
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card h4 {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .use-case-card p {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .use-case-card.not-for {
+      border-color: rgba(251,146,60,0.2);
+      background: rgba(251,146,60,0.03);
+    }
+    .use-case-card.not-for h4 {
+      color: #fb923c;
+    }
+
+    /* Benchmark display */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+    }
+    .benchmark-cost-badge {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: #22d3ee;
+      background: rgba(34,211,238,.08);
+      border: 1px solid rgba(34,211,238,.25);
+      border-radius: 7px;
+      padding: 4px 12px;
+    }
+    .benchmark-cost-badge.bc-mid {
+      color: var(--neon-gold);
+      background: rgba(245,158,11,0.08);
+      border-color: rgba(245,158,11,0.25);
+    }
+    .benchmark-cost-badge.bc-timeout {
+      color: #fb923c;
+      background: rgba(251,146,60,0.08);
+      border-color: rgba(251,146,60,0.25);
+    }
+    .benchmark-prompt-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-prompt-text {
+      background: rgba(7,7,15,.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .benchmark-response-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-response-text {
+      font-size: .88rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    .benchmark-response-text p { margin: 0 0 12px; }
+    .benchmark-response-text p:last-child { margin: 0; }
+
+    /* Token stats row */
+    .token-stats-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+    .token-stat-pill {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 11px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      background: var(--surface-2);
+    }
+    .token-stat-pill.tsp-reasoning {
+      color: #22d3ee;
+      background: rgba(34,211,238,.07);
+      border-color: rgba(34,211,238,.2);
+    }
+    .token-stat-pill.tsp-content {
+      color: var(--neon-indigo);
+      background: rgba(129,140,248,.07);
+      border-color: rgba(129,140,248,.2);
+    }
+    .token-stat-pill.tsp-cost {
+      color: var(--neon-gold);
+      background: rgba(245,158,11,.07);
+      border-color: rgba(245,158,11,.2);
+    }
+
+    /* Timeout / warning callout */
+    .callout-timeout {
+      background: rgba(251,146,60,.05);
+      border: 1px solid rgba(251,146,60,.25);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+    }
+    .callout-timeout-label {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #fb923c;
+      margin-bottom: 8px;
+    }
+    .callout-timeout p {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Reasoning architecture callout — special section */
+    .reasoning-arch-callout {
+      background: linear-gradient(135deg, rgba(34,211,238,.05), rgba(156,39,176,.04));
+      border: 1px solid rgba(34,211,238,.2);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 28px 0;
+    }
+    .reasoning-arch-callout h3 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #22d3ee;
+      margin: 0 0 14px;
+    }
+    .reasoning-arch-callout p {
+      font-size: .86rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin: 0 0 10px;
+    }
+    .reasoning-arch-callout p:last-child { margin: 0; }
+    .reasoning-arch-callout strong { color: var(--text-primary); }
+
+    /* Ratio display */
+    .ratio-display {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(7,7,15,.5);
+      border: 1px solid rgba(34,211,238,.15);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+    .ratio-bar-wrap { flex: 1; min-width: 200px; }
+    .ratio-bar-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .ratio-bar-track {
+      height: 10px;
+      background: rgba(255,255,255,.05);
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+    }
+    .ratio-bar-reasoning {
+      background: #22d3ee;
+      height: 100%;
+      border-radius: 5px 0 0 5px;
+    }
+    .ratio-bar-content {
+      background: var(--neon-indigo);
+      height: 100%;
+      border-radius: 0 5px 5px 0;
+    }
+    .ratio-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .ratio-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .76rem;
+      color: var(--text-secondary);
+    }
+    .ratio-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* Sample prompt block */
+    .sample-prompt-block {
+      background: rgba(7,7,15,.6);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .sample-prompt-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 6px;
+    }
+    .sample-prompt-text {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Visible thinking block — cyan accent */
+    .sample-prompt-block.thinking-excerpt {
+      border-left-color: #22d3ee;
+    }
+    .sample-prompt-block.thinking-excerpt .sample-prompt-label {
+      color: #22d3ee;
+    }
+
+    /* Thinking code block */
+    .thinking-code {
+      background: rgba(7,7,15,.8);
+      border: 1px solid rgba(34,211,238,.15);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: monospace;
+      font-size: .78rem;
+      color: #22d3ee;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      margin: 0;
+    }
+
+    /* Try it CTA */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(156,39,176,.08), rgba(245,158,11,.04));
+      border: 1px solid rgba(156,39,176,.25);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .try-it-band p {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      margin: 0;
+    }
+
+    /* Preview notice */
+    .preview-notice {
+      background: rgba(245,158,11,.05);
+      border: 1px solid rgba(245,158,11,.2);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .preview-notice strong { color: var(--neon-gold); }
+
+    /* Provider accent highlight */
+    .provider-accent {
+      color: #9c27b0;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr; }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+      .ratio-display { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- ── HERO ── -->
+    <div class="article-hero" style="background: linear-gradient(135deg, rgba(156,39,176,0.08), rgba(245,158,11,0.04));">
+      <div class="article-hero-img-wrap">
+        <img src="/images/models/qwen-3-6-max-preview-hero.png"
+             alt="Qwen 3.6 Max Preview — AI model overview"
+             class="article-hero-img" loading="eager"
+             onerror="this.style.background='linear-gradient(135deg,rgba(156,39,176,0.18),rgba(245,158,11,0.06))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/models.html">Models</a>
+            <span>&#x203a;</span>
+            <span>Qwen 3.6 Max Preview</span>
+          </nav>
+          <span class="badge badge-research">Qwen / Alibaba</span>
+          <span class="badge badge-orange" style="margin-left:8px">PREVIEW</span>
+          <h1 class="article-hero-title">Qwen 3.6 Max Preview</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">April 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">10 min read</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">Benchmark attempted</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <div class="article-layout">
+      <div class="article-body">
+
+        <p><span class="provider-accent">Alibaba's</span> Qwen 3.6 Max Preview is the largest and deepest model in the Qwen 3.6 family — a sparse mixture-of-experts architecture with approximately <strong>1 trillion total parameters</strong>, launched in April 2026 as an experimental preview release. At <strong>$1.04 input / $6.24 output per 1M tokens</strong> with a <strong>262K-token context window</strong> and extended visible reasoning chains, this is a model built for one thing: <em>thinking hard</em>. It generated 214 reasoning tokens for the question "What is 2+2?" — a number that reveals everything about its design philosophy. If you need fast answers, look elsewhere. If you need deep, auditable reasoning on frontier tasks, you are in the right place.</p>
+
+        <div class="preview-notice">
+          <strong>Preview status:</strong> Qwen 3.6 Max Preview is an experimental beta release. Pricing, behavior, and context limits may change on final release. Do not depend on this model for production systems.
+        </div>
+
+        <!-- QUICK SPECS -->
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Input /1M tokens</div>
+            <div class="spec-value sv-indigo">$1.04</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output /1M tokens</div>
+            <div class="spec-value sv-indigo">$6.24</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Cache write /1M</div>
+            <div class="spec-value" style="font-size:.9rem">$1.30</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Context window</div>
+            <div class="spec-value">262K tokens</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Max completion</div>
+            <div class="spec-value">65,536 tokens</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Benchmark cost</div>
+            <div class="spec-value sv-gold">$0.002756</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Modality</div>
+            <div class="spec-value" style="font-size:.85rem">Text only</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Architecture</div>
+            <div class="spec-value" style="font-size:.78rem;line-height:1.3">Sparse MoE ~1T params</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Status</div>
+            <div class="spec-value sv-orange" style="font-size:.85rem">PREVIEW</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">OpenRouter ID</div>
+            <div class="spec-value" style="font-size:.65rem;font-family:monospace;color:var(--text-secondary);word-break:break-all">qwen/qwen3.6-max-preview</div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHAT MAKES IT DIFFERENT -->
+        <h2 class="article-h2">What Makes It Different</h2>
+        <p>Qwen 3.6 Max Preview occupies a unique position in the Qwen lineup and the broader market. Most of what distinguishes it comes down to scale and depth of reasoning — and accepting the tradeoffs that come with both.</p>
+
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>~1 Trillion Total Parameters</h4>
+            <p>Max Preview is the largest Qwen model by total parameter count — exceeding GPT-4-class dense models. Sparse MoE keeps active compute manageable, but total capacity is frontier-scale.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Deep Visible Reasoning (CoT)</h4>
+            <p>Like DeepSeek R1, reasoning tokens are exposed as plaintext before the final response. On "What is 2+2?", 214 thinking tokens were generated — detailed step-by-step internal deliberation that developers can read and audit.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Agentic Coding Focus</h4>
+            <p>Max Preview is designed for extended reasoning sessions on complex coding tasks: algorithm design, multi-step refactoring, system architecture planning — tasks where thinking quality matters more than latency.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Context Depth vs. Breadth Tradeoff</h4>
+            <p>Unlike Qwen 3.6 Flash and Plus (1M context), Max Preview has a 262K window. The extra compute budget goes toward depth of reasoning per token, not breadth of context. A deliberate architectural choice.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHO IT'S FOR / NOT FOR -->
+        <h2 class="article-h2">Who It's For — and Who It's Not For</h2>
+        <p>Max Preview's design is highly specific. Understanding where it excels and where it genuinely fails prevents costly misuse.</p>
+
+        <h3 class="article-h3" style="font-size:.95rem;margin:20px 0 10px;color:var(--text-primary)">Best suited for</h3>
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>Complex Agentic Coding</h4>
+            <p>Multi-step code generation, refactoring pipelines, and algorithm design where the model needs to reason across many interdependent constraints before writing a single line.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Deep Mathematical Reasoning</h4>
+            <p>Proofs, derivations, and symbolic reasoning where extended chain-of-thought exploration is a feature, not overhead. Max Preview will work the problem thoroughly.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Tool-Use Pipelines</h4>
+            <p>Agentic loops where the model must plan, call tools, interpret results, and iterate. The deep reasoning architecture improves plan quality even when individual steps are slow.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Frontier Research Exploration</h4>
+            <p>Experimental AI research where you want to explore what a frontier-scale MoE model generates on novel problems — and can tolerate long inference times and preview-tier unpredictability.</p>
+          </div>
+        </div>
+
+        <h3 class="article-h3" style="font-size:.95rem;margin:20px 0 10px;color:#fb923c">Not suited for</h3>
+        <div class="use-case-grid">
+          <div class="use-case-card not-for">
+            <h4>Multimodal Tasks</h4>
+            <p>Max Preview is text-in, text-out only. No image, video, or audio input. Qwen 3.6 Plus supports image and video. For vision tasks, look elsewhere.</p>
+          </div>
+          <div class="use-case-card not-for">
+            <h4>Time-Sensitive Workloads</h4>
+            <p>The model generates extensive reasoning chains before responding. Even simple queries produce hundreds of reasoning tokens. Latency is high — not suitable for real-time user-facing interfaces.</p>
+          </div>
+          <div class="use-case-card not-for">
+            <h4>Tasks Requiring 1M Context</h4>
+            <p>Max Preview has a 262K context limit — far smaller than Qwen 3.6 Flash and Plus (1M). For full-repository analysis across massive codebases or book-length documents, use the Plus or Flash tier.</p>
+          </div>
+          <div class="use-case-card not-for">
+            <h4>Production Systems</h4>
+            <p>This is a preview release. Pricing, output behavior, and availability will change. Build on it for research and exploration — not customer-facing production pipelines.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- BENCHMARK -->
+        <h2 class="article-h2">Benchmark — Timeout &amp; What We Learned</h2>
+        <p>We attempted our standard 650-token benchmark (a technical question about LLM context windows) with Qwen 3.6 Max Preview. The model did not complete within our 55-second harness limit. This is not a failure — it is a direct consequence of the model's architecture. Based on the data we collected, we can explain exactly what happened.</p>
+
+        <div class="callout-timeout">
+          <div class="callout-timeout-label">Benchmark timeout</div>
+          <p>The full benchmark prompt (explaining LLM context windows, ~250 tokens) exceeded our 55-second test harness limit. The model was still generating reasoning tokens when the connection timed out. We estimate the full response would have consumed 2,000–4,000+ reasoning tokens before producing any content — consistent with the ratio we observed on the simple test below.</p>
+        </div>
+
+        <p>To confirm the model was live and understand its behavior, we ran a minimal test: "What is 2+2? Answer in one sentence." Here is exactly what happened.</p>
+
+        <div class="benchmark-block">
+          <div class="benchmark-block-header">
+            <span class="benchmark-block-title">Simple Test — 2+2 Probe</span>
+            <span class="benchmark-cost-badge">Actual cost: $0.001439</span>
+          </div>
+
+          <div class="token-stats-row">
+            <div class="token-stat-pill">22 prompt tokens</div>
+            <div class="token-stat-pill">227 completion tokens</div>
+            <div class="token-stat-pill tsp-reasoning">214 reasoning tokens</div>
+            <div class="token-stat-pill tsp-content">13 content tokens</div>
+            <div class="token-stat-pill tsp-cost">$0.001439 actual</div>
+          </div>
+
+          <div class="benchmark-prompt-label">Prompt</div>
+          <div class="benchmark-prompt-text">What is 2+2? Answer in one sentence.</div>
+
+          <!-- Visible reasoning excerpt -->
+          <div class="sample-prompt-block thinking-excerpt" style="margin-bottom:16px">
+            <div class="sample-prompt-label">Visible Reasoning Chain (214 tokens — for "2+2")</div>
+            <div class="sample-prompt-text">
+              The model's full thinking process was exposed as plaintext before the response:
+            </div>
+            <pre class="thinking-code">Here's a thinking process:
+
+1. Analyze User Input:
+   - Question: "What is 2+2?"
+   - Constraint: "Answer in one sentence."
+
+2. Identify Core Fact:
+   - 2 + 2 = 4
+
+3. Formulate Response (meeting constraint):
+   - Need exactly one sentence.
+   - Example: "Two plus two equals four."
+   - Check constraint: One sentence? Yes. Accurate? Yes.
+
+4. Final Output Generation:
+   - "Two plus two equals four." (or "2 + 2 equals 4.")
+   - Both are one sentence. I'll go with "2 + 2 equals 4." for directness.
+
+5. Self-Correction/Verification:
+   - Does it answer the question? Yes.
+   - Is it exactly one sentence? Yes.
+   - Any extra fluff? No.
+   - Ready. ✅</pre>
+          </div>
+
+          <div class="benchmark-response-label">Model Response (13 content tokens)</div>
+          <div class="benchmark-response-text">
+            <p>"2 + 2 equals 4."</p>
+          </div>
+        </div>
+
+        <p>The ratio here is stark: <strong>214 reasoning tokens to produce 13 words</strong>. The model ran through five numbered reasoning steps — analyzing the input, identifying the fact, formulating a response, generating output, and self-correcting — before committing to a four-word answer. For a question with a universally known answer.</p>
+
+        <p>Scale that reasoning pattern to our full benchmark prompt (a nuanced multi-part technical question) and you can see why it timed out. A conservative estimate puts the reasoning chain for that task at 2,000–4,000 tokens before any content tokens would have appeared. At our 55-second timeout, the model was still thinking.</p>
+
+        <div class="preview-notice">
+          <strong>Theoretical benchmark cost:</strong> Our standard benchmark formula (250 &times; $1.04 + 400 &times; $6.24) yields <strong>$0.002756</strong> — a mid-tier gold rating. In practice, actual costs will be significantly higher because the 400 output tokens in that formula doesn't account for the 2,000–4,000+ reasoning tokens the model generates before producing content. Budget accordingly.
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- REASONING ARCHITECTURE CALLOUT -->
+        <h2 class="article-h2">The Reasoning Architecture</h2>
+
+        <div class="reasoning-arch-callout">
+          <h3>Why Max Preview Thinks So Much — and What It Costs</h3>
+          <p>Qwen 3.6 Max Preview is built around a <strong>think-first, respond-second</strong> architecture. Unlike standard models that generate response tokens directly, Max Preview produces an extended internal reasoning chain (visible as plaintext) before writing a single content token. This is not optional — it happens on every query, including trivial ones.</p>
+          <p>The 2+2 test reveals the ratio: <strong>~16 reasoning tokens per content token</strong> on a simple question. For a complex question involving algorithm design or mathematical proof, that ratio could reach <strong>50–100 reasoning tokens per content token</strong> or higher. You are paying for deep thinking — and you are paying output rates ($6.24/1M) for every reasoning token generated.</p>
+        </div>
+
+        <div class="ratio-display">
+          <div class="ratio-bar-wrap">
+            <div class="ratio-bar-label">Completion token breakdown — "What is 2+2?"</div>
+            <div class="ratio-bar-track">
+              <div class="ratio-bar-reasoning" style="width: 94.3%"></div>
+              <div class="ratio-bar-content" style="width: 5.7%"></div>
+            </div>
+          </div>
+          <div class="ratio-legend">
+            <div class="ratio-legend-item">
+              <div class="ratio-legend-dot" style="background:#22d3ee"></div>
+              <span>214 reasoning tokens (94.3%)</span>
+            </div>
+            <div class="ratio-legend-item">
+              <div class="ratio-legend-dot" style="background:var(--neon-indigo)"></div>
+              <span>13 content tokens (5.7%)</span>
+            </div>
+          </div>
+        </div>
+
+        <p>At $6.24 per million output tokens, a session generating 4,000 reasoning tokens before a 400-token response costs <strong>$0.027</strong> per exchange — roughly 10&times; the theoretical benchmark estimate. For a day of intensive agentic coding work (say 100 such exchanges), that's $2.70 — still affordable for research, but meaningfully different from the headline number. Plan your budgets with reasoning token overhead in mind.</p>
+
+        <p>The upside is proportional: the model self-corrects, verifies, explores alternatives, and commits only after deliberation. For tasks where thinking quality matters more than speed — mathematical proofs, architectural planning, multi-step debugging — this overhead is precisely what you are paying for.</p>
+
+        <hr class="article-divider">
+
+        <!-- SAMPLE PROMPTS -->
+        <h2 class="article-h2">Sample Prompts Best Suited for Max Preview</h2>
+        <p>These prompts are designed to leverage what Max Preview actually offers: extended deliberation on high-complexity tasks where a fast, shallow response would be insufficient or wrong.</p>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Complex Algorithm Design</div>
+          <div class="sample-prompt-text">"Design an efficient algorithm for finding the shortest path in a weighted directed graph where edge weights can be negative but no negative cycles exist. Explain the design choices, prove correctness, analyze time and space complexity, and compare it to Bellman-Ford and SPFA. Provide a Python implementation with edge-case handling."</div>
+        </div>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Multi-Step Agentic Coding</div>
+          <div class="sample-prompt-text">"You are an autonomous coding agent. Refactor the following 800-line Python service to: (1) separate concerns into domain, infrastructure, and interface layers, (2) introduce dependency injection for all external services, (3) replace all mutable global state with context objects, (4) add a comprehensive test suite for the refactored code. Proceed step by step, explaining each architectural decision before implementing it."</div>
+        </div>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Mathematical Proof</div>
+          <div class="sample-prompt-text">"Prove that for any prime p &gt; 2, the group (Z/pZ)* is cyclic. Provide a complete formal proof, identify any lemmas you rely on and prove them from first principles, and then give an explicit construction for finding a generator of the group for a given prime p, with worked examples for p = 7 and p = 13."</div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- ADSENSE MID -->
+        <ins class="adsbygoogle" style="display:block;margin:28px 0"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="auto" data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+        <!-- PRICING BREAKDOWN -->
+        <h2 class="article-h2">Pricing Breakdown</h2>
+        <p>Qwen 3.6 Max Preview occupies the premium tier of the Qwen lineup. Its price reflects the frontier-scale parameter count and the inference compute required to run extended reasoning chains. The key caveat: because reasoning tokens bill at output rates, real-world costs routinely exceed the theoretical per-exchange headline. Factor in a 3–10&times; reasoning multiplier for budget planning.</p>
+
+        <div class="preview-notice">
+          <strong>Preview pricing caveat:</strong> Pricing for preview models frequently changes on general release. The figures below reflect the live OpenRouter API rates as of May 2026 and may not reflect final release pricing.
+        </div>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Input tokens /1M</td><td>$1.04</td><td>Charged per token sent to the model</td></tr>
+              <tr><td>Output tokens /1M</td><td>$6.24</td><td>Covers both reasoning and content tokens</td></tr>
+              <tr><td>Cache write /1M</td><td>$1.30</td><td>For prompt caching on repeated prefixes</td></tr>
+              <tr><td>Context window</td><td>262,144 tokens</td><td>Smaller than Flash/Plus (1M)</td></tr>
+              <tr><td>Max completion</td><td>65,536 tokens</td><td>Reasoning + content combined</td></tr>
+              <tr><td>Theoretical benchmark</td><td>$0.002756</td><td>250 in + 400 out; excludes reasoning overhead</td></tr>
+              <tr><td>2+2 actual cost</td><td>$0.001439</td><td>22 prompt + 227 completion tokens</td></tr>
+              <tr><td>Est. real exchange</td><td>~$0.010–$0.030</td><td>With 2,000–4,000 reasoning tokens per exchange</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="article-h3" style="font-size:.95rem;margin:28px 0 12px;color:var(--text-primary)">How It Compares to the Qwen 3.6 Family</h3>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Model</th><th>Input /1M</th><th>Output /1M</th><th>Context</th><th>Benchmark</th><th>Modality</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Qwen 3.6 Max Preview</strong> &#8592; this</td>
+                <td>$1.04</td>
+                <td>$6.24</td>
+                <td>262K</td>
+                <td>$0.002756*</td>
+                <td>Text only</td>
+              </tr>
+              <tr>
+                <td>Qwen 3.6 Plus</td>
+                <td>$0.325</td>
+                <td>$1.95</td>
+                <td>1M</td>
+                <td>$0.000861</td>
+                <td>Text + Vision + Video</td>
+              </tr>
+              <tr>
+                <td>Qwen 3.6 Flash</td>
+                <td>$0.19</td>
+                <td>$1.12</td>
+                <td>1M</td>
+                <td>$0.000496</td>
+                <td>Text + Vision + Video</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:.77rem;color:var(--text-muted);margin-top:6px">* Theoretical figure; actual cost higher due to reasoning token overhead. Full benchmark timed out at our 55s limit.</p>
+
+        <hr class="article-divider">
+
+        <!-- TRY IT BAND -->
+        <div class="try-it-band">
+          <div>
+            <h3>Try Qwen 3.6 Max Preview with Your Own Key</h3>
+            <p>Connect your OpenRouter API key and run Qwen 3.6 Max Preview directly in the Aether Intel playground — no signup, your key stays in your browser. Expect longer waits due to the reasoning chain. Model ID: <code>qwen/qwen3.6-max-preview</code>.</p>
+          </div>
+          <a href="/tools/playground.html" class="btn btn-primary">Open Playground &rarr;</a>
+        </div>
+
+        <!-- TAKEAWAYS -->
+        <div class="article-takeaways">
+          <h3 class="takeaways-title">Key Takeaways</h3>
+          <ul>
+            <li>At ~1 trillion total parameters, Qwen 3.6 Max Preview is <span class="provider-accent">Alibaba's</span> largest and deepest model — frontier-scale sparse MoE designed for extended reasoning, not speed.</li>
+            <li>The model generated 214 reasoning tokens for "What is 2+2?" — revealing a think-first architecture that runs detailed deliberation on every query, including trivial ones.</li>
+            <li>Our standard 650-token benchmark timed out at 55 seconds. The full response likely would have required 2,000–4,000+ reasoning tokens. Not a bug — it's how this model works.</li>
+            <li>Context is 262K, not 1M: unlike Qwen 3.6 Flash and Plus, Max Preview trades breadth of context for depth of reasoning. Choose accordingly.</li>
+            <li>Text input only — no image or video support. For multimodal tasks, use Qwen 3.6 Plus instead.</li>
+            <li>Preview status means pricing and behavior will change. Use for research and frontier exploration, not production systems.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RELATED MODELS ── -->
+    <section class="article-related">
+      <h2 class="related-title">Related Models</h2>
+      <div class="article-grid">
+
+        <a class="article-card" href="/models/qwen-3-6-plus.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/qwen-3-6-plus-hero.png"
+                 alt="Qwen 3.6 Plus"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(156,39,176,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-research">Qwen / Alibaba</span>
+            <h3 class="article-card-title">Qwen 3.6 Plus</h3>
+            <p class="article-card-excerpt">1M context, image &amp; video input, $0.325/$1.95 per 1M — Alibaba's multimodal thinking model at a fraction of Max's price.</p>
+          </div>
+        </a>
+
+        <a class="article-card" href="/models/qwen-3-6-flash.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/qwen-3-6-flash-hero.png"
+                 alt="Qwen 3.6 Flash"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(156,39,176,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-research">Qwen / Alibaba</span>
+            <h3 class="article-card-title">Qwen 3.6 Flash</h3>
+            <p class="article-card-excerpt">1M context, fast inference, $0.19/$1.12 per 1M — the efficient tier of the Qwen 3.6 family for high-volume workloads.</p>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </article>
+</main>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>

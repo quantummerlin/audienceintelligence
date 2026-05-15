@@ -3,338 +3,654 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gemini 2.5 Flash — Capabilities, Pricing &amp; Benchmark — Aether Intel</title>
-  <meta name="description" content="Gemini 2.5 Flash review: Google's native multimodal model with 1M context. Real pricing, benchmark output, and production use cases via OpenRouter.">
+  <title>Gemini 2.5 Flash — Google's Multimodal Workhorse | Aether Intel</title>
+  <meta name="description" content="Gemini 2.5 Flash review: $0.30/$2.50 per 1M tokens, 1M context, optional thinking mode, full 5-modality input (text, image, file, audio, video). Google's production-ready speed model.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ai.quantummerlin.com/models/gemini-2-5-flash.html">
   <meta property="og:title" content="Gemini 2.5 Flash — Capabilities, Costs &amp; Benchmark">
+  <meta property="og:description" content="Gemini 2.5 Flash review: $0.30/$2.50 per 1M tokens, 1M context, optional thinking mode, full 5-modality input (text, image, file, audio, video). Google's production-ready speed model.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://ai.quantummerlin.com/models/gemini-2-5-flash.html">
   <meta property="og:image" content="https://ai.quantummerlin.com/images/models/gemini-2-5-flash-hero.png">
-  <meta property="article:published_time" content="2025-05-15">
+  <meta property="article:published_time" content="2026-05-15">
   <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gemini 2.5 Flash — Capabilities, Costs &amp; Benchmark">
+  <meta name="twitter:description" content="Gemini 2.5 Flash: $0.30/$2.50 per 1M tokens, 1M context, optional thinking, full 5-modality input. Google's production workhorse reviewed.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/gemini-2-5-flash-hero.png">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <style>
-    .model-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:24px 0}
-    .spec-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
-    .spec-label{font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
-    .spec-value{font-family:var(--font-body);font-size:1.05rem;font-weight:700;color:var(--text-primary)}
-    .spec-value.sv-green{color:#34d399}.spec-value.sv-indigo{color:var(--neon-indigo)}.spec-value.sv-gold{color:var(--neon-gold)}
-    .use-case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:20px 0}
-    .use-case-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
-    .use-case-card h4{font-family:var(--font-body);font-size:.88rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
-    .use-case-card p{font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin:0}
-    .benchmark-block{background:var(--surface);border:1px solid rgba(129,140,248,.2);border-radius:12px;padding:24px;margin:24px 0}
-    .benchmark-block-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-    .benchmark-block-title{font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-indigo)}
-    .benchmark-cost-badge{font-size:.88rem;font-weight:700;color:var(--text-primary);background:rgba(129,140,248,.1);border:1px solid rgba(129,140,248,.25);border-radius:7px;padding:4px 12px}
-    .benchmark-prompt-label,.benchmark-response-label{font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
-    .benchmark-prompt-text{background:rgba(7,7,15,.6);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:.83rem;color:var(--text-secondary);line-height:1.6;font-style:italic;margin-bottom:16px}
-    .benchmark-response-text{font-size:.88rem;color:var(--text-primary);line-height:1.7}
-    .benchmark-response-text p{margin:0 0 12px}.benchmark-response-text p:last-child{margin:0}
-    .sample-prompt-block{background:rgba(7,7,15,.6);border-left:3px solid var(--neon-indigo);border-radius:0 8px 8px 0;padding:14px 16px;margin:16px 0}
-    .sample-prompt-label{font-family:var(--font-display);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--neon-indigo);margin-bottom:6px}
-    .sample-prompt-text{font-size:.84rem;color:var(--text-secondary);line-height:1.55}
-    .try-it-band{background:linear-gradient(135deg,rgba(129,140,248,.08),rgba(34,211,238,.04));border:1px solid rgba(129,140,248,.2);border-radius:14px;padding:28px;margin:32px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-    .try-it-band h3{font-family:var(--font-heading);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
-    .try-it-band p{color:var(--text-secondary);font-size:.86rem;margin:0}
-    @media(max-width:600px){.model-specs-grid{grid-template-columns:repeat(2,1fr)}.use-case-grid{grid-template-columns:1fr}.try-it-band{flex-direction:column;align-items:flex-start}}
+    /* ─── Model article extras ─── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .spec-value {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-value.sv-green  { color: #34d399; }
+    .spec-value.sv-cyan   { color: #22d3ee; }
+    .spec-value.sv-indigo { color: var(--neon-indigo); }
+    .spec-value.sv-gold   { color: var(--neon-gold); }
+
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card h4 {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .use-case-card p {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Benchmark display */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+    }
+    .benchmark-cost-badge {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--neon-gold);
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.25);
+      border-radius: 7px;
+      padding: 4px 12px;
+    }
+    .benchmark-prompt-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-prompt-text {
+      background: rgba(7,7,15,.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .benchmark-response-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-response-text {
+      font-size: .88rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    .benchmark-response-text p { margin: 0 0 12px; }
+    .benchmark-response-text p:last-child { margin: 0; }
+    .benchmark-response-text h3 {
+      font-family: var(--font-heading);
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 18px 0 8px;
+    }
+    .benchmark-response-text ul {
+      margin: 8px 0 12px 20px;
+      padding: 0;
+    }
+    .benchmark-response-text ul li {
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+    .benchmark-response-text .article-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    /* Token stat row */
+    .token-stat-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .token-stat {
+      background: rgba(7,7,15,.5);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 6px 12px;
+      font-family: var(--font-body);
+      font-size: .78rem;
+      color: var(--text-secondary);
+    }
+    .token-stat strong { color: var(--text-primary); }
+
+    /* Sample prompt block */
+    .sample-prompt-block {
+      background: rgba(7,7,15,.6);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .sample-prompt-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 6px;
+    }
+    .sample-prompt-text {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Google multi-color accent on sample prompts for thinking callout */
+    .sample-prompt-block.google-accent {
+      border-left-color: #4285F4;
+    }
+    .sample-prompt-block.google-accent .sample-prompt-label {
+      background: linear-gradient(90deg,#4285F4,#34A853,#FBBC05,#EA4335);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Thinking callout section */
+    .thinking-callout {
+      background: linear-gradient(135deg, rgba(66,133,244,0.06), rgba(52,168,83,0.03), rgba(251,188,5,0.03), rgba(234,67,53,0.03));
+      border: 1px solid rgba(66,133,244,0.22);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .thinking-callout-eyebrow {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg,#4285F4,#34A853,#FBBC05,#EA4335);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .thinking-callout h3 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 10px;
+    }
+    .thinking-callout p {
+      font-size: .86rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin: 0 0 10px;
+    }
+    .thinking-callout p:last-child { margin: 0; }
+    .thinking-callout code {
+      background: rgba(7,7,15,.7);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: .82rem;
+      color: #22d3ee;
+    }
+
+    /* Try it CTA — Google gradient tint */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(66,133,244,0.07), rgba(52,168,83,0.04), rgba(251,188,5,0.03), rgba(234,67,53,0.03));
+      border: 1px solid rgba(66,133,244,0.2);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .try-it-band p {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      margin: 0;
+    }
+
+    /* Provider accent — Google multi-color gradient */
+    .provider-accent {
+      background: linear-gradient(90deg,#4285F4,#34A853,#FBBC05,#EA4335);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr; }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+      .token-stat-row { gap: 8px; }
+    }
   </style>
 </head>
 <body>
 <main>
   <article class="article-page">
 
-    <!-- HERO -->
-    <header class="article-hero">
-      <div class="article-hero-inner">
-        <div class="article-meta-top">
-          <a href="/models/" class="breadcrumb-link">Models</a>
-          <span class="breadcrumb-sep">/</span>
-          <span class="breadcrumb-current">Gemini 2.5 Flash</span>
-        </div>
-        <div class="article-provider-row">
-          <span class="provider-badge">Google</span>
-          <span class="modality-badge">Text + Vision + Audio + Video + File</span>
-          <span class="benchmark-class-badge bc-mid">Mid-Tier Cost</span>
-        </div>
-        <h1 class="article-title">Gemini 2.5 Flash</h1>
-        <p class="article-subtitle">Google's speed-optimized production model — natively multimodal across text, image, audio, video, and file inputs, with a 1M token context window and one of the best cost-per-capability ratios in the current model landscape.</p>
-        <div class="article-meta-row">
-          <span class="article-meta-item">
-            <span class="meta-label">Published</span>
-            <span class="meta-value">May 15, 2025</span>
-          </span>
-          <span class="article-meta-item">
-            <span class="meta-label">Read time</span>
-            <span class="meta-value">8 min</span>
-          </span>
-          <span class="article-meta-item">
-            <span class="meta-label">OpenRouter ID</span>
-            <code class="meta-code">google/gemini-2.5-flash</code>
-          </span>
+    <!-- ── HERO ── -->
+    <div class="article-hero" style="background: linear-gradient(135deg, rgba(66,133,244,0.06), rgba(52,168,83,0.03), rgba(251,188,5,0.03), rgba(234,67,53,0.03));">
+      <div class="article-hero-img-wrap">
+        <img src="/images/models/gemini-2-5-flash-hero.png"
+             alt="Gemini 2.5 Flash — AI model overview"
+             class="article-hero-img" loading="eager"
+             onerror="this.style.background='linear-gradient(135deg,rgba(66,133,244,0.18),rgba(52,168,83,0.08),rgba(251,188,5,0.06),rgba(234,67,53,0.06))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/models.html">Models</a>
+            <span>&#x203a;</span>
+            <span>Gemini 2.5 Flash</span>
+          </nav>
+          <span class="badge badge-tools">Google &middot; June 2025</span>
+          <h1 class="article-hero-title">Gemini 2.5 Flash</h1>
+          <div class="article-meta">
+            <span class="article-meta-date">May 15, 2026</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">9 min read</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">Benchmark tested</span>
+          </div>
         </div>
       </div>
-    </header>
+    </div>
 
-    <!-- SPEC CARDS -->
-    <div class="article-body">
-      <div class="model-specs-grid">
-        <div class="spec-card">
-          <div class="spec-label">Input Price</div>
-          <div class="spec-value sv-green">$0.30<span style="font-size:.7rem;font-weight:400;color:var(--text-muted)">/1M tok</span></div>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Output Price</div>
-          <div class="spec-value sv-green">$2.50<span style="font-size:.7rem;font-weight:400;color:var(--text-muted)">/1M tok</span></div>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Context Window</div>
-          <div class="spec-value sv-indigo">1M</div>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Modality</div>
-          <div class="spec-value" style="font-size:.78rem;">Text + Vision + Audio + Video + File</div>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Bench Cost</div>
-          <div class="spec-value sv-gold">$0.001075</div>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Provider</div>
-          <div class="spec-value">Google</div>
-        </div>
-      </div>
+    <!-- ── BODY ── -->
+    <div class="article-layout">
+      <div class="article-body">
 
-      <!-- WHAT IT IS -->
-      <section class="article-section">
-        <h2 class="section-heading">What Is Gemini 2.5 Flash?</h2>
-        <p>Gemini 2.5 Flash is Google DeepMind's speed-optimized flagship model, and its most important architectural distinction is one that is easy to overlook in a landscape where "multimodal" has become a marketing term: Flash is genuinely, natively multimodal. Where many models bolt a vision adapter onto a text backbone — treating image understanding as a pre-processing step separate from core reasoning — Gemini was designed from the ground up to process text, images, audio, video, and files through the same unified model weights. That means the relationship between what Flash sees, hears, and reads is understood at the training level, not wired together at inference time. A prompt containing a video clip, its transcript, and a follow-up text question is handled in a single coherent pass, not routed through three specialist systems and stitched back together. This architectural difference matters practically: mixed-media reasoning is more accurate, latency is lower, and the engineering overhead of managing multiple API surfaces disappears entirely.</p>
-        <p>Within the Gemini 2.5 family, Flash occupies the speed and efficiency tier while its sibling, Gemini 2.5 Pro, covers deeper reasoning and more complex analytical tasks. The 1M token context window shared across the family is also native — not chunked, not approximated through retrieval augmentation, but a genuine single-pass window that can hold roughly 750,000 words of text, or the equivalent of several full-length novels, a large codebase, or hours of audio transcripts, all simultaneously in working memory. For developers building document-heavy pipelines, research tools, or applications that need to reason holistically across large corpora, that is a fundamentally different capability from models capped at 128K. Flash delivers this with pricing that sits well below comparable multimodal options, making it the strongest candidate for production workloads where both capability breadth and inference cost are constraints.</p>
-      </section>
+        <p><span class="provider-accent">Google's</span> Gemini 2.5 Flash is the production workhorse of the Gemini 2.5 family — a model built for speed, breadth, and scale. Launched in June 2025, it accepts text, images, files, audio, and video as inputs across a <strong>1M-token context window</strong>, priced at <strong>$0.30 input / $2.50 output per 1M tokens</strong>. What sets it apart from every other model at this price point is a thinking mode that is optional by default: reasoning is disabled for fast, cost-efficient standard responses, but a single API parameter activates it on demand when a request needs deeper analysis — adding $2.50/1M thinking tokens only when you actually use it. Among Flash-tier models, that per-request dial is unique.</p>
 
-      <!-- WHERE IT EXCELS -->
-      <section class="article-section">
-        <h2 class="section-heading">Where Gemini Flash Excels</h2>
-        <p>Gemini 2.5 Flash is the only model in this tier that processes text, images, audio, video, and files natively in a single API call — making it uniquely suited to mixed-media workloads that would otherwise require multiple models.</p>
+        <!-- AT A GLANCE -->
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Context Window</div>
+            <div class="spec-value">1M tokens</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Input /1M tokens</div>
+            <div class="spec-value sv-green">$0.30</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output /1M tokens</div>
+            <div class="spec-value sv-indigo">$2.50</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Benchmark Cost</div>
+            <div class="spec-value sv-gold">$0.001075</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Max Output Tokens</div>
+            <div class="spec-value">65,535</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Thinking (optional)</div>
+            <div class="spec-value" style="font-size:.82rem;">$2.50/1M when ON</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Input Modalities</div>
+            <div class="spec-value" style="font-size:.72rem;">Text &bull; Image &bull; File &bull; Audio &bull; Video</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Knowledge Cutoff</div>
+            <div class="spec-value" style="font-size:.82rem;">January 2025</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">OpenRouter ID</div>
+            <div class="spec-value" style="font-size:.66rem;font-family:monospace;color:var(--text-secondary)">google/gemini-2.5-flash</div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHAT MAKES IT DIFFERENT -->
+        <h2 class="article-h2">What Makes Gemini 2.5 Flash Different</h2>
+
+        <p>Gemini 2.5 Flash is not simply a cheaper version of Gemini 2.5 Pro. It is a distinct deployment tier with a specific architectural signature: optional thinking, maximal modality coverage, and a pricing structure tuned for high-volume production pipelines. Three things set it apart.</p>
+
+        <h3 class="article-h3">Optional Thinking Mode — a Toggle, Not a Default</h3>
+        <p>Most reasoning models that support chain-of-thought fire that reasoning on every single request — you pay thinking-token rates whether the task needed them or not. Gemini 2.5 Flash inverts that design. By default, thinking is disabled: the model responds directly, quickly, and cheaply. When a request genuinely warrants deeper reasoning — complex code review, multi-step analytical tasks, structured synthesis across long documents — you pass <code>include_reasoning: true</code> in the API body. Thinking activates for that request only, billed at $2.50/1M thinking tokens (same rate as output). This per-request control means you are never over-paying for reasoning on simple workloads while still having access to it exactly when it matters. No comparable Flash-tier model from any provider offers this dial.</p>
+
+        <h3 class="article-h3">Full 5-Modality Input Breadth</h3>
+        <p>Very few production models handle all five input types natively: text, image, file (PDFs and documents), audio, and video. Gemini 2.5 Flash does — in a single API call, with no pre-processing pipeline required. This is the difference between a model that can analyse a recorded meeting alongside its brief and a model that requires you to transcribe the audio separately, extract the PDF text separately, and then stitch the outputs together before asking your question. Image input is priced at $0.30/1M tokens; audio at $1.00/1M. For organisations processing media at scale, the consolidation advantage is significant: fewer API surfaces, lower compounding error, and a substantially simpler architecture.</p>
+
+        <h3 class="article-h3">Google's Production Workhorse</h3>
+        <p>Within Google's model lineup, Gemini 2.5 Flash is positioned for applications that need strong general performance — coding assistance, document analysis, content generation, customer service, multimodal extraction — without the overhead of Pro-tier pricing on every call. Web search integration ($14.00/search) extends the January 2025 knowledge cutoff for time-sensitive queries. At a benchmark cost of $0.001075 for a standard 250-in / 400-out exchange, it sits in the bc-mid gold tier: not the absolute cheapest per token, but delivering the broadest capability envelope of any model at this cost level.</p>
+
+        <hr class="article-divider">
+
+        <!-- WHO IT'S FOR / NOT FOR -->
+        <h2 class="article-h2">Who It's For</h2>
         <div class="use-case-grid">
           <div class="use-case-card">
-            <h4>Multimodal Analysis</h4>
-            <p>Send images, audio clips, video recordings, and files together in a single prompt and receive unified reasoning across all of them. Flash does not hand off between specialist models — the same weights that process your text query also process everything else attached to it, making cross-modal inference tighter and faster.</p>
+            <h4>Production API Pipelines</h4>
+            <p>Fast standard responses at $0.30/$2.50 per 1M tokens. Ideal for high-volume workloads where thinking adds cost only when you activate it, keeping the default path lean and fast.</p>
           </div>
           <div class="use-case-card">
-            <h4>Long-Document Processing</h4>
-            <p>Load entire contracts, research papers, technical specifications, or full codebases into a single context window. With a genuine 1M token limit, Flash can reason holistically across book-length documents without chunking, retrieval approximation, or loss of coherence between distant sections.</p>
+            <h4>Multimodal Content Analysis</h4>
+            <p>Send images, PDFs, audio recordings, and video clips in a single API call. No pre-processing, no specialist models, no stitching — unified reasoning across all five media types in one pass.</p>
           </div>
           <div class="use-case-card">
-            <h4>High-Throughput Pipelines</h4>
-            <p>At $0.30 input and $2.50 output per million tokens, Flash is priced for scale. Production pipelines handling thousands of API calls per hour can rely on Flash for fast, consistent responses without the cost ceiling that comes with premium-tier models. Speed-optimized inference keeps latency low even under load.</p>
+            <h4>Audio and Video Processing</h4>
+            <p>Native audio ($1.00/1M) and video input without a separate transcription step. Well-suited to meeting summarisation, podcast extraction, video QA, and audio content moderation at scale.</p>
           </div>
           <div class="use-case-card">
-            <h4>Media Understanding</h4>
-            <p>Transcribe audio recordings, analyze video content, describe and extract information from images, and process structured files — all within the same model and the same API call. Eliminating separate transcription and vision services reduces pipeline complexity and the compounding error that comes from chaining specialist models.</p>
+            <h4>Selective Reasoning Tasks</h4>
+            <p>Enable thinking per-request for complex analytical queries without paying for it on every call. Route simple classification requests through standard mode; flag hard reasoning tasks for thinking mode — same model ID, same pipeline.</p>
           </div>
         </div>
-      </section>
 
-      <!-- BENCHMARK -->
-      <section class="article-section">
-        <h2 class="section-heading">Benchmark Response</h2>
+        <h2 class="article-h2">Who Should Look Elsewhere</h2>
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>Maximum Reasoning Depth, Always</h4>
+            <p>If deep, sustained reasoning is required on every request — graduate-level math, advanced architecture design — Gemini 2.5 Pro or OpenAI o3 outperform Flash even with thinking enabled.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Lowest Cost at Scale, Text Only</h4>
+            <p>For pure text pipelines where every fraction of a cent matters, Gemini Flash Lite or Qwen 3.6 Flash can undercut on output pricing for comparable quality on routine tasks.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Real-Time Knowledge Without Search Cost</h4>
+            <p>The knowledge cutoff is January 2025. Web search adds $14.00 per search call. For applications requiring constant real-time data at high volume, that search cost compounds quickly.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- BENCHMARK -->
+        <h2 class="article-h2">Benchmark Response</h2>
+        <p>We ran our standard technical benchmark through Gemini 2.5 Flash via OpenRouter using the default configuration — thinking mode not activated. The prompt asks for a detailed comparison of transformer architectures versus recurrent neural networks, a task that rewards both technical depth and structured communication. The response reached our 650-token test limit; actual model capacity is 65,535 output tokens. Zero reasoning tokens were generated because <code>include_reasoning</code> was not passed — this is the default, fast-path behaviour.</p>
+
         <div class="benchmark-block">
           <div class="benchmark-block-header">
-            <span class="benchmark-block-title">Aether Intel Standard Benchmark</span>
-            <span class="benchmark-cost-badge">$0.001075 per exchange</span>
+            <span class="benchmark-block-title">Benchmark Test — 650 Token Limit (Thinking OFF)</span>
+            <span class="benchmark-cost-badge">bc-mid &middot; $0.001075</span>
           </div>
-          <div class="benchmark-prompt-label">Prompt</div>
+
+          <div class="benchmark-prompt-label">Prompt (28 tokens)</div>
           <div class="benchmark-prompt-text">
-            "You are a senior software architect. A startup is building a real-time collaborative document editor (think Notion or Google Docs). They have 10 engineers and expect 50,000 daily active users at launch. Recommend a technology stack — frontend, backend, real-time sync, and storage — and explain the reasoning behind each choice. Flag any significant trade-offs."
+            Explain the core differences between transformer architectures and recurrent neural networks for sequence modeling. Include key advantages, limitations, and typical use cases for each.
           </div>
-          <div class="benchmark-response-label">Response</div>
+
+          <div class="benchmark-response-label">Gemini 2.5 Flash Response (650 tokens, truncated at test limit)</div>
           <div class="benchmark-response-text">
-            <p><strong>What is a Context Window?</strong></p>
-            <p>The context window is the maximum amount of information an LLM can "see" and process at any given time when generating a response — like the model's short-term working memory. Everything within that window is considered; anything outside is effectively forgotten for that turn. This information is represented as <strong>tokens</strong> — fundamental units that can be a word, part of a word, punctuation, or a character.</p>
-            <p><strong>Why Size Matters: Memory and Coherence</strong></p>
-            <p>With a small context window (4K–8K), the model quickly loses track of earlier conversation or document content. Asking it to summarize a long article may only yield accurate coverage of the last few paragraphs. For chatbots, this causes repetitive questions and a disjointed experience.</p>
-            <p>With a large context window (128K–1M), the model can retain far more: long-form content generation with thematic consistency, complex conversations remembering preferences and goals across many turns, full codebase analysis spanning multiple files, and data synthesis across entire datasets.</p>
-            <p><strong>Multi-Step Tasks and Reasoning</strong></p>
-            <p>Multi-step tasks require the model to carry forward intermediate results and constraints. Small windows cause failure when early instructions fall out of scope mid-task. Large windows enable reliable multi-stage reasoning, plan execution with detailed sub-tasks, and question-answering that synthesizes information across lengthy documents.</p>
-            <p><strong>Token Pricing and Window Usage</strong></p>
-            <p>LLM providers typically charge per-token for both input and output, with output tokens costing significantly more. The critical insight: you pay for every token in your context, every request. A 1M context model processing 500K tokens per call at premium rates can cost 100&times; more than a 128K model processing 10K tokens via RAG. Smart apps minimize per-request token usage through selective retrieval, reserving large context for tasks that require holistic document access.</p>
-            <p><strong>128K vs. 1M: The Developer Decision</strong></p>
-            <p>Choose 128K for most production apps — it covers chatbots, code assistants, document Q&amp;A, and agentic workflows at manageable cost. Choose 1M when you have verified requirements: full repository analysis, book-length document comparison, or complex legal synthesis spanning hundreds of pages. Measure your actual average context per call; it's typically far below either limit, making RAG + 128K the right default for most teams.</p>
+
+            <p>Let's break down the core differences between Transformer architectures and Recurrent Neural Networks (RNNs) for sequence modeling.</p>
+
+            <h3>Recurrent Neural Networks (RNNs)</h3>
+            <p><strong>Core Idea:</strong> RNNs process sequences one element at a time, maintaining a "hidden state" that acts as a memory of previous elements. This hidden state is updated at each step, making the output at any given step dependent on all previous inputs and states.</p>
+
+            <p><strong>How they work (Simplified):</strong></p>
+            <ul>
+              <li><strong>Sequential Processing:</strong> An input sequence is fed into the network one element (x_t) at a time.</li>
+              <li><strong>Hidden State:</strong> At each step t, the RNN takes the current input x_t and the previous hidden state h_{t-1} to compute a new hidden state h_t.</li>
+              <li><strong>Output:</strong> An output y_t can be generated based on h_t.</li>
+              <li><strong>Recurrence:</strong> The key is the feedback loop: h_t is fed back as input for the next step.</li>
+            </ul>
+
+            <p><strong>Variants:</strong></p>
+            <ul>
+              <li><strong>LSTMs (Long Short-Term Memory):</strong> Address the vanishing/exploding gradient problem by introducing "gates" (input, forget, output) that control the flow of information into and out of a "cell state." This allows them to learn long-term dependencies more effectively.</li>
+              <li><strong>GRUs (Gated Recurrent Units):</strong> A simpler variant of LSTMs with fewer gates (reset, update), offering a good balance of performance and computational efficiency.</li>
+            </ul>
+
+            <p><strong>Key Advantages of RNNs:</strong></p>
+            <ul>
+              <li>Simplicity (Conceptually): The idea of processing one element at a time and maintaining a state is intuitive.</li>
+              <li>Memory of Past Information: Their recurrent nature inherently allows them to remember information from previous steps.</li>
+              <li>Good for Shorter Sequences: For sequences of moderate length, they can be quite effective.</li>
+              <li>Parameter Efficiency: Generally have fewer parameters compared to Transformers for similar tasks.</li>
+            </ul>
+
+            <p><strong>Key Limitations of RNNs:</strong></p>
+            <ul>
+              <li>Vanishing/Exploding Gradients: During backpropagation through time, gradients can either shrink exponentially (vanishing) or grow exponentially (exploding). This makes it hard to learn long-term dependencies, especially in vanilla RNNs.</li>
+              <li>Lack of Parallelization: Due to their sequential nature (each step depends on the previous one), RNNs are inherently difficult to parallelize during training.</li>
+              <li>Limited Long-Range Dependencies: Even with LSTMs/GRUs, their "memory" can still struggle to effectively capture dependencies that span very long distances in a sequence.</li>
+            </ul>
+
+            <p style="color:var(--text-muted);font-style:italic;font-size:.82rem">[Response truncated at 650-token test limit — actual Gemini 2.5 Flash capacity: 65,535 output tokens. Transformer section and comparative summary were cut off.]</p>
+
+          </div>
+
+          <div class="token-stat-row">
+            <div class="token-stat"><strong>Prompt tokens:</strong> 28</div>
+            <div class="token-stat"><strong>Completion tokens:</strong> 650</div>
+            <div class="token-stat"><strong>Reasoning tokens:</strong> 0 (thinking OFF)</div>
+            <div class="token-stat"><strong>Finish reason:</strong> length</div>
+            <div class="token-stat"><strong>Actual cost:</strong> $0.001633</div>
           </div>
         </div>
-        <p class="section-note" style="font-size:.8rem;color:var(--text-muted);">Benchmark uses 250 input tokens + 400 output tokens. Cost = 250&times;$0.30/1M + 400&times;$2.50/1M = <strong>$0.001075</strong>.</p>
-      </section>
 
-      <!-- PRICING -->
-      <section class="article-section">
-        <h2 class="section-heading">Pricing &amp; Cost Projections</h2>
-        <p>At $0.30 per million input tokens and $2.50 per million output tokens, Gemini 2.5 Flash delivers the broadest modality coverage of any model in this comparison at the lowest benchmark cost — $0.001075 per standard exchange versus $0.004625 for GPT-4o and $0.004313 for Gemini 2.5 Pro. For teams that have historically needed separate vision, audio, and transcription services alongside their primary LLM, consolidating onto Flash does not just reduce API complexity — it cuts cost at every layer of the stack.</p>
-        <p>The table below translates that per-exchange cost into daily and monthly figures at production scale, using the standard benchmark exchange (250 input + 400 output tokens) as the unit of measure.</p>
-        <div class="pricing-table-wrap" style="overflow-x:auto;margin:20px 0">
-          <table class="pricing-table">
+        <p>The response is well-structured, technically accurate, and direct — consistent with what you want from a Flash-tier model in standard mode. The finish reason is <code>length</code>, meaning the model was mid-response when it hit our 650-token test ceiling, not because it ran out of ideas. In a production context with the full 65,535 output budget available, the Transformer section and comparative summary would follow naturally.</p>
+
+        <hr class="article-divider">
+
+        <!-- OPTIONAL THINKING MODE -->
+        <h2 class="article-h2">Optional Thinking Mode</h2>
+
+        <div class="thinking-callout">
+          <div class="thinking-callout-eyebrow">Google Feature &mdash; Gemini 2.5 Flash</div>
+          <h3>How to Enable Thinking Per Request</h3>
+          <p>Gemini 2.5 Flash supports optional chain-of-thought reasoning via a single API parameter. In your OpenRouter request, include <code>"include_reasoning": true</code> in the request body alongside your standard parameters. When enabled, the model generates internal thinking tokens before producing the final response. These thinking tokens are billed separately at <strong>$2.50 per 1M thinking tokens</strong> — the same rate as output tokens — and appear only on requests where you explicitly activate them.</p>
+          <p>This design is intentional. For the majority of production requests — summarisation, classification, content generation, extraction — thinking is unnecessary overhead. Disabling it by default keeps latency tight and costs predictable. Enabling it selectively for complex analytical or reasoning tasks gives you the benefit of deeper chain-of-thought processing only where the task demands it. You can route simple requests through the same model at standard speed, and flag harder ones for thinking mode — no model switching, no pipeline complexity, no wasted thinking budget on easy queries.</p>
+          <p>Compare this to Gemini 2.5 Pro, where thinking is deeply integrated and essentially always present. Flash's toggle is a different contract: you opt in per call, you pay per call, and you see exactly what thinking is costing across your usage. When thinking is enabled, the model may generate hundreds to thousands of thinking tokens before finalising its response. Budget accordingly when enabling thinking on high-volume routes — at $2.50/1M, a 2,000-token reasoning chain adds $0.005 to each such call.</p>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- SAMPLE PROMPTS -->
+        <h2 class="article-h2">Sample Prompts That Work Well</h2>
+        <p>These prompts are designed to leverage Gemini 2.5 Flash's specific strengths: full 5-modality input breadth, 1M context, optional reasoning, and native audio/video processing capability.</p>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Audio Meeting Analysis (Native Audio Input)</div>
+          <div class="sample-prompt-text">"Here is a 90-minute recorded team meeting [audio file attached]. Extract all action items with assigned owners and deadlines, identify the decisions made, and flag any open questions that were left unresolved. Output as structured JSON with sections for actions, decisions, and open items."</div>
+        </div>
+
+        <div class="sample-prompt-block">
+          <div class="sample-prompt-label">Use case: Cross-Media Document QA (Image + PDF + Text)</div>
+          <div class="sample-prompt-text">"I've attached a scanned contract (PDF), a photo of the signed signature page, and a plain-text summary from our legal team. Identify any discrepancies between the three documents, flag clauses that deviate from our standard template, and produce a prioritised risk summary with recommended actions."</div>
+        </div>
+
+        <div class="sample-prompt-block google-accent">
+          <div class="sample-prompt-label">Use case: Deep Code Review (Thinking Mode ON &mdash; include_reasoning: true)</div>
+          <div class="sample-prompt-text">"Analyse this 80,000-line Python codebase [file attached] for architectural anti-patterns, security vulnerabilities, and performance bottlenecks. Produce a prioritised remediation plan with estimated impact for each issue, organised by severity." <em style="font-size:.78rem;color:var(--text-muted);display:block;margin-top:6px;">Enable thinking mode for this prompt: add "include_reasoning": true to the API call. Thinking tokens billed at $2.50/1M.</em></div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- PRICING BREAKDOWN -->
+        <h2 class="article-h2">Full Pricing Breakdown</h2>
+        <p>Gemini 2.5 Flash has a layered pricing structure that reflects its multimodal range. Standard text input and output are the baseline, but image, audio, web search, optional thinking, and prompt caching all carry separate rates. The effective cost per request depends heavily on what you are actually sending and whether thinking is enabled.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
             <thead>
-              <tr>
-                <th>Scenario</th>
-                <th>Daily Cost</th>
-                <th>Monthly Est.</th>
-              </tr>
+              <tr><th>Pricing Component</th><th>Rate</th><th>Notes</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Benchmark exchange (1&times;)</td>
-                <td>$0.001075</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td>1,000 exchanges / day</td>
-                <td>$1.08</td>
-                <td>~$32</td>
-              </tr>
-              <tr>
-                <td>10,000 exchanges / day</td>
-                <td>$10.75</td>
-                <td>~$323</td>
-              </tr>
+              <tr><td>Text input /1M tokens</td><td>$0.30</td><td>All text content sent in the prompt</td></tr>
+              <tr><td>Text output /1M tokens</td><td>$2.50</td><td>All text content generated in the response</td></tr>
+              <tr><td>Thinking tokens /1M</td><td>$2.50</td><td>Only when include_reasoning: true — same rate as output</td></tr>
+              <tr><td>Image input /1M tokens</td><td>$0.30</td><td>Same rate as text input</td></tr>
+              <tr><td>Audio input /1M tokens</td><td>$1.00</td><td>Native audio — no separate transcription step needed</td></tr>
+              <tr><td>Web search</td><td>$14.00 / search</td><td>Adds real-time data access beyond Jan 2025 cutoff</td></tr>
+              <tr><td>Cache read /1M tokens</td><td>$0.03</td><td>Repeated prompt prefix reads at ~10% of input price</td></tr>
+              <tr><td>Cache write /1M tokens</td><td>$0.083</td><td>One-time cost to write a prompt prefix to cache</td></tr>
+              <tr><td>Benchmark cost (250 in + 400 out)</td><td><strong>$0.001075</strong></td><td>bc-mid gold — our standard pricing tier metric</td></tr>
+              <tr><td>Actual test cost (28 in + 650 out)</td><td>$0.001633</td><td>Live API call result from our benchmark run</td></tr>
             </tbody>
           </table>
         </div>
-      </section>
 
-      <!-- TRY IT BAND -->
-      <div class="try-it-band">
-        <div>
-          <h3>Try Gemini 2.5 Flash in Aether Intel</h3>
-          <p>Connect your OpenRouter API key and run Gemini Flash directly from this page. Your key, your usage, no markup.</p>
+        <p>The benchmark cost of <strong>$0.001075</strong> places Gemini 2.5 Flash firmly in the bc-mid gold tier — priced above ultra-budget alternatives but substantially below flagship models. The output rate of $2.50/1M is competitive for the capability envelope delivered, particularly when the 5-modality input removes the need for separate specialist model costs elsewhere in the stack. Where costs can scale meaningfully is with thinking mode enabled on high-volume routes or web search on frequent queries — both worth routing selectively.</p>
+
+        <!-- ADSENSE MID -->
+        <ins class="adsbygoogle" style="display:block;margin:28px 0"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="auto" data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+        <hr class="article-divider">
+
+        <!-- TRY IT BAND -->
+        <div class="try-it-band">
+          <div>
+            <h3>Try Gemini 2.5 Flash with Your Own Key</h3>
+            <p>Connect your OpenRouter API key and test Gemini 2.5 Flash directly in the Aether Intel playground — no signup required, your key stays in your browser. Toggle thinking mode on or off to compare response depth and cost in real time. Model ID: <code>google/gemini-2.5-flash</code>.</p>
+          </div>
+          <a href="/tools/playground.html" class="btn btn-primary">Open Playground &rarr;</a>
         </div>
-        <a href="/chat/?model=google/gemini-2.5-flash" class="btn btn-primary">Open in Chat</a>
+
+        <!-- KEY TAKEAWAYS -->
+        <div class="article-takeaways">
+          <h3 class="takeaways-title">Key Takeaways</h3>
+          <ul>
+            <li>At $0.30/$2.50 per 1M tokens with a 1M context window and a benchmark cost of $0.001075, Gemini 2.5 Flash delivers the broadest modality coverage of any model at the bc-mid price tier.</li>
+            <li>The optional thinking mode is a genuine differentiator: pass <code>include_reasoning: true</code> per request to activate chain-of-thought at $2.50/1M thinking tokens; the default path generates zero reasoning tokens and runs at full speed.</li>
+            <li>Full 5-modality input — text, image, file, audio, and video — means you can build unified multimodal pipelines without separate transcription, vision, or document-parsing models.</li>
+            <li>The benchmark run produced 0 reasoning tokens and cost $0.001633 actual, confirming that standard mode is lean. Thinking overhead only appears when you explicitly activate it.</li>
+            <li>Web search integration at $14.00/search bridges the January 2025 knowledge cutoff for time-sensitive queries — use it selectively to avoid compounding costs on high-volume routes.</li>
+          </ul>
+        </div>
+
       </div>
+    </div>
 
-      <!-- SAMPLE PROMPTS -->
-      <section class="article-section">
-        <h2 class="section-heading">Sample Prompts</h2>
-        <p>Gemini Flash shines brightest when prompts mix media types — pairing video with transcripts, audio with follow-up questions, or large documents with structured extraction tasks fully unlocks its native multimodal architecture.</p>
+    <!-- ── RELATED MODELS ── -->
+    <section class="article-related">
+      <h2 class="related-title">Related Models</h2>
+      <div class="article-grid">
 
-        <div class="sample-prompt-block">
-          <div class="sample-prompt-label">Multimodal Analysis</div>
-          <div class="sample-prompt-text">"I'm attaching a 30-minute product demo video and its transcript. Identify the top 5 customer pain points mentioned, the 3 features that got the most positive reactions, and any competitive comparisons made."</div>
-        </div>
+        <a class="article-card" href="/models/gemini-2-5-pro.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/gemini-2-5-pro-hero.png"
+                 alt="Gemini 2.5 Pro"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(66,133,244,0.18),rgba(52,168,83,0.08))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Google</span>
+            <h3 class="article-card-title">Gemini 2.5 Pro</h3>
+            <p class="article-card-excerpt">Google's flagship for deep reasoning — always-on thinking, highest capability ceiling. Step up from Flash when sustained analytical depth is the priority, not a per-request toggle.</p>
+          </div>
+        </a>
 
-        <div class="sample-prompt-block">
-          <div class="sample-prompt-label">Long-Document Processing</div>
-          <div class="sample-prompt-text">"Here is the full text of a 200-page technical specification. Summarize the architecture, list all API endpoints described, and flag any security considerations mentioned in the document."</div>
-        </div>
+        <a class="article-card" href="/models/qwen-3-6-plus.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/qwen-3-6-plus-hero.png"
+                 alt="Qwen 3.6 Plus"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(156,39,176,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-research">Alibaba</span>
+            <h3 class="article-card-title">Qwen 3.6 Plus</h3>
+            <p class="article-card-excerpt">Budget hybrid-MoE thinking model at a similar benchmark cost — strong alternative when visible reasoning chain, lower output pricing, and Chinese-English bilingual capability matter more than 5-modality breadth.</p>
+          </div>
+        </a>
 
-        <div class="sample-prompt-block">
-          <div class="sample-prompt-label">Audio Understanding</div>
-          <div class="sample-prompt-text">"Transcribe this audio recording, identify the speakers, and extract a list of action items and decisions made during the meeting."</div>
-        </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- COMPARISON -->
-      <section class="article-section">
-        <h2 class="section-heading">How It Compares</h2>
-        <p>Gemini 2.5 Flash holds a unique position in the current model landscape: it is the only option in this comparison that covers text, image, audio, video, and file modalities natively, while also posting the lowest benchmark cost per exchange. Competing multimodal models either lack audio and video processing, carry a higher price tag, or both.</p>
-        <div style="overflow-x:auto;margin:20px 0">
-          <table class="pricing-table">
-            <thead>
-              <tr>
-                <th>Model</th>
-                <th>Input</th>
-                <th>Output</th>
-                <th>Bench Cost</th>
-                <th>Best For</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="table-row-highlight">
-                <td><strong>Gemini 2.5 Flash</strong> <span class="row-current-badge">this model</span></td>
-                <td>$0.30</td>
-                <td>$2.50</td>
-                <td class="sv-gold" style="color:var(--neon-gold);font-weight:700;">$0.001075</td>
-                <td>Native multimodal + long context at low cost</td>
-              </tr>
-              <tr>
-                <td>GPT-4o</td>
-                <td>$2.50</td>
-                <td>$10.00</td>
-                <td>$0.004625</td>
-                <td>Strong multimodal, higher cost</td>
-              </tr>
-              <tr>
-                <td>Claude Haiku 4.5</td>
-                <td>$1.00</td>
-                <td>$5.00</td>
-                <td>$0.002250</td>
-                <td>Anthropic's budget option</td>
-              </tr>
-              <tr>
-                <td>Gemini 2.5 Pro</td>
-                <td>$1.25</td>
-                <td>$10.00</td>
-                <td>$0.004313</td>
-                <td>Deeper reasoning, same modalities</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="font-size:.8rem;color:var(--text-muted);">Benchmark cost uses 250 input + 400 output tokens. Prices per 1M tokens via OpenRouter.</p>
-      </section>
-
-      <!-- KEY TAKEAWAYS -->
-      <section class="article-section">
-        <h2 class="section-heading">Key Takeaways</h2>
-        <ul class="takeaway-list">
-          <li class="takeaway-item">
-            <span class="takeaway-icon">&#9670;</span>
-            <span>At $0.001075 per benchmark exchange, Flash delivers native multimodal capability cheaper than any comparable model.</span>
-          </li>
-          <li class="takeaway-item">
-            <span class="takeaway-icon">&#9670;</span>
-            <span>True 1M token context — not chunked or approximated — lets you process entire codebases or book-length documents in one API call.</span>
-          </li>
-          <li class="takeaway-item">
-            <span class="takeaway-icon">&#9670;</span>
-            <span>Native audio, video, image, and file processing in a single API call eliminates the need for separate transcription and vision models.</span>
-          </li>
-          <li class="takeaway-item">
-            <span class="takeaway-icon">&#9670;</span>
-            <span>The speed-optimized Flash tier makes it viable for high-throughput production pipelines where latency and cost both matter.</span>
-          </li>
-        </ul>
-      </section>
-
-      <!-- RELATED MODEL CARDS -->
-      <section class="article-section">
-        <h2 class="section-heading">Related Models</h2>
-        <div class="related-cards-grid">
-          <a href="/models/gemini-2-5-pro.html" class="related-model-card">
-            <div class="related-model-provider">Google</div>
-            <div class="related-model-name">Gemini 2.5 Pro</div>
-            <div class="related-model-desc">The deeper-reasoning sibling for complex analytical tasks</div>
-          </a>
-          <a href="/models/gpt-4o.html" class="related-model-card">
-            <div class="related-model-provider">OpenAI</div>
-            <div class="related-model-name">GPT-4o</div>
-            <div class="related-model-desc">The multimodal benchmark from OpenAI</div>
-          </a>
-          <a href="/models/claude-haiku-4-5.html" class="related-model-card">
-            <div class="related-model-provider">Anthropic</div>
-            <div class="related-model-name">Claude Haiku 4.5</div>
-            <div class="related-model-desc">Anthropic's budget-tier alternative</div>
-          </a>
-        </div>
-      </section>
-
-    </div><!-- /.article-body -->
   </article>
 </main>
+
 <script src="/js/main.js"></script>
 <script src="/js/byok.js"></script>
 </body>

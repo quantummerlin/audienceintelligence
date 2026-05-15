@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Llama 4 Maverick — Meta's Open-Weight MoE Vision Model | Aether Intel</title>
+  <meta name="description" content="Llama 4 Maverick review: $0.15/$0.60 per 1M tokens, 1M context, 17B active / 128 expert MoE architecture, vision capable. Meta's cheapest multimodal open-weight model.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/llama-4-maverick.html">
+  <meta property="og:title" content="Llama 4 Maverick — Capabilities, Costs &amp; Benchmark">
+  <meta property="og:description" content="Llama 4 Maverick review: $0.15/$0.60 per 1M tokens, 1M context, 17B active / 128 expert MoE, vision input. Meta's cheapest open-weight multimodal model.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/llama-4-maverick.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/llama-4-maverick-hero.png">
+  <meta property="article:published_time" content="2026-05-15">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Llama 4 Maverick — Capabilities, Costs &amp; Benchmark">
+  <meta name="twitter:description" content="Llama 4 Maverick: $0.15/$0.60 per 1M tokens, 1M context, 17B active / 128 expert sparse MoE, vision capable. Open-weight from Meta.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/llama-4-maverick-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ─── Model article extras ─── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .spec-value {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-value.sv-green  { color: #34d399; }
+    .spec-value.sv-cyan   { color: #22d3ee; }
+    .spec-value.sv-indigo { color: var(--neon-indigo); }
+    .spec-value.sv-gold   { color: var(--neon-gold); }
+
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card h4 {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .use-case-card p {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .use-case-card.not-for {
+      border-color: rgba(239,68,68,0.2);
+    }
+    .use-case-card.not-for h4 {
+      color: #f87171;
+    }
+
+    /* Benchmark display */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+    }
+    .benchmark-cost-badge {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: #22d3ee;
+      background: rgba(34,211,238,.08);
+      border: 1px solid rgba(34,211,238,.25);
+      border-radius: 7px;
+      padding: 4px 12px;
+    }
+    .benchmark-prompt-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-prompt-text {
+      background: rgba(7,7,15,.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .benchmark-response-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .benchmark-response-text {
+      font-size: .88rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    .benchmark-response-text p { margin: 0 0 12px; }
+    .benchmark-response-text p:last-child { margin: 0; }
+    .benchmark-response-text h3 {
+      font-family: var(--font-heading);
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 18px 0 8px;
+    }
+    .benchmark-response-text h4 {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin: 14px 0 6px;
+    }
+    .benchmark-response-text ul {
+      margin: 8px 0 12px 20px;
+      padding: 0;
+    }
+    .benchmark-response-text ul li {
+      margin-bottom: 4px;
+      color: var(--text-secondary);
+    }
+    .benchmark-response-text .article-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+    .benchmark-response-text table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: .82rem;
+    }
+    .benchmark-response-text table th {
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 8px 10px;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-response-text table td {
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .benchmark-token-stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .token-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .token-stat-label {
+      font-family: var(--font-display);
+      font-size: .55rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .token-stat-value {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .token-stat-value.cyan { color: #22d3ee; }
+
+    /* MoE explainer block */
+    .moe-explainer {
+      background: var(--surface-2);
+      border: 1px solid rgba(8,102,255,0.2);
+      border-left: 3px solid #0866FF;
+      border-radius: 0 10px 10px 0;
+      padding: 18px 20px;
+      margin: 20px 0;
+    }
+    .moe-explainer-title {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #0866FF;
+      margin-bottom: 8px;
+    }
+    .moe-explainer p {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0 0 8px;
+    }
+    .moe-explainer p:last-child { margin: 0; }
+
+    /* Sample prompt block */
+    .sample-prompt-block {
+      background: rgba(7,7,15,.6);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .sample-prompt-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 6px;
+    }
+    .sample-prompt-text {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .sample-prompt-block.meta-accent {
+      border-left-color: #0866FF;
+    }
+    .sample-prompt-block.meta-accent .sample-prompt-label {
+      color: #0866FF;
+    }
+
+    /* Try it CTA */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(8,102,255,0.08), rgba(34,211,238,0.04));
+      border: 1px solid rgba(8,102,255,0.2);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .try-it-band p {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      margin: 0;
+    }
+
+    /* Provider accent — Meta blue */
+    .provider-accent {
+      color: #0866FF;
+      font-weight: 700;
+    }
+
+    /* Caveat / warning callout */
+    .caveat-block {
+      background: rgba(251,191,36,0.05);
+      border: 1px solid rgba(251,191,36,0.2);
+      border-left: 3px solid #f59e0b;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+    }
+    .caveat-block-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #f59e0b;
+      margin-bottom: 6px;
+    }
+    .caveat-block p {
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    @media (max-width: 600px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr; }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+      .benchmark-token-stats { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <article class="article-page">
+
+    <!-- ── HERO ── -->
+    <div class="article-hero" style="background: linear-gradient(135deg, rgba(8,102,255,0.08), rgba(34,211,238,0.04));">
+      <div class="article-hero-img-wrap">
+        <img src="/images/models/llama-4-maverick-hero.png"
+             alt="Llama 4 Maverick — AI model overview"
+             class="article-hero-img" loading="eager"
+             onerror="this.style.background='linear-gradient(135deg,rgba(8,102,255,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+      </div>
+      <div class="article-hero-overlay">
+        <div class="article-hero-content">
+          <nav class="article-breadcrumb">
+            <a href="/">Home</a>
+            <span>&#x203a;</span>
+            <a href="/models.html">Models</a>
+            <span>&#x203a;</span>
+            <span>Llama 4 Maverick</span>
+          </nav>
+          <span class="badge badge-research" style="background:rgba(8,102,255,0.15);border-color:rgba(8,102,255,0.4);color:#0866FF;">Meta / Open-Weight</span>
+          <h1 class="article-hero-title">Meta: Llama 4 Maverick</h1>
+          <p class="article-hero-tagline" style="color:rgba(255,255,255,0.75);font-size:1.05rem;margin-top:10px;max-width:560px;">The open-weight MoE giant: 128 experts, 17B active parameters, 1M context, vision input — all at $0.15/1M input.</p>
+          <div class="article-meta">
+            <span class="article-meta-date">April 2025</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">9 min read</span>
+            <span class="article-meta-dot">&middot;</span>
+            <span class="article-meta-read">Benchmark tested</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <div class="article-layout">
+      <div class="article-body">
+
+        <p>Llama 4 Maverick is <span class="provider-accent">Meta's</span> flagship open-weight multimodal model — a sparse mixture-of-experts architecture with 128 total experts and 17 billion active parameters per token. Released in April 2025 and available through OpenRouter via DeepInfra, it offers one of the most compelling price-to-capability ratios in the multimodal space: <strong>$0.15 input / $0.60 output per 1M tokens</strong>, a <strong>1 million token context window</strong>, and the ability to accept both text and image input. Crucially, Meta releases the weights publicly — Llama 4 Maverick can be self-hosted, fine-tuned, and run entirely without API dependency, making it a foundation model for open-source production deployments worldwide.</p>
+
+        <!-- QUICK SPECS -->
+        <h2 class="article-h2">At a Glance</h2>
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Context Window</div>
+            <div class="spec-value">1M tokens</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Input /1M tokens</div>
+            <div class="spec-value sv-green">$0.15</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output /1M tokens</div>
+            <div class="spec-value">$0.60</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Benchmark Cost</div>
+            <div class="spec-value sv-cyan">$0.0002775</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Modality</div>
+            <div class="spec-value" style="font-size:.82rem">Text + Image</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Max Output</div>
+            <div class="spec-value">16,384 tokens</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Architecture</div>
+            <div class="spec-value" style="font-size:.78rem">17B active / 128E MoE</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Knowledge Cutoff</div>
+            <div class="spec-value" style="font-size:.85rem">Aug 2024</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Provider</div>
+            <div class="spec-value" style="font-size:.78rem;color:#0866FF">Meta via DeepInfra</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">OpenRouter ID</div>
+            <div class="spec-value" style="font-size:.62rem;font-family:monospace;color:var(--text-secondary)">meta-llama/llama-4-maverick</div>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- WHAT MAKES IT DIFFERENT -->
+        <h2 class="article-h2">What Makes Llama 4 Maverick Different</h2>
+        <p>Most frontier models exist behind closed APIs — you use them, but you don't own them. Llama 4 Maverick breaks that pattern. Meta releases the weights publicly under a permissive licence, meaning developers can download the model, run it on private infrastructure, fine-tune it on proprietary datasets, and deploy it without any per-token licensing fee. This fundamentally changes the economics for high-volume production systems and makes Llama 4 Maverick the go-to foundation for organisations that need data sovereignty, offline deployments, or full control over their model stack.</p>
+
+        <div class="moe-explainer">
+          <div class="moe-explainer-title">Sparse Mixture-of-Experts Architecture Explained</div>
+          <p>Llama 4 Maverick uses a sparse MoE design with 128 specialised expert sub-networks. For each token processed, a learned routing mechanism selects only a small subset of those experts — approximately 17 billion parameters worth — to perform the computation. The other experts remain inactive for that token.</p>
+          <p>This is the key insight: the model has the representational <em>capacity</em> of a much larger dense model (because it has 128 expert networks each trained on different patterns), but the <em>compute cost</em> of a 17B parameter model (because only ~17B are active at once). The result is a model that punches well above its weight class in both quality and cost-efficiency — and makes a 1M-token context window practical to serve at $0.15/1M input tokens.</p>
+        </div>
+
+        <p>The second differentiator is multimodal input at this price point. At $0.15 per million input tokens, Llama 4 Maverick is one of the cheapest vision-capable models available via OpenRouter. Image understanding, visual question answering, and document analysis at scale become economically feasible for use cases that would be cost-prohibitive with premium multimodal APIs. The third differentiator is the 1M context window itself — the ability to process entire codebases, lengthy legal documents, or extended conversation histories in a single pass, at sub-$0.20 input pricing, is rare.</p>
+
+        <hr class="article-divider">
+
+        <!-- WHO IT'S FOR / NOT FOR -->
+        <h2 class="article-h2">Who Llama 4 Maverick Is For</h2>
+
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <h4>Open-Source Builders</h4>
+            <p>Meta releases weights publicly. Self-host, fine-tune, or deploy on private infrastructure with no API dependency or per-token licensing cost.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Budget Vision Pipelines</h4>
+            <p>At $0.15/$0.60, image analysis at scale is economically viable. Ideal for visual QA, document parsing, and image classification at high volume.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>High-Volume Production</h4>
+            <p>One of the cheapest capable models via OpenRouter. Great for cost-critical systems needing millions of requests per day without quality collapse.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Long-Context Tasks</h4>
+            <p>1M context at sub-$0.20 input enables full-repo code analysis, long document summarisation, and multi-document QA without retrieval middleware.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Multilingual &amp; Code Tasks</h4>
+            <p>Strong multilingual support and code generation make it suitable for international products, automated coding pipelines, and polyglot engineering teams.</p>
+          </div>
+          <div class="use-case-card">
+            <h4>Self-Hostable Production</h4>
+            <p>Download and run on your own hardware. Useful for regulated industries (healthcare, finance, defence) where data must stay on-premises.</p>
+          </div>
+        </div>
+
+        <h2 class="article-h2">Who Should Look Elsewhere</h2>
+
+        <div class="use-case-grid">
+          <div class="use-case-card not-for">
+            <h4>Tasks Requiring Chain-of-Thought</h4>
+            <p>Llama 4 Maverick is a direct-response model with zero reasoning tokens. For complex multi-step problems, consider a thinking model like DeepSeek R1 or Qwen 3.6 Plus.</p>
+          </div>
+          <div class="use-case-card not-for">
+            <h4>Knowledge After August 2024</h4>
+            <p>Training cutoff is August 2024 — older than most frontier models. Anything from late 2024 onward (major model releases, world events) is unknown to it.</p>
+          </div>
+          <div class="use-case-card not-for">
+            <h4>Tasks Needing Long Outputs</h4>
+            <p>Max completion is 16,384 tokens. If your use case requires 64K+ output tokens (long-form books, extended code generation), this model will hit its ceiling.</p>
+          </div>
+          <div class="use-case-card not-for">
+            <h4>Audio or Video Input</h4>
+            <p>Llama 4 Maverick accepts text and image only. No audio transcription, video understanding, or file upload support — use a model with broader modality coverage for those.</p>
+          </div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- BENCHMARK -->
+        <h2 class="article-h2">Benchmark Response</h2>
+        <p>We ran our standard technical exchange through Llama 4 Maverick via the OpenRouter API to measure response quality and real-world cost. The prompt — a comparison of transformer vs RNN architectures — is a strong proxy for technical depth, structure, and clarity. Llama 4 Maverick produced 650 tokens before hitting our test limit, with zero reasoning tokens: this model responds directly with no visible chain-of-thought.</p>
+
+        <div class="benchmark-block">
+          <div class="benchmark-block-header">
+            <span class="benchmark-block-title">Benchmark Test — 650 Token Exchange</span>
+            <span class="benchmark-cost-badge bc-cheap">Cost: $0.0002775</span>
+          </div>
+
+          <div class="benchmark-prompt-label">Prompt (38 tokens)</div>
+          <div class="benchmark-prompt-text">
+            Explain the core differences between transformer architectures and recurrent neural networks for sequence modeling. Include key advantages, limitations, and typical use cases for each.
+          </div>
+
+          <div class="benchmark-response-label">Llama 4 Maverick Response (650 tokens — hit test limit)</div>
+          <div class="benchmark-response-text">
+
+            <h3>Sequence Modeling: Transformers vs Recurrent Neural Networks</h3>
+
+            <h4>Overview</h4>
+            <p>Sequence modeling is a fundamental task in natural language processing (NLP) and other domains, where the goal is to predict or generate a sequence of outputs based on a given input sequence. Two popular architectures for sequence modeling are Recurrent Neural Networks (RNNs) and Transformers. This response highlights the core differences between these architectures, their advantages, limitations, and typical use cases.</p>
+
+            <h4>Recurrent Neural Networks (RNNs)</h4>
+            <p><strong>Architecture</strong><br>
+            RNNs process input sequences one element at a time, maintaining a hidden state that captures information from previous elements. The hidden state is updated at each time step using the current input and the previous hidden state.</p>
+
+            <p><strong>Key Advantages</strong></p>
+            <ul>
+              <li>Sequential processing: RNNs are designed to handle sequential data and can capture temporal dependencies.</li>
+              <li>Variable-length input: RNNs can handle input sequences of varying lengths.</li>
+            </ul>
+
+            <p><strong>Limitations</strong></p>
+            <ul>
+              <li>Sequential computation: RNNs process input sequences sequentially, which can be slow for long sequences.</li>
+              <li>Vanishing gradients: RNNs suffer from vanishing gradients, making it challenging to train deep models.</li>
+              <li>Limited parallelization: RNNs are inherently sequential, limiting parallelization opportunities.</li>
+            </ul>
+
+            <p><strong>Typical Use Cases</strong></p>
+            <ul>
+              <li>Language modeling: RNNs are suitable for language modeling tasks, such as predicting the next word in a sentence.</li>
+              <li>Time-series forecasting: RNNs can be used for time-series forecasting, where the goal is to predict future values based on past observations.</li>
+            </ul>
+
+            <hr class="article-divider">
+
+            <h4>Transformers</h4>
+            <p><strong>Architecture</strong><br>
+            Transformers are based on self-attention mechanisms, which allow the model to attend to different parts of the input sequence simultaneously. The Transformer architecture consists of an encoder and a decoder, where the encoder generates a continuous representation of the input sequence, and the decoder generates the output sequence.</p>
+
+            <p><strong>Key Advantages</strong></p>
+            <ul>
+              <li>Parallelization: Transformers can be parallelized more easily than RNNs, making them faster to train.</li>
+              <li>Scalability: Transformers can handle longer input sequences than RNNs.</li>
+              <li>Improved performance: Transformers have achieved state-of-the-art results in many NLP tasks.</li>
+            </ul>
+
+            <p><strong>Limitations</strong></p>
+            <ul>
+              <li>Computational cost: Transformers require more computational resources than RNNs, especially for longer input sequences.</li>
+              <li>Memory requirements: Transformers require more memory to store the attention weights and intermediate representations.</li>
+            </ul>
+
+            <p><strong>Typical Use Cases</strong></p>
+            <ul>
+              <li>Machine translation: Transformers are widely used for machine translation tasks.</li>
+              <li>Text generation: Transformers can be used for text generation tasks, such as generating text summaries or chatbot responses.</li>
+            </ul>
+
+            <hr class="article-divider">
+
+            <h4>Comparison Summary</h4>
+            <table>
+              <thead>
+                <tr><th></th><th>RNNs</th><th>Transformers</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Sequential processing</td><td>Yes</td><td>No</td></tr>
+                <tr><td>Parallelization</td><td>Limited</td><td>High</td></tr>
+                <tr><td>Scalability</td><td>Limited</td><td>High</td></tr>
+                <tr><td>Computational cost</td><td>Lower</td><td>Higher</td></tr>
+                <tr><td>Typical use cases</td><td>Language modeling, time-series</td><td>Machine translation, text generation</td></tr>
+              </tbody>
+            </table>
+
+            <p>In summary, RNNs are suitable for tasks that require sequential processing and can handle variable-length input sequences. However, they are limited by their sequential computation and vanishing gradients.</p>
+
+            <p style="color:var(--text-muted);font-size:.8rem;font-style:italic;">[Response cut off at 650-token test limit — actual Llama 4 Maverick capacity: 16,384 output tokens]</p>
+
+          </div>
+
+          <div class="benchmark-token-stats">
+            <div class="token-stat">
+              <div class="token-stat-label">Prompt Tokens</div>
+              <div class="token-stat-value">38</div>
+            </div>
+            <div class="token-stat">
+              <div class="token-stat-label">Completion Tokens</div>
+              <div class="token-stat-value">650</div>
+            </div>
+            <div class="token-stat">
+              <div class="token-stat-label">Reasoning Tokens</div>
+              <div class="token-stat-value">0 (none)</div>
+            </div>
+            <div class="token-stat">
+              <div class="token-stat-label">Finish Reason</div>
+              <div class="token-stat-value" style="color:#f59e0b">length (test limit)</div>
+            </div>
+            <div class="token-stat">
+              <div class="token-stat-label">Actual Cost</div>
+              <div class="token-stat-value cyan">$0.0003957</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="caveat-block">
+          <div class="caveat-block-label">Direct Response Model</div>
+          <p>Llama 4 Maverick produces zero reasoning tokens. There is no chain-of-thought, no thinking phase, and no visible scratchpad — it responds immediately. This makes it fast and cheap, but means it is not suited to problems requiring multi-step logical decomposition. For those workloads, a reasoning-capable model is a better fit.</p>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- ARCHITECTURE DEEP DIVE -->
+        <h2 class="article-h2">Architecture Deep Dive: Sparse MoE with 128 Experts</h2>
+        <p>Llama 4 Maverick's architecture is the most technically interesting thing about it. The formal designation — <code>llama-4-maverick-17b-128e-instruct</code> — encodes the key facts: 17B active parameters, 128 total experts, instruction-tuned. Understanding what this means in practice explains why the model can offer 1M context at $0.15/1M input.</p>
+
+        <h3 class="article-h3">How Sparse MoE Works</h3>
+        <p>In a standard dense transformer, every token is processed by every parameter in the network. A 70B dense model routes all 70 billion parameters for every single token. In a sparse mixture-of-experts model, the network is subdivided into many smaller expert sub-networks. A learned routing function (a small classifier) inspects each token and selects which subset of experts should handle it. For Llama 4 Maverick, the routing selects approximately 17B active parameters per token from a pool of 128 experts.</p>
+
+        <div class="moe-explainer">
+          <div class="moe-explainer-title">Why 128 Experts at 17B Active = Massive Capacity, Low Cost</div>
+          <p>Think of it this way: each expert specialises. An expert might excel at code, another at scientific text, another at multilingual content. The routing function learns to dispatch tokens to the right specialists. The model therefore has representational capacity far exceeding its 17B active parameter count — different experts contribute different knowledge — but the compute cost per token is anchored at 17B, not the total number of parameters across all 128 experts.</p>
+          <p>This is why MoE models like Maverick can afford a 1M token context window at $0.15/1M. Each token in that 1M-token context only activates a fraction of the full network. The VRAM and compute bill per token stays manageable even as context scales.</p>
+        </div>
+
+        <h3 class="article-h3">Vision Input</h3>
+        <p>Llama 4 Maverick includes a vision encoder that allows image input alongside text. The model can process screenshots, photographs, diagrams, charts, and documents as part of its context. This is implemented as a standard multimodal transformer with a separate image tokenisation pipeline that maps visual patches into the same embedding space as text tokens — from the model's perspective, an image is simply a sequence of additional tokens in the context window.</p>
+
+        <h3 class="article-h3">Why This Enables 1M Context</h3>
+        <p>Standard quadratic self-attention scales as O(n²) in context length, making very long sequences prohibitively expensive. Llama 4 Maverick uses architectural optimisations — including efficient attention approximations and optimised KV cache management — that make 1M-token sequences practical at inference time. Combined with the sparse MoE compute reduction, the model can serve extremely long contexts at a price point that would be unsustainable for equivalent dense architectures.</p>
+
+        <hr class="article-divider">
+
+        <!-- SAMPLE PROMPTS -->
+        <h2 class="article-h2">Sample Prompts That Work Well</h2>
+        <p>These prompts are designed around Llama 4 Maverick's genuine strengths: vision input at scale, long-context processing, and cost-efficient code generation. They are not suited for deep reasoning chains — for those, use a thinking model.</p>
+
+        <div class="sample-prompt-block meta-accent">
+          <div class="sample-prompt-label">Use case: Visual Document Analysis (Image Input)</div>
+          <div class="sample-prompt-text">"Here are 50 scanned product specification sheets [images attached]. Extract the model number, dimensions, power rating, and compliance certifications from each. Output as structured JSON."</div>
+        </div>
+        <div class="sample-prompt-block meta-accent">
+          <div class="sample-prompt-label">Use case: Full-Codebase Review (Long Context)</div>
+          <div class="sample-prompt-text">"Here is the full source of our Node.js API [pasted — ~300K tokens]. Identify all endpoints that lack input validation, explain each vulnerability, and provide corrected code snippets."</div>
+        </div>
+        <div class="sample-prompt-block meta-accent">
+          <div class="sample-prompt-label">Use case: High-Volume Multilingual Classification</div>
+          <div class="sample-prompt-text">"Classify the sentiment and intent of each of the following 500 customer support messages. Messages may be in English, Spanish, French, Portuguese, or German. Output a JSON array with message_id, language, sentiment, and intent_category."</div>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- PRICING BREAKDOWN -->
+        <h2 class="article-h2">Pricing Breakdown</h2>
+        <p>At $0.15 per million input tokens and $0.60 per million output tokens, Llama 4 Maverick occupies the cheap end of the multimodal model spectrum. The benchmark exchange — 38 prompt tokens plus 650 completion tokens — cost $0.0003957 in actual API spend, and just $0.0002775 at our standardised 250-in / 400-out benchmark calculation. That places it firmly in the cyan cheap tier. For a vision-capable model with 1M context and MoE architecture, this pricing is exceptional.</p>
+
+        <div class="table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr><th>Model</th><th>Input /1M</th><th>Output /1M</th><th>Context</th><th>Vision</th><th>Bench Cost</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Llama 4 Maverick</strong> &#8592; this</td>
+                <td style="color:#34d399">$0.15</td>
+                <td>$0.60</td>
+                <td>1M</td>
+                <td>Yes</td>
+                <td style="color:#22d3ee">$0.0002775</td>
+              </tr>
+              <tr>
+                <td>Llama 3.3 70B Instruct</td>
+                <td>$0.12</td>
+                <td>$0.30</td>
+                <td>128K</td>
+                <td>No</td>
+                <td>$0.000150</td>
+              </tr>
+              <tr>
+                <td>Gemini 2.5 Flash</td>
+                <td>$0.30</td>
+                <td>$2.50</td>
+                <td>1M</td>
+                <td>Yes</td>
+                <td>$0.001075</td>
+              </tr>
+              <tr>
+                <td>Qwen 3.6 Flash</td>
+                <td>$0.19</td>
+                <td>$1.12</td>
+                <td>1M</td>
+                <td>Yes</td>
+                <td>$0.000496</td>
+              </tr>
+              <tr>
+                <td>GPT-4o mini</td>
+                <td>$0.15</td>
+                <td>$0.60</td>
+                <td>128K</td>
+                <td>Yes</td>
+                <td>$0.000278</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>The closest competitor on price is GPT-4o mini, which matches Llama 4 Maverick's $0.15/$0.60 pricing — but offers only 128K context versus Maverick's 1M, and is a closed-weight model with no self-hosting option. Llama 4 Maverick wins on context length and open-weight availability at the same price point.</p>
+
+        <!-- ADSENSE MID -->
+        <ins class="adsbygoogle" style="display:block;margin:28px 0"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="auto" data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+        <hr class="article-divider">
+
+        <!-- CAVEATS -->
+        <h2 class="article-h2">Important Caveats</h2>
+
+        <div class="caveat-block">
+          <div class="caveat-block-label">Knowledge Cutoff: August 2024</div>
+          <p>Llama 4 Maverick's training data ends in August 2024. Events, model releases, product launches, and developments from late 2024 onward are unknown to the model. For tasks requiring up-to-date knowledge — recent news, 2025 frameworks, new APIs — you will need to provide context explicitly or use a model with a more recent cutoff.</p>
+        </div>
+
+        <div class="caveat-block">
+          <div class="caveat-block-label">16K Max Output — A Real Constraint</div>
+          <p>While the 1M context window is impressive for input, the maximum completion length is 16,384 tokens. This is adequate for most tasks — 16K tokens is roughly 12,000 words — but falls short for tasks requiring very long continuous outputs such as generating a full novel chapter, producing extensive test suites from scratch, or writing complete large codebases in a single response. Frontier models like Claude 3.7 Sonnet offer 64K+ output tokens. If your workflow regularly hits this ceiling, consider a model with higher max completion.</p>
+        </div>
+
+        <div class="caveat-block">
+          <div class="caveat-block-label">No Chain-of-Thought Reasoning</div>
+          <p>Llama 4 Maverick does not have a reasoning or thinking mode. Benchmark finish reason was <code>length</code> with 0 reasoning tokens — the model responds directly without an internal scratchpad. This keeps latency and cost low, but means the model may struggle with problems that benefit from step-by-step decomposition: complex math, multi-constraint logic puzzles, or tasks where the answer depends on correctly sequencing many intermediate conclusions.</p>
+        </div>
+
+        <hr class="article-divider">
+
+        <!-- TRY IT BAND -->
+        <div class="try-it-band">
+          <div>
+            <h3>Try Llama 4 Maverick with Your Own Key</h3>
+            <p>Connect your OpenRouter API key and test Llama 4 Maverick directly in the Aether Intel playground — no signup required, your key stays in your browser. Model ID: <code>meta-llama/llama-4-maverick</code>.</p>
+          </div>
+          <a href="/tools/playground.html" class="btn btn-primary">Open Playground &rarr;</a>
+        </div>
+
+        <!-- TAKEAWAYS -->
+        <div class="article-takeaways">
+          <h3 class="takeaways-title">Key Takeaways</h3>
+          <ul>
+            <li>At $0.15/$0.60 per 1M tokens with 1M context and vision input, Llama 4 Maverick is one of the cheapest multimodal models available — benchmark cost just $0.0002775.</li>
+            <li>The sparse MoE architecture (17B active / 128 experts) gives it the representational capacity of a much larger dense model at a fraction of the compute cost — this is what makes $0.15 input pricing possible at 1M context.</li>
+            <li>Meta releases the weights publicly. Llama 4 Maverick can be self-hosted, fine-tuned, and deployed on private infrastructure with no API dependency — a unique advantage over all closed-weight alternatives.</li>
+            <li>The model is a direct-response architecture with zero reasoning tokens. Strong for structured tasks, code, and vision — not suited for complex multi-step reasoning chains.</li>
+            <li>Knowledge cutoff is August 2024 and max output is 16,384 tokens — two real constraints to plan around for certain workloads.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RELATED MODELS ── -->
+    <section class="article-related">
+      <h2 class="related-title">Related Models</h2>
+      <div class="article-grid">
+
+        <a class="article-card" href="/models/llama-3-3-70b.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/llama-3-3-70b-hero.png"
+                 alt="Llama 3.3 70B Instruct"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(8,102,255,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-research" style="color:#0866FF;border-color:rgba(8,102,255,0.3);background:rgba(8,102,255,0.1)">Meta</span>
+            <h3 class="article-card-title">Llama 3.3 70B Instruct</h3>
+            <p class="article-card-excerpt">Meta's previous dense flagship — cheaper output at $0.30/1M, 128K context, no vision. Great text-only workhorse.</p>
+          </div>
+        </a>
+
+        <a class="article-card" href="/models/deepseek-r1.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/deepseek-r1-hero.png"
+                 alt="DeepSeek R1"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-research">DeepSeek</span>
+            <h3 class="article-card-title">DeepSeek R1</h3>
+            <p class="article-card-excerpt">Open-weight reasoning model with full chain-of-thought — the thinking alternative when Maverick's direct-response isn't enough.</p>
+          </div>
+        </a>
+
+        <a class="article-card" href="/models/gemini-2-5-flash.html">
+          <div class="article-card-img-wrap">
+            <img src="/images/models/gemini-2-5-flash-hero.png"
+                 alt="Gemini 2.5 Flash"
+                 class="article-card-img" loading="lazy"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          </div>
+          <div class="article-card-body">
+            <span class="badge badge-tools">Google</span>
+            <h3 class="article-card-title">Gemini 2.5 Flash</h3>
+            <p class="article-card-excerpt">Fast multimodal with thinking mode at 1M context — more expensive output but broader modality support including audio and video.</p>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </article>
+</main>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
