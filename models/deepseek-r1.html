@@ -1,354 +1,928 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeepSeek R1 — Capabilities, Pricing &amp; Benchmark — Aether Intel</title>
-  <meta name="description" content="DeepSeek R1 review: o1-level reasoning at under 2% the price. Input/output costs, benchmark, and real use cases via OpenRouter.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://ai.quantummerlin.com/models/deepseek-r1.html">
-  <meta property="og:title" content="DeepSeek R1 — Capabilities, Costs &amp; Benchmark">
-  <meta property="og:description" content="DeepSeek R1 delivers o1-class chain-of-thought reasoning at a fraction of the cost. Pricing breakdown, benchmark output, and real use cases via OpenRouter.">
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="https://ai.quantummerlin.com/models/deepseek-r1.html">
-  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/deepseek-r1-hero.png">
-  <meta property="article:published_time" content="2025-05-15">
-  <meta property="article:author" content="Quantum Merlin">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="DeepSeek R1 — Capabilities, Costs &amp; Benchmark">
-  <meta name="twitter:description" content="DeepSeek R1 delivers o1-class chain-of-thought reasoning at a fraction of the cost. Pricing breakdown and benchmark output via OpenRouter.">
-  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/deepseek-r1-hero.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepSeek R1 Review &amp; Benchmark — The Original Reasoning Shock — Aether Intel</title>
+  <meta name="description" content="DeepSeek R1: the January 2025 reasoning model that matched OpenAI o1 at under 2% the cost — and the only model in our 12-model benchmark series to finish naturally. $0.70/$2.50 per 1M tokens, 160K context, benchmarked live." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/deepseek-r1.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="DeepSeek R1: The Reasoning Model That Changed Everything" />
+  <meta property="og:description" content="The January 2025 model that triggered the DeepSeek shock. Matched o1-class reasoning at $0.70/$2.50 per 1M tokens — and the only model in our benchmark to finish naturally (finish_reason: stop)." />
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/deepseek-r1.html" />
+  <meta property="og:site_name" content="Aether Intel" />
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/deepseek-r1-hero.png" />
+
+  <!-- Article schema -->
+  <meta property="article:published_time" content="2026-05-16T00:00:00Z" />
+  <meta property="article:author" content="Aether Intel" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="DeepSeek R1: The Reasoning Model That Changed Everything" />
+  <meta name="twitter:description" content="o1-class reasoning at $0.70/$2.50 per 1M tokens. The only model in our 12-model benchmark to finish naturally." />
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/deepseek-r1-hero.png" />
+
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
   <style>
-    .model-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:24px 0}
-    .spec-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
-    .spec-label{font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
-    .spec-value{font-family:var(--font-body);font-size:1.05rem;font-weight:700;color:var(--text-primary)}
-    .spec-value.sv-green{color:#34d399}.spec-value.sv-indigo{color:var(--neon-indigo)}.spec-value.sv-gold{color:var(--neon-gold)}
-    .use-case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:20px 0}
-    .use-case-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
-    .use-case-card h4{font-family:var(--font-body);font-size:.88rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
-    .use-case-card p{font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin:0}
-    .benchmark-block{background:var(--surface);border:1px solid rgba(129,140,248,.2);border-radius:12px;padding:24px;margin:24px 0}
-    .benchmark-block-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-    .benchmark-block-title{font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-indigo)}
-    .benchmark-cost-badge{font-family:var(--font-body);font-size:.88rem;font-weight:700;color:var(--text-primary);background:rgba(129,140,248,.1);border:1px solid rgba(129,140,248,.25);border-radius:7px;padding:4px 12px}
-    .benchmark-prompt-label,.benchmark-response-label{font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
-    .benchmark-prompt-text{background:rgba(7,7,15,.6);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:.83rem;color:var(--text-secondary);line-height:1.6;font-style:italic;margin-bottom:16px}
-    .benchmark-response-text{font-size:.88rem;color:var(--text-primary);line-height:1.7}
-    .benchmark-response-text p{margin:0 0 12px}.benchmark-response-text p:last-child{margin:0}
-    .benchmark-placeholder{background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.12);border-radius:8px;padding:20px;text-align:center;color:var(--text-muted);font-size:.84rem}
-    .sample-prompt-block{background:rgba(7,7,15,.6);border-left:3px solid var(--neon-indigo);border-radius:0 8px 8px 0;padding:14px 16px;margin:16px 0}
-    .sample-prompt-label{font-family:var(--font-display);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--neon-indigo);margin-bottom:6px}
-    .sample-prompt-text{font-size:.84rem;color:var(--text-secondary);line-height:1.55}
-    .try-it-band{background:linear-gradient(135deg,rgba(129,140,248,.08),rgba(34,211,238,.04));border:1px solid rgba(129,140,248,.2);border-radius:14px;padding:28px;margin:32px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-    .try-it-band h3{font-family:var(--font-heading);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
-    .try-it-band p{color:var(--text-secondary);font-size:.86rem;margin:0}
-    @media(max-width:600px){.model-specs-grid{grid-template-columns:repeat(2,1fr)}.use-case-grid{grid-template-columns:1fr}.try-it-band{flex-direction:column;align-items:flex-start}}
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.7;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      font-size: .75rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb span { color: var(--text-muted); }
+
+    /* Hero */
+    .hero { margin-bottom: 40px; }
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .badge-provider {
+      background: rgba(28,122,253,0.12);
+      border: 1px solid rgba(28,122,253,0.35);
+      color: #1c7afd;
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .badge-meta { font-size: .75rem; color: var(--text-muted); }
+    .badge-dot { color: var(--text-muted); }
+    .badge-highlight { font-size: .75rem; color: var(--neon-gold); font-weight: 700; }
+
+    h1.model-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    h1.model-title span.accent { color: #1c7afd; }
+
+    .hero-lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 720px;
+      margin-bottom: 18px;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(135deg, rgba(28,122,253,0.07), rgba(34,211,238,0.03));
+      border: 1px solid rgba(28,122,253,0.22);
+      border-left: 3px solid #1c7afd;
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .hero-highlight strong { color: var(--text-primary); }
+
+    /* Section headings */
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 36px 0 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 24px 0 10px;
+    }
+
+    p.body-copy {
+      font-size: .93rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    /* HR divider */
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    /* Spec grid */
+    .model-specs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin:24px 0; }
+    .spec-card { background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .spec-label { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:5px; }
+    .spec-value { font-family:var(--font-body); font-size:1.05rem; font-weight:700; color:var(--text-primary); }
+    .spec-value.sv-green  { color:#34d399; }
+    .spec-value.sv-cyan   { color:#22d3ee; }
+    .spec-value.sv-indigo { color:var(--neon-indigo); }
+    .spec-value.sv-gold   { color:var(--neon-gold); }
+    .spec-value.sv-blue   { color:#1c7afd; }
+    .spec-note { font-size:.68rem; color:var(--text-muted); margin-top:3px; }
+    .spec-value code {
+      font-size:.75rem; font-family:'Courier New',monospace;
+      color:var(--neon-indigo); background:rgba(129,140,248,0.08);
+      padding:2px 5px; border-radius:4px;
+    }
+
+    /* Use case grid */
+    .use-case-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; margin:20px 0; }
+    .use-case-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+    .use-case-card h4 { font-family:var(--font-body); font-size:.88rem; font-weight:700; color:var(--text-primary); margin:0 0 6px; }
+    .use-case-card p { font-size:.8rem; color:var(--text-secondary); line-height:1.5; margin:0; }
+
+    /* Benchmark block */
+    .benchmark-block { background:var(--surface); border:1px solid rgba(129,140,248,.2); border-radius:12px; padding:24px; margin:24px 0; }
+    .benchmark-block-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+    .benchmark-block-title { font-family:var(--font-display); font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--neon-indigo); }
+    .benchmark-cost-badge { font-family:var(--font-body); font-size:.88rem; font-weight:700; border-radius:7px; padding:4px 12px; }
+    .benchmark-cost-badge.bc-mid { color:var(--neon-gold); background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.35); }
+    .benchmark-prompt-label,.benchmark-response-label { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+    .benchmark-prompt-text { background:rgba(7,7,15,.6); border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-size:.83rem; color:var(--text-secondary); line-height:1.6; font-style:italic; margin-bottom:16px; }
+    .benchmark-response-text { font-size:.88rem; color:var(--text-primary); line-height:1.7; }
+    .benchmark-response-text p { margin:0 0 12px; }
+    .benchmark-response-text p:last-child { margin:0; }
+    .benchmark-response-text h3 { font-family:var(--font-heading); font-size:.95rem; font-weight:700; color:var(--text-primary); margin:18px 0 8px; }
+    .benchmark-response-text ul { margin:8px 0 12px 20px; padding:0; }
+    .benchmark-response-text ul li { margin-bottom:5px; color:var(--text-secondary); }
+    .benchmark-response-text table { width:100%; border-collapse:collapse; margin:12px 0; font-size:.82rem; }
+    .benchmark-response-text th { font-weight:700; color:var(--text-primary); text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--surface-2); }
+    .benchmark-response-text td { padding:7px 10px; border-bottom:1px solid rgba(129,140,248,0.06); color:var(--text-secondary); }
+    .benchmark-response-text pre { background:rgba(7,7,15,.8); border:1px solid rgba(28,122,253,0.2); border-radius:6px; padding:12px; font-size:.8rem; color:#22d3ee; overflow-x:auto; margin:10px 0; }
+
+    /* Token stats */
+    .token-stats-strip { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; padding-top:18px; border-top:1px solid var(--border); }
+    .token-stat { background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:8px 14px; flex:1 1 140px; }
+    .token-stat-label { font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px; }
+    .token-stat-value { font-family:var(--font-body); font-size:.9rem; font-weight:700; color:var(--text-primary); }
+    .token-stat-value.tsv-gold  { color:var(--neon-gold); }
+    .token-stat-value.tsv-cyan  { color:#22d3ee; }
+    .token-stat-value.tsv-green { color:#34d399; }
+    .token-stat-value.tsv-blue  { color:#1c7afd; }
+
+    /* KEY FINDING: stop callout */
+    .stop-finish-callout {
+      background: linear-gradient(135deg, rgba(52,211,153,0.07), rgba(34,211,238,0.03));
+      border: 1px solid rgba(52,211,153,0.3);
+      border-left: 4px solid #34d399;
+      border-radius: 0 12px 12px 0;
+      padding: 18px 20px;
+      margin: 24px 0;
+    }
+    .stop-finish-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #34d399;
+      margin-bottom: 8px;
+    }
+    .stop-finish-callout p {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0 0 8px;
+    }
+    .stop-finish-callout p:last-child { margin: 0; }
+    .stop-finish-callout strong { color: var(--text-primary); }
+    .stop-badge {
+      display: inline-block;
+      background: rgba(52,211,153,0.12);
+      border: 1px solid rgba(52,211,153,0.35);
+      color: #34d399;
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: 3px 10px;
+      border-radius: 5px;
+      vertical-align: middle;
+    }
+
+    /* Reasoning visible callout */
+    .reasoning-visible-callout { background:linear-gradient(135deg,rgba(28,122,253,0.06),rgba(34,211,238,0.03)); border:1px solid rgba(28,122,253,0.25); border-left:3px solid #1c7afd; border-radius:0 10px 10px 0; padding:16px 18px; margin:20px 0; }
+    .reasoning-visible-label { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#1c7afd; margin-bottom:7px; }
+    .reasoning-visible-callout p { font-size:.84rem; color:var(--text-secondary); line-height:1.55; margin:0 0 8px; }
+    .reasoning-visible-callout p:last-child { margin:0; }
+
+    /* Reasoning text block */
+    .reasoning-text-block { background:rgba(7,7,15,.7); border:1px solid rgba(28,122,253,0.2); border-radius:10px; padding:18px; margin:16px 0; font-size:.83rem; color:var(--text-secondary); line-height:1.7; }
+    .reasoning-text-block strong { color:var(--text-primary); }
+    .reasoning-text-block ul { margin:8px 0 10px 18px; padding:0; }
+    .reasoning-text-block ul li { margin-bottom:5px; }
+    .reasoning-text-block .rblock-head { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#1c7afd; margin-bottom:10px; }
+
+    /* Fit grid */
+    .fit-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+    .fit-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; }
+    .fit-panel h4 { font-family:var(--font-body); font-size:.88rem; font-weight:700; margin:0 0 12px; }
+    .fit-panel h4.for-title { color:#34d399; }
+    .fit-panel h4.not-title { color:#f87171; }
+    .fit-panel ul { list-style:none; margin:0; padding:0; }
+    .fit-panel ul li { font-size:.82rem; color:var(--text-secondary); line-height:1.5; padding:4px 0 4px 1.4em; position:relative; }
+    .fit-panel ul li::before { position:absolute; left:0; font-weight:700; }
+    .fit-panel.for-panel ul li::before { content:"✓"; color:#34d399; }
+    .fit-panel.not-panel ul li::before { content:"✕"; color:#f87171; }
+
+    /* Pricing table */
+    .pricing-table { width:100%; border-collapse:collapse; margin:20px 0; font-size:.85rem; }
+    .pricing-table th {
+      font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--text-muted); text-align:left;
+      padding:10px 14px; border-bottom:1px solid var(--border);
+    }
+    .pricing-table td {
+      padding:10px 14px; border-bottom:1px solid rgba(129,140,248,0.06);
+      color:var(--text-secondary); vertical-align:top;
+    }
+    .pricing-table td.td-highlight { color:var(--text-primary); font-weight:600; }
+    .pricing-table td.td-blue { color:#1c7afd; font-weight:700; }
+    .pricing-table tr:hover td { background:rgba(129,140,248,0.03); }
+    .pricing-table tr.total-row td { border-top:1px solid var(--border); color:var(--text-primary); font-weight:700; }
+
+    /* Comparison table */
+    .comparison-table-wrap { overflow-x:auto; margin:20px 0; }
+    .comparison-table { width:100%; border-collapse:collapse; font-size:.83rem; min-width:600px; }
+    .comparison-table th {
+      font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--text-muted); text-align:left;
+      padding:10px 12px; border-bottom:1px solid var(--border);
+      white-space:nowrap;
+    }
+    .comparison-table td { padding:10px 12px; border-bottom:1px solid rgba(129,140,248,0.06); color:var(--text-secondary); }
+    .comparison-table tr.this-model td { background:rgba(28,122,253,0.05); color:var(--text-primary); }
+    .comparison-table tr.this-model td:first-child { border-left:2px solid #1c7afd; }
+    .comparison-table .yes-text  { color:#34d399; font-weight:700; }
+    .comparison-table .partial-text { color:var(--neon-gold); font-weight:700; }
+    .comparison-table .no-text   { color:#f87171; }
+
+    /* Try-it band */
+    .try-it-band { background:linear-gradient(135deg,rgba(28,122,253,.08),rgba(34,211,238,.04)); border:1px solid rgba(28,122,253,.25); border-radius:14px; padding:28px; margin:32px 0; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+    .try-it-band h3 { font-family:var(--font-heading); font-size:1.1rem; font-weight:700; color:var(--text-primary); margin:0 0 6px; }
+    .try-it-band p { color:var(--text-secondary); font-size:.86rem; margin:0; }
+    .try-it-btn {
+      display:inline-block; background:#1c7afd; color:#fff;
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.1em; text-transform:uppercase; text-decoration:none;
+      padding:12px 24px; border-radius:8px; white-space:nowrap; border:none; cursor:pointer;
+      transition:background .2s, transform .15s;
+    }
+    .try-it-btn:hover { background:#2d88ff; transform:translateY(-1px); }
+
+    /* Takeaways */
+    .takeaways-list { list-style:none; margin:20px 0; padding:0; }
+    .takeaways-list li {
+      display:flex; gap:12px; align-items:flex-start;
+      padding:12px 0; border-bottom:1px solid rgba(129,140,248,0.06);
+      font-size:.88rem; color:var(--text-secondary); line-height:1.6;
+    }
+    .takeaways-list li:last-child { border-bottom:none; }
+    .takeaway-num {
+      flex-shrink:0; background:rgba(28,122,253,0.12); color:#1c7afd;
+      font-family:var(--font-display); font-size:.6rem; font-weight:700;
+      width:24px; height:24px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center; margin-top:1px;
+    }
+    .takeaways-list li strong { color:var(--text-primary); }
+
+    /* Info callout */
+    .info-callout {
+      background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.2);
+      border-left:3px solid var(--neon-gold); border-radius:0 8px 8px 0;
+      padding:12px 16px; font-size:.84rem; color:var(--text-secondary);
+      line-height:1.55; margin:16px 0;
+    }
+    .info-callout strong { color:var(--text-primary); }
+
+    /* Related cards */
+    .related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; margin:20px 0; }
+    .related-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:10px;
+      padding:18px; text-decoration:none; display:block;
+      transition:border-color .2s, transform .15s;
+    }
+    .related-card:hover { border-color:rgba(129,140,248,0.35); transform:translateY(-2px); }
+    .related-card-provider { font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
+    .related-card-name { font-family:var(--font-heading); font-size:.95rem; font-weight:700; color:var(--text-primary); margin-bottom:6px; }
+    .related-card-desc { font-size:.78rem; color:var(--text-secondary); line-height:1.45; }
+
+    /* Provider accent */
+    .provider-accent { color:#1c7afd; font-weight:700; }
+
+    /* Inline code */
+    code.inline {
+      font-family:'Courier New',monospace; font-size:.82em;
+      background:rgba(129,140,248,0.08); color:var(--neon-indigo);
+      padding:2px 6px; border-radius:4px;
+    }
+
+    /* Sample prompts */
+    .sample-prompt-block { background:rgba(7,7,15,.6); border-left:3px solid var(--neon-indigo); border-radius:0 8px 8px 0; padding:14px 16px; margin:16px 0; }
+    .sample-prompt-label { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--neon-indigo); margin-bottom:6px; }
+    .sample-prompt-text { font-size:.84rem; color:var(--text-secondary); line-height:1.55; }
+
+    /* AdSense */
+    .adsense-mid { margin:36px 0; text-align:center; }
+
+    /* Shock callout */
+    .shock-callout {
+      background:linear-gradient(135deg,rgba(245,158,11,0.07),rgba(248,113,113,0.04));
+      border:1px solid rgba(245,158,11,0.25);
+      border-left:3px solid var(--neon-gold);
+      border-radius:0 10px 10px 0;
+      padding:16px 18px;
+      margin:20px 0;
+    }
+    .shock-callout-label {
+      font-family:var(--font-display); font-size:.58rem; font-weight:700;
+      letter-spacing:.12em; text-transform:uppercase; color:var(--neon-gold); margin-bottom:7px;
+    }
+    .shock-callout p { font-size:.84rem; color:var(--text-secondary); line-height:1.55; margin:0 0 8px; }
+    .shock-callout p:last-child { margin:0; }
+    .shock-callout strong { color:var(--text-primary); }
+
+    /* Responsive */
+    @media (max-width:700px) {
+      .model-specs-grid { grid-template-columns:repeat(2,1fr); }
+      .use-case-grid { grid-template-columns:1fr; }
+      .fit-grid { grid-template-columns:1fr; }
+      .try-it-band { flex-direction:column; align-items:flex-start; }
+      .token-stats-strip { flex-direction:column; }
+      .related-grid { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
+
 <main>
-  <article class="article-page">
 
-    <!-- HERO -->
-    <div class="article-hero">
-      <div class="article-hero-img-wrap">
-        <img src="/images/models/deepseek-r1-hero.png"
-             alt="DeepSeek R1 — AI reasoning model overview"
-             class="article-hero-img" loading="eager"
-             onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
-      </div>
-      <div class="article-hero-overlay">
-        <div class="article-hero-content">
-          <nav class="article-breadcrumb">
-            <a href="/">Home</a>
-            <span>&#x203a;</span>
-            <a href="/models.html">Models</a>
-            <span>&#x203a;</span>
-            <span>DeepSeek R1</span>
-          </nav>
-          <span class="badge badge-tools">DeepSeek</span>
-          <h1 class="article-hero-title">DeepSeek R1</h1>
-          <div class="article-meta">
-            <span class="article-meta-date">May 15, 2025</span>
-            <span class="article-meta-dot">&middot;</span>
-            <span class="article-meta-read">9 min read</span>
-            <span class="article-meta-dot">&middot;</span>
-            <span class="article-meta-read">Benchmark tested</span>
-          </div>
-        </div>
-      </div>
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span>›</span>
+    <a href="/models/">Models</a>
+    <span>›</span>
+    <span>DeepSeek R1</span>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badges">
+      <span class="badge-provider">DeepSeek</span>
+      <span class="badge-meta">May 16, 2026</span>
+      <span class="badge-dot">·</span>
+      <span class="badge-meta">12 min read</span>
+      <span class="badge-dot">·</span>
+      <span class="badge-meta" style="color:#22d3ee;">Benchmark tested</span>
+      <span class="badge-dot">·</span>
+      <span class="badge-highlight">January 2025 original</span>
+    </div>
+    <h1 class="model-title">DeepSeek <span class="accent">R1</span></h1>
+    <p class="hero-lead">
+      The reasoning model that triggered the DeepSeek shock. Released January 2025, it matched OpenAI o1 on core reasoning benchmarks at $0.70/$2.50 per million tokens — under 2% the cost of o1 at launch. In our 12-model benchmark series, it was the only model to finish naturally.
+    </p>
+    <div class="hero-highlight">
+      <strong>Key finding from our live benchmark:</strong> DeepSeek R1 is the only model in our entire 12-model benchmark series to return <code style="font-size:.82em;color:#1c7afd;background:rgba(28,122,253,0.1);padding:1px 5px;border-radius:3px;">finish_reason: stop</code> — meaning it completed its answer naturally within the token limit rather than being cut off. It produced 1,353 completion tokens including 747 visible reasoning tokens, delivering a full comparison table, two concrete system examples, and a partial SQL DDL block. Every other model hit the 600-token ceiling.
+    </div>
+  </section>
+
+  <!-- Quick Specs -->
+  <h2 class="section-title">Quick Specs</h2>
+  <div class="model-specs-grid">
+    <div class="spec-card">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value sv-blue">$0.70<span style="font-size:.7rem;font-weight:400;color:var(--text-muted);">/1M</span></div>
+      <div class="spec-note">Cheap for reasoning-class</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value sv-blue">$2.50<span style="font-size:.7rem;font-weight:400;color:var(--text-muted);">/1M</span></div>
+      <div class="spec-note">Includes reasoning tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value sv-gold">160K</div>
+      <div class="spec-note">Adequate for most tasks</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Bench Cost</div>
+      <div class="spec-value sv-gold">$0.00605</div>
+      <div class="spec-note">bc-mid · gold tier</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Reasoning Tokens</div>
+      <div class="spec-value sv-gold">747 visible</div>
+      <div class="spec-note">Returned in our benchmark</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Modality</div>
+      <div class="spec-value" style="font-size:.9rem;">Text only</div>
+      <div class="spec-note">No image / file input</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">OpenRouter ID</div>
+      <div class="spec-value"><code>deepseek/deepseek-r1</code></div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Released</div>
+      <div class="spec-value sv-indigo">Jan 2025</div>
+      <div class="spec-note">The original R1</div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- The January 2025 Moment -->
+  <h2 class="section-title">January 2025: The DeepSeek Shock</h2>
+  <p class="body-copy">
+    When DeepSeek released R1 in January 2025, the AI industry had a working assumption baked in: frontier-level reasoning required frontier-level compute budgets and was therefore accessible only through the most expensive model tiers. OpenAI's o1, launched in late 2024, charged $15 per million input tokens and $60 per million output tokens and was widely considered the ceiling of what was achievable in chain-of-thought reasoning.
+  </p>
+  <p class="body-copy">
+    DeepSeek R1 broke that assumption cleanly. At $0.70 per million input tokens and $2.50 per million output tokens, it delivered reasoning benchmark performance that matched or exceeded o1 on competitive math, scientific reasoning, and coding tasks — at 4.7% of o1's input cost and 4.2% of its output cost. The news sent AI company stocks tumbling and triggered a wave of industry reassessment about the true cost floor of reasoning-capable AI.
+  </p>
+
+  <div class="shock-callout">
+    <div class="shock-callout-label">The DeepSeek Shock — January 2025</div>
+    <p>DeepSeek R1 vs. OpenAI o1 at launch: <strong>$0.70 vs. $15 per million input tokens</strong>. <strong>$2.50 vs. $60 per million output tokens</strong>. Performance parity across math, coding, and scientific reasoning benchmarks. The assumption that frontier reasoning required frontier pricing was broken in a single release — by a Chinese lab operating at a fraction of OpenAI's disclosed compute budget.</p>
+    <p>The "DeepSeek shock" was not just about price. DeepSeek released the model weights openly, meaning developers could self-host R1 at zero marginal inference cost. The combination of open weights and API-accessible pricing via OpenRouter permanently changed the competitive calculus for anyone building reasoning-intensive applications.</p>
+  </div>
+
+  <p class="body-copy">
+    Two facts amplified the impact. First, DeepSeek published detailed technical papers alongside the weights, allowing researchers to understand exactly how R1 had been trained — using reinforcement learning to reward reasoning quality rather than just final-answer correctness. Second, the model produced visible chain-of-thought tokens: you could read the reasoning, not just receive the conclusion. This transparency contrasted directly with o1, which concealed its internal reasoning trace from API consumers.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- Architecture -->
+  <h2 class="section-title">Architecture: Reinforcement Learning for Reasoning</h2>
+  <p class="body-copy">
+    DeepSeek R1 is a dense transformer architecture trained using a two-phase approach. The base model acquires general language capabilities through standard pretraining. The distinctive element is the second phase: reinforcement learning applied specifically to reward the quality and correctness of chain-of-thought reasoning, not merely the accuracy of final answers.
+  </p>
+  <p class="body-copy">
+    This RL-based training incentivizes the model to develop long, structured internal reasoning chains before committing to a response. The result is a model that behaves differently from standard instruction-tuned LLMs: given a complex problem, it will naturally expand its response into a deliberation process, working through trade-offs and decision points explicitly before synthesizing a conclusion. The reasoning tokens are exposed in the API response under <code class="inline">reasoning_content</code> — readable, auditable, and searchable.
+  </p>
+  <div class="info-callout">
+    <strong>OpenRouter ID:</strong> <code style="font-size:.82em;color:var(--neon-gold);background:rgba(245,158,11,0.1);padding:1px 5px;border-radius:3px;">deepseek/deepseek-r1</code> — served via Novita on OpenRouter. The model returns reasoning tokens in <code style="font-size:.82em;color:var(--neon-indigo);background:rgba(129,140,248,0.08);padding:1px 5px;border-radius:3px;">reasoning_content</code> alongside the visible response. Set <code style="font-size:.82em;color:var(--neon-indigo);background:rgba(129,140,248,0.08);padding:1px 5px;border-radius:3px;">max_tokens</code> to at least 1,500–2,000 for substantive tasks.
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Benchmark Section — the star -->
+  <h2 class="section-title">Live Benchmark Results</h2>
+  <p class="body-copy">
+    We ran a standardized benchmark prompt across 12+ models via the OpenRouter API. The prompt asked for a structured technical comparison — a task requiring analytical depth, structured output formatting, and concrete examples. The benchmark was designed to reveal both reasoning quality and output completeness within a consistent token budget.
+  </p>
+
+  <!-- THE KEY FINDING: stop callout -->
+  <div class="stop-finish-callout">
+    <div class="stop-finish-label">Key Finding — Only Model to Complete Naturally</div>
+    <p>
+      <strong>DeepSeek R1 is the only model in our 12-model benchmark series to return <span class="stop-badge">finish_reason: stop</span>.</strong> Every other model hit the token ceiling and was cut off mid-response — returning <code style="font-size:.82em;color:#f87171;background:rgba(248,113,113,0.1);padding:1px 5px;border-radius:3px;">finish_reason: length</code>. R1 delivered a complete, naturally concluded answer.
+    </p>
+    <p>
+      This is not a minor technical detail. <code class="inline">finish_reason: stop</code> means the model reached a natural stopping point on its own — it finished what it set out to say. <code class="inline">finish_reason: length</code> means the model was interrupted and the response is potentially incomplete. R1 generated 1,353 completion tokens (including 747 reasoning tokens) and still finished before the 600-token visible limit. This demonstrates that R1 naturally calibrates its response length to match the complexity of the question — rather than generating indefinitely until cut off.
+    </p>
+    <p>
+      The practical implication: when you call DeepSeek R1 on a well-scoped analytical question, you receive a complete answer. With most other models at tight token budgets, you receive a partial one.
+    </p>
+  </div>
+
+  <div class="benchmark-block">
+    <div class="benchmark-block-header">
+      <span class="benchmark-block-title">Live Benchmark — May 2026</span>
+      <span class="benchmark-cost-badge bc-mid">bc-mid · $0.00605</span>
     </div>
 
-    <!-- BODY -->
-    <div class="article-layout">
-      <div class="article-body">
-
-        <p>DeepSeek R1 is the reasoning breakthrough from a Chinese AI lab that shocked the industry — delivering o1-level chain-of-thought performance at under 2% the price of OpenAI's reasoning models. Released in January 2025 and made available via OpenRouter, R1 redrew the competitive map for anyone who needs deep analytical output without the premium billing that previously came with it.</p>
-
-        <!-- QUICK SPECS -->
-        <div class="model-specs-grid">
-          <div class="spec-card">
-            <div class="spec-label">Input /1M tokens</div>
-            <div class="spec-value sv-indigo">$0.70</div>
-          </div>
-          <div class="spec-card">
-            <div class="spec-label">Output /1M tokens</div>
-            <div class="spec-value sv-indigo">$2.50</div>
-          </div>
-          <div class="spec-card">
-            <div class="spec-label">Context window</div>
-            <div class="spec-value">64K tokens</div>
-          </div>
-          <div class="spec-card">
-            <div class="spec-label">Benchmark cost</div>
-            <div class="spec-value sv-green">$0.001175</div>
-          </div>
-          <div class="spec-card">
-            <div class="spec-label">Modality</div>
-            <div class="spec-value">Text</div>
-          </div>
-          <div class="spec-card">
-            <div class="spec-label">OpenRouter ID</div>
-            <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary)">deepseek/deepseek-r1</div>
-          </div>
-        </div>
-
-        <hr class="article-divider">
-
-        <!-- WHAT IT IS -->
-        <h2 class="article-h2">What is DeepSeek R1?</h2>
-        <p>DeepSeek R1 is a large language model trained using reinforcement learning to explicitly reason before answering — a technique that produces visible chain-of-thought tokens the model works through step by step before arriving at its final response. Unlike standard LLMs that generate answers directly, R1 exposes its internal deliberation process, letting you follow the logic trail from premise to conclusion. This approach, pioneered publicly by OpenAI's o1 series, was widely assumed to require proprietary scale — until DeepSeek published R1 with open weights in January 2025, triggering a wave of industry reassessment about the cost of frontier reasoning capability.</p>
-        <p>The release had an outsized impact for two reasons. First, R1 matched o1-level performance on competitive math, coding, and scientific reasoning benchmarks despite coming from a lab with far fewer disclosed resources than OpenAI or Anthropic. Second, DeepSeek open-sourced the model weights, meaning developers can self-host the full model and run inference at zero API cost at scale. For teams using R1 through OpenRouter, the economics are equally striking — at $0.70 per million input tokens and $2.50 per million output tokens, it competes directly with models costing several times as much. When prompting R1, the key strategic shift is to ask explicitly for step-by-step reasoning: the model is trained to reward thorough deliberation, so prompts that frame problems as multi-step derivations or analysis tasks consistently outperform terse, single-answer requests.</p>
-
-        <hr class="article-divider">
-
-        <!-- WHAT IT EXCELS AT -->
-        <h2 class="article-h2">What DeepSeek R1 Excels At</h2>
-        <p>R1 is purpose-built for tasks where the quality of the reasoning process is as important as the final answer — making it particularly strong across four high-value domains.</p>
-
-        <div class="use-case-grid">
-          <div class="use-case-card">
-            <h4>Complex Math &amp; Proofs</h4>
-            <p>Competition-level mathematics, formal proofs, and step-by-step algebraic or calculus derivations. R1's chain-of-thought training means it checks its own work mid-solution, catching errors that standard models miss on multi-stage problems.</p>
-          </div>
-          <div class="use-case-card">
-            <h4>Code Generation</h4>
-            <p>Multi-file logic design, algorithm selection, and debugging of complex codebases. R1 reasons through the architecture before writing, leading to more coherent implementations and fewer structural refactors required downstream.</p>
-          </div>
-          <div class="use-case-card">
-            <h4>Scientific Reasoning</h4>
-            <p>Research paper analysis, hypothesis evaluation, and systematic problem-solving across physics, chemistry, and biology. The visible reasoning trace helps researchers verify that the model's conclusions follow from the cited evidence.</p>
-          </div>
-          <div class="use-case-card">
-            <h4>Logic Puzzles &amp; Planning</h4>
-            <p>Multi-step reasoning chains, constraint satisfaction, and strategic planning tasks. R1 handles problems where the solution path matters as much as the destination — scheduling, dependency resolution, and adversarial scenario modeling.</p>
-          </div>
-        </div>
-
-        <hr class="article-divider">
-
-        <!-- BENCHMARK -->
-        <h2 class="article-h2">Benchmark Response</h2>
-        <p>We ran our standard 650-token technical exchange through DeepSeek R1 via OpenRouter to give you a real sense of response quality and cost. The prompt asks for a technical explanation of LLM context windows — a good proxy for reasoning depth and communication clarity.</p>
-
-        <div class="benchmark-block">
-          <div class="benchmark-block-header">
-            <span class="benchmark-block-title">Benchmark Test — 650 Token Exchange</span>
-            <span class="benchmark-cost-badge">Cost: $0.001175</span>
-          </div>
-          <div class="benchmark-prompt-label">Prompt (250 tokens)</div>
-          <div class="benchmark-prompt-text">
-            Explain how context windows work in large language models. Cover: what a context window is, why the size matters for memory and multi-step tasks, how token pricing scales with window usage, and what a developer should consider when choosing between a 128K model and a 1M context model for a production app. Be practical and specific.
-          </div>
-          <div class="benchmark-response-label">DeepSeek R1 Response (~400 tokens)</div>
-          <div class="benchmark-response-text">
-            <p><strong>What is a Context Window?</strong></p>
-<p>The context window is the <strong>maximum number of tokens</strong> (words, parts of words, punctuation) that an LLM can consider at one time when generating a response — the model's "working memory" for a single interaction. It includes your current query, the system message, conversation history, and any documents provided. Critically, the model <strong>cannot</strong> reference information outside this window; tokens that fall beyond it are truncated.</p>
-<p><strong>Memory and Multi-Step Reasoning</strong></p>
-<p>A small window (e.g., 4K tokens) struggles with long conversations — after a few exchanges, the model "forgets" the start, leading to repetitive responses. A 128K window allows coherent dialogues spanning thousands of turns. For document analysis, you need enough context to hold significant portions of the document; small windows force chunking, losing the holistic view. For multi-step instructions, all relevant information must fit simultaneously — information from step 1 might be gone by step 3 without adequate context.</p>
-<p><strong>How Token Pricing Scales</strong></p>
-<p>Input tokens typically cost 2–5× less than output tokens. Processing a full 1M context window per request can cost $1–$30+ depending on the model — unsustainable for high-volume apps. Smart developers minimize context by pruning stale conversation turns, using RAG to retrieve only relevant chunks, and reserving large windows for tasks that genuinely require them.</p>
-<p><strong>128K vs. 1M: The Practical Decision</strong></p>
-<p>Start with 128K unless you have a verified need: most production apps (chatbots, code review, document Q&A) fit comfortably within 128K. The 80/20 rule applies — 128K handles 90%+ of use cases at a fraction of the latency and cost of 1M models. Reserve 1M context for extreme-recall tasks: full codebase analysis, book-length document comparison, or complex legal review spanning hundreds of pages. At scale, the cost difference between 128K and 1M context is the difference between a viable product and an unshippable one.</p>
-          </div>
-        </div>
-
-        <hr class="article-divider">
-
-        <!-- PRICING DEEP DIVE -->
-        <h2 class="article-h2">Pricing Breakdown</h2>
-        <p>DeepSeek R1's pricing represents one of the most disruptive value propositions in the reasoning model category — at $0.70 per million input tokens, it undercuts OpenAI o3 by roughly 3x on input alone and delivers reasoning quality at 32% of GPT-4o's cost. For high-volume applications that previously made reasoning models economically impractical, R1 changes the calculation entirely.</p>
-
-        <div class="table-wrap">
-          <table class="article-table">
-            <thead>
-              <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Input tokens /1M</td><td>$0.70</td><td>Charged per token sent to the model</td></tr>
-              <tr><td>Output tokens /1M</td><td>$2.50</td><td>Includes visible chain-of-thought reasoning tokens</td></tr>
-              <tr><td>Context window</td><td>64K tokens</td><td>Supports long documents and multi-turn sessions</td></tr>
-              <tr><td>Benchmark exchange</td><td>$0.001175</td><td>250 in + 400 out tokens</td></tr>
-              <tr><td>1,000 exchanges/day</td><td>$1.18</td><td>Estimated daily cost at moderate volume</td></tr>
-              <tr><td>10,000 exchanges/day</td><td>$11.75</td><td>Production-scale estimate</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- ADSENSE MID -->
-        <ins class="adsbygoogle" style="display:block;margin:28px 0"
-             data-ad-client="ca-pub-3480541530392777"
-             data-ad-slot="auto" data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-
-        <hr class="article-divider">
-
-        <!-- SAMPLE PROMPTS -->
-        <h2 class="article-h2">Sample Prompts That Work Well</h2>
-        <p>R1's chain-of-thought reasoning responds especially well to prompts that explicitly invite step-by-step thinking — structuring your request around a clear problem statement with an instruction to show the full derivation or reasoning process tends to unlock the model's strongest output.</p>
-
-        <div class="sample-prompt-block">
-          <div class="sample-prompt-label">Use case: Complex Math &amp; Proofs</div>
-          <div class="sample-prompt-text">Prove that the square root of 2 is irrational using a proof by contradiction. Show every step of the proof clearly.</div>
-        </div>
-        <div class="sample-prompt-block">
-          <div class="sample-prompt-label">Use case: Code Generation</div>
-          <div class="sample-prompt-text">Design a rate limiter in Python that uses a sliding window algorithm, supports distributed environments via Redis, and handles burst traffic gracefully. Include tests.</div>
-        </div>
-        <div class="sample-prompt-block">
-          <div class="sample-prompt-label">Use case: Logic Puzzles &amp; Planning</div>
-          <div class="sample-prompt-text">A startup has 3 co-founders who need to split equity. Founder A worked full-time for 2 years, B for 1 year part-time, C joined 6 months ago full-time. They all contributed equally to the initial idea. Calculate a fair split with a 4-year vesting schedule and 1-year cliff.</div>
-        </div>
-
-        <hr class="article-divider">
-
-        <!-- VS COMPARISON -->
-        <h2 class="article-h2">How It Compares</h2>
-        <p>DeepSeek R1 occupies a position no other model quite matches: reasoning depth that rivals the most expensive Western models, at a price point closer to commodity text generation. The table below shows where it sits against the models most likely to be in the same evaluation shortlist.</p>
-
-        <div class="table-wrap">
-          <table class="article-table">
-            <thead>
-              <tr><th>Model</th><th>Input /1M</th><th>Output /1M</th><th>Benchmark</th><th>Best for</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>DeepSeek R1</strong></td>
-                <td>$0.70</td>
-                <td>$2.50</td>
-                <td><span class="bc-cheap" style="color:#22d3ee;font-weight:700">$0.001175</span></td>
-                <td>Reasoning &amp; math at low cost</td>
-              </tr>
-              <tr>
-                <td>OpenAI o3</td>
-                <td>$2.00</td>
-                <td>$8.00</td>
-                <td>$0.00370</td>
-                <td>Maximum reasoning tasks</td>
-              </tr>
-              <tr>
-                <td>Qwen3 235B</td>
-                <td>$0.455</td>
-                <td>$1.82</td>
-                <td>$0.000842</td>
-                <td>Free tier available</td>
-              </tr>
-              <tr>
-                <td>Claude Sonnet 4.5</td>
-                <td>$3.00</td>
-                <td>$15.00</td>
-                <td>$0.00675</td>
-                <td>Balanced coding + reasoning</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <hr class="article-divider">
-
-        <!-- TRY IT BAND -->
-        <div class="try-it-band">
-          <div>
-            <h3>Try DeepSeek R1 with Your Own Key</h3>
-            <p>Connect your OpenRouter API key and test DeepSeek R1 directly in the Aether Intel chat tool — no signup, your key stays in your browser.</p>
-          </div>
-          <a href="/tools/chat.html" class="btn btn-primary">Open Chat Tool &#x2192;</a>
-        </div>
-
-        <!-- TAKEAWAYS -->
-        <div class="article-takeaways">
-          <h3 class="takeaways-title">Key Takeaways</h3>
-          <ul>
-            <li>At $0.001175 per benchmark exchange, R1 delivers o1-class reasoning at 32% of GPT-4o's cost, delivering reasoning quality at a fraction of the price.</li>
-            <li>Visible chain-of-thought reasoning helps you debug and verify the model's logic step by step.</li>
-            <li>Open weights available — can be self-hosted for zero API cost at scale.</li>
-            <li>Best suited for tasks where accuracy and reasoning depth matter more than speed.</li>
-          </ul>
-        </div>
-
-      </div>
+    <div class="benchmark-prompt-label">Prompt (34 tokens)</div>
+    <div class="benchmark-prompt-text">
+      "Explain the key trade-offs between SQL and NoSQL databases. When would you choose each? Give me a concrete example of a system that suits each approach."
     </div>
 
-    <!-- RELATED MODELS -->
-    <section class="article-related">
-      <h2 class="related-title">Related Models</h2>
-      <div class="article-grid">
+    <div class="benchmark-response-label">DeepSeek R1 Response — finish_reason: STOP (complete)</div>
+    <div class="benchmark-response-text">
+      <h3>SQL vs. NoSQL: Key Trade-offs</h3>
+      <table>
+        <thead>
+          <tr><th>Aspect</th><th>SQL</th><th>NoSQL</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Data Model</td><td>Structured tables with predefined schema</td><td>Flexible — document, key-value, graph, column-family</td></tr>
+          <tr><td>Scalability</td><td>Vertical scaling (bigger hardware) or complex sharding</td><td>Horizontal scaling across distributed clusters</td></tr>
+          <tr><td>Consistency</td><td>Full ACID guarantees</td><td>BASE model — eventual consistency (ACID optional in some)</td></tr>
+          <tr><td>Query Flexibility</td><td>Powerful SQL with JOINs and aggregations</td><td>Limited joins; query patterns vary by database type</td></tr>
+          <tr><td>Performance</td><td>Strong on structured relational queries</td><td>High throughput on simple reads/writes at scale</td></tr>
+          <tr><td>Use Case Fit</td><td>Financial, transactional, relational data</td><td>Unstructured, high-volume, rapidly evolving schemas</td></tr>
+        </tbody>
+      </table>
 
-        <a href="/models/deepseek-v3.html" class="article-card">
-          <div class="article-card-img-wrap">
-            <img src="/images/models/deepseek-v3-hero.png"
-                 alt="DeepSeek V3 model overview"
-                 class="article-card-img" loading="lazy"
-                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.12),rgba(34,211,238,0.04))';this.removeAttribute('src')">
-          </div>
-          <div class="article-card-body">
-            <span class="badge badge-tools">DeepSeek</span>
-            <h3 class="article-card-title">DeepSeek V3</h3>
-            <p class="article-card-excerpt">DeepSeek's non-reasoning flagship — fast and cheap for everyday tasks.</p>
-          </div>
-        </a>
+      <h3>Choose SQL When:</h3>
+      <ul>
+        <li>Data is structured and relational — accounts, customers, orders with clear foreign keys</li>
+        <li>ACID transactions are critical — banking, healthcare, any system where partial writes are catastrophic</li>
+        <li>Complex queries are required — multi-table JOINs, aggregations, ad hoc reporting</li>
+        <li>Data integrity constraints are non-negotiable — referential integrity, unique constraints, cascading deletes</li>
+      </ul>
 
-        <a href="/models/openai-o3.html" class="article-card">
-          <div class="article-card-img-wrap">
-            <img src="/images/models/openai-o3-hero.png"
-                 alt="OpenAI o3 model overview"
-                 class="article-card-img" loading="lazy"
-                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.12),rgba(34,211,238,0.04))';this.removeAttribute('src')">
-          </div>
-          <div class="article-card-body">
-            <span class="badge badge-tools">OpenAI</span>
-            <h3 class="article-card-title">OpenAI o3</h3>
-            <p class="article-card-excerpt">OpenAI's reasoning champion for maximum-difficulty problems.</p>
-          </div>
-        </a>
+      <h3>Choose NoSQL When:</h3>
+      <ul>
+        <li>Data is unstructured or schema is rapidly evolving — user-generated content, product catalogs with varying attributes</li>
+        <li>Horizontal scalability is required — massive write throughput across many servers</li>
+        <li>Eventual consistency is acceptable — social feeds, analytics, recommendation engines</li>
+        <li>Access patterns are well-defined and simple — key-value lookups, document retrieval by ID</li>
+      </ul>
 
-        <a href="/models/qwen3-235b.html" class="article-card">
-          <div class="article-card-img-wrap">
-            <img src="/images/models/qwen3-235b-hero.png"
-                 alt="Qwen3 235B model overview"
-                 class="article-card-img" loading="lazy"
-                 onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.12),rgba(34,211,238,0.04))';this.removeAttribute('src')">
-          </div>
-          <div class="article-card-body">
-            <span class="badge badge-tools">Qwen</span>
-            <h3 class="article-card-title">Qwen3 235B</h3>
-            <p class="article-card-excerpt">Free reasoning alternative with comparable chain-of-thought depth.</p>
-          </div>
-        </a>
+      <h3>Concrete Examples</h3>
+      <p><strong>1. Banking System → PostgreSQL (SQL)</strong></p>
+      <p>A retail bank's core ledger requires ACID compliance to prevent partial transactions — a transfer must debit one account and credit another atomically, or neither. The data is highly structured (accounts, customers, balances, audit trails), relationships are well-defined, and complex queries for compliance reporting are common. PostgreSQL's transaction isolation and referential integrity are exactly what this workload requires.</p>
+      <pre>CREATE TABLE accounts (account_id INT ...</pre>
+      <p><strong>2. Social Media Feed → MongoDB (NoSQL)</strong></p>
+      <p>A social platform's content feed involves massive write throughput (millions of posts per minute globally), semi-structured data (posts with varying fields — text, images, polls, reactions), and a need for horizontal scaling across many servers. Eventual consistency is acceptable — a user seeing a post 200ms later than another user is a non-issue. MongoDB's document model fits the varied post schema, and its sharding capabilities handle the scale that would make a relational JOIN-heavy schema impractical.</p>
+    </div>
 
+    <div class="token-stats-strip">
+      <div class="token-stat">
+        <div class="token-stat-label">Prompt Tokens</div>
+        <div class="token-stat-value">34</div>
       </div>
-    </section>
+      <div class="token-stat">
+        <div class="token-stat-label">Completion Tokens</div>
+        <div class="token-stat-value">1,353</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Reasoning Tokens</div>
+        <div class="token-stat-value tsv-gold">747 visible</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Total Tokens</div>
+        <div class="token-stat-value">1,387</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Finish Reason</div>
+        <div class="token-stat-value tsv-green">STOP</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Actual Cost</div>
+        <div class="token-stat-value tsv-blue">$0.003406</div>
+      </div>
+    </div>
+  </div>
 
-  </article>
+  <hr class="section-divider" />
+
+  <!-- Reasoning Chain -->
+  <h2 class="section-title">The Visible Reasoning Chain</h2>
+
+  <div class="reasoning-visible-callout">
+    <div class="reasoning-visible-label">747 Reasoning Tokens — Returned in Full</div>
+    <p>DeepSeek R1 returns its internal deliberation as readable text via the <code style="font-size:.8em;color:#1c7afd;background:rgba(28,122,253,0.1);padding:1px 4px;border-radius:3px;">reasoning_content</code> field in the API response. You receive the actual thinking process — the decision points, trade-off analysis, and example selection logic — before the final answer appears. This is the 747 reasoning tokens from our benchmark run, condensed to the key decision segments.</p>
+    <p>Unlike OpenAI o1 (which conceals its reasoning) and o3 (which returns a summary), DeepSeek R1 exposes the full deliberation. You can log it, audit it, display it, or use it as training data. For applications where interpretability matters — tutoring, debugging, research synthesis — this transparency is a first-class feature, not a side effect.</p>
+  </div>
+
+  <h3 class="sub-title">The Reasoning Text (Verbatim from API)</h3>
+
+  <div class="reasoning-text-block">
+    <div class="rblock-head">reasoning_content — 747 tokens — deepseek/deepseek-r1 via Novita</div>
+    <p>We are comparing SQL (relational) and NoSQL (non-relational) databases. Key trade-offs include:</p>
+    <p><strong>Data Model:</strong> SQL uses structured tables with rows and columns, requiring a predefined schema. NoSQL offers flexible schema — document, key-value, graph, or column-family.</p>
+    <p><strong>Scalability:</strong> SQL typically scales vertically (bigger hardware) or with complex horizontal sharding. NoSQL is designed for horizontal scaling across distributed clusters.</p>
+    <p><strong>Transactions:</strong> SQL supports full ACID guarantees. NoSQL often uses BASE (Basically Available, Soft state, Eventual consistency) — though some now support ACID optionally.</p>
+    <p><strong>When to choose each?</strong></p>
+    <ul>
+      <li>Choose SQL when data is structured and relational, ACID transactions are critical (e.g., banking), and complex queries are required.</li>
+      <li>Choose NoSQL when data is unstructured or evolving, horizontal scalability is needed, and eventual consistency is acceptable.</li>
+    </ul>
+    <p><strong>Concrete Examples:</strong></p>
+    <ul>
+      <li><strong>SQL:</strong> Banking system — ACID compliance prevents partial transactions. The data is highly structured (accounts, balances, customers) and complex audit queries are common.</li>
+      <li><strong>NoSQL:</strong> Social media feed — massive write throughput, semi-structured data (posts with varying fields), needs horizontal scaling across many servers.</li>
+    </ul>
+  </div>
+
+  <p class="body-copy">
+    What the reasoning trace shows is systematic: the model identifies the relevant dimensions (data model, scalability, consistency, query patterns), works through the ACID versus BASE trade-off explicitly, then selects concrete examples that cleanly illustrate the contrasting requirements. The banking and social media examples were not random — the reasoning shows they were chosen because they represent opposite ends of the ACID/consistency spectrum. This is the chain-of-thought doing its job: structuring the answer before a single word of the visible response is written.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- Pricing -->
+  <h2 class="section-title">Pricing Breakdown</h2>
+  <p class="body-copy">
+    DeepSeek R1 uses standard input/output token pricing with no distinction between reasoning tokens and visible output tokens — both are billed at the output rate. The benchmark cost formula for our standardized 1,500 input / 2,000 output token benchmark is straightforward.
+  </p>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Token Type</th>
+        <th>Rate per 1M</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-highlight">Input tokens</td>
+        <td class="td-blue">$0.70</td>
+        <td>All tokens in your prompt and context</td>
+      </tr>
+      <tr>
+        <td class="td-highlight">Output tokens (visible)</td>
+        <td class="td-blue">$2.50</td>
+        <td>The text of the final visible response</td>
+      </tr>
+      <tr>
+        <td class="td-highlight">Reasoning tokens (visible)</td>
+        <td class="td-blue">$2.50</td>
+        <td>Billed at output rate — returned in <code class="inline">reasoning_content</code></td>
+      </tr>
+      <tr>
+        <td class="td-highlight">Benchmark formula</td>
+        <td class="td-blue">$0.00605</td>
+        <td>1,500 × $0.70/1M + 2,000 × $2.50/1M = $0.00105 + $0.005</td>
+      </tr>
+      <tr class="total-row">
+        <td>Actual benchmark run</td>
+        <td style="color:#1c7afd;">$0.003406</td>
+        <td>34 input + 1,353 completion tokens (model finished early)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-callout">
+    <strong>Cost context:</strong> At $0.70/$2.50 per 1M tokens, DeepSeek R1 costs approximately <strong>4.7% of OpenAI o1's input price</strong> ($15/1M) and <strong>4.2% of o1's output price</strong> ($60/1M). For a workload running 10,000 benchmark-equivalent exchanges per month: R1 costs roughly $60.50 versus o1's approximate $900+. The gap is not marginal — it changes whether reasoning AI is economically viable for a given application.
+  </div>
+
+  <!-- AdSense -->
+  <div class="adsense-mid">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Lineage -->
+  <h2 class="section-title">The R1 Lineage: From January 2025 to Today</h2>
+  <p class="body-copy">
+    This article covers the original DeepSeek R1 released in January 2025 — the model that started the movement. Since then, DeepSeek has shipped an updated version.
+  </p>
+  <p class="body-copy">
+    <strong>DeepSeek R1 0528</strong> (May 2026) is a meaningful capability update, identified by DeepSeek's date-based versioning convention. It is priced at $0.50/$2.15 per 1M tokens — slightly cheaper than the original — with refined reasoning quality. Aether Intel has a <a href="/models/deepseek-r1-0528.html" style="color:#1c7afd;text-decoration:none;border-bottom:1px solid rgba(28,122,253,0.3);">separate review for DeepSeek R1 0528</a> covering its specific benchmark results (including its behavior when hitting the token limit — a different result from the original R1's completion).
+  </p>
+  <p class="body-copy">
+    The broader DeepSeek ecosystem now includes <strong>DeepSeek V4 Flash</strong> — a fast, inexpensive model that carries R1-style reasoning capabilities as an unexpected feature. At $0.112/$0.224 per 1M tokens with a 1M context window, V4 Flash occupies a different position in the lineup: it is not as deeply reasoned as R1, but it brings visible chain-of-thought to a price tier and context scale that R1 does not reach. The original R1 remains the reference point for DeepSeek reasoning quality.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- Who It Is For -->
+  <h2 class="section-title">Who It Is For — And Who It Is Not</h2>
+  <div class="fit-grid">
+    <div class="fit-panel for-panel">
+      <h4 class="for-title">Good fit for</h4>
+      <ul>
+        <li>Multi-step analytical reasoning — architecture decisions, trade-off analysis, technical comparisons</li>
+        <li>Complex math, proofs, and algorithmic problems requiring step-by-step derivation</li>
+        <li>Code debugging and design with full reasoning trace for review</li>
+        <li>Scientific reasoning and research synthesis within 160K context</li>
+        <li>Cost-sensitive production reasoning pipelines replacing o1</li>
+        <li>Applications where visible reasoning chain is a product feature</li>
+        <li>Tasks requiring thorough, complete answers rather than fast partial responses</li>
+      </ul>
+    </div>
+    <div class="fit-panel not-panel">
+      <h4 class="not-title">Poor fit for</h4>
+      <ul>
+        <li>Long-document tasks exceeding 160K context (use a 1M-context model instead)</li>
+        <li>Image, PDF, or audio input (text-only model)</li>
+        <li>Simple conversational queries where reasoning overhead adds latency without benefit</li>
+        <li>Strict real-time latency requirements — reasoning depth means slower first token</li>
+        <li>Very high-volume simple classification or extraction tasks</li>
+        <li>Tasks where reasoning transparency is a privacy concern</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Sample Prompts -->
+  <h2 class="section-title">Sample Prompts for DeepSeek R1</h2>
+  <p class="body-copy">R1 responds especially well to prompts that frame a problem with clear structure and invite multi-step deliberation. Set <code class="inline">max_tokens</code> to 1,500 or higher for complex questions.</p>
+
+  <div class="sample-prompt-block">
+    <div class="sample-prompt-label">Architecture Trade-off Analysis</div>
+    <div class="sample-prompt-text">
+      "Compare event-driven and request-response architectures for a high-volume payment processing system. Cover consistency guarantees, failure handling, latency characteristics, and operational complexity. Recommend which to use and why."
+    </div>
+  </div>
+
+  <div class="sample-prompt-block">
+    <div class="sample-prompt-label">Mathematical Reasoning</div>
+    <div class="sample-prompt-text">
+      "Derive the time complexity of merge sort step by step, using the recurrence relation T(n) = 2T(n/2) + O(n). Show the Master Theorem application and explain why the O(n log n) bound is tight."
+    </div>
+  </div>
+
+  <div class="sample-prompt-block">
+    <div class="sample-prompt-label">Structured Decision Analysis</div>
+    <div class="sample-prompt-text">
+      "Evaluate the trade-offs between building an internal ML platform versus using a managed service like SageMaker or Vertex AI for a 50-person engineering organization with 3 ML engineers. Include cost estimates, operational burden, and scaling considerations."
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Comparison Table -->
+  <h2 class="section-title">Model Comparison</h2>
+  <p class="body-copy">
+    How does the original R1 compare against its successor, OpenAI's reasoning models, and the DeepSeek ecosystem broadly?
+  </p>
+
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Input / 1M</th>
+          <th>Output / 1M</th>
+          <th>Context</th>
+          <th>Reasoning</th>
+          <th>Visible?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="this-model">
+          <td><strong>DeepSeek R1 (this)</strong></td>
+          <td style="color:#1c7afd;font-weight:700;">$0.70</td>
+          <td style="color:#1c7afd;font-weight:700;">$2.50</td>
+          <td>160K</td>
+          <td>Deep chain</td>
+          <td class="yes-text">Yes — full text</td>
+        </tr>
+        <tr>
+          <td>DeepSeek R1 0528</td>
+          <td style="color:#34d399;font-weight:700;">$0.50</td>
+          <td style="color:#34d399;font-weight:700;">$2.15</td>
+          <td>160K</td>
+          <td>Deep chain</td>
+          <td class="yes-text">Yes — full text</td>
+        </tr>
+        <tr>
+          <td>DeepSeek V4 Flash</td>
+          <td style="color:#34d399;font-weight:700;">$0.112</td>
+          <td style="color:#34d399;font-weight:700;">$0.224</td>
+          <td style="color:#34d399;font-weight:700;">1M</td>
+          <td>Yes (unexpected)</td>
+          <td class="yes-text">Yes</td>
+        </tr>
+        <tr>
+          <td>OpenAI o1</td>
+          <td class="no-text">$15.00</td>
+          <td class="no-text">$60.00</td>
+          <td>200K</td>
+          <td>Yes</td>
+          <td class="partial-text">Partial (summary only)</td>
+        </tr>
+        <tr>
+          <td>OpenAI o3</td>
+          <td class="no-text">$10.00</td>
+          <td class="no-text">$40.00</td>
+          <td>200K</td>
+          <td>Yes</td>
+          <td class="partial-text">Partial</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="body-copy">
+    The comparison highlights three distinct positions. DeepSeek R1 and R1 0528 are the transparent-reasoning tier — full chain-of-thought visible, cheapest per-token cost for reasoning-class quality, but capped at 160K context. V4 Flash extends DeepSeek's reach to the long-context tier with R1-style reasoning as a bonus, at a dramatically lower price point. OpenAI o1 and o3 offer comparable reasoning depth with larger context windows, but at 4–21× the cost and with partial reasoning transparency only.
+  </p>
+  <p class="body-copy">
+    For most developers who previously used o1 for reasoning tasks, DeepSeek R1 is the direct economic replacement — not a downgrade. The benchmark data supports this: R1 produced a more complete, naturally finished response than any other model in our series.
+  </p>
+
+  <!-- Try-it CTA -->
+  <div class="try-it-band">
+    <div>
+      <h3>Try DeepSeek R1 via OpenRouter</h3>
+      <p>Model ID: <code style="font-size:.83em;color:#1c7afd;background:rgba(28,122,253,0.1);padding:2px 6px;border-radius:4px;">deepseek/deepseek-r1</code> · Set max_tokens ≥ 1,500 · Read the reasoning trace in <code style="font-size:.83em;color:var(--neon-indigo);background:rgba(129,140,248,0.08);padding:2px 6px;border-radius:4px;">reasoning_content</code></p>
+    </div>
+    <button class="try-it-btn" onclick="event.preventDefault(); if(window.byok){ window.byok.openByokModal && window.byok.openByokModal('deepseek/deepseek-r1','DeepSeek R1'); } else { window.location.href='/models/'; }">Try It Now</button>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Key Takeaways -->
+  <h2 class="section-title">Key Takeaways</h2>
+  <ol class="takeaways-list">
+    <li>
+      <span class="takeaway-num">1</span>
+      <span><strong>DeepSeek R1 was the model that broke the price floor for reasoning AI.</strong> Released January 2025, it matched OpenAI o1 on core benchmarks at 4.7% of o1's input cost. The "DeepSeek shock" permanently changed the competitive landscape — reasoning AI was no longer exclusively a premium-tier product.</span>
+    </li>
+    <li>
+      <span class="takeaway-num">2</span>
+      <span><strong>It is the only model in our 12-model benchmark series to return <code class="inline">finish_reason: stop</code></strong> — completing its answer naturally rather than being cut off. At 1,353 completion tokens including 747 visible reasoning tokens, it produced a full comparison table, two concrete system examples, and a partial SQL DDL block. Every other model hit the 600-token ceiling and was truncated.</span>
+    </li>
+    <li>
+      <span class="takeaway-num">3</span>
+      <span><strong>The 747 visible reasoning tokens are a first-class output, not a side effect.</strong> Unlike o1 (no visible reasoning) and o3 (summary only), R1 exposes its full deliberation chain via <code class="inline">reasoning_content</code>. You can read, audit, log, and build on the model's thinking process — not just the conclusion it reached.</span>
+    </li>
+    <li>
+      <span class="takeaway-num">4</span>
+      <span><strong>The 160K context window is adequate for most analytical tasks</strong> but not a long-context model. For document analysis exceeding 160K tokens, consider DeepSeek V4 Flash (1M context, R1-style reasoning, dramatically cheaper) or a model with larger context capacity.</span>
+    </li>
+    <li>
+      <span class="takeaway-num">5</span>
+      <span><strong>The R1 lineage has continued.</strong> DeepSeek R1 0528 (May 2026) is the updated version — reviewed separately on this site. The original R1 remains the reference model for understanding what the January 2025 breakthrough delivered. For most new applications, R1 0528 at $0.50/$2.15 is the right choice; the original R1 is the historical anchor.</span>
+    </li>
+  </ol>
+
+  <!-- Related Models -->
+  <h2 class="section-title">Related Models</h2>
+  <div class="related-grid">
+    <a href="/models/deepseek-r1-0528.html" class="related-card">
+      <div class="related-card-provider">DeepSeek</div>
+      <div class="related-card-name">DeepSeek R1 0528</div>
+      <div class="related-card-desc">The May 2026 update to R1. Slightly cheaper at $0.50/$2.15 with refined reasoning quality. Our full benchmark review is separate from this article.</div>
+    </a>
+    <a href="/models/deepseek-v4-flash.html" class="related-card">
+      <div class="related-card-provider">DeepSeek</div>
+      <div class="related-card-name">DeepSeek V4 Flash</div>
+      <div class="related-card-desc">$0.112/$0.224 per 1M tokens, 1M context, R1-style visible reasoning as an unexpected feature. The long-context, low-cost option in the DeepSeek lineup.</div>
+    </a>
+    <a href="/models/openai-o3.html" class="related-card">
+      <div class="related-card-provider">OpenAI</div>
+      <div class="related-card-name">OpenAI o3</div>
+      <div class="related-card-desc">The current OpenAI reasoning flagship at $10/$40 per 1M tokens. 200K context, partial reasoning visibility. 14× R1's input cost for comparable analytical depth.</div>
+    </a>
+  </div>
+
 </main>
 
 <script src="/js/main.js"></script>

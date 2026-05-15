@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini 3.1 Flash Lite Review — Budget Multimodal Powerhouse | Aether Intel</title>
+  <meta name="description" content="Google's Gemini 3.1 Flash Lite brings full 5-modality input, 1M context, and the latest 3.1-series intelligence to the budget tier at $0.25/$1.50 per 1M tokens." />
+  <meta property="og:title" content="Gemini 3.1 Flash Lite Review | Aether Intel" />
+  <meta property="og:description" content="The newest entry in Google's Flash Lite lineage. Full 5-modality at bc-cheap pricing." />
+  <meta property="og:type" content="article" />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/gemini-3-1-flash-lite/" />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--neon-indigo); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Layout ── */
+    .site-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--neon-indigo);
+      text-decoration: none;
+    }
+
+    .site-logo span { color: var(--neon-cyan); }
+
+    .site-nav { display: flex; gap: 24px; }
+    .site-nav a { font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; }
+    .site-nav a:hover { color: var(--text-primary); }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      padding: 14px 0;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--text-muted); }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb .sep { opacity: 0.4; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 36px 0 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      border-radius: 5px;
+      padding: 3px 10px;
+      text-transform: uppercase;
+    }
+
+    .badge-provider {
+      background: linear-gradient(90deg, rgba(66,133,244,0.12), rgba(52,168,83,0.08));
+      border: 1px solid rgba(66,133,244,0.35);
+      color: #4285f4;
+    }
+
+    .badge-tier {
+      background: rgba(34,211,238,0.08);
+      border: 1px solid rgba(34,211,238,0.3);
+      color: var(--neon-cyan);
+    }
+
+    .badge-date {
+      background: rgba(129,140,248,0.08);
+      border: 1px solid rgba(129,140,248,0.2);
+      color: var(--neon-indigo);
+    }
+
+    h1.model-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+
+    h1.model-title .accent { color: #4285f4; }
+
+    .hero-lead {
+      font-size: 1.08rem;
+      color: var(--text-secondary);
+      max-width: 720px;
+      margin-bottom: 20px;
+      line-height: 1.65;
+    }
+
+    .hero-highlight {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(66,133,244,0.07);
+      border: 1px solid rgba(66,133,244,0.2);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .hero-highlight strong { color: #4285f4; }
+
+    /* ── Article body ── */
+    .article-body { padding: 40px 0; }
+
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 14px;
+    }
+
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--neon-indigo);
+      margin: 20px 0 8px;
+    }
+
+    p.body-copy {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.72;
+    }
+
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 36px 0;
+    }
+
+    /* ── Specs grid ── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .spec-card .spec-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 4px;
+    }
+
+    .spec-card .spec-value {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .spec-card .spec-value.accent-google { color: #4285f4; }
+    .spec-card .spec-value.accent-cyan { color: var(--neon-cyan); }
+    .spec-card .spec-value.accent-gold { color: var(--neon-gold); }
+
+    /* ── Benchmark block ── */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .benchmark-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .benchmark-header-left {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .benchmark-cost-badge {
+      font-weight: 700;
+      font-size: 0.82rem;
+      border-radius: 7px;
+      padding: 4px 12px;
+    }
+
+    .benchmark-cost-badge.bc-cheap {
+      color: var(--neon-cyan);
+      background: rgba(34,211,238,0.08);
+      border: 1px solid rgba(34,211,238,0.3);
+    }
+
+    .token-stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .token-stat {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .token-stat strong { color: var(--text-primary); }
+
+    .benchmark-prompt-text {
+      background: var(--surface-2);
+      border-left: 3px solid rgba(129,140,248,0.4);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    .benchmark-response-text {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .benchmark-response-text .resp-header {
+      color: var(--neon-indigo);
+      font-weight: 700;
+    }
+
+    .benchmark-note {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Use case grid ── */
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .use-case-card .uc-icon {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .use-case-card .uc-title {
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+    }
+
+    .use-case-card .uc-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ── Fit grid ── */
+    .fit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 560px) { .fit-grid { grid-template-columns: 1fr; } }
+
+    .fit-card {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .fit-card.fit-good { border: 1px solid rgba(52,168,83,0.3); }
+    .fit-card.fit-bad { border: 1px solid rgba(234,67,53,0.25); }
+
+    .fit-card .fit-title {
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .fit-card.fit-good .fit-title { color: #34a853; }
+    .fit-card.fit-bad .fit-title { color: #ea4335; }
+
+    .fit-card ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .fit-card ul li {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .fit-card.fit-good ul li::before { content: "✓"; color: #34a853; flex-shrink: 0; }
+    .fit-card.fit-bad ul li::before { content: "✗"; color: #ea4335; flex-shrink: 0; }
+
+    /* ── Pricing table ── */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.88rem;
+    }
+
+    .pricing-table th {
+      background: var(--surface-2);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.72rem;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pricing-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .pricing-table td strong { color: var(--text-primary); }
+
+    .pricing-table tr:last-child td { border-bottom: none; }
+
+    /* ── Comparison table ── */
+    .comparison-table-wrap { overflow-x: auto; margin: 20px 0; }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 580px;
+    }
+
+    .comparison-table th {
+      background: var(--surface-2);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.72rem;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .comparison-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .comparison-table tr.this-model td {
+      border-left: 3px solid #4285f4;
+      background: rgba(66,133,244,0.05);
+    }
+
+    .comparison-table tr.this-model td:first-child {
+      color: #4285f4;
+      font-weight: 700;
+    }
+
+    .comparison-table tr:last-child td { border-bottom: none; }
+
+    .tag-yes { color: #34a853; font-weight: 600; }
+    .tag-no { color: var(--text-muted); }
+    .tag-some { color: var(--neon-gold); font-weight: 600; }
+
+    /* ── Info callout ── */
+    .info-callout {
+      background: rgba(66,133,244,0.05);
+      border: 1px solid rgba(66,133,244,0.2);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+
+    .info-callout .callout-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #4285f4;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .info-callout p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* ── Try-it band ── */
+    .try-it-band {
+      background: var(--surface);
+      border: 1px solid rgba(66,133,244,0.2);
+      border-radius: 14px;
+      padding: 30px 28px;
+      text-align: center;
+      margin: 36px 0;
+    }
+
+    .try-it-band h2 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .try-it-band p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .btn-try {
+      display: inline-block;
+      background: #4285f4;
+      color: #fff;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 12px 28px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-try:hover {
+      background: #3574e0;
+      transform: translateY(-1px);
+      text-decoration: none;
+      color: #fff;
+    }
+
+    /* ── AdSense placeholder ── */
+    .adsense-mid {
+      min-height: 90px;
+      background: rgba(255,255,255,0.02);
+      border: 1px dashed rgba(255,255,255,0.06);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 28px 0;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .site-footer a { color: var(--text-muted); }
+    .site-footer a:hover { color: var(--neon-indigo); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .site-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Site Header ── -->
+  <header class="site-header">
+    <a class="site-logo" href="/">AETHER<span>INTEL</span></a>
+    <nav class="site-nav">
+      <a href="/models/">Models</a>
+      <a href="/benchmarks/">Benchmarks</a>
+      <a href="/compare/">Compare</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <!-- ── Breadcrumb ── -->
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href="/">Home</a>
+        <span class="sep">›</span>
+        <a href="/models/">Models</a>
+        <span class="sep">›</span>
+        <span>Gemini 3.1 Flash Lite</span>
+      </nav>
+
+      <!-- ── Hero ── -->
+      <section class="hero">
+        <div class="hero-badges">
+          <span class="badge badge-provider">Google</span>
+          <span class="badge badge-tier">bc-cheap</span>
+          <span class="badge badge-date">May 2026</span>
+        </div>
+
+        <h1 class="model-title">
+          <span class="accent">Gemini 3.1</span> Flash Lite
+        </h1>
+
+        <p class="hero-lead">
+          Google's newest budget multimodal model extends the Flash Lite lineage into the 3.1 generation — bringing 5-modality input, a 1M-token context window, and the intelligence improvements of the 3.1 series to the cheapest tier of the Gemini family.
+        </p>
+
+        <div class="hero-highlight">
+          <strong>$0.25 / $1.50</strong> per 1M tokens &nbsp;·&nbsp; 1M context &nbsp;·&nbsp; Text · Image · Audio · Video · File
+        </div>
+      </section>
+
+      <!-- ── Article Body ── -->
+      <article class="article-body">
+
+        <!-- SECTION 1: What it is -->
+        <h2 class="section-title">What is Gemini 3.1 Flash Lite?</h2>
+        <p class="body-copy">
+          Released in May 2026, Gemini 3.1 Flash Lite is Google's latest entry in the budget end of the Gemini model stack. It succeeds Gemini 2.5 Flash Lite as the lowest-cost, full-capability model in the 3.1 Flash family — designed for developers and enterprises that need high-volume, low-latency inference without reaching for a premium model tier.
+        </p>
+        <p class="body-copy">
+          The "Flash Lite" designation has always meant one thing: maximum accessibility. These models run fast, cost little, and carry full Google infrastructure behind them. With the jump to the 3.1 generation, Flash Lite inherits the architectural and training improvements that distinguished Gemini 3.1 Flash from its predecessor, while staying firmly in the budget pricing bracket.
+        </p>
+
+        <!-- Specs grid -->
+        <div class="model-specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Input Price</div>
+            <div class="spec-value accent-google">$0.25 / 1M</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output Price</div>
+            <div class="spec-value accent-google">$1.50 / 1M</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Context Window</div>
+            <div class="spec-value accent-cyan">1,000,000</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Input Modalities</div>
+            <div class="spec-value">5 (full)</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Output Modalities</div>
+            <div class="spec-value">Text</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Reasoning Tokens</div>
+            <div class="spec-value">None</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Architecture</div>
+            <div class="spec-value">Dense Transformer</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Provider</div>
+            <div class="spec-value accent-google">Google (direct)</div>
+          </div>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 2: Lineage -->
+        <h2 class="section-title">The Flash Lite Lineage</h2>
+        <p class="body-copy">
+          Google has iterated the Flash Lite line with deliberate pacing. Each generation has kept the same positioning — cheapest Gemini with full feature access — while improving underlying model quality and capability.
+        </p>
+        <p class="body-copy">
+          Gemini 2.5 Flash Lite launched at $0.10 input / $0.40 output per 1M tokens and brought multimodal capability to an aggressively low price point. It proved that sub-dollar-per-million input pricing was viable for serious production workloads. Gemini 3.1 Flash Lite raises the per-token cost — $0.25 input (2.5× higher) and $1.50 output (3.75× higher) — but in return delivers the stronger reasoning, instruction-following, and multimodal comprehension of the 3.1 generation.
+        </p>
+        <p class="body-copy">
+          The price increase is not trivial, but context matters: Gemini 3.1 Flash Lite still sits comfortably in the bc-cheap benchmark cost tier. For workloads that saturated 2.5 Flash Lite's quality ceiling, the 3.1 version offers a path to better outputs without jumping to Flash or Pro pricing.
+        </p>
+
+        <div class="info-callout">
+          <div class="callout-label">Lineage at a glance</div>
+          <p>2.5 Flash Lite ($0.10/$0.40) → 3.1 Flash Lite ($0.25/$1.50). Same 1M context, same 5-modality inputs, meaningful quality step-up at a still-budget price.</p>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 3: 1M context -->
+        <h2 class="section-title">1M Context at Budget Pricing</h2>
+        <p class="body-copy">
+          One million tokens is a genuinely unusual number at this price tier. To put it in concrete terms: a 750-page book of standard prose runs roughly 750,000 tokens. Sending that entire manuscript as context to Gemini 3.1 Flash Lite costs approximately $0.0002 — less than a fraction of a cent — on the input side alone. For document processing tasks where context size historically forced chunking strategies, the 1M window is a significant architectural simplification.
+        </p>
+        <p class="body-copy">
+          Long-context workloads that previously required retrieval-augmented generation pipelines — with all their indexing overhead, embedding costs, and chunk-boundary artifacts — can instead send raw documents directly. Legal document review, technical manual analysis, codebase summarization, and multi-document research synthesis all become simpler to build when you can fit the source material in a single call.
+        </p>
+
+        <!-- AdSense -->
+        <div class="adsense-mid">
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <!-- SECTION 4: 5-modality -->
+        <h2 class="section-title">Full 5-Modality Input at This Price</h2>
+        <p class="body-copy">
+          All Gemini models accept the same five input types: text, images, audio, video, and files (PDFs and structured documents). That uniformity across the Google model stack means that a prototype built on Gemini 3.1 Flash Lite can scale up to Flash or Pro without any input-handling changes — only the model ID changes.
+        </p>
+        <p class="body-copy">
+          This stands in direct contrast to the budget alternatives from other providers. GPT-4o Mini, for instance, handles text and images but has no native audio or video processing. For teams building pipelines that ingest audio recordings, video clips, or mixed-media documents, Gemini 3.1 Flash Lite is one of the few budget-tier options that handles all five modalities natively without routing different media types to different models.
+        </p>
+        <p class="body-copy">
+          Practically: you can send a customer service audio clip, an invoice PDF, a product image, and a text description in a single API request — and get a unified text response back — without preprocessing any of those inputs yourself.
+        </p>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 5: No reasoning -->
+        <h2 class="section-title">No Reasoning Tokens — Pure Generation</h2>
+        <p class="body-copy">
+          Gemini 3.1 Flash Lite does not employ extended reasoning (chain-of-thought token budgets). What you send is what gets processed; there is no hidden scratchpad accumulating reasoning tokens behind the scenes. This is the correct behavior for the use cases Flash Lite is designed for.
+        </p>
+        <p class="body-copy">
+          For classification tasks, extraction pipelines, translation workflows, and structured output generation, reasoning overhead adds latency and cost without improving the result. Flash Lite's no-reasoning design means predictable token counts, faster time-to-first-token, and clean cost modeling. If a task genuinely requires multi-step deduction — complex mathematical proofs, deep code generation, adversarial reasoning — the model will be honest about its limits. For everything else, the absence of reasoning tokens is a feature.
+        </p>
+
+        <!-- SECTION 6: Benchmark -->
+        <hr class="section-divider" />
+        <h2 class="section-title">Benchmark Results</h2>
+        <p class="body-copy">
+          Our standard benchmark runs a structured technical question through every model at a 600-token output cap. Here is where Gemini 3.1 Flash Lite lands.
+        </p>
+
+        <div class="benchmark-block">
+          <div class="benchmark-header">
+            <div class="benchmark-header-left">Aether Intel Standard Benchmark</div>
+            <span class="benchmark-cost-badge bc-cheap">bc-cheap — $0.003375</span>
+          </div>
+
+          <div class="token-stats-strip">
+            <div class="token-stat"><strong>32</strong> prompt tokens</div>
+            <div class="token-stat"><strong>596</strong> completion tokens</div>
+            <div class="token-stat"><strong>628</strong> total</div>
+            <div class="token-stat"><strong>0</strong> reasoning</div>
+            <div class="token-stat">Finish: <strong>MAX_TOKENS</strong></div>
+            <div class="token-stat">Actual cost: <strong>$0.000902</strong></div>
+          </div>
+
+          <div class="benchmark-prompt-text">
+            "Explain the key trade-offs between SQL and NoSQL databases. When would you choose each? Give me a concrete example of a system that suits each approach."
+          </div>
+
+          <div class="benchmark-response-text"><span class="resp-header">### 1. SQL (Relational Databases)</span>
+
+Structured, ACID-compliant storage with enforced schema. Best when data relationships are well-defined.
+
+<strong>Pros:</strong> Strong consistency, rich query language (JOINs, aggregations), mature ecosystem
+<strong>Cons:</strong> Vertical scaling pressure, rigid schema evolution, less suited for unstructured data
+
+★ <strong>When to choose:</strong> Financial systems, ERP platforms, any domain where transaction integrity is non-negotiable
+
+<strong>Example:</strong> A banking ledger system — every debit must match a credit, and partial writes must never persist.
+
+<span class="resp-header">### 2. NoSQL (Non-relational Databases)</span>
+
+Flexible schemas, horizontal scaling (sharding), and eventual consistency models.
+
+<strong>CAP theorem note:</strong> NoSQL systems typically trade consistency for availability and partition tolerance — fitting the BASE model (Basically Available, Soft state, Eventual consistency) rather than ACID.
+
+★ <strong>When to choose:</strong> High-write-throughput applications, variable document structures, global distribution requirements
+
+<strong>Example:</strong> A Content Management System — MongoDB suits blogs and social media platforms where posts have varying fields (some include video, others only text), and the schema evolves rapidly as product features shi...</div>
+          <p class="benchmark-note">Response cut off at 596 tokens (600 token limit). Finish reason: MAX_TOKENS. Provider: Google (direct).</p>
+        </div>
+
+        <h3 class="sub-title">Reading the Benchmark Response</h3>
+        <p class="body-copy">
+          The response demonstrates clean professional structure immediately — parallel numbered headers, consistent bullet formatting, starred "when to choose" callouts. What stands out most is the unprompted CAP theorem explanation. The model didn't just label NoSQL as "eventually consistent" and move on; it explicitly introduced the BASE acronym (Basically Available, Soft state, Eventual consistency) and connected it to the trade-off being discussed. For a budget-tier model with no reasoning tokens, that level of spontaneous technical depth is encouraging.
+        </p>
+        <p class="body-copy">
+          The concrete example choices are also on point: a banking ledger for SQL (the canonical ACID use case) and MongoDB for a CMS (the canonical document-flexibility use case). The "horizontal scaling (sharding)" phrasing shows appropriate technical vocabulary without overreach. The only limitation visible here is the hard MAX_TOKENS cutoff — the CMS example was mid-sentence when the limit hit. In production use with a higher output budget, this is a non-issue.
+        </p>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 8: Use cases -->
+        <h2 class="section-title">Use Cases</h2>
+        <p class="body-copy">
+          Gemini 3.1 Flash Lite is purpose-built for high-volume production workloads where cost per call matters more than pushing the frontier of model capability.
+        </p>
+
+        <div class="use-case-grid">
+          <div class="use-case-card">
+            <div class="uc-icon">🖼</div>
+            <div class="uc-title">Image Classification Pipelines</div>
+            <div class="uc-desc">Tag, categorize, or describe product images at scale. Batch throughput at a fraction of premium model cost.</div>
+          </div>
+          <div class="use-case-card">
+            <div class="uc-icon">🎙</div>
+            <div class="uc-title">Audio Processing</div>
+            <div class="uc-desc">Transcription, summarization, sentiment analysis on call recordings, podcasts, or voice memos. Native audio input — no preprocessing required.</div>
+          </div>
+          <div class="use-case-card">
+            <div class="uc-icon">📄</div>
+            <div class="uc-title">Document Routing</div>
+            <div class="uc-desc">Classify and triage high volumes of documents — invoices, contracts, support tickets — using the 1M context window to avoid chunking.</div>
+          </div>
+          <div class="use-case-card">
+            <div class="uc-icon">📱</div>
+            <div class="uc-title">Mobile & Edge Apps</div>
+            <div class="uc-desc">Cost-sensitive client applications where inference is billed per-call. Fast generation and low latency suit real-time UX patterns.</div>
+          </div>
+          <div class="use-case-card">
+            <div class="uc-icon">🎞</div>
+            <div class="uc-title">Multimodal Batch Jobs</div>
+            <div class="uc-desc">Mixed-media pipelines that ingest video clips, images, and documents in the same workflow — all handled by a single model endpoint.</div>
+          </div>
+          <div class="use-case-card">
+            <div class="uc-icon">🔍</div>
+            <div class="uc-title">Long-Doc Analysis</div>
+            <div class="uc-desc">Full-document summarization, extraction, and Q&A on large PDFs or codebases without RAG infrastructure overhead.</div>
+          </div>
+        </div>
+
+        <!-- SECTION 9: Pricing -->
+        <hr class="section-divider" />
+        <h2 class="section-title">Pricing Breakdown</h2>
+        <p class="body-copy">
+          Our benchmark cost formula uses 1,500 prompt tokens and 2,000 completion tokens as a representative call. Here is the math for Gemini 3.1 Flash Lite:
+        </p>
+
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Tokens</th>
+              <th>Rate</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Input (prompt)</td>
+              <td>1,500</td>
+              <td>$0.25 / 1M</td>
+              <td><strong>$0.000375</strong></td>
+            </tr>
+            <tr>
+              <td>Output (completion)</td>
+              <td>2,000</td>
+              <td>$1.50 / 1M</td>
+              <td><strong>$0.003000</strong></td>
+            </tr>
+            <tr>
+              <td colspan="3"><strong>Benchmark Total (bc-cheap tier)</strong></td>
+              <td><strong style="color:var(--neon-cyan)">$0.003375</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="body-copy">
+          For context, processing one million input tokens costs $0.25 — that is roughly a 750-page novel for a quarter of a dollar on the input side. Output is the dominant cost driver at $1.50/1M, so prompt-heavy, low-output workloads (classification, extraction) will see the best economics here.
+        </p>
+
+        <!-- SECTION 10: When to use / avoid -->
+        <hr class="section-divider" />
+        <h2 class="section-title">When to Use / When to Avoid</h2>
+
+        <div class="fit-grid">
+          <div class="fit-card fit-good">
+            <div class="fit-title">Good fit</div>
+            <ul>
+              <li>High-volume pipelines where cost per call matters</li>
+              <li>Workloads using more than two input modalities</li>
+              <li>Long documents that would require chunking elsewhere</li>
+              <li>Prototyping with a path to scale up to Flash or Pro</li>
+              <li>Mobile / edge apps with real-time UX requirements</li>
+              <li>Batch jobs where output quality is good enough and speed matters</li>
+            </ul>
+          </div>
+          <div class="fit-card fit-bad">
+            <div class="fit-title">Poor fit</div>
+            <ul>
+              <li>Complex multi-step mathematical reasoning</li>
+              <li>Frontier coding tasks requiring deep code generation</li>
+              <li>Research-grade analysis where model ceiling matters</li>
+              <li>Tasks where Gemini 2.5 Flash Lite performed adequately — no need to upgrade</li>
+              <li>Tight latency requirements on very long-context calls</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SECTION 11: Comparison table -->
+        <hr class="section-divider" />
+        <h2 class="section-title">Gemini Family Comparison</h2>
+        <p class="body-copy">
+          Where Gemini 3.1 Flash Lite sits within the Google model stack — and against the leading third-party budget alternative.
+        </p>
+
+        <div class="comparison-table-wrap">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Input / 1M</th>
+                <th>Output / 1M</th>
+                <th>Context</th>
+                <th>Modalities</th>
+                <th>Reasoning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="this-model">
+                <td>Gemini 3.1 Flash Lite ★</td>
+                <td>$0.25</td>
+                <td>$1.50</td>
+                <td>1M</td>
+                <td>5-modality</td>
+                <td class="tag-no">No</td>
+              </tr>
+              <tr>
+                <td>Gemini 2.5 Flash Lite</td>
+                <td>$0.10</td>
+                <td>$0.40</td>
+                <td>1M</td>
+                <td>5-modality</td>
+                <td class="tag-no">No</td>
+              </tr>
+              <tr>
+                <td>Gemini 2.5 Flash</td>
+                <td>$0.30</td>
+                <td>$2.50</td>
+                <td>1M</td>
+                <td>5-modality</td>
+                <td class="tag-some">Some</td>
+              </tr>
+              <tr>
+                <td>Gemini 2.5 Pro</td>
+                <td>$1.25</td>
+                <td>$10.00</td>
+                <td>1M</td>
+                <td>5-modality</td>
+                <td class="tag-yes">Yes (575 tok)</td>
+              </tr>
+              <tr>
+                <td>GPT-4o Mini</td>
+                <td>$0.15</td>
+                <td>$0.60</td>
+                <td>128K</td>
+                <td>Text + Image</td>
+                <td class="tag-no">No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="body-copy">
+          The comparison highlights a clear trade-off: GPT-4o Mini is cheaper on both input and output, but its 128K context ceiling and lack of native audio and video make it a narrower tool. For text-and-image workflows within 128K tokens, it remains competitive. For everything else — longer documents, audio, video, mixed-media pipelines — Gemini 3.1 Flash Lite is the natural budget choice. Within the Gemini family, Flash Lite occupies the bottom of the cost ladder; stepping up to Flash adds some reasoning capability and better output quality for roughly the same input price but higher output cost.
+        </p>
+
+        <!-- Try it band -->
+        <div class="try-it-band">
+          <h2>Try Gemini 3.1 Flash Lite</h2>
+          <p>Run your own prompts directly through our interface — bring your own API key.</p>
+          <a
+            class="btn-try"
+            href="/models/"
+            onclick="event.preventDefault(); if(window.byok){ window.byok.openByokModal && window.byok.openByokModal('google/gemini-3.1-flash-lite','Gemini 3.1 Flash Lite'); } else { window.location.href='/models/'; }"
+          >
+            Open in Playground
+          </a>
+        </div>
+
+        <!-- Final thoughts -->
+        <hr class="section-divider" />
+        <h2 class="section-title">Final Assessment</h2>
+        <p class="body-copy">
+          Gemini 3.1 Flash Lite is a straightforward value proposition for teams already using Google's model stack. It costs more than its predecessor — that is the honest reality — but it brings the 3.1 generation's improvements to a price point that remains firmly budget. For workloads that never needed Gemini 2.5 Flash Lite's ceiling, there is no compelling reason to upgrade. For workloads that did hit that ceiling, or for new projects that need better instruction following, richer multimodal understanding, or stronger technical depth at low cost, 3.1 Flash Lite makes the step-up sensible.
+        </p>
+        <p class="body-copy">
+          The benchmark confirms what the positioning suggests: professional structure, appropriate technical vocabulary (CAP theorem, BASE model, horizontal sharding), and clean output formatting — all from a model that costs $0.003375 to run a typical benchmark call. The MAX_TOKENS cutoff is a reminder that this is a budget model with real limits, but for the workloads it is designed for, it performs reliably above its price tier.
+        </p>
+
+        <div class="info-callout">
+          <div class="callout-label">OpenRouter ID</div>
+          <p>Model ID: <strong>google/gemini-3.1-flash-lite</strong>&nbsp; (served as: <code>google/gemini-3.1-flash-lite-20260507</code>)</p>
+        </div>
+
+      </article>
+
+    </div><!-- /.container -->
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p>
+      &copy; 2026 <a href="/">Aether Intel</a> &mdash; AI model reviews and benchmarks &mdash;
+      <a href="/privacy/">Privacy</a> &middot;
+      <a href="/about/">About</a>
+    </p>
+    <p style="margin-top:6px;">Published May 16, 2026 &mdash; ai.quantummerlin.com</p>
+  </footer>
+
+</body>
+</html>

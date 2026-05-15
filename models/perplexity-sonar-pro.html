@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perplexity Sonar Pro Review — Live Search AI | Aether Intel</title>
+  <meta name="description" content="Perplexity Sonar Pro benchmarked and reviewed: the search-grounded AI that automatically cites live web sources. 200K context, $3/$15 per 1M tokens, real-time freshness." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/perplexity-sonar-pro/" />
+  <meta property="og:title" content="Perplexity Sonar Pro — Search-Grounded AI Review | Aether Intel" />
+  <meta property="og:description" content="We benchmarked Sonar Pro and got 10 live web citations automatically attached. Here's what that means for your use case." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/perplexity-sonar-pro/" />
+  <meta property="og:site_name" content="Aether Intel" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Perplexity Sonar Pro — Search-Grounded AI Review" />
+  <meta name="twitter:description" content="Live web citations, 200K context, real-time grounding. Not just another LLM." />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Design Tokens ───────────────────────────────────────────── */
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --perplexity: #20b8cd;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+    }
+
+    /* ── Base ────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    a { color: var(--perplexity); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    img { max-width: 100%; display: block; }
+
+    /* ── Layout ──────────────────────────────────────────────────── */
+    .site-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: .85rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: .1em;
+    }
+
+    .site-logo span { color: var(--neon-indigo); }
+
+    .site-nav { display: flex; gap: 24px; }
+    .site-nav a {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+    .site-nav a:hover { color: var(--text-primary); text-decoration: none; }
+
+    .page-wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── Breadcrumb ──────────────────────────────────────────────── */
+    .breadcrumb {
+      font-size: .72rem;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      padding: 18px 0 0;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--text-muted); }
+    .breadcrumb a:hover { color: var(--text-secondary); }
+    .breadcrumb .sep { opacity: .5; }
+
+    /* ── Hero ────────────────────────────────────────────────────── */
+    .hero { padding: 28px 0 32px; }
+
+    .hero-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: .68rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .badge-provider {
+      background: rgba(32,184,205,0.12);
+      border: 1px solid rgba(32,184,205,0.35);
+      color: #20b8cd;
+    }
+
+    .badge-category {
+      background: rgba(129,140,248,0.10);
+      border: 1px solid rgba(129,140,248,0.25);
+      color: var(--neon-indigo);
+    }
+
+    .badge-date {
+      background: rgba(71,85,105,0.25);
+      border: 1px solid rgba(71,85,105,0.4);
+      color: var(--text-muted);
+    }
+
+    h1.model-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: .04em;
+      margin-bottom: 14px;
+    }
+
+    h1.model-title span.accent { color: #20b8cd; }
+
+    .hero-lead {
+      font-size: 1.08rem;
+      color: var(--text-secondary);
+      font-family: var(--font-heading);
+      line-height: 1.65;
+      margin-bottom: 20px;
+      max-width: 680px;
+    }
+
+    .hero-highlight {
+      border-left: 3px solid #20b8cd;
+      padding: 12px 18px;
+      background: rgba(32,184,205,0.05);
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 24px;
+      font-size: .93rem;
+      color: var(--text-secondary);
+      font-family: var(--font-heading);
+      line-height: 1.6;
+    }
+
+    .hero-highlight strong { color: var(--text-primary); }
+
+    /* ── Info Callout ────────────────────────────────────────────── */
+    .info-callout {
+      background: rgba(32,184,205,0.07);
+      border: 1px solid rgba(32,184,205,0.28);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: .9rem;
+      color: var(--text-secondary);
+      font-family: var(--font-heading);
+      line-height: 1.65;
+      margin: 20px 0;
+    }
+
+    .info-callout strong { color: var(--perplexity); }
+
+    /* ── Dividers / Section Titles ───────────────────────────────── */
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 36px 0;
+    }
+
+    h2.section-title {
+      font-family: var(--font-display);
+      font-size: .95rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 16px;
+    }
+
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 20px 0 8px;
+    }
+
+    p.body-copy {
+      color: var(--text-secondary);
+      font-size: .95rem;
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    /* ── Spec Grid ───────────────────────────────────────────────── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .55rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .spec-value {
+      font-family: var(--font-heading);
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .spec-value.accent { color: #20b8cd; }
+
+    .spec-sub {
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Benchmark Block ─────────────────────────────────────────── */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin: 20px 0;
+    }
+
+    .benchmark-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .benchmark-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .benchmark-cost-badge {
+      font-family: var(--font-display);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .benchmark-cost-badge.bc-mid {
+      background: rgba(245,158,11,0.14);
+      border: 1px solid rgba(245,158,11,0.38);
+      color: var(--neon-gold);
+    }
+
+    .benchmark-prompt-text {
+      font-size: .82rem;
+      color: var(--text-muted);
+      font-style: italic;
+      background: rgba(7,7,15,0.5);
+      border-radius: 8px;
+      padding: 10px 14px;
+      border-left: 3px solid var(--border);
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+
+    .benchmark-response-text {
+      font-size: .83rem;
+      color: var(--text-secondary);
+      background: rgba(7,7,15,0.5);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid rgba(32,184,205,0.35);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .benchmark-response-text .truncated {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ── Token Stats Strip ───────────────────────────────────────── */
+    .token-stats-strip {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .token-stat {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: .75rem;
+    }
+
+    .token-stat-label {
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: .52rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .token-stat-value {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* ── Citations Block ─────────────────────────────────────────── */
+    .citations-block {
+      background: rgba(32,184,205,0.04);
+      border: 1px solid rgba(32,184,205,0.18);
+      border-radius: 10px;
+      padding: 18px;
+      margin: 16px 0;
+    }
+
+    .citations-title {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #20b8cd;
+      margin-bottom: 12px;
+    }
+
+    .citation-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(32,184,205,0.08);
+      font-size: .82rem;
+      color: var(--text-secondary);
+    }
+
+    .citation-item:last-child { border-bottom: none; }
+
+    .citation-num {
+      color: #20b8cd;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: .78rem;
+      width: 20px;
+    }
+
+    .citation-body { display: flex; flex-direction: column; gap: 1px; }
+
+    .citation-title {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .citation-domain {
+      color: var(--text-muted);
+      font-size: .75rem;
+    }
+
+    /* ── Use Case Grid ───────────────────────────────────────────── */
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .use-case-icon {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .use-case-title {
+      font-family: var(--font-heading);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .use-case-desc {
+      font-size: .78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Fit Grid (When to Use / Avoid) ─────────────────────────── */
+    .fit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    @media (max-width: 520px) { .fit-grid { grid-template-columns: 1fr; } }
+
+    .fit-card {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .fit-card.good {
+      border: 1px solid rgba(32,184,205,0.28);
+    }
+
+    .fit-card.avoid {
+      border: 1px solid rgba(245,158,11,0.22);
+    }
+
+    .fit-card-title {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .fit-card.good .fit-card-title { color: #20b8cd; }
+    .fit-card.avoid .fit-card-title { color: var(--neon-gold); }
+
+    .fit-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .fit-list li {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      line-height: 1.45;
+    }
+
+    .fit-list li .bullet { flex-shrink: 0; margin-top: 1px; }
+    .fit-card.good .bullet { color: #20b8cd; }
+    .fit-card.avoid .bullet { color: var(--neon-gold); }
+
+    /* ── Pricing Table ───────────────────────────────────────────── */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+      margin: 16px 0;
+      background: var(--surface);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .pricing-table thead tr {
+      background: var(--surface-2);
+    }
+
+    .pricing-table th {
+      font-family: var(--font-display);
+      font-size: .55rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 11px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pricing-table td {
+      padding: 11px 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(129,140,248,0.06);
+      vertical-align: middle;
+    }
+
+    .pricing-table tbody tr:last-child td { border-bottom: none; }
+
+    .pricing-table td strong { color: var(--text-primary); }
+
+    .pricing-table .highlight-row td {
+      background: rgba(32,184,205,0.05);
+    }
+
+    .price-val { font-family: var(--font-heading); font-weight: 700; color: var(--text-primary); }
+
+    /* ── Comparison Table ────────────────────────────────────────── */
+    .comparison-table-wrap {
+      overflow-x: auto;
+      margin: 16px 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .82rem;
+      background: var(--surface);
+      min-width: 560px;
+    }
+
+    .comparison-table thead tr {
+      background: var(--surface-2);
+    }
+
+    .comparison-table th {
+      font-family: var(--font-display);
+      font-size: .52rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 10px 13px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .comparison-table td {
+      padding: 10px 13px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(129,140,248,0.06);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .comparison-table tbody tr:last-child td { border-bottom: none; }
+
+    .comparison-table .this-model td {
+      border-left: 3px solid #20b8cd;
+      background: rgba(32,184,205,0.05);
+      color: var(--text-primary);
+    }
+
+    .comparison-table .this-model td:first-child {
+      font-weight: 700;
+      color: #20b8cd;
+    }
+
+    .tag-yes {
+      display: inline-block;
+      background: rgba(32,184,205,0.12);
+      border: 1px solid rgba(32,184,205,0.3);
+      color: #20b8cd;
+      border-radius: 20px;
+      font-size: .68rem;
+      padding: 2px 8px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+
+    .tag-no {
+      display: inline-block;
+      background: rgba(71,85,105,0.18);
+      border: 1px solid rgba(71,85,105,0.3);
+      color: var(--text-muted);
+      border-radius: 20px;
+      font-size: .68rem;
+      padding: 2px 8px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+
+    /* ── Try-it Band ─────────────────────────────────────────────── */
+    .try-it-band {
+      background: linear-gradient(135deg, rgba(32,184,205,0.08) 0%, rgba(32,184,205,0.03) 100%);
+      border: 1px solid rgba(32,184,205,0.25);
+      border-radius: 12px;
+      padding: 28px 24px;
+      text-align: center;
+      margin: 36px 0;
+    }
+
+    .try-it-band h3 {
+      font-family: var(--font-display);
+      font-size: .9rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .try-it-band p {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      margin-bottom: 18px;
+      font-family: var(--font-heading);
+    }
+
+    .try-it-btn {
+      display: inline-block;
+      background: #20b8cd;
+      color: #07070f;
+      font-family: var(--font-display);
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 12px 28px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+
+    .try-it-btn:hover { opacity: .88; transform: translateY(-1px); text-decoration: none; }
+
+    /* ── AdSense Mid ─────────────────────────────────────────────── */
+    .adsense-mid {
+      margin: 32px 0;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(19,19,38,0.5);
+      border: 1px dashed rgba(71,85,105,0.3);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* ── Code block ──────────────────────────────────────────────── */
+    .code-block {
+      background: #0a0a18;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 14px 0;
+      overflow-x: auto;
+      font-size: .78rem;
+      line-height: 1.65;
+    }
+
+    .code-block code {
+      font-family: 'Courier New', Courier, monospace;
+      color: var(--text-secondary);
+    }
+
+    .code-block .k { color: #818cf8; }
+    .code-block .s { color: #20b8cd; }
+    .code-block .p { color: #94a3b8; }
+    .code-block .n { color: #e2e8f0; }
+    .code-block .c { color: #475569; font-style: italic; }
+
+    /* ── Site Footer ─────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      font-size: .75rem;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+    }
+
+    .site-footer a { color: var(--text-muted); }
+    .site-footer a:hover { color: var(--text-secondary); }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .site-nav { display: none; }
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Site Header ──────────────────────────────────────────────── -->
+  <header class="site-header">
+    <a href="/" class="site-logo">AETHER<span>INTEL</span></a>
+    <nav class="site-nav">
+      <a href="/models/">Models</a>
+      <a href="/benchmarks/">Benchmarks</a>
+      <a href="/guides/">Guides</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  <!-- ── Page Content ─────────────────────────────────────────────── -->
+  <main class="page-wrap">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep">/</span>
+      <a href="/models/">Models</a>
+      <span class="sep">/</span>
+      <span>Perplexity Sonar Pro</span>
+    </nav>
+
+    <!-- ── Hero ─────────────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-badges">
+        <span class="badge badge-provider">Perplexity</span>
+        <span class="badge badge-category">Search-Grounded AI</span>
+        <span class="badge badge-date">Updated May 16, 2026</span>
+      </div>
+
+      <h1 class="model-title">Perplexity <span class="accent">Sonar Pro</span></h1>
+
+      <p class="hero-lead">
+        Not just another language model. Sonar Pro searches the live web before generating each response, returning structured citations alongside every answer. It is the only model in our benchmark series that ships with built-in real-time grounding.
+      </p>
+
+      <div class="hero-highlight">
+        <strong>OpenRouter ID:</strong> perplexity/sonar-pro &nbsp;|&nbsp;
+        <strong>Context:</strong> 200K tokens &nbsp;|&nbsp;
+        <strong>Input:</strong> $3.00 / 1M &nbsp;|&nbsp;
+        <strong>Output:</strong> $15.00 / 1M &nbsp;+&nbsp; ~$5 / 1K searches &nbsp;|&nbsp;
+        <strong>Benchmark cost:</strong> $0.0345 (bc-mid)
+      </div>
+
+      <div class="info-callout">
+        <strong>Not a pure LLM.</strong> Sonar Pro adds a live web search step before generating each response. Every answer is grounded in current sources, not training data from months ago. This makes it uniquely suited for research and current-events tasks — and uniquely unsuitable for pure generation workflows where search grounding adds latency and cost with no benefit.
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- ── Specs ─────────────────────────────────────────────────── -->
+    <h2 class="section-title">Model Specifications</h2>
+    <div class="model-specs-grid">
+      <div class="spec-card">
+        <div class="spec-label">Provider</div>
+        <div class="spec-value accent">Perplexity</div>
+        <div class="spec-sub">Direct serving</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Context Window</div>
+        <div class="spec-value">200K</div>
+        <div class="spec-sub">200,000 tokens</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Input Price</div>
+        <div class="spec-value">$3.00</div>
+        <div class="spec-sub">per 1M tokens</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Output Price</div>
+        <div class="spec-value">$15.00</div>
+        <div class="spec-sub">per 1M tokens</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Search Cost</div>
+        <div class="spec-value">~$5.00</div>
+        <div class="spec-sub">per 1K requests</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Architecture</div>
+        <div class="spec-value" style="font-size:.82rem">LLM + Web Search</div>
+        <div class="spec-sub">Real-time grounding</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Input Modalities</div>
+        <div class="spec-value">Text</div>
+        <div class="spec-sub">No image input</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Output Modalities</div>
+        <div class="spec-value" style="font-size:.82rem">Text + Citations</div>
+        <div class="spec-sub">Inline URL annotations</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Reasoning Tokens</div>
+        <div class="spec-value">None</div>
+        <div class="spec-sub">No chain-of-thought</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Released</div>
+        <div class="spec-value">2024</div>
+        <div class="spec-sub">Actively maintained</div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <!-- ── What Is Sonar Pro ─────────────────────────────────────── -->
+    <h2 class="section-title">What Is Sonar Pro?</h2>
+
+    <p class="body-copy">
+      Perplexity Sonar Pro is best understood as a different product category compared to every other model in our benchmark series. Where GPT-4o, Claude Sonnet, and Gemini are pure language models drawing on compressed training data, Sonar Pro dispatches a live web search on every request and uses the returned pages as grounding context before it writes a single word. The result is a response anchored to what the web says right now — not what it said when the model was trained.
+    </p>
+
+    <p class="body-copy">
+      The fundamental implication: Sonar Pro cannot hallucinate a source. Its citations are live URLs retrieved during inference. If a page no longer exists, it simply does not appear. This is structurally different from a model that confidently fabricates a plausible-sounding journal reference.
+    </p>
+
+    <h3 class="sub-title">The Architecture in Plain Terms</h3>
+    <p class="body-copy">
+      When you submit a prompt to Sonar Pro, three things happen before you see any output. First, the model determines what to search. Second, Perplexity's search infrastructure retrieves relevant current pages. Third, the LLM generates a response using those retrieved pages as primary context, attaching structured <code>url_citation</code> annotation objects to the API response. You receive the prose answer and the sourced URLs in a single call. Your application can then render inline footnotes, reference panels, or source cards with zero additional API calls.
+    </p>
+
+    <p class="body-copy">
+      The 200,000-token context window means Sonar Pro can hold substantial retrieved content alongside a long conversation or document. For research workflows, this translates to the ability to synthesize across many retrieved sources within a single request without running into context limits mid-task.
+    </p>
+
+    <hr class="section-divider" />
+
+    <!-- ── Benchmark ─────────────────────────────────────────────── -->
+    <h2 class="section-title">Live Benchmark</h2>
+    <p class="body-copy">
+      We ran Sonar Pro through the Aether Intel standard benchmark prompt with a 600-token completion cap. The results were unlike anything else in the series.
+    </p>
+
+    <div class="benchmark-block">
+      <div class="benchmark-header">
+        <span class="benchmark-label">Benchmark Prompt</span>
+        <span class="benchmark-cost-badge bc-mid">$0.0345 &mdash; bc-mid</span>
+      </div>
+      <div class="benchmark-prompt-text">
+        "Explain the key trade-offs between SQL and NoSQL databases. When would you choose each? Give me a concrete example of a system that suits each approach."
+      </div>
+
+      <div class="benchmark-header" style="margin-top:16px;">
+        <span class="benchmark-label">Response Preview (truncated at 600-token limit)</span>
+      </div>
+      <div class="benchmark-response-text">
+        <strong>## Core trade-offs: SQL vs NoSQL</strong><br /><br />
+        <strong>1. Data model &amp; schema</strong><br />
+        SQL: Rigid tabular schema enforced before data insertion. Changes require migrations.
+        NoSQL: Flexible or schema-less. Documents, key-value pairs, graphs, or wide columns accepted without pre-definition.
+        <em>Trade-off:</em> SQL predictability vs. NoSQL agility for evolving data shapes.<br /><br />
+        <strong>2. Consistency / integrity / transactions</strong><br />
+        SQL: ACID-compliant transactions guarantee that complex multi-step operations succeed or roll back cleanly.
+        NoSQL: Most offer eventual consistency; some support limited transactions. Better for workloads that tolerate brief inconsistency in exchange for availability.
+        <em>Trade-off:</em> SQL integrity guarantees vs. NoSQL availability at scale.<br /><br />
+        <strong>3. Scalability / performance</strong><br />
+        SQL: Scales vertically (bigger machines). Horizontal sharding is possible but complex.
+        NoSQL: Designed for horizontal scale-out. Distributed by default; handles massive write throughput and geographic distribution.<br /><br />
+        <strong>4. Querying / analytics</strong><br />
+        SQL: Rich declarative query language, joins, aggregations, window functions. <span class="truncated">Strong support for ad... [cut off at token limit — more content was generating]</span>
+      </div>
+
+      <div class="token-stats-strip">
+        <div class="token-stat">
+          <div class="token-stat-label">Prompt Tokens</div>
+          <div class="token-stat-value">33</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Completion Tokens</div>
+          <div class="token-stat-value">598</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Total Tokens</div>
+          <div class="token-stat-value">631</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Reasoning Tokens</div>
+          <div class="token-stat-value">0</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Finish Reason</div>
+          <div class="token-stat-value">length</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Actual Cost</div>
+          <div class="token-stat-value">$0.01507</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Citations ─────────────────────────────────────────────── -->
+    <h3 class="sub-title">10 Live Citations — Automatically Attached</h3>
+    <p class="body-copy">
+      This is the part that has no equivalent in any other model we have benchmarked. The API response included an <code>annotations</code> array containing 10 <code>url_citation</code> objects. These are not suggestions or hallucinated references. They are live URLs retrieved and used during inference.
+    </p>
+
+    <div class="citations-block">
+      <div class="citations-title">Annotations Returned by the API</div>
+
+      <div class="citation-item">
+        <span class="citation-num">1</span>
+        <div class="citation-body">
+          <span class="citation-title">Difference between SQL and NoSQL</span>
+          <span class="citation-domain">geeksforgeeks.org</span>
+        </div>
+      </div>
+      <div class="citation-item">
+        <span class="citation-num">2</span>
+        <div class="citation-body">
+          <span class="citation-title">SQL vs NoSQL: 5 Critical Differences</span>
+          <span class="citation-domain">integrate.io</span>
+        </div>
+      </div>
+      <div class="citation-item">
+        <span class="citation-num">3</span>
+        <div class="citation-body">
+          <span class="citation-title">What Is NoSQL?</span>
+          <span class="citation-domain">datacamp.com</span>
+        </div>
+      </div>
+      <div class="citation-item">
+        <span class="citation-num">4</span>
+        <div class="citation-body">
+          <span class="citation-title">SQL vs. NoSQL Databases: What's the Difference?</span>
+          <span class="citation-domain">ibm.com</span>
+        </div>
+      </div>
+      <div class="citation-item">
+        <span class="citation-num">5</span>
+        <div class="citation-body">
+          <span class="citation-title">SQL vs. NoSQL Today: Databases, Differences &amp; When to Use Which</span>
+          <span class="citation-domain">splunk.com</span>
+        </div>
+      </div>
+      <div class="citation-item">
+        <span class="citation-num">6</span>
+        <div class="citation-body">
+          <span class="citation-title">SQL vs. NoSQL: The Differences Explained + When to Use Each</span>
+          <span class="citation-domain">coursera.org</span>
+        </div>
+      </div>
+      <div class="citation-item">
+        <span class="citation-num">7</span>
+        <div class="citation-body">
+          <span class="citation-title">Community discussion: choosing SQL vs NoSQL</span>
+          <span class="citation-domain">reddit.com</span>
+        </div>
+      </div>
+      <div class="citation-item">
+        <span class="citation-num">8</span>
+        <div class="citation-body">
+          <span class="citation-title">Understanding SQL vs NoSQL Databases</span>
+          <span class="citation-domain">mongodb.com</span>
+        </div>
+      </div>
+      <div class="citation-item">
+        <span class="citation-num">9</span>
+        <div class="citation-body">
+          <span class="citation-title">SQL vs NoSQL — Tradeoffs (video)</span>
+          <span class="citation-domain">youtube.com</span>
+        </div>
+      </div>
+      <div class="citation-item">
+        <span class="citation-num">10</span>
+        <div class="citation-body">
+          <span class="citation-title">Tech community discussion</span>
+          <span class="citation-domain">facebook.com</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="body-copy">
+      IBM, MongoDB, Coursera, Splunk, DataCamp — for a question about databases, Sonar Pro surfaced the most authoritative pages the web has to offer, automatically. No prompt engineering required. No retrieval pipeline to build. The citations arrive in the API response.
+    </p>
+
+    <hr class="section-divider" />
+
+    <!-- ── How the API Works ─────────────────────────────────────── -->
+    <h2 class="section-title">Citation API — How It Works</h2>
+    <p class="body-copy">
+      Sonar Pro surfaces citations through an <code>annotations</code> array on the API response object. Each annotation has <code>type: "url_citation"</code> and a nested object containing the source URL, page title, and the character range in the response text where that source was referenced. A minimal example:
+    </p>
+
+    <div class="code-block"><code>
+<span class="p">{</span><br />
+&nbsp;&nbsp;<span class="k">"annotations"</span><span class="p">:</span> <span class="p">[</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">{</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"type"</span><span class="p">:</span> <span class="s">"url_citation"</span><span class="p">,</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"url_citation"</span><span class="p">:</span> <span class="p">{</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"url"</span><span class="p">:</span> <span class="s">"https://www.ibm.com/think/topics/sql-vs-nosql"</span><span class="p">,</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"title"</span><span class="p">:</span> <span class="s">"SQL vs. NoSQL Databases: What's the Difference?"</span><span class="p">,</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"start_index"</span><span class="p">:</span> <span class="n">142</span><span class="p">,</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"end_index"</span><span class="p">:</span> <span class="n">310</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">}</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">}</span><br />
+&nbsp;&nbsp;<span class="p">]</span><br />
+<span class="p">}</span>
+    </code></div>
+
+    <p class="body-copy">
+      The <code>start_index</code> and <code>end_index</code> values map directly to character positions in the response text. This lets your application render inline superscript citation markers — <span style="color:#20b8cd; font-size:.8rem; font-family:var(--font-heading); font-weight:700">[1]</span> — at exactly the right position without any post-processing heuristics. It is a genuinely complete citation API, not a bolted-on feature.
+    </p>
+
+    <hr class="section-divider" />
+
+    <!-- ── AdSense mid ────────────────────────────────────────────── -->
+    <div class="adsense-mid">
+      <ins class="adsbygoogle"
+           style="display:block; width:100%; min-height:90px;"
+           data-ad-client="ca-pub-3480541530392777"
+           data-ad-slot="auto"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- ── Freshness ─────────────────────────────────────────────── -->
+    <h2 class="section-title">Real-Time Freshness</h2>
+    <p class="body-copy">
+      Every other model in our benchmark responds from training data with a cutoff date. Ask GPT-4o about a merger announced last month and you will get either silence, a disclaimer, or a confident fabrication. Ask Sonar Pro the same question and it searches for current press releases before composing its answer.
+    </p>
+
+    <p class="body-copy">
+      This freshness property has hard value in specific verticals. Security researchers need CVE information from this week, not the training corpus. Financial analysts need current earnings figures. Competitive intelligence teams need to know what a competitor announced at last quarter's product event. Journalists need verified facts from yesterday's filings. In each of these cases, training-data freshness is not a nice-to-have — it is the core requirement, and Sonar Pro is the only API model in this benchmark series that satisfies it by design.
+    </p>
+
+    <p class="body-copy">
+      It is also worth noting what the benchmark response demonstrated even for a topic saturated in training data. SQL versus NoSQL is a subject covered on tens of thousands of pages, all well within any model's training corpus. Yet Sonar Pro still retrieved 10 current, authoritative sources. For topics that are genuinely evolving — AI model releases, regulatory changes, live pricing, breaking geopolitical events — the advantage compounds dramatically.
+    </p>
+
+    <hr class="section-divider" />
+
+    <!-- ── Context Window ────────────────────────────────────────── -->
+    <h2 class="section-title">200K Context — Research-Scale Capacity</h2>
+    <p class="body-copy">
+      Sonar Pro's 200,000-token context window puts it comfortably in the research-capable tier. A typical retrieved web page is 2,000–8,000 tokens. At 200K context, Sonar Pro can hold 25–100 full pages of retrieved content alongside your conversation history and system prompt without compressing or truncating its sources. For multi-document research synthesis — competitive landscaping, literature review, policy analysis — this is the practical capacity that makes deep synthesis viable in a single call.
+    </p>
+
+    <p class="body-copy">
+      Compare this with the basic Sonar tier at 127K context. The 200K ceiling in Sonar Pro is a meaningful upgrade for research tasks where retrieved content volume is the binding constraint, not the generated response length.
+    </p>
+
+    <hr class="section-divider" />
+
+    <!-- ── Pricing ────────────────────────────────────────────────── -->
+    <h2 class="section-title">Pricing</h2>
+    <p class="body-copy">
+      Sonar Pro has a two-component pricing structure: token charges for what you send and receive, plus a per-search charge billed per thousand requests. The search component is where the model earns its premium over a plain LLM.
+    </p>
+
+    <table class="pricing-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Rate</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight-row">
+          <td><strong>Input tokens</strong></td>
+          <td><span class="price-val">$3.00 / 1M</span></td>
+          <td>Your prompt + retrieved context</td>
+        </tr>
+        <tr class="highlight-row">
+          <td><strong>Output tokens</strong></td>
+          <td><span class="price-val">$15.00 / 1M</span></td>
+          <td>Generated response text</td>
+        </tr>
+        <tr>
+          <td><strong>Search requests</strong></td>
+          <td><span class="price-val">~$5.00 / 1K</span></td>
+          <td>Billed per request, not per citation</td>
+        </tr>
+        <tr>
+          <td><strong>Benchmark cost (bc-mid)</strong></td>
+          <td><span class="price-val">$0.0345</span></td>
+          <td>1,500 in + 2,000 out tokens</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="body-copy">
+      The benchmark formula: 1,500 tokens &times; $3/1M = $0.0045 (input) + 2,000 tokens &times; $15/1M = $0.030 (output) = <strong>$0.0345 total</strong>. This is the most expensive model in the bc-mid batch. But cost comparisons across models are largely misleading here. No other model in the batch searches the web — the price delta buys a capability that simply does not exist in the alternatives.
+    </p>
+
+    <p class="body-copy">
+      For high-volume production use, the search component warrants attention. At 1,000 requests per day, you are spending roughly $5/day on search alone before token costs. For use cases where search grounding is essential, this is budget. For use cases where it is optional, it is waste — and pure LLMs are the right tool.
+    </p>
+
+    <hr class="section-divider" />
+
+    <!-- ── Comparison ─────────────────────────────────────────────── -->
+    <h2 class="section-title">Comparison Table</h2>
+    <p class="body-copy">
+      Comparing Sonar Pro directly against non-search models on cost is a category error, but the table below gives a picture of where Sonar Pro sits relative to the rest of the benchmark set across the specs that matter.
+    </p>
+
+    <div class="comparison-table-wrap">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Input / 1M</th>
+            <th>Output / 1M</th>
+            <th>Context</th>
+            <th>Live Search?</th>
+            <th>Citations?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="this-model">
+            <td>Sonar Pro</td>
+            <td>$3.00</td>
+            <td>$15.00</td>
+            <td>200K</td>
+            <td><span class="tag-yes">YES</span></td>
+            <td><span class="tag-yes">YES (10+)</span></td>
+          </tr>
+          <tr>
+            <td>Perplexity Sonar</td>
+            <td>$1.00</td>
+            <td>$1.00</td>
+            <td>127K</td>
+            <td><span class="tag-yes">YES</span></td>
+            <td><span class="tag-yes">YES (fewer)</span></td>
+          </tr>
+          <tr>
+            <td>GPT-4o</td>
+            <td>$2.50</td>
+            <td>$10.00</td>
+            <td>128K</td>
+            <td><span class="tag-no">NO</span></td>
+            <td><span class="tag-no">NO</span></td>
+          </tr>
+          <tr>
+            <td>Gemini 2.5 Pro</td>
+            <td>$1.25</td>
+            <td>$10.00</td>
+            <td>1M</td>
+            <td><span class="tag-no">NO</span></td>
+            <td><span class="tag-no">NO</span></td>
+          </tr>
+          <tr>
+            <td>Claude Sonnet 4.6</td>
+            <td>$3.00</td>
+            <td>$15.00</td>
+            <td>1M</td>
+            <td><span class="tag-no">NO</span></td>
+            <td><span class="tag-no">NO</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="body-copy" style="margin-top:10px;">
+      The context window gap is the one legitimate trade-off: Gemini 2.5 Pro and Claude Sonnet 4.6 both offer 1M-token context against Sonar Pro's 200K. For tasks that require loading an entire codebase or very long document before querying, those models win on raw capacity. Sonar Pro's 200K is sufficient for most research and Q&amp;A workflows but falls short for whole-corpus-ingestion tasks.
+    </p>
+
+    <hr class="section-divider" />
+
+    <!-- ── Use Cases ─────────────────────────────────────────────── -->
+    <h2 class="section-title">Ideal Use Cases</h2>
+
+    <div class="use-case-grid">
+      <div class="use-case-card">
+        <div class="use-case-icon">&#x1f50d;</div>
+        <div class="use-case-title">Market Research</div>
+        <div class="use-case-desc">Current competitor pricing, product launches, funding rounds. Grounded answers with sources you can click through to verify.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">&#x1f4ca;</div>
+        <div class="use-case-title">Competitive Intelligence</div>
+        <div class="use-case-desc">What did a competitor ship last quarter? What are analysts saying? Sonar Pro retrieves and synthesizes live information, not stale training data.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">&#x2714;&#xfe0f;</div>
+        <div class="use-case-title">Fact-Checking</div>
+        <div class="use-case-desc">Verify claims against current sources. Every assertion arrives with a URL you can audit, eliminating hallucinated references entirely.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">&#x1f4f0;</div>
+        <div class="use-case-title">Current Events Summarization</div>
+        <div class="use-case-desc">Breaking news, live regulatory filings, recent earnings calls. Models without search cannot answer these. Sonar Pro does, accurately.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">&#x1f4ac;</div>
+        <div class="use-case-title">Customer Support (Current Products)</div>
+        <div class="use-case-desc">Support bots that need current pricing, feature lists, and compatibility info without bespoke RAG infrastructure. Citations let users self-verify.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">&#x1f9ea;</div>
+        <div class="use-case-title">Research Synthesis</div>
+        <div class="use-case-desc">Multi-source analysis of technical topics. The 200K context window accommodates substantial retrieved content for thorough synthesis in a single call.</div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <!-- ── When to Use / Avoid ───────────────────────────────────── -->
+    <h2 class="section-title">When to Use / When to Avoid</h2>
+
+    <div class="fit-grid">
+      <div class="fit-card good">
+        <div class="fit-card-title">Use Sonar Pro When&hellip;</div>
+        <ul class="fit-list">
+          <li><span class="bullet">&#x25B6;</span> Your task requires current information (events, prices, releases)</li>
+          <li><span class="bullet">&#x25B6;</span> You need verifiable source citations in the output</li>
+          <li><span class="bullet">&#x25B6;</span> Hallucinated references are unacceptable (legal, medical, finance)</li>
+          <li><span class="bullet">&#x25B6;</span> You are building a research or intelligence tool without a custom RAG pipeline</li>
+          <li><span class="bullet">&#x25B6;</span> The answer to "is this still true?" matters more than generation speed</li>
+          <li><span class="bullet">&#x25B6;</span> You need 200K of context for multi-document synthesis</li>
+        </ul>
+      </div>
+      <div class="fit-card avoid">
+        <div class="fit-card-title">Avoid Sonar Pro When&hellip;</div>
+        <ul class="fit-list">
+          <li><span class="bullet">&#x25B6;</span> You are generating creative writing, poetry, or fiction</li>
+          <li><span class="bullet">&#x25B6;</span> You are writing or reviewing code — search adds latency, no value</li>
+          <li><span class="bullet">&#x25B6;</span> You need maximum speed and web search latency is unacceptable</li>
+          <li><span class="bullet">&#x25B6;</span> Your context needs exceed 200K tokens (full codebase ingestion)</li>
+          <li><span class="bullet">&#x25B6;</span> Cost-per-token is the primary constraint and grounding adds no ROI</li>
+          <li><span class="bullet">&#x25B6;</span> Your question is fully answerable from static training knowledge</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <!-- ── Limitations ───────────────────────────────────────────── -->
+    <h2 class="section-title">Limitations</h2>
+
+    <h3 class="sub-title">Search Latency</h3>
+    <p class="body-copy">
+      Sonar Pro is slower than a pure LLM by the duration of its web search step. For synchronous chat applications where time-to-first-token matters, the added latency is perceptible. Perplexity does not publish exact p50/p99 search latency figures, but in practice you should expect meaningful extra time compared to models like GPT-4o Mini or Claude Haiku at equivalent token volumes.
+    </p>
+
+    <h3 class="sub-title">Variable Citation Count</h3>
+    <p class="body-copy">
+      Our benchmark returned 10 citations. That is not a guaranteed floor or ceiling. Citation count varies with the specificity of the query, the richness of search results, and internal Perplexity routing decisions. A highly niche or recent topic may surface fewer citations; a broad popular topic may return more. You cannot rely on a fixed number for UI design without defensive handling.
+    </p>
+
+    <h3 class="sub-title">No Image Input</h3>
+    <p class="body-copy">
+      Sonar Pro accepts only text input. It cannot process images, documents, or multimodal prompts. For tasks requiring vision — invoice parsing, chart analysis, image description — a different model is required.
+    </p>
+
+    <h3 class="sub-title">Cost at Scale</h3>
+    <p class="body-copy">
+      The search surcharge ($5 per 1,000 requests) adds up predictably at high volume. At 100,000 daily requests, search alone costs $500/day. For consumer-facing products with search-grounding used on every message, this needs deliberate budgeting. The alternative — using Sonar Pro only for queries where grounding adds clear value, and routing routine queries to a cheaper pure LLM — is a sensible architecture for cost-sensitive production deployments.
+    </p>
+
+    <hr class="section-divider" />
+
+    <!-- ── Try It ─────────────────────────────────────────────────── -->
+    <div class="try-it-band">
+      <h3>Try Sonar Pro in the Playground</h3>
+      <p>Run it against your own queries and inspect the live citations returned by the API.</p>
+      <button class="try-it-btn"
+        onclick="event.preventDefault(); if(window.byok){ window.byok.openByokModal && window.byok.openByokModal('perplexity/sonar-pro','Perplexity Sonar Pro'); } else { window.location.href='/models/'; }">
+        Open in Playground
+      </button>
+    </div>
+
+    <!-- ── Verdict ───────────────────────────────────────────────── -->
+    <h2 class="section-title">Verdict</h2>
+    <p class="body-copy">
+      Sonar Pro is the most expensive model in this benchmark batch on a per-exchange basis, and it earns that position by doing something no other model in the batch does: it goes and looks things up before it answers. The 10 live citations returned for a simple database question — drawn from IBM, MongoDB, Coursera, Splunk, and six more authoritative sources — are not a party trick. They represent a fundamentally different reliability posture for any task where "is this current and accurate?" matters more than "how cheaply can I generate text?"
+    </p>
+
+    <p class="body-copy">
+      For pure generation workloads, Sonar Pro is the wrong tool and its cost premium is waste. For research, intelligence, fact-checking, and current-events summarization, it is not competing with the other models in this benchmark — it is operating in a different category entirely.
+    </p>
+
+    <div class="hero-highlight" style="margin-top:20px;">
+      <strong>Bottom line:</strong> If your application needs to know what is true right now and needs to show its sources, Sonar Pro is the most direct path to that capability available through a single API call. If your application does not need either of those things, use a cheaper pure LLM.
+    </div>
+
+  </main>
+
+  <!-- ── Site Footer ──────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="/models/">All Models</a>
+      <a href="/benchmarks/">Benchmark Methodology</a>
+      <a href="/about/">About Aether Intel</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/contact/">Contact</a>
+    </div>
+    <p>
+      &copy; 2026 Aether Intel &mdash; <a href="https://ai.quantummerlin.com" target="_blank" rel="noopener noreferrer">ai.quantummerlin.com</a>.
+      Model data and benchmark results current as of May 16, 2026. Prices subject to change; verify with provider before production deployment.
+    </p>
+  </footer>
+
+</body>
+</html>
