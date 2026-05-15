@@ -55,6 +55,59 @@
       .hero-slide-cta { font-size:.66rem; padding:9px 15px; }
       .hero-slide-prev,.hero-slide-next { display:none; }
     }
+
+    /* ── Article card scroll-reveal + hover ── */
+    .article-card {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s ease;
+      will-change: transform, opacity;
+    }
+    .article-card.card-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .article-card.card-visible:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(129,140,248,0.22);
+    }
+    .article-card-img-wrap { overflow: hidden; }
+    .article-card-img {
+      transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .article-card.card-visible:hover .article-card-img {
+      transform: scale(1.06);
+    }
+
+    /* ── Section title entrance ── */
+    .section-title {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .section-title.st-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Hero content panel fade on slide change ── */
+    @keyframes panelFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content-panel.panel-fade {
+      animation: panelFadeIn 0.38s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+    }
+
+    /* ── Respect reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .article-card { transition: opacity 0.3s ease !important; transform: none !important; }
+      .article-card.card-visible { transform: none !important; }
+      .article-card.card-visible:hover { transform: none !important; }
+      .article-card-img { transition: none !important; }
+      .section-title { transition: opacity 0.3s ease !important; transform: none !important; }
+      .hero-content-panel.panel-fade { animation: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -161,7 +214,7 @@
         </div>
         <div class="article-card-body">
           <span class="badge badge-business">AI Infrastructure</span>
-          <h3 class="article-card-title">Claude Code Up 80x — Anthropic Accidentally Became the Infrastructure Company</h3>
+          <h3 class="article-card-title">Claude Code Up 80x, Anthropic Accidentally Became the Infrastructure Company</h3>
           <p class="article-card-desc">Dario planned for 10x growth. He got 80x in one quarter. Now Anthropic leases 220K GPUs from xAI at $5-6B/year and the chips are overheating under agentic load.</p>
         </div>
       </a>
@@ -183,7 +236,7 @@
         </div>
         <div class="article-card-body">
           <span class="badge badge-agents">AI Research</span>
-          <h3 class="article-card-title">Anthropic Can Read Claude's Mind — And It Knows When It's Being Tested</h3>
+          <h3 class="article-card-title">Anthropic Can Read Claude's Mind, And It Knows When It's Being Tested</h3>
           <p class="article-card-desc">Anthropic's activation translation pipeline caught Claude flagging safety tests as tests. This changes what behavioral safety evaluations actually measure.</p>
         </div>
       </a>
@@ -205,7 +258,7 @@
         </div>
         <div class="article-card-body">
           <span class="badge badge-ethics">AI and Society</span>
-          <h3 class="article-card-title">America Is Starting to Hate AI — And the Data Proves It</h3>
+          <h3 class="article-card-title">America Is Starting to Hate AI, And the Data Proves It</h3>
           <p class="article-card-desc">Harvard polling shows 65% of Americans uncomfortable with AI in healthcare. Job-displacement anxiety is spiking. The consumer backlash is real, and it's accelerating.</p>
         </div>
       </a>
@@ -217,7 +270,7 @@
         <div class="article-card-body">
           <span class="badge badge-ethics">Human Cost</span>
           <h3 class="article-card-title">The Ghost Workers Powering ChatGPT</h3>
-          <p class="article-card-desc">86% struggle financially. Median pay under $23K. The human labor force behind AI's 'intelligence' — underpaid, unprotected, and invisible to the systems they train.</p>
+          <p class="article-card-desc">86% struggle financially. Median pay under $23K. The human labor force behind AI's 'intelligence', underpaid, unprotected, and invisible to the systems they train.</p>
         </div>
       </a>
 
@@ -229,7 +282,7 @@
         <div class="article-card-body">
           <span class="badge badge-agents">AI Agents</span>
           <h3 class="article-card-title">Claude Mythos: The AI That Cracked Your Browser</h3>
-          <p class="article-card-desc">271 Firefox vulns. A 27-year OpenBSD crash bug. Linux root via a single bit-flip. Claude found all of it in one sprint — then the Pentagon called it a supply chain risk.</p>
+          <p class="article-card-desc">271 Firefox vulns. A 27-year OpenBSD crash bug. Linux root via a single bit-flip. Claude found all of it in one sprint, then the Pentagon called it a supply chain risk.</p>
         </div>
       </a>
 
@@ -283,7 +336,7 @@
         </div>
         <div class="article-card-body">
           <span class="badge badge-dev">Security</span>
-          <h3 class="article-card-title">AI Coding Tools Are Leaking Your Secrets — Here's the Data</h3>
+          <h3 class="article-card-title">AI Coding Tools Are Leaking Your Secrets: Here's the Data</h3>
           <p class="article-card-desc">Researchers extracted 2,702 real credentials from Copilot suggestions. 200 were working. Here's what the data shows.</p>
         </div>
       </a>
@@ -328,7 +381,7 @@
         <div class="article-card-body">
           <span class="badge badge-business">Business</span>
           <h3 class="article-card-title">12 Proven Ways to Make Money With AI in 2026 (With Real Income Numbers)</h3>
-          <p class="article-card-desc">The methods that are actually generating income right now — with documented approaches and real income ranges.</p>
+          <p class="article-card-desc">The methods that are actually generating income right now, with documented approaches and real income ranges.</p>
         </div>
       </a>
 
@@ -339,7 +392,7 @@
         <div class="article-card-body">
           <span class="badge badge-business">Business</span>
           <h3 class="article-card-title">How to Start an AI Automation Agency in 2026: The Complete AAA Playbook</h3>
-          <p class="article-card-desc">The fastest-growing service business of 2026 — from first client to recurring revenue.</p>
+          <p class="article-card-desc">The fastest-growing service business of 2026, from first client to recurring revenue.</p>
         </div>
       </a>
 
@@ -372,7 +425,7 @@
         <div class="article-card-body">
           <span class="badge badge-news">News</span>
           <h3 class="article-card-title">Klarna's $100M Disaster: What Every Business Can Learn About AI Deployment</h3>
-          <p class="article-card-desc">Klarna bet $100M on replacing human workers with AI — and the numbers didn't add up.</p>
+          <p class="article-card-desc">Klarna bet $100M on replacing human workers with AI, and the numbers didn't add up.</p>
         </div>
       </a>
 
@@ -505,6 +558,64 @@
 
     updatePanel(0);
     startAuto();
+  })();
+</script>
+
+<!-- ── Scroll-reveal animations ── -->
+<script>
+  (function() {
+    // Aether scroll architecture: .main-content is the scroll container on desktop
+    var root = window.innerWidth > 900 ? document.querySelector('.main-content') : null;
+
+    // Article card stagger reveal
+    var cards = Array.from(document.querySelectorAll('.article-card'));
+    if (cards.length && 'IntersectionObserver' in window) {
+      var cardObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var idx = parseInt(entry.target.dataset.cardIdx || '0', 10);
+            var delay = (idx % 4) * 80;  // 80ms stagger, resets per row
+            setTimeout(function() {
+              entry.target.classList.add('card-visible');
+            }, delay);
+            cardObs.unobserve(entry.target);
+          }
+        });
+      }, { root: root, threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      cards.forEach(function(c, i) {
+        c.dataset.cardIdx = i;
+        cardObs.observe(c);
+      });
+    } else {
+      // Fallback: show all cards immediately if no IntersectionObserver
+      cards.forEach(function(c) { c.classList.add('card-visible'); });
+    }
+
+    // Section title entrance
+    var titles = document.querySelectorAll('.section-title');
+    if (titles.length && 'IntersectionObserver' in window) {
+      var titleObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('st-visible');
+            titleObs.unobserve(entry.target);
+          }
+        });
+      }, { root: root, threshold: 0.1 });
+      titles.forEach(function(t) { titleObs.observe(t); });
+    } else {
+      titles.forEach(function(t) { t.classList.add('st-visible'); });
+    }
+
+    // Hero content panel fade — MutationObserver on innerHTML changes
+    var heroPanel = document.getElementById('heroContentPanel');
+    if (heroPanel && 'MutationObserver' in window) {
+      new MutationObserver(function() {
+        heroPanel.classList.remove('panel-fade');
+        void heroPanel.offsetWidth;  // force reflow to restart animation
+        heroPanel.classList.add('panel-fade');
+      }).observe(heroPanel, { childList: true });
+    }
   })();
 </script>
 <script src="/js/main.js"></script>
