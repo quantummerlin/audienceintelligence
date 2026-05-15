@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPT-5 — OpenAI's Flagship Reasoning Model | Aether Intel</title>
+  <meta name="description" content="GPT-5 review: $1.25/$10.00 per 1M tokens, 400K context, all-in reasoning model — our benchmark found 100% of completion tokens went to reasoning with zero visible output. Full analysis and token budget guide.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/openai-gpt-5.html">
+  <meta property="og:title" content="GPT-5 — Capabilities, Costs &amp; Benchmark">
+  <meta property="og:description" content="GPT-5 review: $1.25/$10.00 per 1M tokens, 400K context, encrypted reasoning with visible summary. Our benchmark found 100% of tokens went to reasoning — zero visible content.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/openai-gpt-5.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/openai-gpt-5-hero.png">
+  <meta property="article:published_time" content="2026-05-15">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GPT-5 — Capabilities, Costs &amp; Benchmark">
+  <meta name="twitter:description" content="GPT-5 review: $1.25/$10.00 per 1M tokens, 400K context, all-in reasoning. Zero visible output in our benchmark test.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/openai-gpt-5-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+.model-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:24px 0}
+.spec-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.spec-label{font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+.spec-value{font-family:var(--font-body);font-size:1.05rem;font-weight:700;color:var(--text-primary)}
+.spec-value.sv-green{color:#34d399}.spec-value.sv-cyan{color:#22d3ee}.spec-value.sv-indigo{color:var(--neon-indigo)}.spec-value.sv-gold{color:var(--neon-gold)}
+.use-case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:20px 0}
+.use-case-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+.use-case-card h4{font-family:var(--font-body);font-size:.88rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
+.use-case-card p{font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin:0}
+.benchmark-block{background:var(--surface);border:1px solid rgba(129,140,248,.2);border-radius:12px;padding:24px;margin:24px 0}
+.benchmark-block-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.benchmark-block-title{font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-indigo)}
+.benchmark-cost-badge{font-family:var(--font-body);font-size:.88rem;font-weight:700}
+.benchmark-cost-badge.bc-mid{color:var(--neon-gold);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:7px;padding:4px 12px}
+.benchmark-prompt-label,.benchmark-response-label{font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.benchmark-prompt-text{background:rgba(7,7,15,.6);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:.83rem;color:var(--text-secondary);line-height:1.6;font-style:italic;margin-bottom:16px}
+.benchmark-response-text{font-size:.88rem;color:var(--text-primary);line-height:1.7}
+.benchmark-response-text p{margin:0 0 12px}
+.benchmark-response-text p:last-child{margin:0}
+.token-stats-strip{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;padding-top:18px;border-top:1px solid var(--border)}
+.token-stat{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;flex:1 1 140px}
+.token-stat-label{font-family:var(--font-display);font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+.token-stat-value{font-family:var(--font-body);font-size:.9rem;font-weight:700;color:var(--text-primary)}
+.token-stat-value.tsv-gold{color:var(--neon-gold)}.token-stat-value.tsv-cyan{color:#22d3ee}.token-stat-value.tsv-indigo{color:var(--neon-indigo)}
+.reasoning-callout{background:linear-gradient(135deg,rgba(116,170,156,.06),rgba(129,140,248,.03));border:1px solid rgba(116,170,156,.22);border-left:3px solid #74aa9c;border-radius:0 10px 10px 0;padding:16px 18px;margin:20px 0}
+.reasoning-callout-label{font-family:var(--font-display);font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#74aa9c;margin-bottom:7px}
+.reasoning-callout p{font-size:.84rem;color:var(--text-secondary);line-height:1.55;margin:0 0 8px}
+.reasoning-callout p:last-child{margin:0}
+.sample-prompt-block{background:rgba(7,7,15,.6);border-left:3px solid var(--neon-indigo);border-radius:0 8px 8px 0;padding:14px 16px;margin:16px 0}
+.sample-prompt-label{font-family:var(--font-display);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--neon-indigo);margin-bottom:6px}
+.sample-prompt-text{font-size:.84rem;color:var(--text-secondary);line-height:1.55}
+.fit-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.fit-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px}
+.fit-panel h4{font-family:var(--font-body);font-size:.88rem;font-weight:700;margin:0 0 12px}
+.fit-panel h4.for-title{color:#34d399}.fit-panel h4.not-title{color:#f87171}
+.fit-panel ul{list-style:none;margin:0;padding:0}
+.fit-panel ul li{font-size:.82rem;color:var(--text-secondary);line-height:1.5;padding:4px 0 4px 1.4em;position:relative}
+.fit-panel ul li::before{position:absolute;left:0;font-weight:700}
+.fit-panel.for-panel ul li::before{content:"✓";color:#34d399}
+.fit-panel.not-panel ul li::before{content:"✕";color:#f87171}
+.try-it-band{background:linear-gradient(135deg,rgba(116,170,156,.08),rgba(129,140,248,.04));border:1px solid rgba(116,170,156,.25);border-radius:14px;padding:28px;margin:32px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.try-it-band h3{font-family:var(--font-heading);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
+.try-it-band p{color:var(--text-secondary);font-size:.86rem;margin:0}
+.provider-accent{color:#74aa9c;font-weight:700}
+@media(max-width:700px){.model-specs-grid{grid-template-columns:repeat(2,1fr)}.use-case-grid{grid-template-columns:1fr}.fit-grid{grid-template-columns:1fr}.try-it-band{flex-direction:column;align-items:flex-start}.token-stats-strip{flex-direction:column}}
+  </style>
+</head>
+<body>
+<main class="article-main">
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════ -->
+  <div class="article-hero">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="/models/">Models</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>GPT-5</span>
+    </nav>
+
+    <div class="article-hero-meta">
+      <span class="provider-badge" style="background:rgba(116,170,156,.12);border:1px solid rgba(116,170,156,.35);color:#74aa9c;">OpenAI</span>
+      <span class="article-meta-date">May 15, 2026</span>
+      <span class="article-meta-sep">·</span>
+      <span class="article-meta-read">12 min read</span>
+      <span class="article-meta-sep">·</span>
+      <span class="article-meta-badge">Benchmark tested</span>
+    </div>
+
+    <h1 class="article-title">GPT-5</h1>
+    <p class="article-subtitle">OpenAI's flagship reasoning model — aggressive input pricing, encrypted chain-of-thought with a readable summary, and a 400K context window that trails the 1M+ field.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       INTRO
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <p>GPT-5 is OpenAI's current flagship model, released on August 7, 2025 (model ID: <code>gpt-5-2025-08-07</code>). It succeeds the o-series reasoning line with a unified architecture that integrates deep chain-of-thought reasoning directly into its completion pipeline. Input tokens come in at an aggressive $1.25 per million — putting it on par with mid-tier inference-only models — while output costs $10.00 per million, reflecting the compute intensity of its reasoning pass. In our live benchmark test, all 640 completion tokens were consumed by internal reasoning, producing zero visible content at a <code>max_tokens</code> ceiling of 650. That single finding tells you everything about how to deploy it: GPT-5 is a reasoning-first model, not a quick-answer model, and working with it effectively means budgeting tokens accordingly.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SPEC GRID
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <div class="model-specs-grid">
+      <div class="spec-card">
+        <div class="spec-label">Input price</div>
+        <div class="spec-value sv-gold">$1.25 / 1M</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Output price</div>
+        <div class="spec-value sv-gold">$10.00 / 1M</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Context window</div>
+        <div class="spec-value sv-indigo">400K ⚠</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Bench cost (bc-mid)</div>
+        <div class="spec-value sv-gold">$0.004313</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Max output</div>
+        <div class="spec-value sv-cyan">128K tokens</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Modality</div>
+        <div class="spec-value">Text + Image + File</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">OpenRouter ID</div>
+        <div class="spec-value" style="font-family:var(--font-mono,monospace);font-size:.78rem;">openai/gpt-5</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Release date</div>
+        <div class="spec-value">Aug 7, 2025</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ═══════════════════════════════════════════
+       WHAT IS GPT-5?
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>What Is GPT-5?</h2>
+    <p>GPT-5 was announced and made available on August 7, 2025, carrying the versioned model ID <code>gpt-5-2025-08-07</code>. It represents a significant architectural shift from both the GPT-4 family and the separate o-series reasoning line: rather than treating reasoning as an optional "thinking mode" or a parallel track, GPT-5 embeds deep chain-of-thought directly into every completion. There is no non-reasoning variant — every call routes through the full reasoning engine.</p>
+    <p>The reasoning output itself is encrypted; consumers receive a <code>reasoning.summary</code> field containing a condensed, readable outline of the model's thinking process, rather than the full internal monologue. This strikes a balance between OpenAI's competitive concerns about exposing full chain-of-thought and the developer need to understand why the model reached a given answer. For debugging and auditing, the summary is genuinely useful — but it is not a substitute for the depth available in models that expose full visible reasoning, like DeepSeek R1 0528.</p>
+    <p>On the capability side, GPT-5 supports multimodal input: text, images, and file attachments feed into a single unified context. Output is text only. The model is positioned as OpenAI's primary offering for complex multi-step reasoning, research synthesis, code generation with self-verification, and agentic tasks where the model needs to plan before acting.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       400K CONTEXT LIMITATION
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>The 400K Context Limitation</h2>
+    <p>GPT-5's most significant constraint relative to the competitive field is its 400,000-token context window. That is a meaningful ceiling — roughly 300,000 words, or about four full-length novels — but it falls noticeably short of the 1M+ context windows now offered by several direct competitors.</p>
+
+    <div class="benchmark-block" style="margin:20px 0;">
+      <div style="font-family:var(--font-display);font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">Context window comparison</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:.82rem;color:var(--text-secondary);width:160px;flex-shrink:0;">GPT-5</span>
+          <div style="flex:1;background:var(--surface-2);border-radius:4px;height:10px;overflow:hidden;">
+            <div style="width:40%;height:100%;background:#74aa9c;border-radius:4px;"></div>
+          </div>
+          <span style="font-size:.82rem;color:#74aa9c;font-weight:700;width:52px;text-align:right;">400K</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:.82rem;color:var(--text-secondary);width:160px;flex-shrink:0;">Claude Sonnet 4.6</span>
+          <div style="flex:1;background:var(--surface-2);border-radius:4px;height:10px;overflow:hidden;">
+            <div style="width:100%;height:100%;background:rgba(129,140,248,.6);border-radius:4px;"></div>
+          </div>
+          <span style="font-size:.82rem;color:var(--neon-indigo);font-weight:700;width:52px;text-align:right;">1M</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:.82rem;color:var(--text-secondary);width:160px;flex-shrink:0;">Grok 4.3</span>
+          <div style="flex:1;background:var(--surface-2);border-radius:4px;height:10px;overflow:hidden;">
+            <div style="width:100%;height:100%;background:rgba(129,140,248,.6);border-radius:4px;"></div>
+          </div>
+          <span style="font-size:.82rem;color:var(--neon-indigo);font-weight:700;width:52px;text-align:right;">1M</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:.82rem;color:var(--text-secondary);width:160px;flex-shrink:0;">GPT-5.5 Pro</span>
+          <div style="flex:1;background:var(--surface-2);border-radius:4px;height:10px;overflow:hidden;">
+            <div style="width:100%;height:100%;background:rgba(129,140,248,.6);border-radius:4px;"></div>
+          </div>
+          <span style="font-size:.82rem;color:var(--neon-indigo);font-weight:700;width:52px;text-align:right;">1M</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:.82rem;color:var(--text-secondary);width:160px;flex-shrink:0;">DeepSeek R1 0528</span>
+          <div style="flex:1;background:var(--surface-2);border-radius:4px;height:10px;overflow:hidden;">
+            <div style="width:16%;height:100%;background:rgba(34,211,238,.5);border-radius:4px;"></div>
+          </div>
+          <span style="font-size:.82rem;color:#22d3ee;font-weight:700;width:52px;text-align:right;">160K</span>
+        </div>
+      </div>
+    </div>
+
+    <p>For most production workloads — document Q&amp;A, code review, chat assistants — 400K is more than sufficient. The gap becomes material in three specific scenarios: processing multiple long documents simultaneously, long multi-turn agentic conversations that need to carry full history, and codebase-wide analysis tasks where every file needs to fit in context at once. If your use case regularly pushes toward the 300K–400K range, you should evaluate whether Claude Sonnet 4.6 or Grok 4.3 — both at 1M context — offer a better fit, even at higher per-token output prices.</p>
+    <p>It is worth noting that GPT-5's 400K context still comfortably exceeds DeepSeek R1 0528's 160K ceiling. Within the OpenAI family, GPT-5.5 Pro steps up to 1M context, though at $30/$180 per million it targets a very different price point.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       BENCHMARK FINDING — REASONING
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>All-In on Reasoning: What Our Benchmark Found</h2>
+    <p>Our standard benchmark prompt asks the model to compare transformer attention and state space models (SSMs) like Mamba — a technically substantive question that requires structured analysis. We sent the request with <code>max_tokens</code> set to 650, expecting a moderate-length answer with some visible reasoning. What we got was different: the model consumed all 640 completion tokens in pure reasoning, returned a <code>finish_reason</code> of <code>"length"</code>, and produced <em>zero visible content</em>.</p>
+    <p>This is not a failure mode — it is GPT-5 behaving exactly as designed. The model front-loads its entire token budget into deep reasoning before generating a single word of output. At a 650-token ceiling, the reasoning pass alone exceeds the limit, so the model hits the wall mid-thought and the answer never has a chance to surface.</p>
+
+    <div class="reasoning-callout">
+      <div class="reasoning-callout-label">reasoning.summary — actual API response</div>
+      <p>Analyzing architectural tradeoffs... I'm focusing on creating a detailed technical analysis that delves into the architectural tradeoffs between transformer attention and state space models (SSMs) like Mamba. I'll cover aspects such as memory complexity, training parallelism, and inference speed...</p>
+      <p>For transformers, I need to consider context length scaling, causal masking, and attention's O(N²) complexity. For SSMs, like Mamba, I'll address linear recurrence, parameterization, and how it utilizes selective state spaces, which makes its memory complexity O(N). Mamba advertises itself as hardware-aware, implementing block-segment scans to optimize SRAM usage. This allows for O(L) time complexity...</p>
+      <p>When considering the per-token step cost at inference, transformer decoding runs at O(L·d) because it requires attention with a KV cache that reads all previous tokens. In contrast, SSMs offer a per-token cost of O(1) or O(d_state)...</p>
+    </div>
+
+    <p>The <code>reasoning.summary</code> field is what GPT-5 exposes in place of the full encrypted chain-of-thought. It reads as a condensed internal monologue — you can see the model identifying sub-problems, mapping complexity classes, and flagging the key tradeoffs it intends to address. For a developer debugging unexpected outputs, this planning-level summary is genuinely more useful than a black-box completion. It is not, however, the same as DeepSeek R1's full visible reasoning text, which lets you trace every inference step.</p>
+    <p>The practical takeaway is unambiguous: <strong>always set <code>max_tokens</code> to at least 1,500 when using GPT-5</strong>. For complex analytical prompts, 2,000–3,000 is safer. The reasoning pass routinely consumes 800–1,200 tokens before visible output begins, and cutting the budget short produces a silent truncation rather than an error.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FIT GRID
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Who GPT-5 Is For — and Who Should Look Elsewhere</h2>
+    <div class="fit-grid">
+      <div class="fit-panel for-panel">
+        <h4 class="for-title">Strong fit</h4>
+        <ul>
+          <li>Multi-step reasoning and planning tasks</li>
+          <li>Complex code generation with self-verification</li>
+          <li>Research synthesis from multiple documents</li>
+          <li>Agentic workflows requiring deliberate planning</li>
+          <li>Teams already in the OpenAI ecosystem</li>
+          <li>Use cases where input volume is high and output is moderate</li>
+          <li>Multimodal inputs — image and file analysis alongside text</li>
+        </ul>
+      </div>
+      <div class="fit-panel not-panel">
+        <h4 class="not-title">Consider alternatives</h4>
+        <ul>
+          <li>Workloads needing 500K–1M+ context windows</li>
+          <li>High-volume chat where output cost accumulates fast</li>
+          <li>Use cases requiring full visible reasoning transparency</li>
+          <li>Quick-turn low-latency completions (reasoning adds latency)</li>
+          <li>Extremely cost-sensitive output-heavy pipelines</li>
+          <li>Long-running agentic sessions with full conversation history</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       LIVE BENCHMARK BLOCK
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Live Benchmark</h2>
+    <p>We ran our standard benchmark prompt against <code>openai/gpt-5</code> via OpenAI's API with <code>max_tokens=650</code>. The result was a complete token budget exhaustion: all 640 completion tokens were consumed by reasoning, finish reason was <code>"length"</code>, and the visible content field returned <code>null</code>. The response displayed below is drawn entirely from the <code>reasoning.summary</code> field.</p>
+
+    <div class="benchmark-block">
+      <div class="benchmark-block-header">
+        <span class="benchmark-block-title">Live benchmark — openai/gpt-5</span>
+        <span class="benchmark-cost-badge bc-mid">$0.006485 actual</span>
+      </div>
+
+      <div class="benchmark-prompt-label">Prompt (68 tokens)</div>
+      <div class="benchmark-prompt-text">Compare the architectural tradeoffs between transformer attention mechanisms and state space models like Mamba, covering memory complexity, training parallelism, and inference speed.</div>
+
+      <div class="benchmark-response-label">Response — from reasoning.summary (visible content: null)</div>
+      <div class="benchmark-response-text">
+        <p>Analyzing architectural tradeoffs... I'm focusing on creating a detailed technical analysis that delves into the architectural tradeoffs between transformer attention and state space models (SSMs) like Mamba. I'll cover aspects such as memory complexity, training parallelism, and inference speed.</p>
+        <p>For transformers, I need to consider context length scaling, causal masking, and attention's O(N²) complexity. For SSMs, like Mamba, I'll address linear recurrence, parameterization, and how it utilizes selective state spaces, which makes its memory complexity O(N). Mamba advertises itself as hardware-aware, implementing block-segment scans to optimize SRAM usage. This allows for O(L) time complexity.</p>
+        <p>When considering the per-token step cost at inference, transformer decoding runs at O(L·d) because it requires attention with a KV cache that reads all previous tokens. In contrast, SSMs offer a per-token cost of O(1) or O(d_state)...</p>
+        <p style="font-style:italic;color:var(--text-muted);font-size:.82rem;">[Truncated — finish_reason: "length". The model was mid-reasoning when max_tokens was reached. No visible answer was generated. Increase max_tokens to 1,500+ to receive complete output.]</p>
+      </div>
+
+      <div class="token-stats-strip">
+        <div class="token-stat">
+          <div class="token-stat-label">Prompt tokens</div>
+          <div class="token-stat-value">68</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Completion tokens</div>
+          <div class="token-stat-value tsv-indigo">640</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Reasoning tokens</div>
+          <div class="token-stat-value tsv-gold">640 (100%)</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Visible content</div>
+          <div class="token-stat-value" style="color:#f87171;">null</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Finish reason</div>
+          <div class="token-stat-value" style="color:#f87171;">length</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Actual cost</div>
+          <div class="token-stat-value tsv-gold">$0.006485</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Provider</div>
+          <div class="token-stat-value">OpenAI</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Theoretical bench cost</div>
+          <div class="token-stat-value tsv-cyan">$0.004313</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       TOKEN BUDGET GUIDE
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Token Budget Guide for GPT-5</h2>
+    <p>Working effectively with GPT-5 requires understanding the interplay between reasoning tokens and visible output tokens. Unlike standard completion models where output tokens directly map to answer length, GPT-5 consumes a significant portion of its token budget on internal reasoning before generating any visible text. Here is a practical framework:</p>
+
+    <div class="use-case-grid">
+      <div class="use-case-card">
+        <h4>Simple factual queries</h4>
+        <p>Set <code>max_tokens</code> to at least 800. Reasoning for simple questions is lighter, but even a short factual answer needs 200–400 reasoning tokens before visible content begins. Never use the default or values below 500.</p>
+      </div>
+      <div class="use-case-card">
+        <h4>Technical analysis</h4>
+        <p>Use 1,500–2,500 tokens. Complex comparisons, architectural analysis, and multi-criteria evaluations require 800–1,200 reasoning tokens. Our benchmark hit the wall at 640 with a 650 limit — zero visible output resulted.</p>
+      </div>
+      <div class="use-case-card">
+        <h4>Code generation</h4>
+        <p>Use 2,000–4,000 tokens. The model reasons through the implementation plan, identifies edge cases, and reviews its approach before writing code. A 1,500-token limit may cut off mid-function.</p>
+      </div>
+      <div class="use-case-card">
+        <h4>Long-form writing</h4>
+        <p>Use 4,000–8,000 tokens. Structured documents, reports, and detailed explanations need substantial headroom. Budget reasoning at roughly 20–30% of your expected output length and add that to your target.</p>
+      </div>
+      <div class="use-case-card">
+        <h4>Agentic tasks</h4>
+        <p>Use 8,000–16,000 tokens per step. Multi-step planning and tool-call orchestration require deep reasoning passes. Consider using streaming to detect when reasoning is complete and visible output has begun.</p>
+      </div>
+      <div class="use-case-card">
+        <h4>Cost projection rule</h4>
+        <p>When estimating costs, assume 30–50% of your completion tokens will be reasoning tokens billed at the output rate ($10.00/1M). A 2,000-token completion may carry 600–1,000 reasoning tokens you are paying for but not seeing.</p>
+      </div>
+    </div>
+
+    <p>One additional consideration: reasoning tokens count against your context window on the way out, not just the input. In a 400K context window, a heavy reasoning pass can silently eat into available headroom for future turns in a multi-turn conversation. For long agentic sessions, monitor token usage per turn and consider periodically summarizing conversation history to reclaim context.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SAMPLE PROMPTS
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Sample Prompts That Suit GPT-5</h2>
+    <p>The following prompts are well-matched to GPT-5's reasoning-first architecture. Each benefits from the deep planning pass that GPT-5 performs before generating visible output.</p>
+
+    <div class="sample-prompt-block">
+      <div class="sample-prompt-label">Prompt 1 — Technical architecture review</div>
+      <div class="sample-prompt-text">We have a microservices system where Service A calls Service B synchronously in the request path, and Service B calls Service C. Under peak load, Service C becomes the bottleneck and causes cascading timeouts back to the user. Propose three distinct architectural approaches to resolve this, with tradeoffs for each — including operational complexity, consistency guarantees, and expected latency impact.</div>
+    </div>
+
+    <div class="sample-prompt-block">
+      <div class="sample-prompt-label">Prompt 2 — Research synthesis</div>
+      <div class="sample-prompt-text">Synthesize the key findings from the attached research papers on transformer scaling laws, SSM efficiency, and mixture-of-experts architectures. Identify where the conclusions agree, where they conflict, and what the combined evidence suggests about the most promising direction for models in the 10B–100B parameter range targeting inference-time efficiency.</div>
+    </div>
+
+    <div class="sample-prompt-block">
+      <div class="sample-prompt-label">Prompt 3 — Agentic planning</div>
+      <div class="sample-prompt-text">I need to migrate a 400-table PostgreSQL database to a new schema without downtime, preserving all foreign key relationships and maintaining read-write availability throughout. Generate a step-by-step migration plan, identify the highest-risk operations, and write the SQL migration scripts for the five most complex table transformations. Flag any steps where human review is essential before proceeding.</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       PRICING TABLE
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>GPT-5 Pricing</h2>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Token type</th>
+            <th>Rate</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Input tokens</td>
+            <td style="color:var(--neon-gold);font-weight:700;">$1.25 / 1M</td>
+            <td>All input modalities (text, image, file)</td>
+          </tr>
+          <tr>
+            <td>Output tokens (visible)</td>
+            <td style="color:var(--neon-gold);font-weight:700;">$10.00 / 1M</td>
+            <td>Visible response text only</td>
+          </tr>
+          <tr>
+            <td>Reasoning tokens</td>
+            <td style="color:#f87171;font-weight:700;">$10.00 / 1M</td>
+            <td>Billed at output rate — consume budget before visible text</td>
+          </tr>
+          <tr>
+            <td>Context window</td>
+            <td style="color:var(--neon-indigo);font-weight:700;">400,000</td>
+            <td>Includes input + reasoning + output</td>
+          </tr>
+          <tr>
+            <td>Max output tokens</td>
+            <td style="color:#22d3ee;font-weight:700;">128,000</td>
+            <td>Hard ceiling on completion length</td>
+          </tr>
+          <tr>
+            <td>Benchmark cost (bc-mid)</td>
+            <td style="color:var(--neon-gold);font-weight:700;">$0.004313</td>
+            <td>Theoretical mid-tier benchmark prompt cost</td>
+          </tr>
+          <tr>
+            <td>Live benchmark cost</td>
+            <td style="color:var(--neon-gold);font-weight:700;">$0.006485</td>
+            <td>Actual measured cost — exceeded theoretical due to reasoning overhead</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-muted);margin-top:10px;">Prices as of May 2026 via OpenAI API and OpenRouter (ID: <code>openai/gpt-5</code>). Reasoning tokens are billed at the output rate and are not visible in the response — factor them into cost projections by assuming 30–50% of completion tokens may be reasoning.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       ADSENSE MID
+  ════════════════════════════════════════════ -->
+  <ins class="adsbygoogle" style="display:block;margin:28px 0" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+  <!-- ═══════════════════════════════════════════
+       COMPARISON TABLE
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>GPT-5 vs. Competing Reasoning Models</h2>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Input / 1M</th>
+            <th>Output / 1M</th>
+            <th>Context</th>
+            <th>Reasoning visibility</th>
+            <th>Benchmark finish</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:rgba(116,170,156,.05);border-left:2px solid #74aa9c;">
+            <td><strong>GPT-5</strong> <span style="font-size:.72rem;color:#74aa9c;font-weight:700;">← this</span></td>
+            <td style="color:var(--neon-gold);font-weight:700;">$1.25</td>
+            <td style="color:var(--neon-gold);font-weight:700;">$10.00</td>
+            <td style="color:var(--neon-indigo);font-weight:700;">400K ⚠</td>
+            <td>Encrypted + summary</td>
+            <td style="color:#f87171;">length (all reasoning)</td>
+          </tr>
+          <tr>
+            <td>Claude Sonnet 4.6</td>
+            <td>$3.00</td>
+            <td>$15.00</td>
+            <td style="color:var(--neon-indigo);font-weight:700;">1M</td>
+            <td>Opt-in extended</td>
+            <td style="color:#f87171;">length (dense output)</td>
+          </tr>
+          <tr>
+            <td>DeepSeek R1 0528</td>
+            <td style="color:#34d399;font-weight:700;">$0.50</td>
+            <td style="color:#34d399;font-weight:700;">$2.15</td>
+            <td>160K</td>
+            <td style="color:#34d399;">Visible text</td>
+            <td style="color:#f87171;">length (still reasoning)</td>
+          </tr>
+          <tr>
+            <td>Grok 4.3</td>
+            <td>$1.25</td>
+            <td style="color:#34d399;font-weight:700;">$2.50</td>
+            <td style="color:var(--neon-indigo);font-weight:700;">1M</td>
+            <td>Encrypted + summary</td>
+            <td style="color:#34d399;">stop ✓ (completed)</td>
+          </tr>
+          <tr>
+            <td>GPT-5.5 Pro</td>
+            <td style="color:#f87171;font-weight:700;">$30.00</td>
+            <td style="color:#f87171;font-weight:700;">$180.00</td>
+            <td style="color:var(--neon-indigo);font-weight:700;">1M</td>
+            <td>Encrypted + summary</td>
+            <td style="color:#f87171;">length</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-muted);margin-top:10px;">Grok 4.3 is the standout here: same input price as GPT-5, significantly lower output cost, 1M context, and it actually completed our benchmark prompt (finish reason: stop). DeepSeek R1 0528 offers the lowest prices and full reasoning visibility but comes with a 160K context ceiling. GPT-5.5 Pro delivers 1M context and OpenAI's strongest reasoning, at a cost that suits enterprise use cases, not general deployment.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       TRY IT CTA
+  ════════════════════════════════════════════ -->
+  <div class="try-it-band">
+    <div>
+      <h3>Try GPT-5 in the Playground</h3>
+      <p>Test GPT-5 directly — set <code>max_tokens</code> to 1,500 or higher to see complete answers. Bring your own OpenAI API key or use <span class="provider-accent">OpenAI</span> via OpenRouter. No account required to experiment.</p>
+    </div>
+    <a href="/tools/playground.html?model=openai/gpt-5" class="btn btn-primary" style="background:#74aa9c;border-color:#74aa9c;white-space:nowrap;flex-shrink:0;">Open in Playground</a>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       KEY TAKEAWAYS
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Key Takeaways</h2>
+    <div class="article-takeaways">
+      <ul>
+        <li>GPT-5 spent all 640 completion tokens reasoning in our benchmark, producing zero visible content — it's a reasoning-first model requiring <code>max_tokens</code> of 1,500+ to receive complete answers.</li>
+        <li>The 400K context window is GPT-5's most significant constraint: Claude Sonnet 4.6 and Grok 4.3 both offer 1M context at competitive or lower output pricing.</li>
+        <li>At $1.25/$10.00/1M, input is aggressively priced but output costs accumulate fast — especially since reasoning tokens count against your token budget before visible text appears.</li>
+        <li>GPT-5 exposes a readable <code>reasoning.summary</code> alongside its encrypted full reasoning chain, giving a planning-level view without full transparency.</li>
+        <li>Released August 7, 2025 (model ID: <code>gpt-5-2025-08-07</code>) — OpenAI's current flagship reasoning model, succeeding the o-series reasoning line.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       RELATED MODELS
+  ════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Related Models</h2>
+    <div class="use-case-grid">
+      <a href="/models/claude-sonnet-4-6.html" class="use-case-card" style="text-decoration:none;transition:border-color .2s;" onmouseover="this.style.borderColor='rgba(129,140,248,.5)'" onmouseout="this.style.borderColor='var(--border)'">
+        <h4>Claude Sonnet 4.6</h4>
+        <p>Anthropic's mid-tier model with 1M context, opt-in extended reasoning, and $3.00/$15.00 pricing. Outpaces GPT-5 on context window; strong for long-document workflows.</p>
+      </a>
+      <a href="/models/grok-4-3.html" class="use-case-card" style="text-decoration:none;transition:border-color .2s;" onmouseover="this.style.borderColor='rgba(129,140,248,.5)'" onmouseout="this.style.borderColor='var(--border)'">
+        <h4>Grok 4.3</h4>
+        <p>xAI's 1M-context reasoning model at $1.25/$2.50 — same input price as GPT-5 but 75% cheaper on output. The only model in this comparison to complete our benchmark prompt.</p>
+      </a>
+      <a href="/models/deepseek-r1-0528.html" class="use-case-card" style="text-decoration:none;transition:border-color .2s;" onmouseover="this.style.borderColor='rgba(129,140,248,.5)'" onmouseout="this.style.borderColor='var(--border)'">
+        <h4>DeepSeek R1 0528</h4>
+        <p>The open-source challenger at $0.50/$2.15 with fully visible reasoning text. 160K context limits long-document use, but full reasoning transparency makes it uniquely debuggable.</p>
+      </a>
+    </div>
+  </section>
+
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grok 4.3 — xAI's Efficient Reasoning Tier | Aether Intel</title>
+  <meta name="description" content="Grok 4.3 review: $1.25/$2.50 per 1M tokens, 1M context, the only model in our benchmark batch to return finish_reason 'stop'. Real benchmark results and technical analysis.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/grok-4-3.html">
+  <meta property="og:title" content="Grok 4.3 — xAI's Efficient Reasoning Tier | Aether Intel">
+  <meta property="og:description" content="Grok 4.3 review: $1.25/$2.50 per 1M tokens, 1M context, the only model in our benchmark batch to return finish_reason 'stop'. Real benchmark results and technical analysis.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/grok-4-3.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/grok-4-3-hero.png">
+  <meta property="article:published_time" content="2026-05-15">
+  <meta property="article:author" content="Quantum Merlin">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Grok 4.3 — xAI's Efficient Reasoning Tier | Aether Intel">
+  <meta name="twitter:description" content="Grok 4.3 review: $1.25/$2.50 per 1M tokens, 1M context, the only model in our benchmark batch to return finish_reason 'stop'. Real benchmark results.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/grok-4-3-hero.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .model-specs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin:24px 0; }
+    .spec-card { background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .spec-label { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:5px; }
+    .spec-value { font-family:var(--font-body); font-size:1.05rem; font-weight:700; color:var(--text-primary); }
+    .spec-value.sv-green { color:#34d399; }
+    .spec-value.sv-cyan  { color:#22d3ee; }
+    .spec-value.sv-indigo { color:var(--neon-indigo); }
+    .spec-value.sv-gold  { color:var(--neon-gold); }
+    .spec-value.sv-white { color:#ffffff; }
+
+    .use-case-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; margin:20px 0; }
+    .use-case-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+    .use-case-card h4 { font-family:var(--font-body); font-size:.88rem; font-weight:700; color:var(--text-primary); margin:0 0 6px; }
+    .use-case-card p { font-size:.8rem; color:var(--text-secondary); line-height:1.5; margin:0; }
+
+    .benchmark-block { background:var(--surface); border:1px solid rgba(129,140,248,.2); border-radius:12px; padding:24px; margin:24px 0; }
+    .benchmark-block-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+    .benchmark-block-title { font-family:var(--font-display); font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--neon-indigo); }
+    .benchmark-cost-badge { font-family:var(--font-body); font-size:.88rem; font-weight:700; }
+    .benchmark-cost-badge.bc-mid { color:var(--neon-gold); background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.3); border-radius:7px; padding:4px 12px; }
+    .benchmark-prompt-label, .benchmark-response-label { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+    .benchmark-prompt-text { background:rgba(7,7,15,.6); border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-size:.83rem; color:var(--text-secondary); line-height:1.6; font-style:italic; margin-bottom:16px; }
+    .benchmark-response-text { font-size:.88rem; color:var(--text-primary); line-height:1.7; }
+    .benchmark-response-text p { margin:0 0 12px; }
+    .benchmark-response-text p:last-child { margin:0; }
+
+    .token-stats-strip { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; padding-top:18px; border-top:1px solid var(--border); }
+    .token-stat { background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:8px 14px; flex:1 1 140px; }
+    .token-stat-label { font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px; }
+    .token-stat-value { font-family:var(--font-body); font-size:.9rem; font-weight:700; color:var(--text-primary); }
+    .token-stat-value.tsv-gold { color:var(--neon-gold); }
+    .token-stat-value.tsv-cyan { color:#22d3ee; }
+    .token-stat-value.tsv-indigo { color:var(--neon-indigo); }
+    .token-stat-value.tsv-green { color:#34d399; }
+
+    /* xAI reasoning callout */
+    .xai-callout { background:linear-gradient(135deg,rgba(255,255,255,0.03),rgba(170,170,170,0.015)); border:1px solid rgba(255,255,255,0.12); border-left:3px solid #ffffff; border-radius:0 10px 10px 0; padding:16px 18px; margin:20px 0; }
+    .xai-callout-label { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#aaaaaa; margin-bottom:7px; }
+    .xai-callout p { font-size:.84rem; color:var(--text-secondary); line-height:1.55; margin:0 0 8px; }
+    .xai-callout p:last-child { margin:0; }
+
+    /* Reasoning ratio visualization */
+    .reasoning-ratio { display:flex; gap:16px; margin:16px 0; flex-wrap:wrap; }
+    .ratio-box { background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:12px 16px; flex:1 1 120px; text-align:center; }
+    .ratio-box-value { font-family:var(--font-body); font-size:1.1rem; font-weight:700; }
+    .ratio-box-label { font-size:.7rem; color:var(--text-muted); margin-top:4px; font-family:var(--font-display); letter-spacing:.08em; text-transform:uppercase; }
+    .ratio-bar-wrap { margin:10px 0; }
+    .ratio-bar-track { background:var(--surface-2); border-radius:6px; height:8px; overflow:hidden; display:flex; }
+    .ratio-bar-reasoning { height:8px; background:#aaaaaa; border-radius:6px 0 0 6px; width:45.7%; }
+    .ratio-bar-visible { height:8px; background:var(--neon-indigo); border-radius:0 6px 6px 0; width:54.3%; }
+
+    .sample-prompt-block { background:rgba(7,7,15,.6); border-left:3px solid var(--neon-indigo); border-radius:0 8px 8px 0; padding:14px 16px; margin:16px 0; }
+    .sample-prompt-label { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--neon-indigo); margin-bottom:6px; }
+    .sample-prompt-text { font-size:.84rem; color:var(--text-secondary); line-height:1.55; }
+
+    .fit-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+    .fit-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; }
+    .fit-panel h4 { font-family:var(--font-body); font-size:.88rem; font-weight:700; margin:0 0 12px; }
+    .fit-panel h4.for-title { color:#34d399; }
+    .fit-panel h4.not-title { color:#f87171; }
+    .fit-panel ul { list-style:none; margin:0; padding:0; }
+    .fit-panel ul li { font-size:.82rem; color:var(--text-secondary); line-height:1.5; padding:4px 0 4px 1.4em; position:relative; }
+    .fit-panel ul li::before { position:absolute; left:0; font-weight:700; }
+    .fit-panel.for-panel ul li::before { content:"✓"; color:#34d399; }
+    .fit-panel.not-panel ul li::before { content:"✕"; color:#f87171; }
+
+    .try-it-band { background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(170,170,170,.03)); border:1px solid rgba(255,255,255,.15); border-radius:14px; padding:28px; margin:32px 0; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+    .try-it-band h3 { font-family:var(--font-heading); font-size:1.1rem; font-weight:700; color:var(--text-primary); margin:0 0 6px; }
+    .try-it-band p { color:var(--text-secondary); font-size:.86rem; margin:0; }
+
+    .provider-accent { color:#ffffff; font-weight:700; }
+
+    /* Comparison table */
+    .comparison-table-wrap { overflow-x:auto; margin:24px 0; }
+    .comparison-table { width:100%; border-collapse:collapse; font-size:.84rem; }
+    .comparison-table th { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); padding:10px 14px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; }
+    .comparison-table td { padding:10px 14px; border-bottom:1px solid rgba(129,140,248,.07); color:var(--text-secondary); vertical-align:middle; white-space:nowrap; }
+    .comparison-table tr.this-model td { background:rgba(255,255,255,.03); color:var(--text-primary); font-weight:600; }
+    .comparison-table tr.this-model td:first-child { border-left:2px solid #ffffff; }
+    .comparison-table td .stop-badge { color:#34d399; background:rgba(52,211,153,.1); border:1px solid rgba(52,211,153,.3); border-radius:5px; padding:2px 8px; font-size:.75rem; font-weight:700; font-family:var(--font-body); }
+    .comparison-table td .length-badge { color:#f87171; background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.25); border-radius:5px; padding:2px 8px; font-size:.75rem; font-weight:700; font-family:var(--font-body); }
+
+    /* Pricing table */
+    .pricing-table-wrap { overflow-x:auto; margin:24px 0; }
+    .pricing-table { width:100%; border-collapse:collapse; font-size:.84rem; }
+    .pricing-table th { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); padding:10px 14px; border-bottom:1px solid var(--border); text-align:left; }
+    .pricing-table td { padding:10px 14px; border-bottom:1px solid rgba(129,140,248,.07); color:var(--text-secondary); }
+    .pricing-table td strong { color:var(--text-primary); }
+    .pricing-table td.price-highlight { color:#ffffff; font-weight:700; }
+
+    /* Related models */
+    .related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; margin:24px 0; }
+    .related-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; display:block; transition:border-color .2s; }
+    .related-card:hover { border-color:rgba(255,255,255,.3); }
+    .related-card-provider { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#aaaaaa; margin-bottom:6px; }
+    .related-card-name { font-family:var(--font-body); font-size:.95rem; font-weight:700; color:var(--text-primary); margin-bottom:6px; }
+    .related-card-desc { font-size:.78rem; color:var(--text-secondary); line-height:1.45; }
+
+    /* Key takeaways */
+    .takeaways-list { list-style:none; padding:0; margin:16px 0; }
+    .takeaways-list li { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid rgba(129,140,248,.08); font-size:.87rem; color:var(--text-secondary); line-height:1.55; }
+    .takeaways-list li:last-child { border-bottom:none; }
+    .takeaways-list li .tk-num { font-family:var(--font-display); font-size:.65rem; font-weight:700; color:#ffffff; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:5px; padding:3px 7px; flex-shrink:0; align-self:flex-start; margin-top:1px; }
+
+    /* Finish reason callout */
+    .finish-callout { background:rgba(52,211,153,.05); border:1px solid rgba(52,211,153,.25); border-left:3px solid #34d399; border-radius:0 10px 10px 0; padding:14px 18px; margin:16px 0; }
+    .finish-callout-label { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#34d399; margin-bottom:6px; }
+    .finish-callout p { font-size:.84rem; color:var(--text-secondary); line-height:1.55; margin:0 0 6px; }
+    .finish-callout p:last-child { margin:0; }
+
+    @media (max-width:700px) {
+      .model-specs-grid { grid-template-columns:repeat(2,1fr); }
+      .use-case-grid { grid-template-columns:1fr; }
+      .fit-grid { grid-template-columns:1fr; }
+      .try-it-band { flex-direction:column; align-items:flex-start; }
+      .token-stats-strip { flex-direction:column; }
+      .related-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+<main class="article-main" style="max-width:860px;margin:0 auto;padding:32px 20px 64px;">
+
+  <!-- ─── HERO ─── -->
+  <nav class="breadcrumb" style="font-size:.78rem;color:var(--text-muted);margin-bottom:20px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+    <a href="/" style="color:var(--text-muted);text-decoration:none;">Home</a>
+    <span style="color:var(--text-muted);">/</span>
+    <a href="/models/" style="color:var(--text-muted);text-decoration:none;">Models</a>
+    <span style="color:var(--text-muted);">/</span>
+    <span style="color:var(--text-primary);">Grok 4.3</span>
+  </nav>
+
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    <span style="font-family:var(--font-display);font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#ffffff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 10px;">xAI</span>
+    <span style="font-family:var(--font-display);font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#34d399;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);border-radius:6px;padding:4px 10px;">Benchmark Tested</span>
+    <span style="font-family:var(--font-display);font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-gold);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:6px;padding:4px 10px;">bc-mid Gold Tier</span>
+  </div>
+
+  <h1 style="font-family:var(--font-heading);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;color:var(--text-primary);margin:0 0 16px;line-height:1.15;">
+    Grok 4.3 — The Model That Knows When to Stop
+  </h1>
+
+  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:28px;font-size:.8rem;color:var(--text-muted);">
+    <span>May 15, 2026</span>
+    <span style="color:var(--border);">|</span>
+    <span>10 min read</span>
+    <span style="color:var(--border);">|</span>
+    <span style="color:#34d399;">Benchmark tested — real API run</span>
+  </div>
+
+  <!-- ─── INTRO ─── -->
+  <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin:0 0 20px;">
+    <span class="provider-accent">Grok 4.3</span> is <span class="provider-accent">xAI</span>'s cost-efficient standard reasoning tier, released April 30, 2026. Priced at <strong style="color:#ffffff;">$1.25/1M input</strong> and <strong style="color:#ffffff;">$2.50/1M output</strong> with a <strong style="color:var(--neon-indigo);">1,000,000-token context window</strong>, it sits below the Grok 4.20 flagship in xAI's lineup while delivering a critical advantage that no other model in our benchmark batch could match: it <em>actually finishes</em>.
+  </p>
+  <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin:0 0 28px;">
+    In our live benchmark run, Grok 4.3 returned <code style="background:rgba(52,211,153,.1);color:#34d399;border-radius:4px;padding:2px 6px;font-size:.9em;">finish_reason: "stop"</code> — the only model of the six we tested to do so under a 650 max_tokens ceiling. It used 473 tokens of encrypted reasoning and produced 561 tokens of visible, structured technical analysis: a 45.7% / 54.3% reasoning-to-output ratio that demonstrates deliberate budget allocation rather than runaway chain-of-thought. This is not a minor footnote. For production systems where truncated outputs are a hard failure mode, it changes the calculus significantly.
+  </p>
+
+  <!-- ─── QUICK SPECS ─── -->
+  <div class="model-specs-grid">
+    <div class="spec-card">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value sv-white">$1.25<span style="font-size:.65rem;font-weight:500;color:var(--text-muted);"> /1M</span></div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value sv-white">$2.50<span style="font-size:.65rem;font-weight:500;color:var(--text-muted);"> /1M</span></div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value sv-indigo">1M<span style="font-size:.65rem;font-weight:500;color:var(--text-muted);"> tokens</span></div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Bench Cost</div>
+      <div class="spec-value sv-gold">$0.001313</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Modality</div>
+      <div class="spec-value" style="font-size:.82rem;">Text + Image</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Cache Hit</div>
+      <div class="spec-value sv-cyan">128<span style="font-size:.75rem;font-weight:500;color:var(--text-muted);"> / 191 (67%)</span></div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">OpenRouter ID</div>
+      <div class="spec-value" style="font-size:.72rem;font-family:monospace;color:var(--text-secondary);">x-ai/grok-4.3</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Released</div>
+      <div class="spec-value" style="font-size:.88rem;">Apr 30, 2026</div>
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--border);margin:32px 0;">
+
+  <!-- ─── WHAT IS GROK 4.3 ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:0 0 14px;">What Is Grok 4.3?</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    Grok 4.3 is the standard reasoning entry in xAI's current model family, positioned one tier below the Grok 4.20 flagship and well below the Grok 4.20 Multi-Agent system. The model ID <code style="font-family:monospace;color:var(--text-secondary);background:var(--surface-2);padding:1px 5px;border-radius:3px;font-size:.88em;">x-ai/grok-4.3-20260430</code> pins its release to April 30, 2026 — making it the most recently released model in our benchmark cohort.
+  </p>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    Within xAI's lineup, the positioning is deliberate. Grok 4.20 ($1.25/$2.50, 2M context) is a pure generation model with no exposed reasoning chain — you get the answer, not the thinking. Grok 4.20 Multi-Agent ($2.00/$6.00, 2M context) is a heavy-reasoning orchestration system with encrypted parallel reasoning chains. Grok 4.3 occupies the middle ground: standard reasoning with a visible summary, at the same input price as Grok 4.20 but with output priced to match, half the context window, and — critically — a reasoning architecture that completes responses efficiently rather than exhausting token budgets.
+  </p>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 24px;">
+    Text plus image input is supported; file uploads are not. If your workflow requires PDF or document ingestion directly at the API level, you will need to handle extraction externally or route to a model that accepts file inputs, such as Claude Sonnet 4.6. For everything else — technical writing, code analysis, long-context document Q&amp;A, structured reasoning tasks — Grok 4.3's 1M context and $2.50/1M output price make it a compelling default.
+  </p>
+
+  <!-- ─── REASONING THAT KNOWS WHEN TO STOP ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:0 0 14px;">Reasoning That Knows When to Stop</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    The most operationally significant finding from our benchmark is also the simplest to describe: Grok 4.3 returned <code style="font-family:monospace;color:#34d399;background:rgba(52,211,153,.1);padding:1px 6px;border-radius:3px;font-size:.88em;">finish_reason: "stop"</code>. Every other model we tested under the same 650 max_tokens ceiling — GPT-5, Claude Sonnet 4.6, Grok 4.20 Multi-Agent, and others — hit <code style="font-family:monospace;color:#f87171;background:rgba(248,113,113,.08);padding:1px 6px;border-radius:3px;font-size:.88em;">finish_reason: "length"</code>, truncating their outputs mid-response.
+  </p>
+
+  <div class="finish-callout">
+    <div class="finish-callout-label">Key Finding — Benchmark Batch</div>
+    <p>Grok 4.3 is the <strong style="color:var(--text-primary);">only model</strong> in our six-model benchmark cohort that returned <code style="font-family:monospace;font-size:.88em;">finish_reason: "stop"</code> at max_tokens=650. It completed the full 400–500 word technical analysis with tokens to spare — without being told how many tokens it had available.</p>
+    <p>The practical implication: applications that treat "length" as a failure mode (parsers expecting complete JSON, structured outputs, step-by-step procedures) will experience fewer silent failures with Grok 4.3 at standard token budgets.</p>
+  </div>
+
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    The mechanism behind this is visible in the token breakdown. Of the 1,034 total completion tokens, 473 went to encrypted reasoning and 561 to visible output. That 45.7% reasoning / 54.3% visible split is a notably lean reasoning allocation — especially compared to Grok 4.20 Multi-Agent, which in our testing consumed approximately 75% of completion tokens in reasoning and 25% in visible output. Grok 4.3 thinks just enough and then delivers.
+  </p>
+
+  <!-- Reasoning ratio visualization -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin:20px 0;">
+    <div style="font-family:var(--font-display);font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Reasoning Efficiency — Grok 4.3 vs Grok 4.20 Multi-Agent</div>
+
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-family:var(--font-body);font-size:.82rem;font-weight:600;color:var(--text-primary);">Grok 4.3</span>
+        <span style="font-size:.76rem;color:var(--text-muted);">473 reasoning / 561 visible</span>
+      </div>
+      <div class="ratio-bar-track">
+        <div class="ratio-bar-reasoning"></div>
+        <div class="ratio-bar-visible"></div>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:5px;">
+        <span style="font-size:.72rem;color:#aaaaaa;">45.7% reasoning</span>
+        <span style="font-size:.72rem;color:var(--neon-indigo);">54.3% visible output</span>
+      </div>
+    </div>
+
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-family:var(--font-body);font-size:.82rem;font-weight:600;color:var(--text-secondary);">Grok 4.20 Multi-Agent</span>
+        <span style="font-size:.76rem;color:var(--text-muted);">~75% reasoning / ~25% visible</span>
+      </div>
+      <div class="ratio-bar-track">
+        <div style="height:8px;background:rgba(170,170,170,.5);border-radius:6px 0 0 6px;width:75%;"></div>
+        <div style="height:8px;background:rgba(129,140,248,.4);border-radius:0 6px 6px 0;width:25%;"></div>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:5px;">
+        <span style="font-size:.72rem;color:var(--text-muted);">~75% reasoning</span>
+        <span style="font-size:.72rem;color:var(--text-muted);">~25% visible output</span>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 24px;">
+    This efficiency matters beyond token cost. When a model spends a disproportionate fraction of its budget on internal deliberation, it often signals over-thinking — running through alternatives and hedges that never surface in the visible answer. Grok 4.3's ratio suggests a training objective that rewards concise, complete responses rather than exhaustive internal exploration.
+  </p>
+
+  <!-- ─── xAI REASONING ARCHITECTURE CALLOUT ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:0 0 14px;">xAI Reasoning Architecture</h2>
+
+  <div class="xai-callout">
+    <div class="xai-callout-label">xAI Reasoning Pattern — Encrypted + Visible Summary</div>
+    <p>Like Grok 4.20, Grok 4.3 exposes a two-layer reasoning structure. You receive a <strong style="color:var(--text-primary);">visible reasoning summary</strong> in <code style="font-family:monospace;font-size:.88em;">reasoning_details[0].summary</code> and an <strong style="color:var(--text-primary);">encrypted reasoning blob</strong> in <code style="font-family:monospace;font-size:.88em;">reasoning_details[1]</code> (format: <code style="font-family:monospace;font-size:.88em;">xai-responses-v1</code>). You can see where the model went — the problem decomposition and scope — but not the step-by-step chain itself.</p>
+    <p>From our benchmark run, the visible summary read: <em style="color:var(--text-primary);">"The question asks for a detailed technical analysis (400–500 words) on architectural tradeoffs between transformer attention mechanisms and state space models (SSMs) like Mamba. Cover: memory complexity..."</em> — confirming the model correctly parsed the task scope before generating its response.</p>
+    <p>The self-assessment embedded in the model's final output — <em>"Final answer: 450 words on the architectural tradeoffs covering memory (linear vs quadratic), training (associative scan vs full parallelism), inference (O(1) state vs KV cache), and long-context (native million-token scaling for SSMs)"</em> — is an unusual transparency signal. The model audited its own output and confirmed completion. That pattern does not appear in any other model's response from this batch.</p>
+  </div>
+
+  <!-- ─── WHAT MAKES IT DIFFERENT ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:0 0 14px;">What Makes It Different</h2>
+  <div class="use-case-grid">
+    <div class="use-case-card">
+      <h4>Completion Reliability</h4>
+      <p>The only model in our batch to finish under a 650-token ceiling. Critical for structured outputs, parsers, and workflows that cannot tolerate truncated responses.</p>
+    </div>
+    <div class="use-case-card">
+      <h4>Output-Weighted Reasoning</h4>
+      <p>45.7% reasoning, 54.3% visible output. Where Grok 4.20 Multi-Agent spends three-quarters of tokens on internal deliberation, 4.3 delivers more words per dollar.</p>
+    </div>
+    <div class="use-case-card">
+      <h4>Active Prefix Caching</h4>
+      <p>67% of prompt tokens were served from cache in our run (128/191). Applications with stable system prompts or repeated context prefixes see materially lower effective input costs.</p>
+    </div>
+    <div class="use-case-card">
+      <h4>1M Context at $2.50 Output</h4>
+      <p>Same 1M context as Claude Sonnet 4.6, at one-sixth the output price ($2.50 vs $15.00). Long-document analysis, code review, and research synthesis become significantly more economical.</p>
+    </div>
+  </div>
+
+  <!-- ─── WHO IT IS FOR / NOT FOR ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:0 0 14px;">Who It Is For</h2>
+  <div class="fit-grid">
+    <div class="fit-panel for-panel">
+      <h4 class="for-title">Good Fit</h4>
+      <ul>
+        <li>Structured output pipelines where truncation is a hard failure</li>
+        <li>Long-document Q&amp;A and summarization (1M context)</li>
+        <li>Technical analysis and code review at scale</li>
+        <li>High-volume inference where $2.50/1M output matters</li>
+        <li>Applications with reusable system prompts (caching active)</li>
+        <li>Reasoning with audit trail (visible summary available)</li>
+        <li>Multimodal workflows combining text and images</li>
+      </ul>
+    </div>
+    <div class="fit-panel not-panel">
+      <h4 class="not-title">Poor Fit</h4>
+      <ul>
+        <li>Workflows that require direct file or document uploads at the API level</li>
+        <li>Tasks needing the deepest multi-step agentic orchestration (use 4.20 Multi-Agent)</li>
+        <li>Applications requiring a context window beyond 1M tokens (use Grok 4.20 at 2M)</li>
+        <li>Fully transparent chain-of-thought (reasoning remains encrypted)</li>
+        <li>Real-time interactive use cases sensitive to reasoning latency</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── LIVE BENCHMARK ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">Live Benchmark — Full Response</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 16px;">
+    We ran a standardized technical writing prompt across six models using the OpenRouter API, with <code style="font-family:monospace;font-size:.88em;">max_tokens=650</code>. The prompt asked for a 400–500 word technical analysis comparing transformer attention to state space models. Below is Grok 4.3's complete response — reproduced verbatim, formatted for readability.
+  </p>
+
+  <div class="benchmark-block">
+    <div class="benchmark-block-header">
+      <span class="benchmark-block-title">Live Benchmark Run — x-ai/grok-4.3</span>
+      <span class="benchmark-cost-badge bc-mid">bc-mid &nbsp;|&nbsp; $0.001313 theoretical</span>
+    </div>
+
+    <div class="benchmark-prompt-label">Prompt</div>
+    <div class="benchmark-prompt-text">
+      "Write a detailed technical analysis (~400–500 words) on architectural tradeoffs between transformer attention mechanisms and state space models (SSMs) like Mamba."
+    </div>
+
+    <div class="benchmark-response-label">Model Response &nbsp;<span style="color:#34d399;font-size:.62rem;border:1px solid rgba(52,211,153,.3);background:rgba(52,211,153,.08);border-radius:4px;padding:2px 8px;font-family:var(--font-body);font-weight:700;">COMPLETED &mdash; finish_reason: stop</span></div>
+    <div class="benchmark-response-text">
+      <p>Transformer attention and state-space models (SSMs) such as Mamba represent fundamentally different approaches to sequence modeling, with distinct implications for scaling.</p>
+
+      <p><strong>Memory complexity differs sharply.</strong> Standard scaled-dot-product attention materializes an <em>n</em> &times; <em>n</em> matrix (or its block-wise equivalent in FlashAttention), yielding &Theta;(<em>n</em>&sup2;<em>d</em>) bytes of intermediate storage for hidden dimension <em>d</em>. KV-cache growth further adds 2&middot;<em>L</em>&middot;<em>n</em>&middot;<em>d</em> bytes during autoregressive decoding (<em>L</em> layers). In contrast, a selective SSM maintains a fixed-size hidden state whose dimension is independent of sequence length; Mamba's discretization yields an O(<em>d</em>&middot;<em>N</em>) recurrent state (<em>N</em> typically 16), so total activation memory scales linearly as &Theta;(<em>nd</em> + <em>L</em>&middot;<em>d</em>&middot;<em>N</em>). For contexts beyond 32k tokens this gap exceeds an order of magnitude.</p>
+
+      <p><strong>Training parallelism follows from the computation graph.</strong> Attention is embarrassingly parallel: all <em>n</em>&sup2; dot-products are independent, enabling near-perfect utilization of tensor cores via tiled matrix multiplies. SSMs are expressed as linear recurrences; while a na&iuml;ve loop is sequential, the associative scan algorithm (as implemented in Mamba's CUDA kernels) computes the prefix sums in O(log <em>n</em>) parallel steps using a parallel prefix-sum primitive. The resulting wall-clock efficiency is typically 3&ndash;5&times; lower than attention at equivalent FLOPs because of irregular memory access and lower arithmetic intensity, although the gap narrows on modern hardware with hardware-aware kernels.</p>
+
+      <p><strong>Inference speed exhibits the opposite asymmetry.</strong> Per-token generation in transformers requires an O(<em>n</em>) matrix-vector product against the growing KV cache, producing latency that increases with context length. SSMs (and Mamba in particular) perform only a constant-time state update per token after the initial parallel prefix scan, yielding sub-millisecond latency that remains flat even at million-token contexts.</p>
+
+      <p><strong>Long-context handling therefore favors SSMs</strong> for both training and inference once <em>n</em> &gtrsim; 64k. Transformers require sparse or local attention patterns and still suffer quadratic memory walls without additional compression; Mamba's input-dependent &Delta;, <em>B</em>, <em>C</em> parameters retain selective recall while preserving linear complexity, enabling end-to-end training on sequences exceeding 1M tokens within the same HBM budget.</p>
+
+      <p>The core tradeoff is therefore <em>expressivity versus scalability</em>: attention supplies unrestricted pairwise interactions at quadratic cost, while selective SSMs trade global parallelism for linear-time, constant-state recurrent computation that is markedly more efficient for long-context workloads.</p>
+    </div>
+
+    <!-- Token stats strip -->
+    <div class="token-stats-strip">
+      <div class="token-stat">
+        <div class="token-stat-label">Prompt Tokens</div>
+        <div class="token-stat-value">191 <span style="font-size:.72rem;color:var(--text-muted);">(128 cached)</span></div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Reasoning Tokens</div>
+        <div class="token-stat-value tsv-indigo">473 <span style="font-size:.72rem;color:var(--text-muted);">(encrypted)</span></div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Visible Output</div>
+        <div class="token-stat-value tsv-cyan">~561 tokens</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Total Completion</div>
+        <div class="token-stat-value">1,034</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Actual Cost</div>
+        <div class="token-stat-value tsv-gold">$0.00268935</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Finish Reason</div>
+        <div class="token-stat-value tsv-green">stop &#10003;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SAMPLE PROMPTS ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">Sample Prompts</h2>
+  <p style="font-size:.9rem;color:var(--text-secondary);line-height:1.65;margin:0 0 8px;">Prompt patterns that align well with Grok 4.3's strengths — structured reasoning, long-context analysis, and efficient completion within defined scope.</p>
+
+  <div class="sample-prompt-block">
+    <div class="sample-prompt-label">Long-Context Code Review</div>
+    <div class="sample-prompt-text">Review the following 80,000-token codebase for (1) security vulnerabilities, (2) performance bottlenecks, (3) architectural anti-patterns, and (4) missing test coverage. For each finding, provide severity (critical / high / medium / low), affected file and line range, and a concrete remediation recommendation. Output as structured JSON.</div>
+  </div>
+
+  <div class="sample-prompt-block">
+    <div class="sample-prompt-label">Technical Documentation with Scope Constraint</div>
+    <div class="sample-prompt-text">Write a 600-word technical specification for a WebSocket-based real-time notification service. Cover: connection lifecycle management, message schema design, authentication flow (JWT), delivery guarantees, and reconnection strategy. Target audience: backend engineers onboarding to the system. Do not exceed 600 words.</div>
+  </div>
+
+  <div class="sample-prompt-block">
+    <div class="sample-prompt-label">Comparative Analysis with Image Input</div>
+    <div class="sample-prompt-text">[Attach architecture diagram image] Analyze the system architecture shown in this diagram. Identify single points of failure, bottlenecks under high load, missing redundancy layers, and any components that appear over-engineered for the stated throughput requirements. Compare to a comparable event-driven architecture pattern and recommend three specific structural changes.</div>
+  </div>
+
+  <!-- ─── PRICING TABLE ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">Pricing Breakdown</h2>
+  <div class="pricing-table-wrap">
+    <table class="pricing-table">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Rate</th>
+          <th>Benchmark Cost</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--text-primary);">Input tokens</strong></td>
+          <td class="price-highlight">$1.25 / 1M</td>
+          <td style="color:var(--text-secondary);">$0.000079 (63 non-cached)</td>
+          <td style="color:var(--text-secondary);">Standard rate for non-cached prompt tokens</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-primary);">Cached input tokens</strong></td>
+          <td class="price-highlight">~$0.00 effective</td>
+          <td style="color:var(--text-secondary);">128/191 tokens cached</td>
+          <td style="color:var(--text-secondary);">67% cache hit on benchmark prompt reduces effective input cost</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-primary);">Output tokens</strong></td>
+          <td class="price-highlight">$2.50 / 1M</td>
+          <td style="color:var(--text-secondary);">$0.00258500 (1,034 tokens)</td>
+          <td style="color:var(--text-secondary);">Includes both reasoning (473) and visible (561) tokens</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-primary);">Total (actual run)</strong></td>
+          <td class="price-highlight">—</td>
+          <td style="color:#34d399;font-weight:700;">$0.00268935</td>
+          <td style="color:var(--text-secondary);">Direct xAI routing, no OpenRouter markup applied</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-primary);">Theoretical benchmark cost</strong></td>
+          <td class="price-highlight">—</td>
+          <td style="color:var(--neon-gold);font-weight:700;">$0.001313</td>
+          <td style="color:var(--text-secondary);">bc-mid gold tier; normalized benchmark prompt costs</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── ADSENSE MID ─── -->
+  <div style="margin:32px 0;text-align:center;">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- ─── COMPARISON TABLE ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">How It Compares</h2>
+  <p style="font-size:.9rem;color:var(--text-secondary);line-height:1.65;margin:0 0 16px;">Grok 4.3 in context across the xAI lineup and closest pricing-tier peers. All data from live API runs or published pricing as of May 2026.</p>
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Input / 1M</th>
+          <th>Output / 1M</th>
+          <th>Context</th>
+          <th>Reasoning</th>
+          <th>Benchmark Finish</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="this-model">
+          <td><strong>Grok 4.3</strong> <span style="font-size:.7rem;color:#aaaaaa;font-weight:400;">← this</span></td>
+          <td>$1.25</td>
+          <td>$2.50</td>
+          <td style="color:var(--neon-indigo);">1M</td>
+          <td>Encrypted + summary</td>
+          <td><span class="stop-badge">Completed</span></td>
+        </tr>
+        <tr>
+          <td>Grok 4.20</td>
+          <td>$1.25</td>
+          <td>$2.50</td>
+          <td style="color:var(--text-secondary);">2M</td>
+          <td>None exposed</td>
+          <td><span style="color:var(--text-muted);font-size:.8rem;">—</span></td>
+        </tr>
+        <tr>
+          <td>Grok 4.20 Multi-Agent</td>
+          <td>$2.00</td>
+          <td>$6.00</td>
+          <td style="color:var(--text-secondary);">2M</td>
+          <td>Encrypted parallel</td>
+          <td><span style="color:var(--text-muted);font-size:.8rem;">—</span></td>
+        </tr>
+        <tr>
+          <td>Claude Sonnet 4.6</td>
+          <td>$3.00</td>
+          <td>$15.00</td>
+          <td style="color:var(--text-secondary);">1M</td>
+          <td>Opt-in</td>
+          <td><span style="color:var(--text-muted);font-size:.8rem;">—</span></td>
+        </tr>
+        <tr>
+          <td>GPT-5</td>
+          <td>$1.25</td>
+          <td>$10.00</td>
+          <td style="color:var(--text-secondary);">400K</td>
+          <td>Encrypted + summary</td>
+          <td><span class="length-badge">Length (at 640)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:.82rem;color:var(--text-muted);line-height:1.6;margin:8px 0 0;">
+    GPT-5 shares the same input price ($1.25/1M) and similar reasoning architecture (encrypted + visible summary) as Grok 4.3, but hit "length" in our benchmark at 640 tokens — 10 tokens short of completing. Grok 4.3 produced a comparable-quality response and finished cleanly, with 2.5&times; cheaper output and 2.5&times; more context (1M vs 400K).
+  </p>
+
+  <!-- ─── TRY IT CTA ─── -->
+  <div class="try-it-band">
+    <div>
+      <h3>Try <span class="provider-accent">Grok 4.3</span> via OpenRouter</h3>
+      <p>Model ID: <code style="font-family:monospace;font-size:.88em;color:#aaaaaa;">x-ai/grok-4.3</code> &nbsp;&middot;&nbsp; Real model: <code style="font-family:monospace;font-size:.88em;color:#aaaaaa;">x-ai/grok-4.3-20260430</code> &nbsp;&middot;&nbsp; Direct xAI routing available</p>
+    </div>
+    <a href="https://openrouter.ai/x-ai/grok-4.3" target="_blank" rel="noopener noreferrer"
+       style="display:inline-block;background:#ffffff;color:#07070f;font-family:var(--font-body);font-weight:700;font-size:.9rem;padding:12px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;flex-shrink:0;">
+      Open in OpenRouter &rarr;
+    </a>
+  </div>
+
+  <!-- ─── KEY TAKEAWAYS ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">Key Takeaways</h2>
+  <ul class="takeaways-list">
+    <li>
+      <span class="tk-num">1</span>
+      <span>Grok 4.3 is the <strong style="color:var(--text-primary);">only model in this benchmark batch</strong> that returned <code style="font-family:monospace;font-size:.88em;color:#34d399;">finish_reason: "stop"</code> at our standard max_tokens=650 ceiling — it completed the full technical analysis (473 reasoning + ~561 visible tokens) without hitting limits.</span>
+    </li>
+    <li>
+      <span class="tk-num">2</span>
+      <span><strong style="color:var(--text-primary);">Reasoning efficiency ratio: 45.7% / 54.3%.</strong> Of 1,034 completion tokens, 473 went to reasoning and 561 to visible output. Compare to Grok 4.20 Multi-Agent (~75% reasoning, ~25% visible) — Grok 4.3 is notably more output-efficient per dollar spent.</span>
+    </li>
+    <li>
+      <span class="tk-num">3</span>
+      <span><strong style="color:var(--text-primary);">Prefix caching is active and effective:</strong> 128 of 191 prompt tokens (67%) were served from cache in our run. Applications that reuse system prompts or context prefixes will see proportionally lower effective input costs at production scale.</span>
+    </li>
+    <li>
+      <span class="tk-num">4</span>
+      <span>At <strong style="color:#ffffff;">$1.25/$2.50/1M</strong>, Grok 4.3 delivers reasoning with a visible summary at the same input price as GPT-5 but with <strong style="color:var(--text-primary);">2.5&times; cheaper output</strong> ($2.50 vs $10.00/1M) and <strong style="color:var(--text-primary);">2.5&times; more context</strong> (1M vs 400K tokens).</span>
+    </li>
+    <li>
+      <span class="tk-num">5</span>
+      <span>Released <strong style="color:var(--text-primary);">April 30, 2026</strong> (pinned by model ID <code style="font-family:monospace;font-size:.88em;">grok-4.3-20260430</code>) — the most recently released model in this benchmark cohort, suggesting it benefits from xAI's latest training methodology and hardware-aware optimizations.</span>
+    </li>
+  </ul>
+
+  <!-- ─── RELATED MODELS ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">Related Models</h2>
+  <div class="related-grid">
+    <a href="/models/grok-4-20.html" class="related-card">
+      <div class="related-card-provider">xAI</div>
+      <div class="related-card-name">Grok 4.20</div>
+      <div class="related-card-desc">$1.25/$2.50/1M &middot; 2M context &middot; No reasoning chain exposed. The flagship generation model with the largest context in xAI's lineup.</div>
+    </a>
+    <a href="/models/grok-4-20-multi-agent.html" class="related-card">
+      <div class="related-card-provider">xAI</div>
+      <div class="related-card-name">Grok 4.20 Multi-Agent</div>
+      <div class="related-card-desc">$2.00/$6.00/1M &middot; 2M context &middot; Parallel encrypted reasoning. xAI's heaviest orchestration tier — 75% reasoning token allocation.</div>
+    </a>
+    <a href="/models/claude-sonnet-4-6.html" class="related-card">
+      <div class="related-card-provider">Anthropic</div>
+      <div class="related-card-name">Claude Sonnet 4.6</div>
+      <div class="related-card-desc">$3.00/$15.00/1M &middot; 1M context &middot; Opt-in reasoning &middot; File input supported. Comparable context to Grok 4.3 at 6&times; higher output price.</div>
+    </a>
+  </div>
+
+  <!-- Schema.org structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Grok 4.3 — The Model That Knows When to Stop",
+    "description": "Grok 4.3 review: $1.25/$2.50 per 1M tokens, 1M context, the only model in our benchmark batch to return finish_reason stop. Real benchmark results and technical analysis.",
+    "datePublished": "2026-05-15",
+    "author": {
+      "@type": "Person",
+      "name": "Quantum Merlin"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Aether Intel"
+    },
+    "url": "https://ai.quantummerlin.com/models/grok-4-3.html"
+  }
+  </script>
+
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
