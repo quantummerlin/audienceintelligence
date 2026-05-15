@@ -181,31 +181,7 @@
     .skill-card-featured {
       grid-column: 1 / -1;
       display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 0;
-    }
-    @media (max-width: 700px) {
-      .skill-card-featured {
-        grid-template-columns: 1fr;
-      }
-    }
-    .skill-card-featured .skill-card-body {
-      padding: 32px 36px;
-    }
-    .skill-card-featured .skill-card-aside {
-      background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(34,211,238,.06));
-      border-left: 1px solid var(--border);
-      padding: 32px 36px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    @media (max-width: 700px) {
-      .skill-card-featured .skill-card-aside {
-        border-left: none;
-        border-top: 1px solid var(--border);
-        padding: 24px 28px;
-      }
     }
     .skill-card-featured .skill-card-title {
       font-size: 1.35rem;
@@ -257,33 +233,6 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-    }
-
-    .skill-card-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .skill-diff {
-      font-family: var(--font-display);
-      font-size: .65rem;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 4px;
-    }
-    .skill-diff-beginner { background: rgba(52,211,153,.12); color: #34d399; }
-    .skill-diff-intermediate { background: rgba(251,191,36,.1); color: #fbbf24; }
-    .skill-diff-advanced { background: rgba(248,113,113,.1); color: #f87171; }
-    .skill-time {
-      font-family: var(--font-display);
-      font-size: .65rem;
-      letter-spacing: .06em;
-      color: var(--text-muted);
-      margin-left: auto;
     }
 
     .skill-card-title {
@@ -340,75 +289,28 @@
       margin-top: auto;
       padding-top: 4px;
     }
-    .btn-skill-download {
+    .skill-guide-link {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 9px 18px;
-      background: var(--neon-indigo);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
+      gap: 6px;
       font-family: var(--font-display);
       font-size: .72rem;
       font-weight: 700;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background .18s, transform .12s;
-      text-decoration: none;
-    }
-    .btn-skill-download:hover {
-      background: var(--neon-cyan);
-      color: #0a0a14;
-      transform: translateY(-1px);
-    }
-    .btn-skill-download svg {
-      width: 13px; height: 13px;
-      fill: none; stroke: currentColor;
-      stroke-width: 2.2;
-      stroke-linecap: round; stroke-linejoin: round;
-    }
-    .skill-guide-link {
-      font-family: var(--font-display);
-      font-size: .7rem;
-      font-weight: 700;
       letter-spacing: .07em;
       text-transform: uppercase;
-      color: var(--text-secondary);
+      color: var(--neon-indigo);
       text-decoration: none;
-      transition: color .18s;
+      transition: color .18s, gap .18s;
     }
-    .skill-guide-link:hover { color: var(--neon-cyan); }
+    .skill-guide-link:hover {
+      color: var(--neon-cyan);
+      gap: 10px;
+    }
     .skill-guide-link.coming {
       color: var(--text-muted);
       cursor: default;
       pointer-events: none;
     }
-
-    /* Aside preview panel (featured only) */
-    .skill-aside-label {
-      font-family: var(--font-display);
-      font-size: .65rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .skill-aside-snippet {
-      background: rgba(0,0,0,.35);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 16px;
-      font-family: 'Courier New', monospace;
-      font-size: .72rem;
-      color: rgba(255,255,255,.55);
-      line-height: 1.7;
-      flex: 1;
-      overflow: hidden;
-      white-space: pre-wrap;
-    }
-    .skill-aside-snippet .hl { color: var(--neon-cyan); }
 
     /* No results */
     .skills-empty {
@@ -540,11 +442,6 @@
             <img src="/images/skills/prompt-chaining-hero.webp" alt="Prompt Chaining for Complex Tasks" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-secondary">Prompts</span>
-              <span class="skill-diff skill-diff-intermediate">Intermediate</span>
-              <span class="skill-time">~30 min to learn</span>
-            </div>
             <h3 class="skill-card-title">Prompt Chaining for Complex Tasks</h3>
             <p class="skill-card-why">Most prompts fail because you're asking one model to do too much in one shot.</p>
             <p class="skill-card-desc">Break multi-step problems into sequential prompts where each output feeds the next input. This framework reduces hallucinations, keeps LLMs on-task across long workflows, and makes your outputs auditable at every step.</p>
@@ -554,31 +451,8 @@
               <li>When chaining helps vs. when a single prompt is better</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('prompt-chaining')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
               <a href="/skills/prompt-chaining.html" class="skill-guide-link">Read the Guide →</a>
             </div>
-          </div>
-          <div class="skill-card-aside">
-            <div class="skill-aside-label">Template Preview</div>
-            <div class="skill-aside-snippet"><span class="hl">STEP 1 — EXTRACT</span>
-You are a research assistant.
-Extract every factual claim from
-the text below. Output as JSON.
-
-<span class="hl">STEP 2 — VERIFY</span>
-You are a fact-checker.
-For each claim in {step1_output},
-rate confidence 0–10 and flag
-any that need sourcing.
-
-<span class="hl">STEP 3 — SYNTHESISE</span>
-You are a senior editor.
-Using only the verified claims
-from {step2_output}, write a
-concise 3-paragraph summary.</div>
           </div>
         </div>
 
@@ -588,11 +462,6 @@ concise 3-paragraph summary.</div>
             <img src="/images/skills/chain-of-thought-hero.webp" alt="Chain-of-Thought Prompting" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-secondary">Prompts</span>
-              <span class="skill-diff skill-diff-beginner">Beginner</span>
-              <span class="skill-time">~15 min</span>
-            </div>
             <h3 class="skill-card-title">Chain-of-Thought Prompting</h3>
             <p class="skill-card-why">LLMs give better answers when they show their working — just like humans.</p>
             <p class="skill-card-desc">A simple but powerful technique that forces the model to reason step-by-step before committing to an answer. Significantly improves accuracy on maths, logic, and multi-step reasoning tasks with almost zero extra effort.</p>
@@ -602,10 +471,6 @@ concise 3-paragraph summary.</div>
               <li>Self-consistency: running CoT multiple times to vote on the best answer</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('chain-of-thought')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
               <a href="/skills/chain-of-thought.html" class="skill-guide-link">Read the Guide →</a>
             </div>
           </div>
@@ -617,11 +482,6 @@ concise 3-paragraph summary.</div>
             <img src="/images/skills/few-shot-prompting-hero.webp" alt="Few-Shot Prompting" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-secondary">Prompts</span>
-              <span class="skill-diff skill-diff-beginner">Beginner</span>
-              <span class="skill-time">~20 min</span>
-            </div>
             <h3 class="skill-card-title">Few-Shot Prompting</h3>
             <p class="skill-card-why">When you can't fully describe what you want in words, show the model.</p>
             <p class="skill-card-desc">Include 2–5 worked examples directly in your prompt and the model infers format, tone, and edge-case handling from them — no fine-tuning required. The fastest way to lock in exact output schemas and teach unusual output styles.</p>
@@ -631,10 +491,6 @@ concise 3-paragraph summary.</div>
               <li>How to write examples that teach the right things</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('few-shot-prompting')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
               <a href="/skills/few-shot-prompting.html" class="skill-guide-link">Read the Guide →</a>
             </div>
           </div>
@@ -646,11 +502,6 @@ concise 3-paragraph summary.</div>
             <img src="/images/skills/agent-memory-hero.webp" alt="Agent Memory Architecture" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-agents">Agents</span>
-              <span class="skill-diff skill-diff-advanced">Advanced</span>
-              <span class="skill-time">~1 hour</span>
-            </div>
             <h3 class="skill-card-title">Agent Memory Architecture</h3>
             <p class="skill-card-why">Stateless agents are powerful but forget everything. Add memory and they become genuinely useful.</p>
             <p class="skill-card-desc">Design persistent, retrievable memory layers for autonomous agents using vector stores and structured summaries. Covers short-term context windows, episodic recall, and long-term knowledge bases built for production.</p>
@@ -660,11 +511,7 @@ concise 3-paragraph summary.</div>
               <li>System prompt templates for memory-aware agents</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('agent-memory')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
-              <a href="/skills/agent-memory.html" class="skill-guide-link">Read the Guide &rarr;</a>
+              <a href="/skills/agent-memory.html" class="skill-guide-link">Read the Guide →</a>
             </div>
           </div>
         </div>
@@ -675,11 +522,6 @@ concise 3-paragraph summary.</div>
             <img src="/images/skills/rag-basics-hero.webp" alt="RAG: Retrieval-Augmented Generation" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-tools">Tools</span>
-              <span class="skill-diff skill-diff-intermediate">Intermediate</span>
-              <span class="skill-time">~45 min</span>
-            </div>
             <h3 class="skill-card-title">RAG: Retrieval-Augmented Generation</h3>
             <p class="skill-card-why">LLMs don't know your documents. RAG fixes that without fine-tuning or retraining.</p>
             <p class="skill-card-desc">Connect any LLM to your own knowledge base using vector search. RAG lets models answer questions grounded in your specific data — PDFs, wikis, codebases, customer records — with citations and minimal hallucination.</p>
@@ -689,11 +531,7 @@ concise 3-paragraph summary.</div>
               <li>Prompt templates that integrate retrieved context cleanly</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('rag-basics')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
-              <a href="/skills/rag-basics.html" class="skill-guide-link">Read the Guide &rarr;</a>
+              <a href="/skills/rag-basics.html" class="skill-guide-link">Read the Guide →</a>
             </div>
           </div>
         </div>
@@ -704,11 +542,6 @@ concise 3-paragraph summary.</div>
             <img src="/images/skills/model-routing-hero.webp" alt="Cost-Optimised Model Routing" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-tools">Tools</span>
-              <span class="skill-diff skill-diff-advanced">Advanced</span>
-              <span class="skill-time">~1 hour</span>
-            </div>
             <h3 class="skill-card-title">Cost-Optimised Model Routing</h3>
             <p class="skill-card-why">You don't need GPT-4o to answer a yes/no question. Smart routing cuts your bill 60–80%.</p>
             <p class="skill-card-desc">Route tasks to the cheapest capable model using intent classifiers and complexity scoring. A practical system for cutting inference costs without sacrificing output quality — built on top of OpenRouter.</p>
@@ -718,11 +551,7 @@ concise 3-paragraph summary.</div>
               <li>Tracking cost-per-task across model tiers with OpenRouter</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('model-routing')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
-              <a href="/skills/model-routing.html" class="skill-guide-link">Read the Guide &rarr;</a>
+              <a href="/skills/model-routing.html" class="skill-guide-link">Read the Guide →</a>
             </div>
           </div>
         </div>
@@ -733,11 +562,6 @@ concise 3-paragraph summary.</div>
             <img src="/images/skills/reddit-mining-hero.webp" alt="Reddit Intelligence Mining" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-business">Research</span>
-              <span class="skill-diff skill-diff-beginner">Beginner</span>
-              <span class="skill-time">~20 min</span>
-            </div>
             <h3 class="skill-card-title">Reddit Intelligence Mining</h3>
             <p class="skill-card-why">Reddit is the most honest market research data on the internet. Most people ignore it.</p>
             <p class="skill-card-desc">Use AI to systematically extract product insights, competitor signals, and unmet customer needs from Reddit threads at scale. Includes query templates, sentiment scoring, and synthesis prompts ready to copy-paste.</p>
@@ -747,10 +571,6 @@ concise 3-paragraph summary.</div>
               <li>Synthesising hundreds of comments into an actionable brief</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('reddit-mining')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
               <a href="/skills/reddit-mining.html" class="skill-guide-link coming">Guide Coming Soon</a>
             </div>
           </div>
@@ -762,11 +582,6 @@ concise 3-paragraph summary.</div>
             <img src="/images/skills/content-pipeline-hero.webp" alt="AI Content Pipeline" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-secondary">Automation</span>
-              <span class="skill-diff skill-diff-advanced">Advanced</span>
-              <span class="skill-time">~2 hours</span>
-            </div>
             <h3 class="skill-card-title">AI Content Pipeline</h3>
             <p class="skill-card-why">Manual content creation doesn't scale. A pipeline lets one person do the work of ten.</p>
             <p class="skill-card-desc">An end-to-end automation stack that handles topic research, drafting, fact-checking, SEO optimisation, and publishing with minimal human intervention. Built around modular prompt templates and webhook triggers.</p>
@@ -776,11 +591,7 @@ concise 3-paragraph summary.</div>
               <li>Connecting to CMS and social platforms via webhooks</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('content-pipeline')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
-              <a href="/skills/content-pipeline.html" class="skill-guide-link">Read the Guide &rarr;</a>
+              <a href="/skills/content-pipeline.html" class="skill-guide-link">Read the Guide →</a>
             </div>
           </div>
         </div>
@@ -791,11 +602,6 @@ concise 3-paragraph summary.</div>
             <img src="/images/skills/system-prompts-hero.webp" alt="System Prompts" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-secondary">Prompts</span>
-              <span class="skill-diff skill-diff-beginner">Beginner</span>
-              <span class="skill-time">~25 min</span>
-            </div>
             <h3 class="skill-card-title">System Prompts</h3>
             <p class="skill-card-why">Most AI products misbehave because the system prompt is a loose list of rules rather than a structured identity.</p>
             <p class="skill-card-desc">Build production-ready system prompts using a four-layer structure: role/persona, context, constraints, and output format. Includes jailbreak resistance patterns and an output validation template.</p>
@@ -805,11 +611,7 @@ concise 3-paragraph summary.</div>
               <li>How to harden prompts against jailbreak attacks</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('system-prompts')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
-              <a href="/skills/system-prompts.html" class="skill-guide-link">Read the Guide &rarr;</a>
+              <a href="/skills/system-prompts.html" class="skill-guide-link">Read the Guide →</a>
             </div>
           </div>
         </div>
@@ -820,11 +622,6 @@ concise 3-paragraph summary.</div>
             <img src="/images/skills/jailbreak-proof-hero.webp" alt="Jailbreak-Proof System Prompts" class="skill-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')">
           </div>
           <div class="skill-card-body">
-            <div class="skill-card-meta">
-              <span class="badge badge-tools">Security</span>
-              <span class="skill-diff skill-diff-intermediate">Intermediate</span>
-              <span class="skill-time">~30 min</span>
-            </div>
             <h3 class="skill-card-title">Jailbreak-Proof System Prompts</h3>
             <p class="skill-card-why">If you're shipping AI products, adversarial users will try to break your prompts. Here's how to stop them.</p>
             <p class="skill-card-desc">Harden your AI-powered products against adversarial user inputs using layered system prompt design, input sanitization patterns, and output validation guards. Practical templates you can drop into any production system.</p>
@@ -834,11 +631,7 @@ concise 3-paragraph summary.</div>
               <li>Output validation prompts to catch off-policy responses</li>
             </ul>
             <div class="skill-card-actions">
-              <button class="btn-skill-download" onclick="downloadSkill('jailbreak-proof')">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Free
-              </button>
-              <a href="/skills/jailbreak-proof.html" class="skill-guide-link">Read the Guide &rarr;</a>
+              <a href="/skills/jailbreak-proof.html" class="skill-guide-link">Read the Guide →</a>
             </div>
           </div>
         </div>
