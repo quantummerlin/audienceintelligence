@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPT-4o Mini Review & Benchmarks | Aether Intel</title>
+  <meta name="description" content="GPT-4o Mini reviewed: live benchmark results, pricing breakdown, and a clear guide to when OpenAI's cheapest capable model is — and isn't — the right choice." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/gpt-4o-mini/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="GPT-4o Mini Review & Benchmarks | Aether Intel" />
+  <meta property="og:description" content="Live benchmark results, pricing breakdown, and a clear guide to when OpenAI's cheapest capable model is the right choice." />
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/gpt-4o-mini/" />
+  <meta property="og:site_name" content="Aether Intel" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GPT-4o Mini Review & Benchmarks | Aether Intel" />
+  <meta name="twitter:description" content="Live benchmark results, pricing breakdown, and a clear guide to when OpenAI's cheapest capable model is the right choice." />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 5rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-family: var(--font-body);
+      flex-wrap: wrap;
+    }
+    .breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb .sep { color: var(--text-muted); opacity: 0.5; }
+    .breadcrumb .current { color: var(--text-secondary); }
+
+    /* Hero */
+    .hero { margin-bottom: 2.5rem; }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .badge-provider, .badge-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      border: 1px solid;
+      letter-spacing: 0.02em;
+    }
+
+    .badge-provider {
+      background: rgba(116,170,156,0.12);
+      border-color: rgba(116,170,156,0.35);
+      color: #74aa9c;
+    }
+
+    .badge-meta {
+      background: rgba(129,140,248,0.08);
+      border-color: rgba(129,140,248,0.2);
+      color: var(--text-secondary);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.7;
+    }
+
+    h1.model-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 5vw, 2.6rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    h1.model-title .accent { color: #74aa9c; }
+
+    .hero-lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin-bottom: 1.25rem;
+      font-family: var(--font-heading);
+    }
+
+    .hero-highlight {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid #74aa9c;
+      border-radius: 0 8px 8px 0;
+      padding: 0.85rem 1.1rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-highlight strong { color: var(--text-primary); }
+
+    /* Section layout */
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    p.body-copy {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-size: 0.97rem;
+    }
+
+    p.body-copy strong { color: var(--text-primary); }
+
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* Spec Grid */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+    }
+
+    .spec-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+
+    .spec-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      line-height: 1.2;
+    }
+
+    .spec-note {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .sv-green  { color: #74aa9c; }
+    .sv-cyan   { color: var(--neon-cyan); }
+    .sv-indigo { color: var(--neon-indigo); }
+    .sv-gold   { color: var(--neon-gold); }
+
+    /* Benchmark block */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.9rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+
+    .benchmark-block-title {
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+    }
+
+    .benchmark-cost-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1px solid;
+    }
+
+    .benchmark-cost-badge.bc-cheap {
+      background: rgba(34,211,238,0.1);
+      border-color: rgba(34,211,238,0.3);
+      color: var(--neon-cyan);
+    }
+
+    .benchmark-prompt-text {
+      padding: 0.85rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .benchmark-response-text {
+      padding: 0.85rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      line-height: 1.65;
+    }
+
+    .token-stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .token-stat {
+      flex: 1 1 120px;
+      padding: 0.65rem 1rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .token-stat:last-child { border-right: none; }
+
+    .token-stat-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .token-stat-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+    }
+
+    /* Use case grid */
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+    }
+
+    .use-case-card .uc-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .use-case-card .uc-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+      font-family: var(--font-heading);
+    }
+
+    .use-case-card .uc-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Fit grid */
+    .fit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 560px) { .fit-grid { grid-template-columns: 1fr; } }
+
+    .fit-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+    }
+
+    .fit-panel .fit-heading {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.75rem;
+      font-family: var(--font-heading);
+    }
+
+    .for-panel .fit-heading  { color: #74aa9c; }
+    .not-panel .fit-heading  { color: #f87171; }
+
+    .fit-panel ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .fit-panel li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .for-panel li::before  { content: '✓'; position: absolute; left: 0; color: #74aa9c; font-weight: 700; }
+    .not-panel li::before { content: '✗'; position: absolute; left: 0; color: #f87171; font-weight: 700; }
+
+    /* Pricing table */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .pricing-table th {
+      text-align: left;
+      padding: 0.6rem 0.85rem;
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pricing-table td {
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .pricing-table tr:last-child td { border-bottom: none; }
+    .pricing-table td:first-child { color: var(--text-primary); font-weight: 600; }
+    .pricing-table .price-em { color: #74aa9c; font-weight: 700; }
+
+    /* Comparison table */
+    .comparison-table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 0.5rem;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    .comparison-table th {
+      text-align: left;
+      padding: 0.6rem 0.85rem;
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .comparison-table td {
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .comparison-table tr:last-child td { border-bottom: none; }
+
+    .comparison-table .this-model td {
+      background: rgba(116,170,156,0.05);
+      border-left: 3px solid #74aa9c;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .comparison-table .this-model td:first-child { color: #74aa9c; }
+
+    /* Try-it band */
+    .try-it-band {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      background: var(--surface);
+      border: 1px solid rgba(116,170,156,0.25);
+      border-radius: 12px;
+      padding: 1.4rem 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .try-it-band p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .try-it-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #07070f;
+      text-decoration: none;
+      font-family: var(--font-heading);
+      transition: opacity 0.2s, transform 0.15s;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .try-it-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* Info callout */
+    .info-callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 8px 8px 0;
+      padding: 0.85rem 1.1rem;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+
+    .info-callout strong { color: var(--text-primary); }
+
+    /* Sample prompt block */
+    .sample-prompt-block {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1.1rem;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      font-family: 'Space Grotesk', monospace;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+    }
+
+    /* AdSense */
+    .adsense-mid {
+      margin: 2rem 0;
+      text-align: center;
+      min-height: 90px;
+    }
+
+    /* Published date */
+    .publish-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+<main>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Aether Intel</a>
+    <span class="sep">/</span>
+    <a href="/models/">Models</a>
+    <span class="sep">/</span>
+    <span class="current">GPT-4o Mini</span>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-badges">
+      <span class="badge-provider">
+        <span class="badge-dot"></span>OpenAI
+      </span>
+      <span class="badge-meta">Released July 2024</span>
+      <span class="badge-meta">Dense Transformer</span>
+      <span class="badge-meta">128K Context</span>
+    </div>
+
+    <h1 class="model-title">GPT-4o <span class="accent">Mini</span></h1>
+
+    <p class="hero-lead">
+      OpenAI's most affordable capable model — a compact powerhouse designed for high-throughput tasks where cost discipline matters more than frontier intelligence.
+    </p>
+
+    <div class="hero-highlight">
+      <strong>OpenRouter ID:</strong> <code>openai/gpt-4o-mini</code> &nbsp;·&nbsp;
+      <strong>Input:</strong> $0.15 / 1M tokens &nbsp;·&nbsp;
+      <strong>Output:</strong> $0.60 / 1M tokens
+    </div>
+
+    <p class="publish-meta">Published May 16, 2026 &nbsp;·&nbsp; Aether Intel Editorial</p>
+  </header>
+
+  <hr class="section-divider" />
+
+  <!-- Quick Specs -->
+  <section aria-labelledby="specs-heading">
+    <h2 class="section-title" id="specs-heading">Quick Specs</h2>
+    <div class="model-specs-grid">
+      <div class="spec-card">
+        <div class="spec-label">Input Price</div>
+        <div class="spec-value sv-green">$0.15</div>
+        <div class="spec-note">per 1M tokens</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Output Price</div>
+        <div class="spec-value sv-green">$0.60</div>
+        <div class="spec-note">per 1M tokens</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Context Window</div>
+        <div class="spec-value sv-indigo">128K</div>
+        <div class="spec-note">tokens</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Input Modalities</div>
+        <div class="spec-value sv-cyan" style="font-size:0.9rem;">Text + Vision</div>
+        <div class="spec-note">image understanding</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Output Modalities</div>
+        <div class="spec-value" style="font-size:0.9rem;">Text</div>
+        <div class="spec-note">no audio/image output</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Reasoning Tokens</div>
+        <div class="spec-value sv-gold">None</div>
+        <div class="spec-note">standard decoding</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Architecture</div>
+        <div class="spec-value" style="font-size:0.85rem;">Dense Transformer</div>
+        <div class="spec-note">no MoE routing</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Benchmark Cost</div>
+        <div class="spec-value sv-cyan">$0.001425</div>
+        <div class="spec-note">bc-cheap tier</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- What Is Section -->
+  <section aria-labelledby="what-heading">
+    <h2 class="section-title" id="what-heading">What Is GPT-4o Mini?</h2>
+
+    <p class="body-copy">
+      GPT-4o Mini is OpenAI's small, efficient model — the heir apparent to GPT-3.5 Turbo, released in July 2024 as a deliberately affordable option for developers who need a capable LLM without paying GPT-4o prices. Where the full GPT-4o targets reasoning depth and knowledge breadth, Mini trades some of that headroom for a dramatically lower price tag: <strong>$0.15 per million input tokens and $0.60 per million output tokens</strong>, making it among the most cost-effective options in OpenAI's lineup.
+    </p>
+
+    <p class="body-copy">
+      OpenAI positioned GPT-4o Mini as the default replacement for GPT-3.5 Turbo in virtually all use cases. In their own evals at launch, it outperformed GPT-3.5 Turbo on MMLU, MGSM, and HumanEval despite being cheaper to serve — a significant jump in quality-per-dollar. It also inherits multimodal inputs from the "4o" family: the model can process images alongside text, enabling vision-based classification and document understanding workflows without reaching for a heavier model.
+    </p>
+
+    <p class="body-copy">
+      The architecture is a <strong>dense transformer</strong> — no mixture-of-experts routing, no sparse activations. Every forward pass touches the full parameter count. This makes inference costs predictable and latency consistent, which is a practical advantage when you're building systems that need deterministic throughput rather than the variable tail latency that can come with MoE systems under load.
+    </p>
+
+    <p class="body-copy">
+      The context window lands at <strong>128K tokens</strong> — the same ceiling as the full GPT-4o. For a small model, this is generous. It means Mini can comfortably process long documents, multi-turn conversation histories, and chunked retrieval results without context truncation becoming a problem. The output side remains text-only; if you need GPT-4o Mini to speak or draw, you'll need separate synthesis steps downstream.
+    </p>
+
+    <div class="info-callout">
+      <strong>GPT-3.5 Turbo Replacement:</strong> OpenAI officially deprecated GPT-3.5 Turbo in favor of GPT-4o Mini for new projects. If you have a GPT-3.5 Turbo integration, GPT-4o Mini is the natural migration path — better quality, similar cost, larger context window.
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- AdSense mid -->
+  <div class="adsense-mid">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- Benchmark Section -->
+  <section aria-labelledby="bench-heading">
+    <h2 class="section-title" id="bench-heading">Live Benchmark Results</h2>
+
+    <p class="body-copy">
+      We test all models with a standardized prompt suite designed to surface both quality and cost characteristics. For GPT-4o Mini, we ran our database trade-offs prompt — a mid-complexity reasoning and explanation task that demands structured thinking, accurate recall, and clear prose. Results below are live, not synthetic.
+    </p>
+
+    <div class="benchmark-block">
+      <div class="benchmark-block-header">
+        <span class="benchmark-block-title">Database Design Trade-offs — SQL vs. NoSQL</span>
+        <span class="benchmark-cost-badge bc-cheap">$0.001425 benchmark</span>
+      </div>
+      <div class="benchmark-prompt-text">
+        Prompt: "Explain the key trade-offs between SQL and NoSQL databases. When would you choose each? Give me a concrete example of a system that suits each approach."
+      </div>
+      <div class="benchmark-response-text">## SQL Databases
+
+**Core Trade-offs:**
+- ACID compliance — transactions are atomic, consistent, isolated, durable
+- Rigid schema — structure must be defined upfront, migrations required for changes
+- Vertical scaling primary path — scale up by adding CPU/RAM to a single node
+- Strong query power — JOIN operations, aggregations, and complex filtering are native
+- Mature ecosystem — decades of tooling, ORMs, and operational knowledge
+
+**Concrete Example — PostgreSQL for E-commerce Order Management:**
+An online retailer needs to track customers, orders, line items, inventory, and payments. These entities have clear relational integrity requirements: an order must reference a real customer, line items must reference real products with consistent pricing. Transactions ensure that placing an order decrements inventory and creates a payment record atomically — partial state is never acceptable.
+
+## NoSQL Databases
+
+**Core Trade-offs:**
+- BASE model (Basically Available, Soft state, Eventually consistent)
+- Flexible schema — documents, key-value pairs, or wide-column structures adapt without migrations
+- Horizontal scaling — data partitioned across many nodes, scale out by adding machines
+- Query trade-offs — complex joins are expensive or unsupported, denormalization is common
+- Optimized for specific access patterns — read-heavy, write-heavy, or geographically distributed workloads
+
+**Concrete Example — MongoDB for a Social Media Platform:**
+A social platform stores user profiles, posts, comments, and reaction counts. Schema varies significantly between user types...</div>
+      <div class="token-stats-strip">
+        <div class="token-stat">
+          <div class="token-stat-label">Finish Reason</div>
+          <div class="token-stat-value">length</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Prompt Tokens</div>
+          <div class="token-stat-value">38</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Completion Tokens</div>
+          <div class="token-stat-value">600</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Total Tokens</div>
+          <div class="token-stat-value">638</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Reasoning Tokens</div>
+          <div class="token-stat-value">0</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Actual Cost</div>
+          <div class="token-stat-value">$0.000366</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">Provider</div>
+          <div class="token-stat-value">Azure</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-title">Benchmark Analysis</h3>
+
+    <p class="body-copy">
+      The most notable result: GPT-4o Mini hit the 600-token completion limit mid-sentence, with the finish reason coming back as <strong>length</strong> rather than <strong>stop</strong>. This means the model had more to say — the truncation was our test limit, not the model's natural conclusion. For production use, set your max_tokens generously or verify that streaming termination behavior matches your expectations.
+    </p>
+
+    <p class="body-copy">
+      The quality of what was generated before the cutoff is genuinely good. The response organized itself into clear <code>## SQL Databases</code> and <code>## NoSQL Databases</code> sections unprompted, used bold headers within each section to separate trade-offs from examples, and produced technically accurate content — ACID vs. BASE semantics are correctly contrasted, the PostgreSQL e-commerce use case is appropriate, and the MongoDB social platform framing is a standard, defensible choice. No hallucinations detected.
+    </p>
+
+    <p class="body-copy">
+      The model was served via <strong>Azure</strong>, which is OpenAI's enterprise routing layer for GPT-4o Mini in many regions. Azure-served responses tend to perform similarly to direct OpenAI API responses; latency and token counts are comparable. No reasoning tokens were allocated — this model does not support internal chain-of-thought; every output token goes directly to the user.
+    </p>
+
+    <p class="body-copy">
+      Actual cost for the run came in at <strong>$0.000366</strong> — tiny enough that you could run this prompt ~2,700 times for a dollar. At scale, that kind of economics makes GPT-4o Mini genuinely viable for high-frequency, low-margin applications that would be prohibitively expensive with a heavier model.
+    </p>
+
+    <div class="info-callout">
+      <strong>Benchmark cost formula:</strong> 1,500 input tokens × $0.15/1M + 2,000 output tokens × $0.60/1M = <strong>$0.000225 + $0.001200 = $0.001425</strong>. Our standardized benchmark assumes a 3:4 input-to-output ratio, typical for instruction-following tasks.
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- Use Cases -->
+  <section aria-labelledby="usecases-heading">
+    <h2 class="section-title" id="usecases-heading">Best Use Cases</h2>
+
+    <p class="body-copy">
+      GPT-4o Mini shines wherever you need reliable language understanding and generation at volume. Its low cost and solid baseline intelligence make it a natural fit for any workload where you'd otherwise be using GPT-3.5 Turbo — but want better instruction-following, larger context, and vision support in the same package.
+    </p>
+
+    <div class="use-case-grid">
+      <div class="use-case-card">
+        <div class="uc-icon">💬</div>
+        <div class="uc-title">Customer Chatbots</div>
+        <div class="uc-desc">Handles FAQ deflection, support triage, and guided workflows reliably without the cost of a frontier model for every turn.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">🏷️</div>
+        <div class="uc-title">Content Classification</div>
+        <div class="uc-desc">Categorize, tag, or label text at bulk scale — product descriptions, support tickets, documents — for fractions of a cent per item.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">⚙️</div>
+        <div class="uc-title">Lightweight Agents</div>
+        <div class="uc-desc">Tool-calling and function dispatch for simple agentic loops where the decision tree is well-defined and steps are discrete.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">✍️</div>
+        <div class="uc-title">Summarization</div>
+        <div class="uc-desc">Article summaries, meeting notes, document digests. The 128K context window handles long inputs without chunking overhead.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">🖼️</div>
+        <div class="uc-title">Vision Tasks</div>
+        <div class="uc-desc">Image captioning, visual Q&A, document OCR assistance, and screenshot-to-text pipelines at a fraction of GPT-4o pricing.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="uc-icon">🔄</div>
+        <div class="uc-title">Batch Processing</div>
+        <div class="uc-desc">Transform, rewrite, or extract data from thousands of records in parallel pipelines where per-call cost adds up fast.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- Fit Grid -->
+  <section aria-labelledby="fit-heading">
+    <h2 class="section-title" id="fit-heading">When to Use — and When to Avoid</h2>
+
+    <p class="body-copy">
+      No model is universal. GPT-4o Mini's cost efficiency comes with real trade-offs in reasoning depth. Understanding the boundaries helps you avoid paying for a heavier model unnecessarily — and avoids shipping Mini into workflows that will frustrate it.
+    </p>
+
+    <div class="fit-grid">
+      <div class="fit-panel for-panel">
+        <div class="fit-heading">Good Fit</div>
+        <ul>
+          <li>High-volume, repetitive language tasks</li>
+          <li>Customer-facing chatbots with constrained domains</li>
+          <li>Text classification and tagging at scale</li>
+          <li>Summarization of long documents (128K window)</li>
+          <li>Image description and visual Q&A</li>
+          <li>Simple extraction and data transformation</li>
+          <li>Agentic loops with clear, bounded decision steps</li>
+          <li>Cost-sensitive prototypes and MVPs</li>
+        </ul>
+      </div>
+      <div class="fit-panel not-panel">
+        <div class="fit-heading">Poor Fit</div>
+        <ul>
+          <li>Complex multi-step mathematical reasoning</li>
+          <li>Deep research synthesis across many sources</li>
+          <li>Long-horizon planning with ambiguous constraints</li>
+          <li>Advanced coding with subtle logic requirements</li>
+          <li>Tasks requiring internal chain-of-thought (no reasoning tokens)</li>
+          <li>Nuanced legal, medical, or regulatory analysis</li>
+          <li>High-stakes decisions with low error tolerance</li>
+          <li>Creative work demanding true originality</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-callout" style="margin-top:1rem;">
+      <strong>Routing tip:</strong> In multi-model architectures, GPT-4o Mini works well as the first-pass classifier that routes complex queries to GPT-4o or a reasoning model. You get the cost savings of Mini for the easy majority while reserving expensive compute for the hard minority.
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- Pricing Table -->
+  <section aria-labelledby="pricing-heading">
+    <h2 class="section-title" id="pricing-heading">Pricing Breakdown</h2>
+
+    <p class="body-copy">
+      GPT-4o Mini is priced at the lower end of the OpenAI catalog. The numbers below use the standard per-million-token pricing via OpenRouter (which passes through OpenAI list pricing at no markup when using your own key).
+    </p>
+
+    <table class="pricing-table">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Price</th>
+          <th>1M tokens cost</th>
+          <th>Example at 100K tokens</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Input tokens</td>
+          <td class="price-em">$0.15 / 1M</td>
+          <td>$0.15</td>
+          <td>$0.015</td>
+        </tr>
+        <tr>
+          <td>Output tokens</td>
+          <td class="price-em">$0.60 / 1M</td>
+          <td>$0.60</td>
+          <td>$0.060</td>
+        </tr>
+        <tr>
+          <td>Benchmark run (std.)</td>
+          <td class="price-em">$0.001425</td>
+          <td>1.5K in + 2K out</td>
+          <td>bc-cheap tier</td>
+        </tr>
+        <tr>
+          <td>1,000 chatbot turns</td>
+          <td class="price-em">~$0.75</td>
+          <td>avg 500 in + 500 out</td>
+          <td>at typical message length</td>
+        </tr>
+        <tr>
+          <td>1M classification calls</td>
+          <td class="price-em">~$0.38</td>
+          <td>avg 100 in + 50 out</td>
+          <td>label/tag workloads</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="body-copy" style="margin-top:0.75rem;">
+      Batch API pricing (when available through OpenAI directly) can reduce costs further — typically 50% off for asynchronous workloads with 24-hour turnaround. For real-time applications, the list rates above apply.
+    </p>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- Comparison Table -->
+  <section aria-labelledby="compare-heading">
+    <h2 class="section-title" id="compare-heading">How It Compares</h2>
+
+    <p class="body-copy">
+      GPT-4o Mini sits in the affordable small-model tier alongside Gemini 2.5 Flash Lite and DeepSeek V4 Flash. Here's how it stacks up against the models developers most commonly consider in the same budget range.
+    </p>
+
+    <div class="comparison-table-wrap">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Input / 1M</th>
+            <th>Output / 1M</th>
+            <th>Context</th>
+            <th>Bench Cost</th>
+            <th>Input Modalities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="this-model">
+            <td>GPT-4o Mini ★</td>
+            <td>$0.15</td>
+            <td>$0.60</td>
+            <td>128K</td>
+            <td>$0.001425</td>
+            <td>Text + Vision</td>
+          </tr>
+          <tr>
+            <td>GPT-4o</td>
+            <td>$2.50</td>
+            <td>$10.00</td>
+            <td>128K</td>
+            <td>$5.75</td>
+            <td>Text + Vision</td>
+          </tr>
+          <tr>
+            <td>Gemini 2.5 Flash Lite</td>
+            <td>$0.10</td>
+            <td>$0.40</td>
+            <td>1M</td>
+            <td>$0.00095</td>
+            <td>Multimodal</td>
+          </tr>
+          <tr>
+            <td>Claude Haiku 3.5</td>
+            <td>$0.80</td>
+            <td>$4.00</td>
+            <td>200K</td>
+            <td>$9.20</td>
+            <td>Text + Vision</td>
+          </tr>
+          <tr>
+            <td>DeepSeek V4 Flash</td>
+            <td>$0.112</td>
+            <td>$0.224</td>
+            <td>1M</td>
+            <td>$0.000616</td>
+            <td>Text</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="body-copy" style="margin-top:0.75rem;">
+      <strong>Key takeaway:</strong> GPT-4o Mini is not the cheapest option — Gemini 2.5 Flash Lite and DeepSeek V4 Flash both undercut it on price, and both offer 1M token context windows versus Mini's 128K. However, Mini brings the OpenAI ecosystem advantage: familiarity, Azure enterprise routing, function-calling reliability, and the trusted OpenAI brand for enterprise compliance conversations. If raw cost efficiency and context length are your primary concerns, Gemini 2.5 Flash Lite is the main competitor to evaluate. If you're already in the OpenAI ecosystem or need Azure-backed SLAs, Mini's pricing is competitive enough.
+    </p>
+
+    <p class="body-copy">
+      Claude Haiku 3.5 is notably more expensive at $0.80/$4.00 — roughly 5x Mini's input price — with a benchmark cost that reflects this. Haiku 3.5 does offer 200K context and Anthropic's characteristically strong instruction-following, but for budget-conscious workloads the price gap is difficult to justify unless you specifically need Anthropic's safety characteristics or Claude's stylistic qualities.
+    </p>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- Sample Prompt Block -->
+  <section aria-labelledby="sample-heading">
+    <h2 class="section-title" id="sample-heading">Sample Prompt Patterns</h2>
+    <p class="body-copy">These prompt structures work well with GPT-4o Mini's instruction-following style:</p>
+
+    <h3 class="sub-title">Classification</h3>
+    <div class="sample-prompt-block">Classify the following support ticket into exactly one of these categories: billing, technical, account, other. Reply with only the category name.
+
+Ticket: "I was charged twice for my subscription this month."</div>
+
+    <h3 class="sub-title">Structured Extraction</h3>
+    <div class="sample-prompt-block">Extract the following fields from the job posting below and return them as JSON:
+{ "title": "", "company": "", "location": "", "salary_range": "", "remote": true/false }
+
+Job posting: [paste text here]</div>
+
+    <h3 class="sub-title">Summarization with constraints</h3>
+    <div class="sample-prompt-block">Summarize the following article in exactly 3 bullet points. Each bullet should be one sentence. Focus on key findings only.
+
+Article: [paste text here]</div>
+  </section>
+
+  <!-- Try-it Band -->
+  <div class="try-it-band">
+    <div>
+      <h3>Try GPT-4o Mini Now</h3>
+      <p>Use your own OpenRouter API key — no markup, streaming responses, direct model access.</p>
+    </div>
+    <a href="/models/"
+       class="try-it-btn"
+       style="background:#74aa9c;"
+       onclick="event.preventDefault(); if(window.byok){ window.byok.openByokModal && window.byok.openByokModal('openai/gpt-4o-mini','GPT-4o Mini'); } else { window.location.href='/models/'; }">
+      ⚡ Use Now
+    </a>
+  </div>
+
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>

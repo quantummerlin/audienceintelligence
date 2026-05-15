@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qwen3 235B A22B Review — Alibaba's Massive MoE Thinker | Aether Intel</title>
+  <meta name="description" content="Qwen3 235B A22B benchmark review: 975 reasoning tokens, 235B total parameters, MoE efficiency at $0.455/1M input. Alibaba's flagship open-weight model tested." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/qwen3-235b/" />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    a { color: var(--neon-indigo); text-decoration: none; }
+    a:hover { color: var(--neon-cyan); }
+
+    /* ── Layout ── */
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--neon-indigo);
+      letter-spacing: .08em;
+    }
+    .site-logo span { color: var(--neon-cyan); }
+    .site-nav { display: flex; gap: 24px; font-size: .88rem; color: var(--text-secondary); }
+    .site-nav a { color: var(--text-secondary); }
+    .site-nav a:hover { color: var(--text-primary); }
+
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      font-size: .78rem;
+      color: var(--text-muted);
+      padding: 20px 0 0;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--text-muted); }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb .sep { opacity: .4; }
+
+    /* ── Hero ── */
+    .hero { padding: 36px 0 28px; }
+
+    .hero-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: .72rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .badge-provider {
+      background: rgba(156,39,176,0.12);
+      border: 1px solid rgba(156,39,176,0.35);
+      color: #9c27b0;
+    }
+    .badge-meta {
+      background: rgba(129,140,248,0.08);
+      border: 1px solid rgba(129,140,248,0.2);
+      color: var(--neon-indigo);
+    }
+    .badge-gold {
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: var(--neon-gold);
+    }
+
+    h1.model-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    h1.model-title .accent { color: #9c27b0; }
+
+    .hero-lead {
+      font-size: 1.08rem;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin-bottom: 24px;
+      line-height: 1.65;
+    }
+
+    .hero-highlight {
+      border-left: 3px solid #9c27b0;
+      background: rgba(156,39,176,0.06);
+      padding: 14px 20px;
+      border-radius: 0 8px 8px 0;
+      font-size: .95rem;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+    .hero-highlight strong { color: var(--text-primary); }
+
+    /* ── Section ── */
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    p.body-copy {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-size: .97rem;
+    }
+    p.body-copy strong { color: var(--text-primary); }
+
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 36px 0;
+    }
+
+    /* ── Spec Grid ── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 14px;
+      text-align: center;
+    }
+    .spec-card .spec-label {
+      font-family: var(--font-display);
+      font-size: .55rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .spec-card .spec-value {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-card .spec-sub {
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .spec-card.highlight-spec .spec-value { color: #9c27b0; }
+
+    /* ── Benchmark Block ── */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block .bm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .benchmark-block .bm-title {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .bc-cheap {
+      background: rgba(34,211,238,0.1);
+      border: 1px solid rgba(34,211,238,0.3);
+      color: var(--neon-cyan);
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .benchmark-prompt-text {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+    .benchmark-response-text {
+      background: var(--surface-2);
+      border: 1px solid rgba(156,39,176,0.2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      margin-bottom: 0;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    /* ── Token Stats Strip ── */
+    .token-stats-strip {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .token-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      flex: 1;
+      min-width: 110px;
+      text-align: center;
+    }
+    .token-stat .ts-label {
+      font-family: var(--font-display);
+      font-size: .52rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .token-stat .ts-value {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .token-stat.highlight-token .ts-value { color: #9c27b0; }
+
+    /* ── Reasoning Callout ── */
+    .reasoning-visible-callout {
+      background: rgba(156,39,176,0.06);
+      border: 1px solid rgba(156,39,176,0.3);
+      border-radius: 10px;
+      padding: 22px 24px;
+      margin: 24px 0;
+    }
+    .reasoning-visible-callout .rcl-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .reasoning-visible-callout .rcl-icon {
+      font-size: 1.2rem;
+    }
+    .reasoning-visible-callout .rcl-title {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #9c27b0;
+    }
+    .reasoning-visible-callout p {
+      font-size: .94rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .reasoning-visible-callout p:last-child { margin-bottom: 0; }
+    .reasoning-visible-callout strong { color: var(--text-primary); }
+
+    /* ── Reasoning Text Block ── */
+    .reasoning-text-block {
+      background: var(--surface-2);
+      border-left: 3px solid #9c27b0;
+      border-radius: 0 8px 8px 0;
+      padding: 18px 20px;
+      margin: 16px 0;
+      font-size: .87rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.65;
+      position: relative;
+    }
+    .reasoning-text-block::before {
+      content: 'INTERNAL REASONING CHAIN';
+      display: block;
+      font-family: var(--font-display);
+      font-size: .52rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: #9c27b0;
+      margin-bottom: 10px;
+      font-style: normal;
+      opacity: .8;
+    }
+
+    /* ── Reasoning Ratio Bar ── */
+    .reasoning-ratio-bar { margin: 16px 0; }
+    .ratio-bar-track {
+      background: var(--surface-2);
+      border-radius: 6px;
+      height: 10px;
+      overflow: hidden;
+      margin: 6px 0;
+    }
+    .ratio-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      background: #9c27b0;
+    }
+    .ratio-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: .72rem;
+      color: var(--text-muted);
+    }
+    .ratio-title {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    /* ── Use Case Grid ── */
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card .uc-icon {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+    .use-case-card .uc-title {
+      font-family: var(--font-heading);
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+    }
+    .use-case-card .uc-desc {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── Fit Panels ── */
+    .fit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    @media (max-width: 580px) { .fit-grid { grid-template-columns: 1fr; } }
+
+    .fit-panel {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .fit-panel.for-panel {
+      border: 1px solid rgba(34,197,94,0.25);
+    }
+    .fit-panel.not-panel {
+      border: 1px solid rgba(239,68,68,0.25);
+    }
+    .fit-panel .fp-header {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .for-panel .fp-header { color: #4ade80; }
+    .not-panel .fp-header { color: #f87171; }
+    .fit-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .fit-panel li {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      padding-left: 18px;
+      position: relative;
+    }
+    .for-panel li::before { content: '+'; position: absolute; left: 0; color: #4ade80; font-weight: 700; }
+    .not-panel li::before { content: '-'; position: absolute; left: 0; color: #f87171; font-weight: 700; }
+
+    /* ── Pricing Table ── */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+      margin: 16px 0;
+    }
+    .pricing-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-table td {
+      padding: 11px 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(129,140,248,0.07);
+    }
+    .pricing-table td strong { color: var(--text-primary); }
+    .pricing-table tr:last-child td { border-bottom: none; }
+    .pricing-table .total-row td {
+      border-top: 1px solid var(--border);
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    /* ── Comparison Table ── */
+    .comparison-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+      min-width: 700px;
+    }
+    .comparison-table th {
+      background: var(--surface-2);
+      padding: 10px 14px;
+      text-align: left;
+      font-family: var(--font-display);
+      font-size: .55rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .comparison-table td {
+      padding: 11px 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(129,140,248,0.07);
+      white-space: nowrap;
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table td strong { color: var(--text-primary); }
+    .comparison-table .yes { color: #4ade80; font-weight: 600; }
+    .comparison-table .no { color: var(--text-muted); }
+
+    tr.this-model td {
+      background: rgba(156,39,176,0.05);
+      border-left: 3px solid #9c27b0;
+    }
+    tr.this-model td:first-child { font-weight: 700; color: #9c27b0; }
+
+    /* ── Try-It Band ── */
+    .try-it-band {
+      background: var(--surface);
+      border: 1px solid rgba(156,39,176,0.3);
+      border-radius: 12px;
+      padding: 28px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 36px 0;
+    }
+    .try-it-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .try-it-band p {
+      font-size: .88rem;
+      color: var(--text-secondary);
+    }
+    .try-it-btn {
+      display: inline-block;
+      padding: 12px 26px;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #fff;
+      white-space: nowrap;
+      transition: opacity .15s;
+    }
+    .try-it-btn:hover { opacity: .85; color: #fff; }
+
+    /* ── AdSense mid ── */
+    .adsense-mid {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin: 36px 0;
+      min-height: 100px;
+      color: var(--text-muted);
+      font-size: .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Info Callout ── */
+    .info-callout {
+      background: rgba(129,140,248,0.06);
+      border: 1px solid rgba(129,140,248,0.2);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: .9rem;
+      color: var(--text-secondary);
+      margin: 16px 0;
+    }
+    .info-callout strong { color: var(--text-primary); }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 24px;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 640px) {
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .try-it-band { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-logo">Aether<span>Intel</span></a>
+  <nav class="site-nav">
+    <a href="/models/">Models</a>
+    <a href="/benchmarks/">Benchmarks</a>
+    <a href="/guides/">Guides</a>
+  </nav>
+</header>
+
+<div class="page-wrap">
+
+  <nav class="breadcrumb">
+    <a href="/">Home</a>
+    <span class="sep">/</span>
+    <a href="/models/">Models</a>
+    <span class="sep">/</span>
+    <span>Qwen3 235B A22B</span>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-badges">
+      <span class="badge badge-provider">Qwen / Alibaba</span>
+      <span class="badge badge-meta">MoE 235B / 22B Active</span>
+      <span class="badge badge-meta">131K Context</span>
+      <span class="badge badge-gold">975 Reasoning Tokens</span>
+      <span class="badge badge-meta">April 2026</span>
+    </div>
+
+    <h1 class="model-title">
+      <span class="accent">Qwen3 235B A22B</span> —
+      The Deepest Thinker in Our Batch
+    </h1>
+
+    <p class="hero-lead">
+      Alibaba's flagship open-weight model combines a 235-billion-parameter MoE architecture with native thinking mode — producing the longest reasoning chain in our entire benchmark series. At just $0.004323 per exchange, it still lands in the bc-cheap tier. Massive mind. Modest bill.
+    </p>
+
+    <div class="hero-highlight">
+      <strong>975 reasoning tokens</strong> — nearly 3x the second-place DeepSeek V4 Flash (325), and leagues ahead of models like GPT-4o Mini or Gemini Flash Lite that produce zero visible reasoning. Qwen3 235B doesn't just answer; it thinks out loud — and you can read every step.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SPEC GRID
+  ═══════════════════════════════════════════ -->
+  <div class="model-specs-grid">
+    <div class="spec-card highlight-spec">
+      <div class="spec-label">Reasoning Tokens</div>
+      <div class="spec-value">975</div>
+      <div class="spec-sub">benchmark chain</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Total Params</div>
+      <div class="spec-value">235B</div>
+      <div class="spec-sub">MoE architecture</div>
+    </div>
+    <div class="spec-card highlight-spec">
+      <div class="spec-label">Active Params</div>
+      <div class="spec-value">22B</div>
+      <div class="spec-sub">of 235B total</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value">131K</div>
+      <div class="spec-sub">tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value">$0.455</div>
+      <div class="spec-sub">per 1M tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value">$1.82</div>
+      <div class="spec-sub">per 1M tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Open Weight</div>
+      <div class="spec-value">Yes</div>
+      <div class="spec-sub">self-hostable</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Released</div>
+      <div class="spec-value">Apr 2026</div>
+      <div class="spec-sub">04-28 build</div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       WHAT IT IS
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">What Is Qwen3 235B A22B?</h2>
+
+  <p class="body-copy">
+    Qwen3 235B A22B is Alibaba's flagship open-weight language model, the crown jewel of the Qwen3 series released in April 2026. It is a <strong>Mixture-of-Experts (MoE)</strong> model — 235 billion total parameters organized into specialized expert sub-networks, with only 22 billion parameters active during any given forward pass. The model ships with thinking mode enabled by default, meaning every inference includes an extended internal reasoning chain visible to the caller before the final response is generated.
+  </p>
+
+  <p class="body-copy">
+    On OpenRouter the model ID is <code style="background:var(--surface-2);padding:1px 6px;border-radius:3px;font-size:.88em;color:var(--neon-indigo);">qwen/qwen3-235b-a22b</code>, routed to the <code style="background:var(--surface-2);padding:1px 6px;border-radius:3px;font-size:.88em;color:var(--neon-indigo);">qwen/qwen3-235b-a22b-04-28</code> build and served by Alibaba's own infrastructure. As an open-weight model it can also be self-hosted on compatible hardware stacks — a significant advantage for teams with data-residency requirements or sufficient compute to absorb the operational cost.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       MoE ARCHITECTURE
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">The MoE Architecture: 235B Quality, 22B Compute</h2>
+
+  <p class="body-copy">
+    The Mixture-of-Experts design is the core reason Qwen3 235B A22B punches above its weight class while remaining cost-accessible. In a dense model, every parameter participates in every token prediction. In a MoE model, a learned routing mechanism dispatches each token to a small subset of "expert" networks, leaving the rest idle. The result: a model that stores the knowledge and representational capacity of 235 billion parameters but only burns the compute of approximately 22 billion per token.
+  </p>
+
+  <p class="body-copy">
+    This translates directly into pricing. Inference cost scales primarily with <em>active</em> compute, not total parameter count. So where a hypothetical 235B dense model might cost several dollars per million tokens, Qwen3's MoE design keeps output pricing at <strong>$1.82/1M</strong> — competitive with far smaller dense models. You are not paying for 213B dormant parameters; you are paying for the 22B that actually fire.
+  </p>
+
+  <div class="info-callout">
+    <strong>MoE vs. Dense, simplified:</strong> Think of it as a large library where each book is an expert. Dense models read every book on every question. MoE models route each question to the most relevant shelf and read only those books — faster, cheaper, and often just as thorough.
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       THINKING MODE
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Thinking Mode: Reasoning Turned On by Default</h2>
+
+  <p class="body-copy">
+    Unlike models where extended reasoning is an optional mode you opt into, Qwen3 235B A22B ships with thinking mode active by default. Before emitting its visible response, the model generates a private-to-public reasoning chain — a scratchpad of deliberation covering assumption checks, constraint analysis, plan formation, and self-correction. In the API response this chain appears as a distinct set of <strong>reasoning tokens</strong> that callers can read, log, or discard.
+  </p>
+
+  <p class="body-copy">
+    Why does this matter? Visible reasoning tokens are a strong signal of model capability. A model that shows its work is harder to fool with adversarial prompts, more robust on multi-step problems, and produces outputs that are auditable — you can trace exactly why the model reached its conclusion. For regulated industries, scientific workflows, or any context where explainability matters, this is a qualitative advantage that no amount of benchmark numbers fully captures.
+  </p>
+
+  <div class="reasoning-visible-callout">
+    <div class="rcl-header">
+      <span class="rcl-icon">&#x1F9E0;</span>
+      <span class="rcl-title">Visible Reasoning — What You Actually Get</span>
+    </div>
+    <p>Every Qwen3 235B A22B response includes a <strong>reasoning token block</strong> before the final answer. These are real internal deliberations — not post-hoc explanations. The model thinks through constraints, explores alternatives, and catches its own errors before committing to a response.</p>
+    <p>In our benchmark exchange, the reasoning chain ran to <strong>975 tokens</strong> — covering schema design philosophy, ACID vs. BASE trade-offs, horizontal vs. vertical scaling mechanics, query complexity considerations, and the framing of two concrete system examples. Only then did the visible answer begin.</p>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       BENCHMARK
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Live Benchmark: 975 Reasoning Tokens</h2>
+
+  <p class="body-copy">We tested Qwen3 235B A22B with our standard database trade-offs prompt — a question designed to reward structured analysis and concrete examples.</p>
+
+  <div class="benchmark-block">
+    <div class="bm-header">
+      <span class="bm-title">Aether Intel Benchmark — Database Trade-offs Prompt</span>
+      <span class="bc-cheap">BC-CHEAP TIER</span>
+    </div>
+
+    <div class="benchmark-prompt-text">
+      "Explain the key trade-offs between SQL and NoSQL databases. When would you choose each? Give me a concrete example of a system that suits each approach."
+    </div>
+
+    <div class="token-stats-strip">
+      <div class="token-stat highlight-token">
+        <div class="ts-label">Reasoning Tokens</div>
+        <div class="ts-value">975</div>
+      </div>
+      <div class="token-stat">
+        <div class="ts-label">Visible Tokens</div>
+        <div class="ts-value">604</div>
+      </div>
+      <div class="token-stat">
+        <div class="ts-label">Total Completion</div>
+        <div class="ts-value">1,579</div>
+      </div>
+      <div class="token-stat">
+        <div class="ts-label">Prompt Tokens</div>
+        <div class="ts-value">40</div>
+      </div>
+      <div class="token-stat">
+        <div class="ts-label">Actual Cost</div>
+        <div class="ts-value" style="font-size:1.1rem;">$0.00289</div>
+      </div>
+    </div>
+
+    <div class="reasoning-ratio-bar">
+      <div class="ratio-title">Token Budget Split — Reasoning vs. Visible Output</div>
+      <div class="ratio-bar-track">
+        <div class="ratio-bar-fill" style="width:61.7%;"></div>
+      </div>
+      <div class="ratio-labels">
+        <span>Reasoning: 975 tokens (61.7%)</span>
+        <span>Visible: 604 tokens (38.3%)</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">The Actual Reasoning Chain (excerpt)</h3>
+  <p class="body-copy">The model spent 975 tokens deliberating before writing a single word of the visible response. Here is a representative excerpt from that chain:</p>
+
+  <div class="reasoning-text-block">
+    "Okay, I need to explain the key trade-offs between SQL and NoSQL databases... SQL databases are relational, right? They use structured data, tables with schemas defined in advance. You get strong ACID guarantees — atomicity, consistency, isolation, durability — which makes them the right call anywhere data integrity is non-negotiable... NoSQL databases are non-relational, so schema is flexible or even schema-less in the document store case... but BASE properties instead of ACID: basically available, soft state, eventually consistent. That's a real trade-off when you need exactly-once semantics on financial transactions... Scalability: SQL scales vertically, mostly — bigger machine, more RAM, faster disk. Sharding is possible but painful. NoSQL systems were architected for horizontal scale from day one, which is why they dominate at the kind of write volumes a social media platform generates... Query complexity: SQL's JOIN semantics and decades of optimizer work mean it can answer deeply relational questions that would require multiple round-trips in a NoSQL system... For the concrete examples I should pick something obviously relational — a banking system, PostgreSQL — and something obviously document-store — a social media feed, MongoDB. That maps the abstraction cleanly to the concrete..."
+  </div>
+
+  <p class="body-copy">
+    The visible response that followed was a clean markdown table comparing SQL vs. NoSQL across eight axes — Schema, Consistency, Scalability, Query Power, Transactions, Performance, and Use Cases — followed by a Banking System example (PostgreSQL) and a Social Media Platform example (MongoDB). The finish reason was <code style="background:var(--surface-2);padding:1px 6px;border-radius:3px;font-size:.88em;">length</code> (hit the 600-token visible output cap), meaning the model had more to say.
+  </p>
+
+  <div class="benchmark-block">
+    <div class="bm-header">
+      <span class="bm-title">Response Style (summarized — hit 600-token limit)</span>
+    </div>
+    <div class="benchmark-response-text">| Aspect        | SQL                        | NoSQL                        |
+|---------------|----------------------------|------------------------------|
+| Schema        | Fixed, predefined          | Flexible or schema-less      |
+| Consistency   | Strong (ACID)              | Eventual (BASE)              |
+| Scalability   | Vertical (primary)         | Horizontal (native)          |
+| Query Power   | Rich JOINs, aggregations   | Limited cross-collection     |
+| Transactions  | Multi-row, multi-table     | Document-level (varies)      |
+| Performance   | Complex queries fast       | Simple lookups at huge scale |
+| Use Cases     | Finance, ERP, reporting    | Social, IoT, catalogs        |
+
+Banking System → PostgreSQL
+Social Media Platform → MongoDB
+[...output continued — hit 600-token visible cap]</div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- AdSense mid -->
+  <div class="adsense-mid">
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;height:90px;"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="horizontal"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       REASONING BATCH COMPARISON
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Reasoning Depth: The Full Batch Picture</h2>
+
+  <p class="body-copy">
+    Across our current benchmark batch, reasoning token counts tell a stark story about which models are actually deliberating versus which are pattern-matching at inference speed:
+  </p>
+
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Reasoning Tokens</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="this-model">
+          <td><strong>Qwen3 235B A22B</strong></td>
+          <td style="color:#9c27b0;font-weight:700;">975</td>
+          <td>Deepest in batch — full deliberation chain</td>
+        </tr>
+        <tr>
+          <td>DeepSeek V4 Flash</td>
+          <td>325</td>
+          <td>Visible reasoning, concise chain</td>
+        </tr>
+        <tr>
+          <td>DeepSeek R1 0528</td>
+          <td style="color:var(--neon-indigo);">Deep (extended)</td>
+          <td>R1-class deep reasoning</td>
+        </tr>
+        <tr>
+          <td>GPT-4o Mini</td>
+          <td style="color:var(--text-muted);">0</td>
+          <td>No visible reasoning tokens</td>
+        </tr>
+        <tr>
+          <td>Gemini Flash Lite</td>
+          <td style="color:var(--text-muted);">0</td>
+          <td>No visible reasoning tokens</td>
+        </tr>
+        <tr>
+          <td>Llama 4 Maverick</td>
+          <td style="color:var(--text-muted);">0</td>
+          <td>No reasoning mode</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="body-copy">
+    Qwen3 235B A22B's 975 reasoning tokens represent a <strong>3x advantage</strong> over the next-closest open-reasoning model in this batch. For tasks that benefit from methodical deliberation — algorithm design, system architecture trade-off analysis, complex reasoning chains — this gap is meaningful.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       PRICING
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Pricing: More Than Peers, Still bc-Cheap</h2>
+
+  <p class="body-copy">
+    Qwen3 235B A22B is not the cheapest model in the cheap tier — that distinction belongs to options like Gemini Flash Lite or Llama 4 Scout. But it is <em>surprisingly</em> affordable given its scale. At <strong>$0.455/1M input</strong> and <strong>$1.82/1M output</strong>, a typical exchange sits well under the $0.005 bc-cheap ceiling.
+  </p>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Tokens</th>
+        <th>Rate</th>
+        <th>Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Input (prompt)</td>
+        <td>1,500</td>
+        <td>$0.455 / 1M</td>
+        <td>$0.000683</td>
+      </tr>
+      <tr>
+        <td>Output (completion)</td>
+        <td>2,000</td>
+        <td>$1.82 / 1M</td>
+        <td>$0.003640</td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="3"><strong>Benchmark Cost (1,500 in / 2,000 out)</strong></td>
+        <td><strong>$0.004323</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="body-copy">
+    The bc-cheap tier ceiling is $0.005 per exchange. Qwen3 235B A22B comes in at $0.004323 — clearing the threshold with a little room to spare. For context, GPT-4o at $2.50 input / $10.00 output would cost approximately $21.83 for the same exchange volume. The MoE architecture makes this cost profile possible.
+  </p>
+
+  <div class="info-callout">
+    <strong>Note on reasoning token costs:</strong> Reasoning tokens count toward your output billing. In our live benchmark, 975 of the 1,579 completion tokens were reasoning — meaning the model billed you $0.001775 just to think. This is worth knowing if you are highly cost-sensitive: a model with zero reasoning tokens will always produce a cheaper raw exchange, even if it produces a worse answer.
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       CONTEXT WINDOW
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">131K Context: Solid, Not Exceptional</h2>
+
+  <p class="body-copy">
+    A 131,072-token context window is substantial for most applications. It comfortably handles long codebases, extended research documents, multi-turn conversations with rich history, and most RAG-augmented workloads. For the majority of real-world tasks it will never be the limiting factor.
+  </p>
+
+  <p class="body-copy">
+    Where it falls short is in comparison to frontier context-window leaders: Gemini 1.5 Pro and Gemini 2.0 offer 1M+ token contexts, and DeepSeek V4 Flash matches that at $0.112/1M input. If your workflow involves entire large codebases (100K+ lines), book-length documents, or extended multi-document synthesis, Qwen3 235B A22B's 131K ceiling may force you to chunk inputs in ways that other models would not require.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       OPEN WEIGHT
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Open Weight: Self-Hosting Is on the Table</h2>
+
+  <p class="body-copy">
+    Qwen3 235B A22B is released as an open-weight model, meaning the weights are publicly available for download and deployment on your own infrastructure. This matters for several reasons:
+  </p>
+
+  <ul style="color:var(--text-secondary);font-size:.95rem;padding-left:22px;margin-bottom:16px;line-height:1.9;">
+    <li><strong style="color:var(--text-primary);">Data residency:</strong> Sensitive inputs never leave your controlled environment.</li>
+    <li><strong style="color:var(--text-primary);">Cost at scale:</strong> At very high volumes, amortized GPU costs can undercut API pricing.</li>
+    <li><strong style="color:var(--text-primary);">Customization:</strong> Fine-tuning, LoRA adapters, and custom serving configurations are all possible.</li>
+    <li><strong style="color:var(--text-primary);">No rate limits:</strong> Self-hosted inference is not subject to provider throughput caps.</li>
+  </ul>
+
+  <p class="body-copy">
+    The practical caveat: serving a 235B MoE model at production quality requires significant hardware — likely multi-GPU or multi-node setups depending on your quantization strategy. For most teams, API access via OpenRouter or Alibaba's DashScope remains the more practical path. But the option exists, and that matters.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       USE CASES
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Best Use Cases</h2>
+
+  <div class="use-case-grid">
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F9E9;</div>
+      <div class="uc-title">Complex Analysis</div>
+      <div class="uc-desc">Trade-off analysis, architectural decisions, and multi-factor evaluations where visible reasoning adds auditability.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F4BB;</div>
+      <div class="uc-title">Advanced Coding</div>
+      <div class="uc-desc">Algorithm design, debugging complex systems, code review, and generating well-reasoned implementation plans.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F4DA;</div>
+      <div class="uc-title">Research Synthesis</div>
+      <div class="uc-desc">Summarizing multi-document bodies of evidence, comparing methodologies, and generating structured research outputs.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F4CA;</div>
+      <div class="uc-title">Multi-Step Reasoning</div>
+      <div class="uc-desc">Math-heavy problems, logical inference chains, and tasks requiring step-by-step verification before output.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F4DD;</div>
+      <div class="uc-title">Long-Form Writing</div>
+      <div class="uc-desc">Reports, technical documentation, and structured essays where coherence across thousands of tokens is required.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="uc-icon">&#x1F50D;</div>
+      <div class="uc-title">Explainable AI Workflows</div>
+      <div class="uc-desc">Regulated industries where showing the reasoning path is as important as the conclusion itself.</div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       FIT GRID
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">When to Use vs. Avoid</h2>
+
+  <div class="fit-grid">
+    <div class="fit-panel for-panel">
+      <div class="fp-header">Use Qwen3 235B A22B When</div>
+      <ul>
+        <li>You need the deepest reasoning chain available at this price point</li>
+        <li>Explainability or auditability of the reasoning process matters</li>
+        <li>The task is complex enough to benefit from 235B-parameter knowledge depth</li>
+        <li>You want open-weight flexibility with API convenience</li>
+        <li>You're doing code-intensive or research-synthesis work</li>
+        <li>Budget allows slight premium over cheapest-tier options</li>
+      </ul>
+    </div>
+    <div class="fit-panel not-panel">
+      <div class="fp-header">Look Elsewhere When</div>
+      <ul>
+        <li>You need 1M+ token context (try Gemini Flash or DeepSeek V4 Flash)</li>
+        <li>Cost must be minimized to the absolute floor (try Gemini Flash Lite)</li>
+        <li>Latency is critical — reasoning tokens add time before the first output byte</li>
+        <li>Task is simple and doesn't benefit from deep deliberation</li>
+        <li>Multimodal input (image/audio) is required — text only here</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Try It Band -->
+  <div class="try-it-band">
+    <div>
+      <h3>Try Qwen3 235B A22B Now</h3>
+      <p>Use your own OpenRouter API key — 975+ thinking tokens, 235B parameter quality at MoE cost.</p>
+    </div>
+    <a href="/models/" class="try-it-btn" style="background:#9c27b0;" onclick="event.preventDefault(); if(window.byok){ window.byok.openByokModal && window.byok.openByokModal('qwen/qwen3-235b-a22b','Qwen3 235B A22B'); } else { window.location.href='/models/'; }">&#x26A1; Use Now</a>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       COMPARISON TABLE
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Full Model Comparison</h2>
+  <p class="body-copy">How Qwen3 235B A22B stacks up against the most relevant peers in the current landscape:</p>
+
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Input / 1M</th>
+          <th>Output / 1M</th>
+          <th>Context</th>
+          <th>Reasoning</th>
+          <th>Architecture</th>
+          <th>Open Weights?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="this-model">
+          <td>Qwen3 235B A22B &#x2190;</td>
+          <td>$0.455</td>
+          <td>$1.82</td>
+          <td>131K</td>
+          <td style="color:#9c27b0;font-weight:700;">975 tokens</td>
+          <td>MoE 235B/22B</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>GPT-4o</td>
+          <td>$2.50</td>
+          <td>$10.00</td>
+          <td>128K</td>
+          <td class="no">None visible</td>
+          <td>Dense (est.)</td>
+          <td class="no">No</td>
+        </tr>
+        <tr>
+          <td>DeepSeek V4 Flash</td>
+          <td>$0.112</td>
+          <td>$0.224</td>
+          <td>1M</td>
+          <td style="color:var(--neon-indigo);">325 tokens</td>
+          <td>MoE</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>DeepSeek R1 0528</td>
+          <td>$0.50</td>
+          <td>$2.15</td>
+          <td>160K</td>
+          <td style="color:var(--neon-indigo);">Deep (visible)</td>
+          <td>MoE</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Llama 4 Maverick</td>
+          <td>$0.19</td>
+          <td>$0.49</td>
+          <td>1M</td>
+          <td class="no">None</td>
+          <td>MoE</td>
+          <td class="yes">Yes</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════════
+       VERDICT
+  ═══════════════════════════════════════════ -->
+  <h2 class="section-title">Verdict</h2>
+
+  <p class="body-copy">
+    Qwen3 235B A22B is a remarkable demonstration of what the MoE architecture can achieve when paired with a serious investment in reasoning capability. It is, by a wide margin, the deepest thinking model in our bc-cheap benchmark tier — and it is not close. 975 reasoning tokens versus 325 for the next-best, versus zero for the majority of models at this price band.
+  </p>
+
+  <p class="body-copy">
+    The trade-offs are real: the 131K context window lags behind 1M-token alternatives, and pricing at $0.455/$1.82 per million is noticeably higher than peer MoE models like Llama 4 Maverick or DeepSeek V4 Flash. If your primary concern is raw throughput on simple tasks, or you need a very long context window, other options serve better.
+  </p>
+
+  <p class="body-copy">
+    But if your workflow demands genuine analytical depth — system design, multi-step reasoning, research synthesis, explainable outputs — Qwen3 235B A22B delivers something that cheaper models in this tier simply cannot replicate. The 235 billion parameters of distilled knowledge, the 22 billion of active MoE compute efficiency, and 975 tokens of thinking out loud add up to a model that earns its place in any serious practitioner's toolkit.
+  </p>
+
+  <div class="hero-highlight" style="margin-top:24px;">
+    <strong>Bottom line:</strong> The largest model in our benchmark batch. The deepest thinker in our benchmark batch. Still inside the bc-cheap tier. Qwen3 235B A22B is the right call when the problem is genuinely hard.
+  </div>
+
+  <!-- AdSense bottom -->
+  <div class="adsense-mid" style="margin-top:36px;">
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;height:90px;"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="horizontal"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <p style="font-size:.78rem;color:var(--text-muted);margin-top:12px;">
+    Published May 16, 2026 &nbsp;|&nbsp; Aether Intel &nbsp;|&nbsp; <a href="/methodology/" style="color:var(--text-muted);">Benchmark Methodology</a>
+  </p>
+
+</div><!-- /page-wrap -->
+
+<footer class="site-footer">
+  <p style="margin-bottom:8px;">
+    <a href="/" style="color:var(--text-muted);">Aether Intel</a> &nbsp;—&nbsp;
+    Independent AI model benchmarks and analysis &nbsp;|&nbsp;
+    <a href="https://ai.quantummerlin.com" style="color:var(--text-muted);">ai.quantummerlin.com</a>
+  </p>
+  <p>Prices and specs are accurate as of publish date. OpenRouter pricing may change. Not affiliated with Alibaba, Qwen, or any model provider.</p>
+</footer>
+
+</body>
+</html>

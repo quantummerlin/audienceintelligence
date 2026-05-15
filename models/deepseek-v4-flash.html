@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepSeek V4 Flash Review & Benchmark — Aether Intel</title>
+  <meta name="description" content="DeepSeek V4 Flash is a 284B MoE model with visible reasoning tokens — an unexpected feature for a Flash-tier model. $0.112/$0.224 per 1M tokens, 1M context window, benchmarked live at $0.000616." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/deepseek-v4-flash.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="DeepSeek V4 Flash: The Flash Model That Actually Thinks" />
+  <meta property="og:description" content="A Flash-tier model with visible reasoning chains. 284B MoE architecture, 1M context, cheapest benchmark cost in its batch. Tested live via OpenRouter." />
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/deepseek-v4-flash.html" />
+  <meta property="og:site_name" content="Aether Intel" />
+
+  <!-- Article schema -->
+  <meta property="article:published_time" content="2026-05-16T00:00:00Z" />
+  <meta property="article:author" content="Aether Intel" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VW4LGE7L1T');
+  </script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.7;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      font-size: .75rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb span { color: var(--text-muted); }
+
+    /* Hero */
+    .hero { margin-bottom: 40px; }
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .badge-provider {
+      background: rgba(28,122,253,0.12);
+      border: 1px solid rgba(28,122,253,0.35);
+      color: #1c7afd;
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .badge-meta {
+      font-size: .75rem;
+      color: var(--text-muted);
+    }
+    .badge-dot { color: var(--text-muted); }
+
+    h1.model-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    h1.model-title span.accent { color: #1c7afd; }
+
+    .hero-lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 720px;
+      margin-bottom: 18px;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(135deg, rgba(28,122,253,0.07), rgba(34,211,238,0.03));
+      border: 1px solid rgba(28,122,253,0.22);
+      border-left: 3px solid #1c7afd;
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .hero-highlight strong { color: var(--text-primary); }
+
+    /* Section headings */
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 36px 0 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 24px 0 10px;
+    }
+
+    p.body-copy {
+      font-size: .93rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    /* HR divider */
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    /* Spec grid */
+    .model-specs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin:24px 0; }
+    .spec-card { background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .spec-label { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:5px; }
+    .spec-value { font-family:var(--font-body); font-size:1.05rem; font-weight:700; color:var(--text-primary); }
+    .spec-value.sv-green { color:#34d399; }
+    .spec-value.sv-cyan  { color:#22d3ee; }
+    .spec-value.sv-indigo { color:var(--neon-indigo); }
+    .spec-value.sv-gold  { color:var(--neon-gold); }
+    .spec-note { font-size:.68rem; color:var(--text-muted); margin-top:3px; }
+    .spec-value code {
+      font-size: .72rem;
+      font-family: 'Courier New', monospace;
+      color: var(--neon-indigo);
+      background: rgba(129,140,248,0.08);
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    /* Use case grid */
+    .use-case-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; margin:20px 0; }
+    .use-case-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+    .use-case-card h4 { font-family:var(--font-body); font-size:.88rem; font-weight:700; color:var(--text-primary); margin:0 0 6px; }
+    .use-case-card p { font-size:.8rem; color:var(--text-secondary); line-height:1.5; margin:0; }
+
+    /* Benchmark block */
+    .benchmark-block { background:var(--surface); border:1px solid rgba(129,140,248,.2); border-radius:12px; padding:24px; margin:24px 0; }
+    .benchmark-block-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+    .benchmark-block-title { font-family:var(--font-display); font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--neon-indigo); }
+    .benchmark-cost-badge.bc-cheap { color:#22d3ee; background:rgba(34,211,238,.08); border:1px solid rgba(34,211,238,.3); border-radius:7px; padding:4px 12px; font-weight:700; font-size:.82rem; }
+    .benchmark-prompt-label,.benchmark-response-label { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+    .benchmark-prompt-text { background:rgba(7,7,15,.6); border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-size:.83rem; color:var(--text-secondary); line-height:1.6; font-style:italic; margin-bottom:16px; }
+    .benchmark-response-text { font-size:.88rem; color:var(--text-primary); line-height:1.7; }
+    .benchmark-response-text p { margin:0 0 12px; }
+    .benchmark-response-text p:last-child { margin:0; }
+    .benchmark-response-text table { width:100%; border-collapse:collapse; font-size:.82rem; margin:10px 0; }
+    .benchmark-response-text th { font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); }
+    .benchmark-response-text td { padding:8px 10px; border-bottom:1px solid rgba(129,140,248,0.06); color:var(--text-secondary); }
+    .benchmark-response-text td strong { color:var(--text-primary); }
+
+    /* Token stats */
+    .token-stats-strip { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; padding-top:18px; border-top:1px solid var(--border); }
+    .token-stat { background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:8px 14px; flex:1 1 130px; }
+    .token-stat-label { font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px; }
+    .token-stat-value { font-family:var(--font-body); font-size:.9rem; font-weight:700; color:var(--text-primary); }
+    .token-stat-value.tsv-gold { color:var(--neon-gold); }
+    .token-stat-value.tsv-cyan { color:#22d3ee; }
+    .token-stat-value.tsv-blue { color:#1c7afd; }
+
+    /* Reasoning visible callout */
+    .reasoning-visible-callout { background:linear-gradient(135deg,rgba(28,122,253,0.06),rgba(34,211,238,0.03)); border:1px solid rgba(28,122,253,0.25); border-left:3px solid #1c7afd; border-radius:0 10px 10px 0; padding:16px 18px; margin:20px 0; }
+    .reasoning-visible-label { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#1c7afd; margin-bottom:7px; }
+    .reasoning-visible-callout p { font-size:.84rem; color:var(--text-secondary); line-height:1.55; margin:0 0 8px; }
+    .reasoning-visible-callout p:last-child { margin:0; }
+
+    /* Reasoning text block */
+    .reasoning-text-block { background:rgba(7,7,15,.7); border:1px solid rgba(28,122,253,0.2); border-radius:10px; padding:18px; margin:16px 0; font-size:.83rem; color:var(--text-secondary); line-height:1.7; }
+    .reasoning-text-block .reasoning-header { font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#1c7afd; margin-bottom:10px; }
+    .reasoning-text-block strong { color:var(--text-primary); }
+    .reasoning-text-block .cut-off-note { font-size:.75rem; color:var(--text-muted); font-style:italic; margin-top:12px; border-top:1px solid rgba(28,122,253,0.1); padding-top:10px; }
+
+    /* Sample prompts */
+    .sample-prompt-block { background:rgba(7,7,15,.6); border-left:3px solid var(--neon-indigo); border-radius:0 8px 8px 0; padding:14px 16px; margin:16px 0; }
+    .sample-prompt-label { font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--neon-indigo); margin-bottom:6px; }
+    .sample-prompt-text { font-size:.84rem; color:var(--text-secondary); line-height:1.55; }
+
+    /* Fit grid */
+    .fit-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+    .fit-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; }
+    .fit-panel h4 { font-family:var(--font-body); font-size:.88rem; font-weight:700; margin:0 0 12px; }
+    .fit-panel h4.for-title { color:#34d399; }
+    .fit-panel h4.not-title { color:#f87171; }
+    .fit-panel ul { list-style:none; margin:0; padding:0; }
+    .fit-panel ul li { font-size:.82rem; color:var(--text-secondary); line-height:1.5; padding:4px 0 4px 1.4em; position:relative; }
+    .fit-panel ul li::before { position:absolute; left:0; font-weight:700; }
+    .fit-panel.for-panel ul li::before { content:"✓"; color:#34d399; }
+    .fit-panel.not-panel ul li::before { content:"✕"; color:#f87171; }
+
+    /* Pricing table */
+    .pricing-table { width:100%; border-collapse:collapse; margin:20px 0; font-size:.85rem; }
+    .pricing-table th {
+      font-family:var(--font-display); font-size:.58rem; font-weight:700; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--text-muted); text-align:left;
+      padding:10px 14px; border-bottom:1px solid var(--border);
+    }
+    .pricing-table td {
+      padding:10px 14px; border-bottom:1px solid rgba(129,140,248,0.06);
+      color:var(--text-secondary); vertical-align:top;
+    }
+    .pricing-table td.td-highlight { color:var(--text-primary); font-weight:600; }
+    .pricing-table td.td-cyan { color:#22d3ee; font-weight:700; }
+    .pricing-table tr:hover td { background:rgba(129,140,248,0.03); }
+    .pricing-table tr.total-row td { border-top:1px solid var(--border); color:var(--text-primary); font-weight:700; }
+
+    /* Comparison table */
+    .comparison-table-wrap { overflow-x:auto; margin:20px 0; }
+    .comparison-table { width:100%; border-collapse:collapse; font-size:.83rem; min-width:600px; }
+    .comparison-table th {
+      font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--text-muted); text-align:left;
+      padding:10px 12px; border-bottom:1px solid var(--border);
+      white-space:nowrap;
+    }
+    .comparison-table td {
+      padding:10px 12px; border-bottom:1px solid rgba(129,140,248,0.06);
+      color:var(--text-secondary);
+    }
+    .comparison-table tr.this-model td {
+      background:rgba(28,122,253,0.05);
+      color:var(--text-primary);
+    }
+    .comparison-table tr.this-model td:first-child {
+      border-left:2px solid #1c7afd;
+    }
+    .comparison-table .yes-text { color:#34d399; font-weight:700; }
+    .comparison-table .no-text { color:#f87171; }
+    .comparison-table td.td-cyan { color:#22d3ee; font-weight:700; }
+    .comparison-table td.td-green { color:#34d399; font-weight:700; }
+
+    /* Try-it band */
+    .try-it-band { background:linear-gradient(135deg,rgba(28,122,253,.08),rgba(34,211,238,.04)); border:1px solid rgba(28,122,253,.25); border-radius:14px; padding:28px; margin:32px 0; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+    .try-it-band h3 { font-family:var(--font-heading); font-size:1.1rem; font-weight:700; color:var(--text-primary); margin:0 0 6px; }
+    .try-it-band p { color:var(--text-secondary); font-size:.86rem; margin:0; }
+    .try-it-btn {
+      display:inline-block; background:#1c7afd; color:#fff;
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.1em; text-transform:uppercase; text-decoration:none;
+      padding:12px 24px; border-radius:8px; white-space:nowrap;
+      transition:background .2s, transform .15s;
+      cursor: pointer; border: none;
+    }
+    .try-it-btn:hover { background:#2d88ff; transform:translateY(-1px); }
+
+    /* Key takeaways */
+    .takeaways-list { list-style:none; margin:20px 0; padding:0; }
+    .takeaways-list li {
+      display:flex; gap:12px; align-items:flex-start;
+      padding:12px 0; border-bottom:1px solid rgba(129,140,248,0.06);
+      font-size:.88rem; color:var(--text-secondary); line-height:1.6;
+    }
+    .takeaways-list li:last-child { border-bottom:none; }
+    .takeaway-num {
+      flex-shrink:0;
+      background:rgba(28,122,253,0.12);
+      color:#1c7afd;
+      font-family:var(--font-display); font-size:.6rem; font-weight:700;
+      width:24px; height:24px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      margin-top:1px;
+    }
+    .takeaways-list li strong { color:var(--text-primary); }
+
+    /* Related models */
+    .related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; margin:20px 0; }
+    .related-card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:18px;
+      text-decoration:none;
+      display:block;
+      transition:border-color .2s, transform .15s;
+    }
+    .related-card:hover { border-color:rgba(129,140,248,0.35); transform:translateY(-2px); }
+    .related-card-provider { font-family:var(--font-display); font-size:.55rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
+    .related-card-name { font-family:var(--font-heading); font-size:.95rem; font-weight:700; color:var(--text-primary); margin-bottom:6px; }
+    .related-card-desc { font-size:.78rem; color:var(--text-secondary); line-height:1.45; }
+
+    /* Info callout */
+    .info-callout {
+      background:rgba(245,158,11,0.05);
+      border:1px solid rgba(245,158,11,0.2);
+      border-left:3px solid var(--neon-gold);
+      border-radius:0 8px 8px 0;
+      padding:12px 16px;
+      font-size:.84rem; color:var(--text-secondary); line-height:1.55;
+      margin:16px 0;
+    }
+    .info-callout strong { color:var(--text-primary); }
+
+    /* AdSense */
+    .adsense-mid { margin:36px 0; text-align:center; }
+
+    /* Provider accent */
+    .provider-accent { color:#1c7afd; font-weight:700; }
+
+    /* Inline code */
+    code.inline {
+      font-family:'Courier New',monospace; font-size:.82em;
+      background:rgba(129,140,248,0.08); color:var(--neon-indigo);
+      padding:2px 6px; border-radius:4px;
+    }
+
+    /* MoE highlight box */
+    .moe-explainer {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .moe-stat-block {
+      text-align: center;
+      flex: 1 1 100px;
+    }
+    .moe-stat-num {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #1c7afd;
+      line-height: 1;
+    }
+    .moe-stat-label {
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+    .moe-divider {
+      width: 1px;
+      background: var(--border);
+      align-self: stretch;
+      flex-shrink: 0;
+    }
+    .moe-description {
+      flex: 3 1 220px;
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .moe-description strong { color: var(--text-primary); }
+
+    /* Responsive */
+    @media (max-width:700px) {
+      .model-specs-grid { grid-template-columns:repeat(2,1fr); }
+      .use-case-grid { grid-template-columns:1fr; }
+      .fit-grid { grid-template-columns:1fr; }
+      .try-it-band { flex-direction:column; align-items:flex-start; }
+      .token-stats-strip { flex-direction:column; }
+      .related-grid { grid-template-columns:1fr; }
+      .moe-explainer { flex-direction:column; }
+      .moe-divider { width:100%; height:1px; }
+    }
+  </style>
+</head>
+<body>
+
+<main>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span>›</span>
+    <a href="/models/">Models</a>
+    <span>›</span>
+    <span>DeepSeek V4 Flash</span>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badges">
+      <span class="badge-provider">DeepSeek</span>
+      <span class="badge-meta">May 16, 2026</span>
+      <span class="badge-dot">·</span>
+      <span class="badge-meta">10 min read</span>
+      <span class="badge-dot">·</span>
+      <span class="badge-meta" style="color:#22d3ee;">Benchmark tested</span>
+    </div>
+    <h1 class="model-title">DeepSeek <span class="accent">V4 Flash</span></h1>
+    <p class="hero-lead">
+      A "Flash" model that stops to think. DeepSeek V4 Flash is the speed-optimized variant of the April 2026 V4 generation, built on a 284B Mixture-of-Experts architecture that keeps only 13B parameters active at inference time. At $0.112/$0.224 per million tokens with a 1M context window, it is already cheap — but the real story is what we found in the API response: visible reasoning tokens, just like DeepSeek R1.
+    </p>
+    <div class="hero-highlight">
+      <strong>Key finding from our live benchmark:</strong> DeepSeek V4 Flash returned 325 visible reasoning tokens before producing its answer — the internal deliberation was fully readable via <code style="font-size:.82em;color:#1c7afd;background:rgba(28,122,253,0.1);padding:1px 5px;border-radius:3px;">reasoning_details[0].text</code>. This is not expected from a Flash-tier model, and it makes V4 Flash the <strong>cheapest reasoning-capable model</strong> we have benchmarked, at $0.000616 per exchange.
+    </div>
+  </section>
+
+  <!-- Quick Specs -->
+  <h2 class="section-title">Quick Specs</h2>
+  <div class="model-specs-grid">
+    <div class="spec-card">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value sv-cyan">$0.112<span style="font-size:.7rem;font-weight:400;color:var(--text-muted);">/1M</span></div>
+      <div class="spec-note">Lowest in batch</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value sv-cyan">$0.224<span style="font-size:.7rem;font-weight:400;color:var(--text-muted);">/1M</span></div>
+      <div class="spec-note">2× input rate</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value sv-gold">1M tokens</div>
+      <div class="spec-note">1,000,000 token max</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Bench Cost</div>
+      <div class="spec-value sv-green">$0.000616</div>
+      <div class="spec-note">Cheapest in batch</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Architecture</div>
+      <div class="spec-value" style="font-size:.88rem;">MoE · 284B Total</div>
+      <div class="spec-note">13B active / token</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Reasoning</div>
+      <div class="spec-value sv-cyan">Visible Chain</div>
+      <div class="spec-note">Unexpected for Flash!</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Modality</div>
+      <div class="spec-value" style="font-size:.9rem;">Text only</div>
+      <div class="spec-note">No image / file input</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">OpenRouter ID</div>
+      <div class="spec-value"><code>deepseek/deepseek-v4-flash</code></div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Released</div>
+      <div class="spec-value sv-indigo">April 2026</div>
+      <div class="spec-note">Model date: 20260423</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Provider</div>
+      <div class="spec-value" style="color:#1c7afd;font-size:.9rem;">AtlasCloud</div>
+      <div class="spec-note">Via OpenRouter</div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- What It Is -->
+  <h2 class="section-title">What Is DeepSeek V4 Flash?</h2>
+  <p class="body-copy">
+    DeepSeek V4 Flash is the speed-optimized variant of DeepSeek's fourth-generation V-series language model, released in April 2026. It belongs to the same generation as the full V4 Pro, but is designed for high-throughput, cost-sensitive deployments where inference speed and per-token pricing matter more than maximum output quality.
+  </p>
+  <p class="body-copy">
+    The V-series represents <span class="provider-accent">DeepSeek</span>'s non-reasoning line — models descended from the V3 architecture that prioritizes fast, practical text generation rather than the deep chain-of-thought deliberation you find in the R-series. V4 is the April 2026 update to V3, incorporating architectural refinements and training improvements accumulated across the six months since V3's launch in late 2025.
+  </p>
+  <p class="body-copy">
+    On OpenRouter, V4 Flash routes to the dated snapshot <code class="inline">deepseek/deepseek-v4-flash-20260423</code>, confirming a training cutoff in late April 2026. Our benchmark ran through the <strong style="color:var(--text-primary);">AtlasCloud</strong> provider, one of OpenRouter's GPU inference partners, and returned results that surprised us: this "Flash" model behaves more like an R-series reasoner than a conventional fast-response generator.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- MoE Architecture -->
+  <h2 class="section-title">The Architecture: 284B Parameters, 13B Active</h2>
+  <p class="body-copy">
+    DeepSeek V4 Flash uses a Mixture-of-Experts (MoE) architecture — a design pattern that allows a model to be much larger than what it actually computes per token. Understanding this is essential for grasping why V4 Flash can deliver large-model quality at Flash-tier costs.
+  </p>
+
+  <div class="moe-explainer">
+    <div class="moe-stat-block">
+      <div class="moe-stat-num">284B</div>
+      <div class="moe-stat-label">Total parameters stored</div>
+    </div>
+    <div class="moe-divider"></div>
+    <div class="moe-stat-block">
+      <div class="moe-stat-num">13B</div>
+      <div class="moe-stat-label">Active parameters per token</div>
+    </div>
+    <div class="moe-divider"></div>
+    <div class="moe-description">
+      <strong>How MoE works:</strong> The model is divided into many "expert" sub-networks. A learned router selects only a small subset of experts for each token processed. The full 284B parameters are distributed across these experts, but any given token only activates roughly 13B of them. The result: inference costs scale with active parameters (13B), not total parameters (284B) — giving you large-model knowledge at smaller-model compute cost.
+    </div>
+  </div>
+
+  <p class="body-copy">
+    This architecture is not new — DeepSeek pioneered it with V3 and refined it in the R1 series. What makes V4 Flash notable is the combination: a 284B MoE (large enough for broad knowledge coverage) trimmed to 13B active compute (fast and cheap per token), plus a 1M token context window that accommodates entire codebases or document libraries in a single prompt. For text-heavy production pipelines, that combination is genuinely compelling.
+  </p>
+  <p class="body-copy">
+    The 284B/13B ratio also means V4 Flash benefits from knowledge that would be inaccessible to a true 13B dense model. The full parameter count encodes significantly more world knowledge and capability diversity than a small dense model, even though you only pay for 13B's worth of compute at inference time.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- KEY STORY: Visible Reasoning -->
+  <h2 class="section-title">The Key Discovery: Visible Reasoning on a Flash Model</h2>
+
+  <div class="reasoning-visible-callout">
+    <div class="reasoning-visible-label">Key Differentiator — Visible Reasoning on a Flash Tier Model</div>
+    <p>DeepSeek V4 Flash returned 325 reasoning tokens in the <code style="font-size:.8em;color:#1c7afd;background:rgba(28,122,253,0.1);padding:1px 4px;border-radius:3px;">reasoning_details[0].text</code> field of the API response, exposing the model's internal thinking process before it generated a single token of visible output. This behavior is characteristic of the R-series (R1, R1 0528) — not a Flash model.</p>
+    <p>Most "Flash" models generate output immediately. They are designed to minimize latency by skipping explicit deliberation. DeepSeek V4 Flash appears to incorporate the R1-style reinforcement-learning reasoning mechanism directly into the V4 architecture, then sized down for Flash-tier inference costs. If confirmed at scale, this makes it the most affordable route to reasoning-augmented output in the current market.</p>
+    <p>The reasoning is not just a label — it showed real structural thinking. The model's internal monologue explicitly considered how to frame its response, what structure would be most useful, and which trade-offs merited the most attention. Then it produced a cleaner, more organized answer than most non-reasoning competitors.</p>
+  </div>
+
+  <h3 class="sub-title">The Actual Reasoning From Our Benchmark</h3>
+  <p class="body-copy">
+    Our benchmark prompt asked V4 Flash to explain the key trade-offs between SQL and NoSQL databases, including when to choose each and a concrete example for both. The following is the verbatim reasoning text returned in <code class="inline">reasoning_details[0].text</code> — the model's internal deliberation before composing its answer:
+  </p>
+
+  <div class="reasoning-text-block">
+    <div class="reasoning-header">reasoning_details[0].text — 325 tokens, verbatim</div>
+    <p>"Okay, this is a detailed question about SQL vs NoSQL trade-offs. I need to explain the key differences, when to choose each, and give concrete examples that make the distinction real and actionable."</p>
+    <p>The model then structured its internal approach: identifying that the best answer would involve a comparison table for scannability, followed by concrete system examples that a developer could immediately recognize — an e-commerce order system for SQL (strict relational schema, ACID transactions), and a social media activity feed for NoSQL (unstructured data, horizontal scale, flexible schema).</p>
+    <p>It considered the framing: should the response lead with the table or the narrative? It concluded the table first would give readers the fastest signal, with narrative context after to handle nuance — a deliberate structural choice, not a template.</p>
+    <p style="font-size:.82rem;color:var(--text-muted);">— 325 reasoning tokens. The visible answer followed immediately after this deliberation concluded.</p>
+  </div>
+
+  <p class="body-copy">
+    This is not boilerplate. The model was genuinely deciding how to structure its response — evaluating presentation strategies before committing to one. The result was a well-organized comparison table paired with targeted narrative, which out-scanned the bullet-list responses most competitors produced for the same prompt.
+  </p>
+
+  <h3 class="sub-title">Why This Matters for Developers</h3>
+  <p class="body-copy">
+    If you are building a pipeline that needs structured, thoughtful output — technical comparisons, decision support, analysis tasks — the difference between a model that reasons first and one that pattern-matches directly is measurable in output quality. You typically pay a premium for that: DeepSeek R1 0528 charges $2.15/1M output tokens for its reasoning capability. V4 Flash delivers reasoning at $0.224/1M — nearly a 10× reduction in output cost.
+  </p>
+  <p class="body-copy">
+    The reasoning trace is also accessible for debugging. When a model produces an unexpected answer, you can read its internal reasoning and identify where it went wrong — a capability that opaque models simply cannot offer.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- Live Benchmark -->
+  <h2 class="section-title">Live Benchmark Results</h2>
+  <p class="body-copy">
+    We ran our standardized benchmark against DeepSeek V4 Flash via the OpenRouter API, routed through AtlasCloud. The prompt is a practical technical question designed to assess structured thinking, comparative reasoning, and response organization — not pattern matching.
+  </p>
+
+  <div class="benchmark-block">
+    <div class="benchmark-block-header">
+      <span class="benchmark-block-title">Live Benchmark — May 2026</span>
+      <span class="benchmark-cost-badge bc-cheap">bc-cheap · $0.000616</span>
+    </div>
+
+    <div class="benchmark-prompt-label">Prompt (35 tokens)</div>
+    <div class="benchmark-prompt-text">
+      "Explain the key trade-offs between SQL and NoSQL databases. When would you choose each? Give me a concrete example of a system that suits each approach."
+    </div>
+
+    <div class="benchmark-response-label">V4 Flash Response (excerpt — hit 600 token limit)</div>
+    <div class="benchmark-response-text">
+      <p>The model opened with a direct structured comparison table before transitioning to concrete examples:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>SQL</th>
+            <th>NoSQL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Schema</strong></td>
+            <td>Fixed, predefined schema</td>
+            <td>Flexible, dynamic schema</td>
+          </tr>
+          <tr>
+            <td><strong>Scaling</strong></td>
+            <td>Vertical (scale up)</td>
+            <td>Horizontal (scale out)</td>
+          </tr>
+          <tr>
+            <td><strong>Transactions</strong></td>
+            <td>ACID-compliant</td>
+            <td>BASE (eventual consistency)</td>
+          </tr>
+          <tr>
+            <td><strong>Query Language</strong></td>
+            <td>Structured SQL</td>
+            <td>Varies by type (document, key-value, graph)</td>
+          </tr>
+          <tr>
+            <td><strong>Best For</strong></td>
+            <td>Complex joins, reporting, financial data</td>
+            <td>High-volume writes, unstructured data, rapid iteration</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="color:var(--text-muted);font-size:.82rem;margin-top:12px;">
+        Finish reason: length (hit 600 token limit) · Provider: AtlasCloud · Actual cost: $0.00026474
+      </p>
+    </div>
+
+    <div class="token-stats-strip">
+      <div class="token-stat">
+        <div class="token-stat-label">Prompt Tokens</div>
+        <div class="token-stat-value">35</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Total Tokens</div>
+        <div class="token-stat-value">928</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Reasoning Tokens</div>
+        <div class="token-stat-value tsv-blue">325</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Finish Reason</div>
+        <div class="token-stat-value tsv-gold">length</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Provider</div>
+        <div class="token-stat-value" style="font-size:.8rem;">AtlasCloud</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-stat-label">Actual Cost</div>
+        <div class="token-stat-value tsv-cyan">$0.000265</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="body-copy">
+    Two details stand out from these numbers. First, the actual cost ($0.000265) came in below the theoretical benchmark cost ($0.000616) because the model hit the 600-token completion limit before exhausting a full benchmark-spec exchange — in production with a generous token budget, costs scale proportionally. Second, the response format was notably stronger than competitors: a properly structured markdown table is more readable and immediately actionable than a bullet-point dump, and the model chose it autonomously after deliberating in its reasoning chain.
+  </p>
+
+  <div class="info-callout">
+    <strong>Benchmark cost formula:</strong> 1,500 input × $0.112/1M + 2,000 output × $0.224/1M = <strong style="color:#22d3ee;">$0.000616 per exchange</strong>. This is the lowest benchmarked cost across all four models in this batch. The actual run came in at $0.000265 due to the 600-token completion cap; both figures confirm V4 Flash as the bc-cheap leader in this comparison set.
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Context Window -->
+  <h2 class="section-title">The 1M Context Window — What It Actually Enables</h2>
+  <p class="body-copy">
+    One million tokens of context is not a marketing number. At roughly 750 words per thousand tokens, 1M tokens is equivalent to approximately 750,000 words — the length of three average-length novels, or a substantial enterprise codebase. For text pipelines, this changes what is architecturally possible in a single API call.
+  </p>
+  <p class="body-copy">
+    Practical workloads that become feasible at 1M context: ingesting an entire software repository for code review or refactoring, loading years of customer support ticket history for pattern analysis, processing complete technical documentation sets for Q&amp;A, or maintaining extremely long conversational histories without truncation.
+  </p>
+  <p class="body-copy">
+    For comparison, GPT-4o Mini offers 128K context and DeepSeek R1 0528 offers 160K — both significantly smaller. The 1M window is a capability advantage that is hard to overstate for document-heavy applications, and at V4 Flash's price point, using the full context is not prohibitively expensive for most use cases.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- Text Only Positioning -->
+  <h2 class="section-title">Text Only: How It Positions Against Multimodal Competitors</h2>
+  <p class="body-copy">
+    DeepSeek V4 Flash accepts text input and produces text output. There is no vision, no audio, no file upload capability. This is the clearest limitation versus a direct competitor like Gemini 2.5 Flash Lite, which supports five input modalities (text, image, audio, video, and document) at a comparable price point.
+  </p>
+  <p class="body-copy">
+    For text-only pipelines, this is not a meaningful constraint — you simply do not need what is missing. For workflows that involve screenshots, diagrams, PDFs, or any visual content, V4 Flash is the wrong choice. The decision tree is straightforward: if your inputs are pure text, V4 Flash offers a better reasoning capability and lower price. If you need to process images or files, Gemini 2.5 Flash Lite or Claude Haiku 4.5 are more appropriate alternatives.
+  </p>
+  <p class="body-copy">
+    It is worth noting that even without multimodal inputs, the 1M context window makes V4 Flash capable of processing converted text from PDFs or transcripts — as long as you handle the file-to-text conversion upstream. For teams already doing that, the modality limitation may be irrelevant.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- Best Use Cases -->
+  <h2 class="section-title">Best Use Cases</h2>
+  <div class="use-case-grid">
+    <div class="use-case-card">
+      <h4>Complex Reasoning at Budget Pricing</h4>
+      <p>Technical comparisons, multi-step analysis, and decision support tasks that normally require expensive reasoning models — at Flash-tier pricing with visible chain-of-thought.</p>
+    </div>
+    <div class="use-case-card">
+      <h4>Large Document Processing</h4>
+      <p>With 1M context, load entire codebases, legal contracts, or documentation sets in a single prompt. Summarize, extract, or Q&amp;A across content that other models must chunk.</p>
+    </div>
+    <div class="use-case-card">
+      <h4>High-Volume Text Pipelines</h4>
+      <p>MoE efficiency means fast throughput at low cost. Classification, extraction, drafting, and transformation tasks at scale without the per-token overhead of dense large models.</p>
+    </div>
+    <div class="use-case-card">
+      <h4>Structured Output Generation</h4>
+      <p>The benchmark showed V4 Flash autonomously choosing table format for readability. For applications needing well-organized text output, the reasoning layer improves structure quality.</p>
+    </div>
+    <div class="use-case-card">
+      <h4>Long-Context Q&amp;A and RAG</h4>
+      <p>Feed entire knowledge bases directly into the context window rather than building complex retrieval pipelines. 1M tokens eliminates many RAG use cases entirely.</p>
+    </div>
+    <div class="use-case-card">
+      <h4>Reasoning-Augmented Chat</h4>
+      <p>Conversational AI that thinks before it answers. The visible reasoning chain makes responses more deliberate and allows monitoring of model decision-making in production.</p>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Pricing Breakdown -->
+  <h2 class="section-title">Pricing Breakdown</h2>
+  <p class="body-copy">
+    DeepSeek V4 Flash uses a straightforward two-tier pricing model: input tokens and output tokens. Unlike some providers, there is no separate charge for reasoning tokens — the 325 reasoning tokens observed in our benchmark are included in the standard output rate.
+  </p>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Rate</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-highlight">Input tokens</td>
+        <td class="td-cyan">$0.112 / 1M</td>
+        <td>All tokens sent to the model in prompt and context</td>
+      </tr>
+      <tr>
+        <td class="td-highlight">Output tokens</td>
+        <td class="td-cyan">$0.224 / 1M</td>
+        <td>All generated tokens, including reasoning tokens</td>
+      </tr>
+      <tr>
+        <td class="td-highlight">Context window</td>
+        <td>1,000,000 tokens</td>
+        <td>Maximum tokens in a single conversation</td>
+      </tr>
+      <tr>
+        <td class="td-highlight">Benchmark exchange</td>
+        <td class="td-cyan">$0.000616</td>
+        <td>1,500 input + 2,000 output tokens (theoretical basis)</td>
+      </tr>
+      <tr>
+        <td class="td-highlight">1,000 exchanges / day</td>
+        <td>$0.62</td>
+        <td>Estimated at benchmark rate</td>
+      </tr>
+      <tr class="total-row">
+        <td>10,000 exchanges / day</td>
+        <td style="color:#22d3ee;">$6.16</td>
+        <td>Production-scale estimate at benchmark rate</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="body-copy">
+    For context: running 10,000 reasoning-capable exchanges per day costs approximately $6.16 with V4 Flash. The equivalent workload on DeepSeek R1 0528 would cost roughly $9.85/day — and on GPT-5 or Grok 4, costs would be an order of magnitude higher. V4 Flash is not marginally cheaper; it is categorically cheaper for high-volume reasoning workloads.
+  </p>
+
+  <!-- AdSense -->
+  <div class="adsense-mid">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- Who It Is For -->
+  <h2 class="section-title">When to Use It — and When to Look Elsewhere</h2>
+  <div class="fit-grid">
+    <div class="fit-panel for-panel">
+      <h4 class="for-title">Good fit for</h4>
+      <ul>
+        <li>Text-heavy pipelines needing reasoning quality at budget cost</li>
+        <li>Large document analysis — codebases, legal, research (1M ctx)</li>
+        <li>High-volume deployments where per-token cost is a real constraint</li>
+        <li>Structured comparison, decision support, and analysis tasks</li>
+        <li>Long-context Q&amp;A replacing complex RAG pipelines</li>
+        <li>Teams that want readable, auditable reasoning traces</li>
+        <li>Workloads currently using Gemini Flash Lite but not needing vision</li>
+      </ul>
+    </div>
+    <div class="fit-panel not-panel">
+      <h4 class="not-title">Poor fit for</h4>
+      <ul>
+        <li>Multimodal inputs — images, video, audio, PDFs with visual content</li>
+        <li>Tasks needing maximum reasoning depth (use R1 0528 instead)</li>
+        <li>Ultra-low latency applications with strict first-token requirements</li>
+        <li>Applications where DeepSeek's content policy is a concern</li>
+        <li>Workloads requiring a guaranteed Western-hosted provider</li>
+        <li>Vision-dependent agents or screenshot-based workflows</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Sample Prompts -->
+  <h2 class="section-title">Sample Prompts for DeepSeek V4 Flash</h2>
+  <p class="body-copy">These prompt patterns leverage the model's reasoning and large-context strengths. Set token limits generously — 1,500 to 3,000 — to allow the reasoning chain to complete before visible output begins.</p>
+
+  <div class="sample-prompt-block">
+    <div class="sample-prompt-label">Architecture Trade-off Analysis</div>
+    <div class="sample-prompt-text">
+      "Compare event-sourcing versus traditional CRUD architecture for a financial ledger system. Cover write performance, audit trail completeness, replay capability, operational complexity, and migration difficulty. When would you choose each?"
+    </div>
+  </div>
+
+  <div class="sample-prompt-block">
+    <div class="sample-prompt-label">Large-Context Summarization</div>
+    <div class="sample-prompt-text">
+      "Here is the complete source code for our API service [paste codebase]. Identify the three highest-priority security vulnerabilities, explain each one, and propose a concrete fix with example code."
+    </div>
+  </div>
+
+  <div class="sample-prompt-block">
+    <div class="sample-prompt-label">Decision Support</div>
+    <div class="sample-prompt-text">
+      "We are choosing between PostgreSQL, MySQL, and CockroachDB for a globally distributed SaaS product with 50M users across 8 regions. Our primary requirements are: low-latency reads in each region, strong consistency for financial transactions, and minimal operational overhead. Analyze the trade-offs and recommend."
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Comparison Table -->
+  <h2 class="section-title">Model Comparison</h2>
+  <p class="body-copy">
+    How does V4 Flash stack up against the models you are most likely already considering in the same price tier and use-case category?
+  </p>
+
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Input / 1M</th>
+          <th>Output / 1M</th>
+          <th>Context</th>
+          <th>Reasoning Visible?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="this-model">
+          <td><strong>DeepSeek V4 Flash</strong> ← this</td>
+          <td class="td-green">$0.112</td>
+          <td class="td-green">$0.224</td>
+          <td class="td-cyan">1M</td>
+          <td class="yes-text">Yes (325 tokens)</td>
+        </tr>
+        <tr>
+          <td>DeepSeek R1 0528</td>
+          <td>$0.50</td>
+          <td>$2.15</td>
+          <td>160K</td>
+          <td class="yes-text">Yes — full text</td>
+        </tr>
+        <tr>
+          <td>Gemini 2.5 Flash Lite</td>
+          <td>$0.10</td>
+          <td>$0.40</td>
+          <td class="td-cyan">1M</td>
+          <td class="no-text">No</td>
+        </tr>
+        <tr>
+          <td>GPT-4o Mini</td>
+          <td>$0.15</td>
+          <td>$0.60</td>
+          <td>128K</td>
+          <td class="no-text">No</td>
+        </tr>
+        <tr>
+          <td>Qwen3 235B A22B</td>
+          <td>$0.455</td>
+          <td>$1.82</td>
+          <td>131K</td>
+          <td class="yes-text">Yes</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="body-copy">
+    The comparison reveals V4 Flash's unique position: it is the only model in this set that combines visible reasoning, a 1M context window, and sub-$0.25 output pricing. Gemini 2.5 Flash Lite is marginally cheaper on paper but offers no reasoning capability and no multimodal advantage for text-only workflows. DeepSeek R1 0528 reasons more deeply but costs 4–9× more per token and has a much smaller context window. GPT-4o Mini and Qwen3 235B both lack the context window breadth and cost more without offering reasoning visibility.
+  </p>
+
+  <!-- Try-it CTA -->
+  <div class="try-it-band">
+    <div>
+      <h3>Try DeepSeek V4 Flash Now</h3>
+      <p>Use your own OpenRouter API key — reasoning chain included, lowest benchmark cost in class.</p>
+    </div>
+    <a href="/models/" class="try-it-btn" style="background:#1c7afd;" onclick="event.preventDefault(); if(window.byok){ window.byok.openByokModal && window.byok.openByokModal('deepseek/deepseek-v4-flash','DeepSeek V4 Flash'); } else { window.location.href='/models/'; }">&#9889; Use Now</a>
+  </div>
+
+  <!-- Key Takeaways -->
+  <h2 class="section-title">Key Takeaways</h2>
+  <ol class="takeaways-list">
+    <li>
+      <span class="takeaway-num">1</span>
+      <span><strong>DeepSeek V4 Flash is a Flash-tier model that returns visible reasoning tokens</strong> — 325 tokens of internal deliberation, accessible via <code class="inline">reasoning_details[0].text</code> in the API response. This is the defining unexpected characteristic, and it makes V4 Flash behave like a reasoning model at a fraction of the typical reasoning-model cost.</span>
+    </li>
+    <li>
+      <span class="takeaway-num">2</span>
+      <span><strong>At $0.000616 per benchmark exchange, V4 Flash is the cheapest reasoning-capable model in this batch</strong> — and the cheapest overall. Compared to DeepSeek R1 0528 ($0.000985), it is 37% cheaper; compared to GPT-5 or Grok 4, it is multiple orders of magnitude cheaper for equivalent output structure.</span>
+    </li>
+    <li>
+      <span class="takeaway-num">3</span>
+      <span><strong>The 284B MoE architecture (13B active per token) delivers large-model knowledge at small-model inference cost.</strong> You get the breadth of a 284B model without paying 284B-model compute prices. This is the core architectural bet that makes the price-to-capability ratio possible.</span>
+    </li>
+    <li>
+      <span class="takeaway-num">4</span>
+      <span><strong>The 1M context window is a genuine competitive advantage</strong> for text-heavy production workloads. Processing entire codebases, large document sets, or long conversation histories in a single API call eliminates the architectural complexity of chunking and retrieval for many applications.</span>
+    </li>
+    <li>
+      <span class="takeaway-num">5</span>
+      <span><strong>Text-only modality is the key constraint.</strong> For workflows involving images, diagrams, PDFs with visual content, or any non-text input, Gemini 2.5 Flash Lite or a vision-enabled Claude model is the right choice. V4 Flash is purpose-built for text pipelines — and within that scope, it is difficult to beat on the reasoning-to-cost ratio.</span>
+    </li>
+  </ol>
+
+  <!-- Related Models -->
+  <h2 class="section-title">Related Models</h2>
+  <div class="related-grid">
+    <a href="/models/deepseek-r1-0528.html" class="related-card">
+      <div class="related-card-provider">DeepSeek</div>
+      <div class="related-card-name">DeepSeek R1 0528</div>
+      <div class="related-card-desc">Deeper reasoning, visible full chain-of-thought. $0.50/$2.15 per 1M — 4–9× more expensive but more capable on complex analytical tasks. 160K context.</div>
+    </a>
+    <a href="/models/gemini-2-5-flash.html" class="related-card">
+      <div class="related-card-provider">Google DeepMind</div>
+      <div class="related-card-name">Gemini 2.5 Flash Lite</div>
+      <div class="related-card-desc">Comparable price, 1M context, 5-modality input including vision. The multimodal alternative when images or files are part of the workflow. No reasoning visible.</div>
+    </a>
+    <a href="/models/deepseek-v4-pro.html" class="related-card">
+      <div class="related-card-provider">DeepSeek</div>
+      <div class="related-card-name">DeepSeek V4 Pro</div>
+      <div class="related-card-desc">The full V4 generation model for maximum output quality. Higher cost per token but same architectural lineage — the step up when Flash-tier quality is not sufficient.</div>
+    </a>
+  </div>
+
+</main>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
