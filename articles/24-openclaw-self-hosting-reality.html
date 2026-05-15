@@ -61,7 +61,7 @@
     <div class="article-layout">
       <div class="article-body">
 
-        <p>The pitch was compelling: self-host your AI agent, own your data, control your costs, run it your way. For thousands of builders, OpenClaw represented exactly that — an escape from the black-box dependency of hosted AI services. You'd have the infrastructure. You'd have the keys. You'd be in charge.</p>
+        <p>The pitch was compelling: self-host your AI agent, own your data, control your costs, run it your way. For thousands of builders, OpenClaw represented exactly that: an escape from the black-box dependency of hosted AI services. You'd have the infrastructure. You'd have the keys. You'd be in charge.</p>
 
         <p>The picture looks considerably different. Across every upvoted complaint, every support thread, every moment of collective frustration, a consistent story emerges. The self-hosting proposition isn't broken because the idea is bad. It's broken because the execution has been catastrophic across every dimension that actually matters to people trying to build with this thing.</p>
 
@@ -69,7 +69,7 @@
 
         <h2 class="article-h2">The Security Paradox: You Self-Hosted for Privacy and Got a Vulnerability Farm</h2>
 
-        <p>The cruelest irony in the OpenClaw data is this: the users most concerned about data privacy — the ones who explicitly chose self-hosting to keep their data off third-party servers — ended up with the worst security posture of anyone in the AI agent ecosystem.</p>
+        <p>The cruelest irony in the OpenClaw data is this: the users most concerned about data privacy: the ones who explicitly chose self-hosting to keep their data off third-party servers, ended up with the worst security posture of anyone in the AI agent ecosystem.</p>
 
         <p>The official OpenClaw Docker image ships with approximately 2,000 known CVEs. Not theoretical vulnerabilities. Not edge cases. Known, catalogued, assigned CVE numbers. Users who pulled the image and ran a container scan discovered they were hosting what one commenter accurately described as a "vulnerability farm."</p>
 
@@ -81,23 +81,23 @@
           <p>"Scanned the container and wanted to cry. How is this considered production-ready with that many security holes?"</p>
         </blockquote>
 
-        <p>The container vulnerabilities are the floor, not the ceiling. Above them sits a credential management system that stores API keys in plaintext — inside log files, inside configuration files, anywhere with filesystem access. In a world where a single compromised skill or misconfigured endpoint could drain an AWS account or expose customer data, this isn't a minor oversight. It's a liability.</p>
+        <p>The container vulnerabilities are the floor, not the ceiling. Above them sits a credential management system that stores API keys in plaintext, inside log files, inside configuration files, anywhere with filesystem access. In a world where a single compromised skill or misconfigured endpoint could drain an AWS account or expose customer data, this isn't a minor oversight. It's a liability.</p>
 
         <blockquote class="article-quote">
           <p>"Found my API keys in plaintext in the logs. Anyone with filesystem access can steal them and rack up charges."</p>
         </blockquote>
 
-        <p>Then there's ClawHub — OpenClaw's marketplace for community skills. Third-party skills can execute arbitrary system commands and access the filesystem without sandboxing or verification. Installing a skill from ClawHub is, as one user put it, like installing random npm packages with sudo access. The trust model that makes skill marketplaces valuable is completely absent.</p>
+        <p>Then there's ClawHub, OpenClaw's marketplace for community skills. Third-party skills can execute arbitrary system commands and access the filesystem without sandboxing or verification. Installing a skill from ClawHub is, as one user put it, like installing random npm packages with sudo access. The trust model that makes skill marketplaces valuable is completely absent.</p>
 
-        <p>Default configurations compound the problem further by exposing management gateways and agent endpoints to the public internet without authentication. Enterprise adoption under these conditions isn't delayed — it's impossible. Security teams won't approve it. Legal teams won't sign off on it. And technically sophisticated users who understand what they're looking at are walking away.</p>
+        <p>Default configurations compound the problem further by exposing management gateways and agent endpoints to the public internet without authentication. Enterprise adoption under these conditions isn't delayed: it's impossible. Security teams won't approve it. Legal teams won't sign off on it. And technically sophisticated users who understand what they're looking at are walking away.</p>
 
         <hr class="article-divider">
 
         <h2 class="article-h2">The Bill Arrives: $300 a Day for an Agent That Won't Stop</h2>
 
-        <p>Of all the pain points in OpenClaw deployments, API cost overruns generate the highest-intensity discussion — the kind where people aren't just agreeing, they were relieved someone finally said it out loud.</p>
+        <p>Of all the pain points in OpenClaw deployments, API cost overruns generate the highest-intensity discussion: the kind where people aren't just agreeing, they were relieved someone finally said it out loud.</p>
 
-        <p>The core problem is structural. When an OpenClaw agent enters an infinite loop — and they do, frequently — it keeps calling the API. There's no circuit breaker. There's no spend cap at the agent framework level. There's no mechanism that says "you've spent $50 today, stop." The agent just keeps going until you catch it, or until you get the invoice.</p>
+        <p>The core problem is structural. When an OpenClaw agent enters an infinite loop, and they do, frequently: it keeps calling the API. There's no circuit breaker. There's no spend cap at the agent framework level. There's no mechanism that says "you've spent $50 today, stop." The agent just keeps going until you catch it, or until you get the invoice.</p>
 
         <blockquote class="article-quote">
           <p>"Just got hit with a $200 bill because my OpenClaw agent went into a loop overnight. Opus is 10-15x more expensive than Sonnet and it adds up FAST."</p>
@@ -107,9 +107,9 @@
           <p>"Running OpenClaw 24/7 costs me $300/day. That's $9k a month just in API calls. Completely unsustainable for a startup."</p>
         </blockquote>
 
-        <p>The model selection problem makes this worse. OpenClaw's default configurations tend toward premium model tiers — Opus-class models that cost 10-15x more per token than Sonnet-class alternatives capable of handling the same tasks. Users are burning Opus budget on operations that Sonnet handles fine, and no intelligent routing exists to prevent it. The result: bills that arrive as complete surprises, for work that a cheaper model could have done better.</p>
+        <p>The model selection problem makes this worse. OpenClaw's default configurations tend toward premium model tiers, Opus-class models that cost 10-15x more per token than Sonnet-class alternatives capable of handling the same tasks. Users are burning Opus budget on operations that Sonnet handles fine, and no intelligent routing exists to prevent it. The result: bills that arrive as complete surprises, for work that a cheaper model could have done better.</p>
 
-        <p>For the bootstrapped founders and indie operators who represent a significant portion of OpenClaw's user base, $400+ monthly API bills aren't an operating cost — they're a kill switch. The promise of autonomous, cost-effective AI automation ends at the billing dashboard.</p>
+        <p>For the bootstrapped founders and indie operators who represent a significant portion of OpenClaw's user base, $400+ monthly API bills aren't an operating cost: they're a kill switch. The promise of autonomous, cost-effective AI automation ends at the billing dashboard.</p>
 
         <hr class="article-divider">
 
@@ -127,7 +127,7 @@
           <p>"Token bloat is real. It repeats questions I already answered because the memory buffer is too small, doubling my costs for zero benefit."</p>
         </blockquote>
 
-        <p>This creates a double tax. The agent forgets context <em>and</em> burns tokens on redundant operations to reconstruct what it lost. Users end up spending more on API calls for less useful output than they started with. Long-running, high-value workflows — the exact use cases that would justify adopting an agent framework — are the ones that break hardest. Complex multi-step tasks that require sustained context over hours of operation don't just produce worse results. They fail entirely, mid-execution, leaving users to restart from scratch.</p>
+        <p>This creates a double tax. The agent forgets context <em>and</em> burns tokens on redundant operations to reconstruct what it lost. Users end up spending more on API calls for less useful output than they started with. Long-running, high-value workflows: the exact use cases that would justify adopting an agent framework, are the ones that break hardest. Complex multi-step tasks that require sustained context over hours of operation don't just produce worse results. They fail entirely, mid-execution, leaving users to restart from scratch.</p>
 
         <blockquote class="article-quote">
           <p>"Workflows break constantly because context gets dropped mid-task. I have to babysit it through every step or risk losing hours of progress."</p>
@@ -147,9 +147,9 @@
           <p>"The amount of custom rules and guardrails you need to write just to make it safe is ridiculous. This isn't 'low-code' it's 'write-your-own-framework'."</p>
         </blockquote>
 
-        <p>The documentation situation makes this worse. OpenClaw's official knowledge base is unstructured, populated with internal architecture details rather than user-facing configuration guidance, and — critically — not properly indexed by search engines. Users troubleshooting specific errors can't Google their way to an answer. The documentation might as well not exist for anyone who relies on a search engine to find help.</p>
+        <p>The documentation situation makes this worse. OpenClaw's official knowledge base is unstructured, populated with internal architecture details rather than user-facing configuration guidance, and, critically, not properly indexed by search engines. Users troubleshooting specific errors can't Google their way to an answer. The documentation might as well not exist for anyone who relies on a search engine to find help.</p>
 
-        <p>The result: Discord scrollback and GitHub issues become the de facto documentation. That's not a community asset — it's a support cost disguised as one. New users spend days on setup, technical users spend weekends writing guardrails, and everyone ends up on Discord asking the same questions because there's nowhere else to go.</p>
+        <p>The result: Discord scrollback and GitHub issues become the de facto documentation. That's not a community asset: it's a support cost disguised as one. New users spend days on setup, technical users spend weekends writing guardrails, and everyone ends up on Discord asking the same questions because there's nowhere else to go.</p>
 
         <hr class="article-divider">
 
@@ -157,9 +157,9 @@
 
         <p>The OpenClaw data isn't really about OpenClaw. It's a map of unsolved infrastructure problems that are going to determine which agent platforms succeed at scale and which get abandoned in favour of better-resourced competitors.</p>
 
-        <p>The demand signals are unmistakable. Users want spend caps that stop agents before they generate surprise invoices — not retrospective dashboards showing what already burned. They want intelligent model routing that defaults to Sonnet-class efficiency and escalates to Opus-class capability only when the task actually requires it. They want memory management that works like human working memory: retaining what matters, discarding what doesn't, never asking the same question twice.</p>
+        <p>The demand signals are unmistakable. Users want spend caps that stop agents before they generate surprise invoices, not retrospective dashboards showing what already burned. They want intelligent model routing that defaults to Sonnet-class efficiency and escalates to Opus-class capability only when the task actually requires it. They want memory management that works like human working memory: retaining what matters, discarding what doesn't, never asking the same question twice.</p>
 
-        <p>Most importantly, they want security that doesn't require them to become Docker hardening experts. The market for a managed, production-grade OpenClaw deployment — one that handles the 2,000 CVEs, encrypts credentials, sandboxes skills, and just works — is not theoretical. It's thousands of users actively describing it as the thing they would pay for if it existed.</p>
+        <p>Most importantly, they want security that doesn't require them to become Docker hardening experts. The market for a managed, production-grade OpenClaw deployment, one that handles the 2,000 CVEs, encrypts credentials, sandboxes skills, and just works, is not theoretical. It's thousands of users actively describing it as the thing they would pay for if it existed.</p>
 
         <p>The deeper signal is about trust. Self-hosting was supposed to be the trust model for privacy-first operators. Instead, it's become the configuration burden that prevents the people who care most about data control from actually deploying anything. That's a market failure worth paying attention to.</p>
 
@@ -167,22 +167,22 @@
 
         <h2 class="article-h2">The Practical Takeaway for Builders Running OpenClaw Today</h2>
 
-        <p>If you're already deployed, the immediate priorities are clear. Scan your container with <strong>Trivy or Grype</strong> before anything else — know what vulnerabilities you're currently running. Rotate and vault any credentials that have touched OpenClaw logs. Consider running your deployment behind a reverse proxy with authentication before it touches the public internet, regardless of what the default configuration did.</p>
+        <p>If you're already deployed, the immediate priorities are clear. Scan your container with <strong>Trivy or Grype</strong> before anything else, know what vulnerabilities you're currently running. Rotate and vault any credentials that have touched OpenClaw logs. Consider running your deployment behind a reverse proxy with authentication before it touches the public internet, regardless of what the default configuration did.</p>
 
-        <p>For cost control: set hard spending limits at the API provider level, not just inside OpenClaw. Most frontier model providers — Anthropic, OpenAI, Google — offer spend caps through their billing dashboards. Use them. Don't wait for the agent framework to protect you from itself.</p>
+        <p>For cost control: set hard spending limits at the API provider level, not just inside OpenClaw. Most frontier model providers, Anthropic, OpenAI, Google, offer spend caps through their billing dashboards. Use them. Don't wait for the agent framework to protect you from itself.</p>
 
         <p>For memory: consider replacing the default context handling with structured summaries passed at session start. It's more work upfront but produces dramatically better long-run behaviour than the default naive truncation approach.</p>
 
-        <p>If you're evaluating OpenClaw and haven't deployed yet: the 7,347 people who went first have done your testing. The security posture requires significant hardening investment before production use. The cost dynamics require active management to avoid surprises. The memory behaviour requires custom implementation to be reliable for serious tasks. None of this is insurmountable — but none of it is handled for you.</p>
+        <p>If you're evaluating OpenClaw and haven't deployed yet: the 7,347 people who went first have done your testing. The security posture requires significant hardening investment before production use. The cost dynamics require active management to avoid surprises. The memory behaviour requires custom implementation to be reliable for serious tasks. None of this is insurmountable, but none of it is handled for you.</p>
 
         <div class="article-takeaways">
           <h3 class="article-h3">Key Takeaways</h3>
           <ul>
             <li>OpenClaw's official Docker image ships with ~2,000 CVEs. Scan before deploying. API keys are stored in plaintext by default.</li>
             <li>Runaway agents have generated $200+ single-incident bills and $300/day continuous costs. Set API-level spend caps regardless of framework settings.</li>
-            <li>Context amnesia and token bloat are the most productivity-destructive failure mode — affecting the high-value, long-running tasks the platform is supposed to enable.</li>
+            <li>Context amnesia and token bloat are the most productivity-destructive failure mode, affecting the high-value, long-running tasks the platform is supposed to enable.</li>
             <li>Setup complexity effectively excludes non-engineers, and the documentation provides no recovery path for people who get stuck.</li>
-            <li>The market gap this data describes — managed, secure, cost-governed agent infrastructure — is the next real product opportunity in this space.</li>
+            <li>The market gap this data describes, managed, secure, cost-governed agent infrastructure, is the next real product opportunity in this space.</li>
           </ul>
         </div>
 

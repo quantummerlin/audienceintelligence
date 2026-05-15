@@ -58,11 +58,11 @@
     <div class="article-layout">
       <div class="article-body">
 
-        <p>It was 11 PM. A developer set an AI agent loose on a research task and went to bed. By 7 AM, the agent had spent eight hours looping — calling the same APIs, summarizing the same pages, writing "I need to research this further" into an ever-growing context window. The bill: $200 for eight hours of productive nothing.</p>
+        <p>It was 11 PM. A developer set an AI agent loose on a research task and went to bed. By 7 AM, the agent had spent eight hours looping, calling the same APIs, summarizing the same pages, writing "I need to research this further" into an ever-growing context window. The bill: $200 for eight hours of productive nothing.</p>
 
         <p>This is not an edge case. It is the most common first bill shock in the AI agent world right now. And it's almost never mentioned in the tutorials.</p>
 
-        <p>This article exists because 7,347 real comments from AI agent users were analyzed to find out what people actually experience when they start running agents in production. The numbers are not pretty — but they are real, and knowing them before you hit send on that first long-running job changes everything.</p>
+        <p>This article exists because 7,347 real comments from AI agent users were analyzed to find out what people actually experience when they start running agents in production. The numbers are not pretty, but they are real, and knowing them before you hit send on that first long-running job changes everything.</p>
 
         <hr class="article-divider">
 
@@ -105,17 +105,17 @@
                 <td>GPT-4o Mini</td>
                 <td>~$0.15</td>
                 <td>~$0.60</td>
-                <td>0.05x — cheapest tier</td>
+                <td>0.05x, cheapest tier</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <p>Those numbers look manageable until you run the math at scale. A single Opus agent handling a complex coding task might consume 100,000 output tokens per session. That's $7.50 per run. Run it 10 times a day and you're at $75/day — $2,250/month — before you've built anything for customers.</p>
+        <p>Those numbers look manageable until you run the math at scale. A single Opus agent handling a complex coding task might consume 100,000 output tokens per session. That's $7.50 per run. Run it 10 times a day and you're at $75/day, $2,250/month, before you've built anything for customers.</p>
 
         <blockquote>"Running OpenClaw 24/7 costs me $300/day. That's $9k a month just in API calls. Completely unsustainable for a startup."</blockquote>
 
-        <p>That $9k/month figure is not an anomaly. It is the straightforward arithmetic of running a capable model continuously. Continuous operation means roughly 86,400 seconds of potential API calls per day. Even at moderate token consumption — say 10,000 tokens per minute during active tasks — the bill compounds fast.</p>
+        <p>That $9k/month figure is not an anomaly. It is the straightforward arithmetic of running a capable model continuously. Continuous operation means roughly 86,400 seconds of potential API calls per day. Even at moderate token consumption, say 10,000 tokens per minute during active tasks: the bill compounds fast.</p>
 
         <p>The 24/7 operation math breaks down like this: if an agent is actively processing for even 30% of the day on Opus, you're looking at $90–$150/day in API costs alone. Add overhead from memory, tool calls, and re-tries, and $300/day is not hard to reach.</p>
 
@@ -127,13 +127,13 @@
 
         <h3 class="article-h3">1. Infinite Loops</h3>
 
-        <p>This is the most common and most expensive failure mode. An agent gets stuck in a reasoning loop — it identifies a task, decides it needs more information, calls a tool, gets a partial result, decides it needs more information, and repeats indefinitely.</p>
+        <p>This is the most common and most expensive failure mode. An agent gets stuck in a reasoning loop: it identifies a task, decides it needs more information, calls a tool, gets a partial result, decides it needs more information, and repeats indefinitely.</p>
 
         <blockquote>"Agent has been looping on the same task for 3 hours, just repeating 'I need to research this' over and over, burning $15/hour in Opus tokens doing absolutely nothing."</blockquote>
 
         <p>The cruel irony of the loop problem: the longer it runs, the longer the context window gets, which makes each subsequent call more expensive. A $15/hour loop becomes a $25/hour loop two hours in because the agent is now hauling around 80,000 tokens of prior failed reasoning on every call.</p>
 
-        <p>Most agent frameworks ship without loop detection. There is no built-in circuit breaker that says "you have called this tool with the same parameters three times — stop." You have to build that yourself, or it will happen to you.</p>
+        <p>Most agent frameworks ship without loop detection. There is no built-in circuit breaker that says "you have called this tool with the same parameters three times, stop." You have to build that yourself, or it will happen to you.</p>
 
         <blockquote>"Left it running overnight and woke up to a $200 bill. How do I set a timeout or budget cap?"</blockquote>
 
@@ -145,27 +145,27 @@
 
         <blockquote>"Just got hit with a $200 bill because my OpenClaw agent went into a loop overnight. Opus is 10-15x more expensive than Sonnet and it adds up FAST."</blockquote>
 
-        <p>The model you choose for the hard reasoning tasks becomes the model that handles every trivial sub-task too. A tool call that fetches a webpage and asks the model to extract a title doesn't need Opus. It needs Sonnet at most, and probably a much cheaper model. But if your agent is configured for Opus, Opus is what runs — at full Opus prices.</p>
+        <p>The model you choose for the hard reasoning tasks becomes the model that handles every trivial sub-task too. A tool call that fetches a webpage and asks the model to extract a title doesn't need Opus. It needs Sonnet at most, and probably a much cheaper model. But if your agent is configured for Opus, Opus is what runs, at full Opus prices.</p>
 
         <h3 class="article-h3">3. Token Bloat from Poor Memory Management</h3>
 
-        <p>Default memory configurations in most agent frameworks are aggressive. They include the full conversation history, all tool outputs, all intermediate reasoning steps, and all prior context — on every single call.</p>
+        <p>Default memory configurations in most agent frameworks are aggressive. They include the full conversation history, all tool outputs, all intermediate reasoning steps, and all prior context, on every single call.</p>
 
-        <p>This creates what practitioners call token bloat. A task that started with a 2,000 token context is now running with a 40,000 token context three hours later — not because the task requires it, but because the framework appended everything and nobody told it to stop.</p>
+        <p>This creates what practitioners call token bloat. A task that started with a 2,000 token context is now running with a 40,000 token context three hours later, not because the task requires it, but because the framework appended everything and nobody told it to stop.</p>
 
         <blockquote>"Hit the context limit halfway through a complex coding task and lost all the requirements I spent an hour explaining, had to start over and burn another $20 in tokens re-explaining everything."</blockquote>
 
-        <p>Bloat is expensive twice over. It increases the cost of every call while also increasing the risk of hitting context limits — which means paying for a run that fails, then paying again to re-run it.</p>
+        <p>Bloat is expensive twice over. It increases the cost of every call while also increasing the risk of hitting context limits: which means paying for a run that fails, then paying again to re-run it.</p>
 
         <hr class="article-divider">
 
         <h2 class="article-h2">The Opus vs. Sonnet Trap</h2>
 
-        <p>People default to Opus because they're worried the cheaper model will fail. This is a rational fear — it's just a fear that costs a lot of money when applied universally.</p>
+        <p>People default to Opus because they're worried the cheaper model will fail. This is a rational fear: it's just a fear that costs a lot of money when applied universally.</p>
 
         <p>Here is the actual experience of someone who ran the experiment:</p>
 
-        <blockquote>"Switched from Opus to Sonnet and cut my bill from $400/month to $40 — but now the agent is dumber. I need a way to auto-switch between them based on task complexity."</blockquote>
+        <blockquote>"Switched from Opus to Sonnet and cut my bill from $400/month to $40, but now the agent is dumber. I need a way to auto-switch between them based on task complexity."</blockquote>
 
         <p>That quote captures the real tension. Sonnet handles the majority of tasks adequately. Opus handles the hard ones better. The mistake is treating it as a binary choice rather than a routing problem.</p>
 
@@ -222,7 +222,7 @@
 
         <p>The practical takeaway: route simple and medium tasks to Sonnet or cheaper models, reserve Opus for tasks that fail at lower tiers. A routing layer that classifies tasks by complexity before model selection can drop overall costs by 70–80% without meaningful output quality loss on the tasks that matter.</p>
 
-        <blockquote>"Wasted $50 testing different models to see which one could handle my workflow without hallucinating — no guidance anywhere."</blockquote>
+        <blockquote>"Wasted $50 testing different models to see which one could handle my workflow without hallucinating, no guidance anywhere."</blockquote>
 
         <p>Testing is unavoidable. What's avoidable is testing on production workloads at full Opus rates. Benchmark your specific task types on a small sample first. The $50 spent on structured testing beats the $200 wasted on accidental discovery.</p>
 
@@ -266,11 +266,11 @@
           </table>
         </div>
 
-        <p>The jump from "active builder" to "24/7 continuous" is where startups get into trouble. The difference isn't just usage volume — it's exposure time. A 24/7 system means any configuration mistake runs for 24 hours before anyone notices. That's how a $15/hour loop turns into a $360 overnight charge.</p>
+        <p>The jump from "active builder" to "24/7 continuous" is where startups get into trouble. The difference isn't just usage volume: it's exposure time. A 24/7 system means any configuration mistake runs for 24 hours before anyone notices. That's how a $15/hour loop turns into a $360 overnight charge.</p>
 
         <blockquote>"Want to run this continuously? That'll be $400+ monthly just in API fees. Not viable for small teams or bootstrapped founders."</blockquote>
 
-        <p>For bootstrapped builders, the honest answer is that 24/7 continuous AI agent operation probably doesn't pencil out yet — unless you can definitively measure revenue attribution and it exceeds the API cost with meaningful margin. For everyone else, task-triggered or scheduled operation (run the agent when there's work, not on a heartbeat) cuts costs dramatically.</p>
+        <p>For bootstrapped builders, the honest answer is that 24/7 continuous AI agent operation probably doesn't pencil out yet, unless you can definitively measure revenue attribution and it exceeds the API cost with meaningful margin. For everyone else, task-triggered or scheduled operation (run the agent when there's work, not on a heartbeat) cuts costs dramatically.</p>
 
         <hr class="article-divider">
 
@@ -280,7 +280,7 @@
 
         <h3 class="article-h3">1. Hard Spend Caps at the Provider Level</h3>
 
-        <p>Every major AI API provider — Anthropic, OpenAI, Google — lets you set monthly spend limits and usage alerts. Set a hard cap at 150% of your expected monthly budget before you run your first agent. Set an alert at 50% so you get an email with time to investigate before you're close to the limit.</p>
+        <p>Every major AI API provider, Anthropic, OpenAI, Google, lets you set monthly spend limits and usage alerts. Set a hard cap at 150% of your expected monthly budget before you run your first agent. Set an alert at 50% so you get an email with time to investigate before you're close to the limit.</p>
 
         <p>This is the single most important control. It converts "I woke up to a $200 bill" into "I got an email at 2 AM and turned it off." That's the difference between a learning experience and a financial hit.</p>
 
@@ -292,17 +292,17 @@
 
         <p>Build a simple classification step at the start of your agent's execution: is this task simple (summarization, extraction, formatting) or complex (multi-step reasoning, code generation, planning)? Route simple tasks to Sonnet or a cheaper model. Reserve Opus for tasks that fail the simple tier.</p>
 
-        <p>This doesn't require sophisticated ML. A prompt classifier — "does this task require complex reasoning? Yes/No" — run on a cheap model is good enough to capture 70% of the savings. You can refine it from there.</p>
+        <p>This doesn't require sophisticated ML. A prompt classifier, "does this task require complex reasoning? Yes/No", run on a cheap model is good enough to capture 70% of the savings. You can refine it from there.</p>
 
         <h3 class="article-h3">3. Loop Detection Patterns</h3>
 
         <p>Implement a basic loop detector: track the last N tool calls and their parameters. If the same tool is called with the same (or near-identical) parameters more than 3 times in a row, stop execution and flag for review. This single pattern would have prevented the majority of large unexpected bills in the dataset.</p>
 
-        <p>A cruder but effective fallback: set a maximum step count per agent run. If your task should take 20 steps and it's at step 50, something has gone wrong. Stop it. The cron-job-style "kill after N minutes" workaround that people use is a blunt instrument — it breaks legitimate long-running tasks — but maximum step count doesn't have that problem.</p>
+        <p>A cruder but effective fallback: set a maximum step count per agent run. If your task should take 20 steps and it's at step 50, something has gone wrong. Stop it. The cron-job-style "kill after N minutes" workaround that people use is a blunt instrument: it breaks legitimate long-running tasks, but maximum step count doesn't have that problem.</p>
 
         <h3 class="article-h3">4. Context Window Budgeting</h3>
 
-        <p>Decide upfront how much context your agent is allowed to accumulate. Set a context budget — say, 20,000 tokens per session. When the session approaches that limit, trigger a summarization step that compresses the prior context into a concise state object, then continue. This prevents the spiral where a long-running task becomes progressively more expensive per step.</p>
+        <p>Decide upfront how much context your agent is allowed to accumulate. Set a context budget, say, 20,000 tokens per session. When the session approaches that limit, trigger a summarization step that compresses the prior context into a concise state object, then continue. This prevents the spiral where a long-running task becomes progressively more expensive per step.</p>
 
         <p>Most frameworks make this an explicit configuration option. If yours doesn't, build a wrapper that counts tokens between calls and triggers compression at threshold. The token counting libraries for most languages are small and well-maintained.</p>
 
@@ -310,21 +310,21 @@
 
         <p>Set up real-time cost visibility before you run anything in production. LangSmith, Helicone, and similar tools provide per-run cost breakdowns with minimal integration effort. You want to see cost-per-run, cost-per-hour, and which tasks are consuming disproportionate budget.</p>
 
-        <p>The goal is not to obsess over costs — it's to make anomalies visible immediately. A run that costs 10x the expected amount should surface in your dashboard within minutes, not after you check your credit card statement at the end of the month.</p>
+        <p>The goal is not to obsess over costs: it's to make anomalies visible immediately. A run that costs 10x the expected amount should surface in your dashboard within minutes, not after you check your credit card statement at the end of the month.</p>
 
         <hr class="article-divider">
 
         <h2 class="article-h2">The Honest Summary</h2>
 
-        <p>AI agents are genuinely useful. The productivity gains are real. The ability to delegate complex, multi-step work to an automated system is a meaningful capability shift — particularly for small teams and solo builders who couldn't otherwise afford to do that work at all.</p>
+        <p>AI agents are genuinely useful. The productivity gains are real. The ability to delegate complex, multi-step work to an automated system is a meaningful capability shift, particularly for small teams and solo builders who couldn't otherwise afford to do that work at all.</p>
 
-        <p>But the economics require intentional management. The default state — no spend caps, no loop detection, maximum model everywhere, unlimited context accumulation — is a configuration that will burn money. Not because vendors are predatory, but because agents run fast and most of the failure modes are silent until they show up on a bill.</p>
+        <p>But the economics require intentional management. The default state, no spend caps, no loop detection, maximum model everywhere, unlimited context accumulation, is a configuration that will burn money. Not because vendors are predatory, but because agents run fast and most of the failure modes are silent until they show up on a bill.</p>
 
-        <p>The five controls in this article cost a few hours to implement. They will save multiples of that in avoided waste. The people who get the most value from AI agents in 2026 are the ones who treated cost management as a first-class engineering concern from day one — not an afterthought after the first ugly bill.</p>
+        <p>The five controls in this article cost a few hours to implement. They will save multiples of that in avoided waste. The people who get the most value from AI agents in 2026 are the ones who treated cost management as a first-class engineering concern from day one, not an afterthought after the first ugly bill.</p>
 
         <p>Set the cap. Build the router. Detect the loops. Then build the interesting stuff.</p>
 
-        <p class="article-attribution">Published on ai.quantummerlin.com — Your source for practical AI agent intelligence</p>
+        <p class="article-attribution">Published on ai.quantummerlin.com, Your source for practical AI agent intelligence</p>
 
         <div class="article-ad-mid">
           <ins class="adsbygoogle" style="display:block;text-align:center" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
@@ -342,7 +342,7 @@
           <img src="/images/articles/17-hermes-cost-guide-hero.webp" alt="Hermes Agent cost breakdown for 2026">
           <span class="badge badge-agents">Agents</span>
           <h3>How Much Does Hermes Agent Actually Cost? Real Breakdown for 2026</h3>
-          <p>What Hermes Agent actually costs to run — month by month, use-case by use-case.</p>
+          <p>What Hermes Agent actually costs to run, month by month, use-case by use-case.</p>
         </a>
         <a href="/articles/14-openrouter-guide.html" class="article-card">
           <img src="/images/articles/14-openrouter-guide-hero.webp" alt="OpenRouter complete guide to accessing every AI model from one API">
@@ -354,7 +354,7 @@
           <img src="/images/articles/13-ai-passive-income-hero.webp" alt="AI passive income honest guide — what works and what doesn't in 2026">
           <span class="badge badge-business">Business</span>
           <h3>AI Passive Income in 2026: The Honest Guide (What Works, What Doesn't)</h3>
-          <p>What AI-powered passive income actually looks like — with real numbers.</p>
+          <p>What AI-powered passive income actually looks like, with real numbers.</p>
         </a>
       </div>
     </section>
