@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>claude-sonnet-latest Guide — Anthropic's Auto-Updating Sonnet Alias on OpenRouter | Aether Intel</title>
+  <meta name="description" content="Everything about ~anthropic/claude-sonnet-latest: how the tilde prefix works, what it currently resolves to, when to use it vs pinning Claude Sonnet 4.6, and production best practices.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/claude-sonnet-latest/">
+  <meta property="og:title" content="~anthropic/claude-sonnet-latest — Auto-Updating Sonnet Alias Guide">
+  <meta property="og:description" content="What ~anthropic/claude-sonnet-latest resolves to, how OpenRouter tilde aliases work, and when to use the Sonnet alias vs pinning Claude Sonnet 4.6.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/claude-sonnet-latest/">
+  <meta property="article:published_time" content="2026-05-16">
+  <meta property="article:author" content="Aether Intel">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="~anthropic/claude-sonnet-latest — Routing Alias Guide">
+  <meta name="twitter:description" content="How Anthropic's auto-updating Sonnet alias works on OpenRouter, what it routes to in May 2026, and production best practices.">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+/* ── Design tokens ─────────────────────────────────────── */
+:root{
+  --bg:#07070f;
+  --surface:#0d0d1a;
+  --surface-2:#131326;
+  --border:rgba(129,140,248,0.12);
+  --neon-indigo:#818cf8;
+  --neon-cyan:#22d3ee;
+  --neon-gold:#f59e0b;
+  --text-primary:#e2e8f0;
+  --text-secondary:#94a3b8;
+  --text-muted:#475569;
+  --amber:#d97706;
+  --amber-glow:rgba(217,119,6,0.12);
+  --amber-border:rgba(217,119,6,0.35);
+}
+
+/* ── Badge row ─────────────────────────────────────────── */
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.badge{display:inline-block;padding:4px 11px;border-radius:6px;font-family:'Orbitron',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.badge-anthropic{background:var(--amber-glow);border:1px solid var(--amber-border);color:var(--amber)}
+.badge-alias{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);color:var(--neon-gold)}
+.badge-auto{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.3);color:var(--neon-cyan)}
+.badge-sonnet{background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.25);color:var(--neon-indigo)}
+
+/* ── Hero ──────────────────────────────────────────────── */
+.article-hero{
+  background:linear-gradient(135deg,rgba(217,119,6,.07),rgba(129,140,248,.03));
+  border:1px solid var(--amber-border);
+  border-radius:16px;
+  padding:2.2rem 2rem 2rem;
+  margin-bottom:2.2rem;
+}
+.hero-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;font-size:.78rem;color:var(--text-muted)}
+.hero-meta a{color:var(--text-muted);text-decoration:none;transition:color .2s}
+.hero-meta a:hover{color:var(--amber)}
+.hero-meta .sep{opacity:.5}
+.hero-provider-badge{
+  display:inline-flex;align-items:center;
+  background:var(--amber-glow);border:1px solid var(--amber-border);
+  color:var(--amber);border-radius:6px;
+  padding:3px 10px;
+  font-family:'Orbitron',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  margin-right:6px;
+}
+.article-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;
+  color:var(--text-primary);margin:0 0 14px;line-height:1.2;
+}
+.article-title .accent{color:var(--amber)}
+.article-subtitle{font-size:.95rem;color:var(--text-secondary);line-height:1.7;margin:0 0 20px}
+
+/* ── Alias highlight box ───────────────────────────────── */
+.alias-highlight{
+  background:linear-gradient(135deg,rgba(217,119,6,.08),rgba(217,119,6,.03));
+  border:1px solid var(--amber-border);
+  border-left:3px solid var(--amber);
+  border-radius:0 10px 10px 0;
+  padding:16px 20px;
+  margin:24px 0;
+}
+.alias-highlight-label{
+  font-family:'Orbitron',monospace;
+  font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:8px;
+}
+.alias-highlight p{font-size:.88rem;color:var(--text-secondary);line-height:1.6;margin:0}
+.alias-highlight strong{color:var(--text-primary)}
+
+/* ── Tilde callout ─────────────────────────────────────── */
+.tilde-callout{
+  background:rgba(34,211,238,.05);
+  border:1px solid rgba(34,211,238,.25);
+  border-radius:12px;
+  padding:24px;
+  margin:24px 0;
+}
+.tilde-callout-label{
+  font-family:'Orbitron',monospace;
+  font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--neon-cyan);margin-bottom:12px;
+}
+.tilde-callout p{font-size:.87rem;color:var(--text-secondary);line-height:1.65;margin:0 0 10px}
+.tilde-callout p:last-child{margin-bottom:0}
+.tilde-callout strong{color:var(--text-primary)}
+.tilde-callout code{
+  background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);
+  color:var(--neon-cyan);border-radius:4px;
+  padding:1px 6px;font-size:.85em;
+}
+
+/* ── Flow diagram ──────────────────────────────────────── */
+.flow-diagram{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 24px;
+  margin:24px 0;
+  overflow-x:auto;
+}
+.flow-title{
+  font-family:'Orbitron',monospace;
+  font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:20px;
+}
+.flow-section{margin-bottom:20px}
+.flow-section:last-child{margin-bottom:0}
+.flow-section-label{
+  font-size:.74rem;font-weight:700;
+  margin-bottom:10px;
+}
+.flow-section-label.fsl-alias{color:var(--neon-cyan)}
+.flow-section-label.fsl-pinned{color:var(--neon-indigo)}
+.flow-track{
+  display:flex;align-items:flex-start;gap:0;
+  min-width:540px;
+}
+.flow-node{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 14px;
+  font-family:'Orbitron',monospace;
+  font-size:.65rem;font-weight:700;
+  color:var(--text-primary);
+  white-space:nowrap;text-align:center;
+  flex-shrink:0;
+}
+.flow-node.fn-alias{border-color:var(--amber-border);color:var(--amber)}
+.flow-node.fn-pinned{border-color:rgba(129,140,248,.35);color:var(--neon-indigo)}
+.flow-node.fn-router{border-color:rgba(34,211,238,.3);color:var(--neon-cyan)}
+.flow-arrow{
+  display:flex;align-items:center;
+  padding:0 6px;color:var(--text-muted);
+  font-size:1.1rem;flex-shrink:0;align-self:center;
+}
+.flow-outcomes{display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.flow-outcome{display:flex;align-items:center;gap:8px}
+.flow-outcome-arrow{color:var(--text-muted);font-size:.9rem;flex-shrink:0}
+.flow-outcome-node{
+  background:var(--surface-2);border:1px solid rgba(217,119,6,.2);
+  border-radius:7px;padding:7px 12px;
+  font-size:.7rem;font-weight:600;color:var(--text-secondary);white-space:nowrap;
+}
+.flow-outcome-node.fon-today{border-color:var(--amber-border);color:var(--amber)}
+.flow-outcome-node.fon-future{border-color:var(--border);color:var(--text-muted);font-style:italic}
+.flow-outcome-node.fon-pinned{border-color:rgba(129,140,248,.35);color:var(--neon-indigo)}
+.flow-note{font-size:.76rem;color:var(--text-muted);margin-top:14px;line-height:1.5}
+.flow-divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+
+/* ── Char grid ─────────────────────────────────────────── */
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin:24px 0}
+.char-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.char-label{font-family:'Orbitron',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+.char-value{font-size:.95rem;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.char-note{font-size:.74rem;color:var(--text-secondary);line-height:1.4}
+.char-value.cv-amber{color:var(--amber)}
+.char-value.cv-cyan{color:var(--neon-cyan)}
+.char-value.cv-indigo{color:var(--neon-indigo)}
+.char-value.cv-variable{color:var(--neon-gold)}
+.char-value.cv-warning{color:#f87171}
+
+/* ── Sonnet track history table ────────────────────────── */
+.track-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px;margin:20px 0}
+.track-table{width:100%;border-collapse:collapse;font-size:.84rem}
+.track-table th{
+  background:var(--surface-2);
+  padding:12px 16px;text-align:left;
+  font-family:'Orbitron',monospace;
+  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);border-bottom:1px solid var(--border);white-space:nowrap;
+}
+.track-table td{
+  padding:11px 16px;color:var(--text-secondary);
+  border-bottom:1px solid rgba(129,140,248,.06);vertical-align:middle;
+}
+.track-table tr:last-child td{border-bottom:none}
+.track-table tr:hover td{background:rgba(129,140,248,.03)}
+.track-table td:first-child{font-weight:600;color:var(--text-primary);font-family:monospace;font-size:.8rem}
+.track-table .current-row td{background:rgba(217,119,6,.04)}
+.track-table .current-row td:first-child{color:var(--amber)}
+.td-yes{color:#34d399;font-weight:700}
+.td-warn{color:var(--neon-gold);font-weight:700}
+.td-amber{color:var(--amber);font-weight:700}
+
+/* ── Alias family table ────────────────────────────────── */
+.alias-family-wrap{overflow-x:auto;border:1px solid var(--amber-border);border-radius:12px;margin:20px 0}
+.alias-family-table{width:100%;border-collapse:collapse;font-size:.84rem}
+.alias-family-table th{
+  background:rgba(217,119,6,.08);
+  padding:12px 16px;text-align:left;
+  font-family:'Orbitron',monospace;
+  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--amber);border-bottom:1px solid var(--amber-border);white-space:nowrap;
+}
+.alias-family-table td{
+  padding:12px 16px;color:var(--text-secondary);
+  border-bottom:1px solid rgba(217,119,6,.08);vertical-align:middle;
+}
+.alias-family-table tr:last-child td{border-bottom:none}
+.alias-family-table tr:hover td{background:rgba(217,119,6,.03)}
+.alias-family-table td:first-child{font-family:monospace;font-size:.82rem;font-weight:600;color:var(--amber)}
+.alias-family-table .current-alias-row td{background:rgba(217,119,6,.06)}
+.alias-family-table .current-alias-row td:first-child{color:var(--neon-cyan)}
+.tier-badge{
+  display:inline-block;padding:2px 8px;border-radius:4px;
+  font-family:'Orbitron',monospace;font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+}
+.tier-premium{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--neon-gold)}
+.tier-mid{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);color:var(--neon-cyan)}
+.tier-budget{background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.25);color:var(--neon-indigo)}
+
+/* ── Decision guide ────────────────────────────────────── */
+.decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.decision-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.decision-panel h4{font-family:'Sora',sans-serif;font-size:.9rem;font-weight:700;margin:0 0 14px}
+.decision-panel.dp-alias h4{color:var(--amber)}
+.decision-panel.dp-pin h4{color:var(--neon-indigo)}
+.decision-list{list-style:none;margin:0;padding:0}
+.decision-list li{font-size:.82rem;color:var(--text-secondary);line-height:1.55;padding:5px 0 5px 1.5em;position:relative}
+.decision-list li::before{position:absolute;left:0;font-weight:700}
+.dp-alias .decision-list li::before{content:"✓";color:var(--amber)}
+.dp-pin .decision-list li::before{content:"✓";color:var(--neon-indigo)}
+
+/* ── Anthropic notes list ──────────────────────────────── */
+.anth-list{list-style:none;margin:0;padding:0}
+.anth-item{
+  display:flex;gap:14px;align-items:flex-start;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:16px 18px;margin-bottom:10px;
+}
+.anth-num{
+  flex-shrink:0;width:28px;height:28px;
+  background:var(--amber-glow);border:1px solid var(--amber-border);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:.65rem;font-weight:700;color:var(--amber);
+  margin-top:1px;
+}
+.anth-body{}
+.anth-title{font-size:.88rem;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.anth-desc{font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin:0}
+
+/* ── Code block ────────────────────────────────────────── */
+.code-block-wrap{background:rgba(7,7,15,.85);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:20px 0}
+.code-block-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:var(--surface-2);border-bottom:1px solid var(--border);
+}
+.code-block-lang{font-family:'Orbitron',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
+.code-block-note{font-size:.75rem;color:var(--text-secondary)}
+.code-block-wrap pre{margin:0;padding:20px;overflow-x:auto}
+.code-block-wrap code{font-family:'Space Mono','Courier New',monospace;font-size:.82rem;line-height:1.7;color:var(--text-primary);display:block}
+.code-comment{color:var(--text-muted)}
+.code-string{color:#a3e635}
+.code-keyword{color:var(--neon-indigo)}
+.code-func{color:var(--neon-cyan)}
+.code-attr{color:var(--neon-gold)}
+.code-tilde{color:var(--neon-cyan);font-weight:700}
+
+/* ── Try-it band ───────────────────────────────────────── */
+.try-it-band{
+  background:linear-gradient(135deg,rgba(217,119,6,.09),rgba(129,140,248,.04));
+  border:1px solid var(--amber-border);
+  border-radius:14px;padding:28px;margin:32px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;
+}
+.try-it-band h3{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
+.try-it-band p{color:var(--text-secondary);font-size:.86rem;margin:0 0 6px}
+.try-it-note{font-size:.76rem;color:var(--text-muted);margin-top:6px !important}
+.try-btn{
+  background:var(--amber);border:none;border-radius:8px;
+  padding:12px 24px;
+  font-family:'Orbitron',monospace;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:#07070f;cursor:pointer;white-space:nowrap;flex-shrink:0;
+  transition:opacity .2s,transform .1s;
+}
+.try-btn:hover{opacity:.85;transform:translateY(-1px)}
+
+/* ── Related models grid ───────────────────────────────── */
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:20px 0}
+.related-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:16px;text-decoration:none;display:block;
+  transition:border-color .2s;
+}
+.related-card:hover{border-color:var(--amber-border)}
+.related-card h4{font-size:.88rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
+.related-card p{font-size:.78rem;color:var(--text-secondary);line-height:1.5;margin:0}
+.related-card .rc-tag{
+  display:inline-block;margin-bottom:8px;padding:2px 7px;
+  border-radius:4px;font-family:'Orbitron',monospace;
+  font-size:.54rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+}
+.rc-tag-anthropic{background:var(--amber-glow);border:1px solid var(--amber-border);color:var(--amber)}
+.rc-tag-openai{background:rgba(116,170,156,.1);border:1px solid rgba(116,170,156,.3);color:#74aa9c}
+
+/* ── Section label ─────────────────────────────────────── */
+.section-label{font-family:'Orbitron',monospace;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;display:block}
+.accent{color:var(--amber)}
+code{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.2);color:var(--amber);border-radius:4px;padding:1px 6px;font-size:.85em}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media(max-width:700px){
+  .decision-grid{grid-template-columns:1fr}
+  .char-grid{grid-template-columns:repeat(2,1fr)}
+  .flow-track{min-width:420px}
+  .try-it-band{flex-direction:column;align-items:flex-start}
+  .track-table th,.track-table td{padding:9px 12px}
+  .alias-family-table th,.alias-family-table td{padding:9px 12px}
+}
+  </style>
+</head>
+<body>
+<main class="article-main">
+
+  <!-- ══════════════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════════════ -->
+  <div class="article-hero">
+    <nav class="hero-meta" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep">›</span>
+      <a href="/models/">Models</a>
+      <span class="sep">›</span>
+      <span style="color:var(--text-secondary)">claude-sonnet-latest</span>
+    </nav>
+
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+      <span class="hero-provider-badge">Anthropic</span>
+      <span style="font-size:.78rem;color:var(--text-muted);">May 2026</span>
+      <span class="sep" style="font-size:.78rem;color:var(--text-muted);">·</span>
+      <span style="font-size:.78rem;color:var(--text-muted);">Developer guide</span>
+      <span class="sep" style="font-size:.78rem;color:var(--text-muted);">·</span>
+      <span style="font-size:.78rem;color:var(--text-muted);">By Aether Intel</span>
+    </div>
+
+    <div class="badge-row">
+      <span class="badge badge-anthropic">Anthropic</span>
+      <span class="badge badge-alias">Routing Alias</span>
+      <span class="badge badge-auto">Auto-Update</span>
+      <span class="badge badge-sonnet">Sonnet Track</span>
+    </div>
+
+    <h1 class="article-title"><span class="accent">~anthropic/</span>claude-sonnet-latest</h1>
+    <p class="article-subtitle">Anthropic's Sonnet track — the mid-tier Claude line that balances capability and cost — is available through an auto-updating alias on OpenRouter. <code>~anthropic/claude-sonnet-latest</code> always routes to the latest Sonnet version without requiring you to update your model ID.</p>
+
+    <div class="alias-highlight">
+      <div class="alias-highlight-label">Key fact — tilde alias</div>
+      <p><strong>The <code>~</code> prefix in OpenRouter model IDs signals an auto-updating alias.</strong> Today it resolves to Claude Sonnet 4.6 ($3/$15 per 1M tokens, 1M context). As new Sonnet versions ship, this alias updates automatically — your model ID string stays the same, but the underlying model and its pricing can change.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       THE TILDE PREFIX EXPLAINED
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>The Tilde Prefix — What <code>~</code> Means in OpenRouter Model IDs</h2>
+    <p>Most developers using OpenRouter never encounter the <code>~</code> prefix in a model ID. When they do, they typically assume it's a typo or a provider quirk. It's neither. The tilde is a deliberate OpenRouter convention — and understanding it changes how you should think about using the model.</p>
+
+    <div class="tilde-callout">
+      <div class="tilde-callout-label">OpenRouter Convention — Tilde Prefix</div>
+      <p><strong>The <code>~</code> prefix marks a model ID as an auto-updating alias.</strong> A tilde model ID does not point to a fixed model version. It points to a <em>track</em> — a rolling target that OpenRouter updates as new model versions are released by the provider.</p>
+      <p>Compare these two IDs:</p>
+      <p><code>~anthropic/claude-sonnet-latest</code> — tilde prefix, routes to whichever Sonnet version is current</p>
+      <p><code>anthropic/claude-sonnet-4-6</code> — no tilde, always routes to exactly Claude Sonnet 4.6, forever</p>
+      <p>Regular model IDs (no <code>~</code>) are pinned. They will continue to work as long as OpenRouter supports the version. They will never silently change. Tilde IDs change whenever OpenRouter decides the track target should update.</p>
+    </div>
+
+    <p>The tilde convention is similar to how package managers use version ranges. In npm, <code>^4.6.0</code> means "compatible with 4.6.0, auto-update to 4.x patches." OpenRouter's tilde works the same way — you subscribe to a track, not a release. The difference: model behavior, pricing, and context limits can change far more significantly than a library patch.</p>
+
+    <div class="flow-diagram">
+      <div class="flow-title">How tilde aliasing resolves over time</div>
+
+      <div class="flow-section">
+        <div class="flow-section-label fsl-alias">Tilde alias — routes to current version (changes over time)</div>
+        <div class="flow-track">
+          <div class="flow-node fn-alias" style="min-width:200px;">~anthropic/<br>claude-sonnet-latest<br><small style="font-size:.58rem;color:var(--text-muted);">tilde alias</small></div>
+          <div class="flow-arrow">──►</div>
+          <div class="flow-node fn-router">OpenRouter<br>routing layer</div>
+          <div class="flow-arrow">──►</div>
+          <div class="flow-outcomes">
+            <div class="flow-outcome">
+              <span class="flow-outcome-arrow">┌►</span>
+              <span class="flow-outcome-node fon-today">Claude Sonnet 4.6 (today, May 2026)</span>
+            </div>
+            <div class="flow-outcome">
+              <span class="flow-outcome-arrow">├►</span>
+              <span class="flow-outcome-node fon-future">Claude Sonnet 4.7 (when released)</span>
+            </div>
+            <div class="flow-outcome">
+              <span class="flow-outcome-arrow">└►</span>
+              <span class="flow-outcome-node fon-future">Claude Sonnet 5.x (future)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="flow-divider">
+
+      <div class="flow-section">
+        <div class="flow-section-label fsl-pinned">Pinned ID — always the same model (no changes)</div>
+        <div class="flow-track">
+          <div class="flow-node fn-pinned" style="min-width:200px;">anthropic/<br>claude-sonnet-4-6<br><small style="font-size:.58rem;color:var(--text-muted);">pinned version</small></div>
+          <div class="flow-arrow">──►</div>
+          <div class="flow-node fn-router">OpenRouter<br>routing layer</div>
+          <div class="flow-arrow">──►</div>
+          <div class="flow-outcomes">
+            <div class="flow-outcome">
+              <span class="flow-outcome-arrow">└►</span>
+              <span class="flow-outcome-node fon-pinned">Claude Sonnet 4.6 (always, forever)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="flow-note">The resolved model is always returned in the <strong>model</strong> field of the API response. Even when using the tilde alias, you can see exactly which Sonnet version handled your request.</p>
+    </div>
+
+    <p>One practical detail worth knowing: Anthropic's own SDK also has an alias called <code>claude-sonnet-latest</code> (without the tilde, without the <code>anthropic/</code> prefix). This is Anthropic's native alias for their direct API, not an OpenRouter concept. The two serve the same conceptual purpose but are maintained by different parties. When using OpenRouter, you need the tilde form: <code>~anthropic/claude-sonnet-latest</code>.</p>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       CHARACTERISTICS GRID
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <span class="section-label">Alias characteristics — May 2026</span>
+    <div class="char-grid">
+      <div class="char-card">
+        <div class="char-label">Current resolution</div>
+        <div class="char-value cv-amber">Sonnet 4.6</div>
+        <div class="char-note">As of May 2026. Updates automatically when Anthropic releases a new Sonnet.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-label">Input pricing</div>
+        <div class="char-value cv-variable">~$3/1M</div>
+        <div class="char-note">Inherits from Sonnet 4.6 today. Will change when alias target updates.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-label">Output pricing</div>
+        <div class="char-value cv-variable">~$15/1M</div>
+        <div class="char-note">Inherits from Sonnet 4.6 today. Subject to change on alias update.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-label">Context window</div>
+        <div class="char-value cv-cyan">1M tokens</div>
+        <div class="char-note">Sonnet 4.6 context. Future Sonnet versions may expand this further.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-label">Modalities</div>
+        <div class="char-value cv-indigo">Text + Vision</div>
+        <div class="char-note">Image and document understanding included via Sonnet 4.6 capabilities.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-label">Stability</div>
+        <div class="char-value cv-warning">Changes over time</div>
+        <div class="char-note">Behavior, pricing, and context may change silently. Not for stable production use.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       THE SONNET TRACK RECORD
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>The Sonnet Track Record</h2>
+    <p>One reason the Sonnet alias is considered less risky than other routing aliases is Anthropic's strong track record with the Sonnet tier. Unlike some model families that have had erratic price jumps or regressive behavioral changes between versions, the Claude Sonnet line has maintained a consistent upgrade pattern.</p>
+
+    <div class="track-table-wrap">
+      <table class="track-table">
+        <thead>
+          <tr>
+            <th>Version</th>
+            <th>Input price</th>
+            <th>Output price</th>
+            <th>Context</th>
+            <th>Key improvement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>claude-sonnet-4-5</td>
+            <td>$3/1M</td>
+            <td>$15/1M</td>
+            <td>200K</td>
+            <td>Coding &amp; reasoning uplift over Claude 3.5</td>
+          </tr>
+          <tr class="current-row">
+            <td>claude-sonnet-4-6 ← <em style="font-size:.75rem;color:var(--amber);font-style:normal;">alias today</em></td>
+            <td>$3/1M</td>
+            <td>$15/1M</td>
+            <td>1M</td>
+            <td>Context expanded to 1M; multimodal improvements</td>
+          </tr>
+          <tr>
+            <td>claude-sonnet-4-7 <em style="font-size:.75rem;color:var(--text-muted);font-style:normal;">(future)</em></td>
+            <td>TBD</td>
+            <td>TBD</td>
+            <td>TBD</td>
+            <td>Alias will update when released</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Several patterns are visible from Anthropic's Sonnet release history:</p>
+    <ul style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;padding-left:1.4em;margin:16px 0;">
+      <li><strong style="color:var(--text-primary);">Pricing has held at $3/$15.</strong> Anthropic has maintained this price point across multiple Sonnet releases. While not guaranteed, this suggests more pricing stability than some competing model families.</li>
+      <li><strong style="color:var(--text-primary);">Capability improvements have been additive, not regressive.</strong> Sonnet 4.6 is better than 4.5 at effectively all benchmarks. Anthropic has not shipped a "worse" Sonnet to replace a "better" one.</li>
+      <li><strong style="color:var(--text-primary);">Context has expanded (200K → 1M).</strong> This is a breaking change in a positive direction — applications that relied on 200K context can now use more, but code that assumed a hard 200K limit needs no changes.</li>
+      <li><strong style="color:var(--text-primary);">System prompt behavior has been consistent.</strong> Instruction-following format and behavior has remained stable enough that most system prompts transfer between Sonnet versions without rework.</li>
+    </ul>
+
+    <div class="alias-highlight">
+      <div class="alias-highlight-label">Important caveat</div>
+      <p>Consistent past behavior does not guarantee future behavior. Anthropic may choose to restructure Sonnet pricing, shift capability focus, or make more significant behavioral changes in future versions. The alias still carries the same fundamental risks as any auto-updating model ID — the track record just suggests those risks have been lower for Sonnet than for other model tracks.</p>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       DECISION GUIDE
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Decision Guide: Use the Alias or Pin a Specific Version?</h2>
+    <p>The Sonnet alias sits in an interesting position. Because the Sonnet track has been unusually stable — consistent pricing, consistent behavior improvements — it's more defensible to use the alias in borderline cases than with other model families. But "more defensible" doesn't mean "safe for all production use cases." Here's how to think about the choice.</p>
+
+    <div class="decision-grid">
+      <div class="decision-panel dp-alias">
+        <h4>Use <code>~anthropic/claude-sonnet-latest</code> when:</h4>
+        <ul class="decision-list">
+          <li>Building personal projects or internal tools where you want to stay on the current best Sonnet without maintenance overhead</li>
+          <li>Running development or staging environments where you want to test the latest Sonnet before it reaches production</li>
+          <li>Exploring Claude capabilities in a research or experimentation context</li>
+          <li>Cost monitoring is in place and you can respond quickly to pricing changes</li>
+          <li>Your application's behavior is not finely tuned to specific model quirks that might shift between Sonnet versions</li>
+          <li>Quick prototypes, demos, or hackathon projects where long-term stability is not a concern</li>
+        </ul>
+      </div>
+
+      <div class="decision-panel dp-pin">
+        <h4>Use a pinned version (e.g., <code>anthropic/claude-sonnet-4-6</code>) when:</h4>
+        <ul class="decision-list">
+          <li>Running production applications with real users who depend on consistent behavior</li>
+          <li>Operating in regulated industries — healthcare, finance, legal — where model auditability is required</li>
+          <li>System prompts are carefully tuned to Sonnet 4.6's specific behavior (format, tone, instruction-following patterns)</li>
+          <li>Costs are budgeted and must remain predictable month over month</li>
+          <li>You have automated test suites that run against your AI pipeline and need stable baselines</li>
+          <li>Compliance requirements mandate tracking exactly which model version handled each request</li>
+          <li>Your output is parsed programmatically (JSON, structured output) — format changes between versions can break parsers</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alias-highlight">
+      <div class="alias-highlight-label">Recommended pattern</div>
+      <p>A sensible deployment pattern: use <strong><code>~anthropic/claude-sonnet-latest</code></strong> in development and staging — you'll always be testing against the current Sonnet version, which means you'll catch compatibility issues before they matter. Pin to <strong><code>anthropic/claude-sonnet-4-6</code></strong> (or whatever specific version you've validated) in production. When OpenRouter updates the alias target, that's your cue to evaluate the new Sonnet in staging and deliberately upgrade your production pin on your own schedule.</p>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       ANTHROPIC-SPECIFIC CONSIDERATIONS
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Anthropic-Specific Considerations</h2>
+    <p>Not all model providers are equal when it comes to how predictable alias updates are. Anthropic has established several practices that affect how you should think about using the Sonnet alias specifically — both positively and negatively.</p>
+
+    <ul class="anth-list">
+      <li class="anth-item">
+        <div class="anth-num">1</div>
+        <div class="anth-body">
+          <div class="anth-title">Pricing stability across Sonnet versions</div>
+          <p class="anth-desc">Anthropic has maintained the $3/$15 per 1M tokens price point across multiple Sonnet releases. This is not a contractual guarantee, but it's a meaningful signal: a sudden 3x price jump when the alias updates is less likely for Sonnet than for model families where pricing has varied widely between versions. That said, always configure cost threshold alerts in your OpenRouter dashboard — don't rely on assumptions about future pricing.</p>
+        </div>
+      </li>
+      <li class="anth-item">
+        <div class="anth-num">2</div>
+        <div class="anth-body">
+          <div class="anth-title">Detailed changelogs and advance notice</div>
+          <p class="anth-desc">Anthropic publishes detailed release notes when shipping new model versions. Unlike some providers who update models quietly, Anthropic announces new Sonnet releases publicly, including behavioral changes and new capabilities. This gives you a window to evaluate the incoming model before it potentially updates the alias target on OpenRouter. Subscribe to Anthropic's developer newsletter and check their changelog at anthropic.com/news when planning production upgrades.</p>
+        </div>
+      </li>
+      <li class="anth-item">
+        <div class="anth-num">3</div>
+        <div class="anth-body">
+          <div class="anth-title">HIPAA compliance and enterprise tiers require direct Anthropic access</div>
+          <p class="anth-desc">Anthropic offers HIPAA-compliant API access and enterprise agreements with data processing addendums. However, these compliance features apply to <em>direct Anthropic API access</em>, not to requests routed through OpenRouter. If you're in a regulated industry and need HIPAA compliance, GDPR data processing agreements, or enterprise SLAs, you need to use the Anthropic API directly — OpenRouter is not the right path for those requirements. This also means that for regulated use cases, you should be using pinned model IDs via the Anthropic API, not the OpenRouter tilde alias.</p>
+        </div>
+      </li>
+      <li class="anth-item">
+        <div class="anth-num">4</div>
+        <div class="anth-body">
+          <div class="anth-title">Deprecation notices for retired model IDs</div>
+          <p class="anth-desc">When Anthropic retires a model version (stopping support for older Claude versions), they provide advance notice. Older pinned model IDs (like <code>anthropic/claude-2</code>) are eventually deprecated, meaning code that pins to very old Sonnet versions will eventually need updating. The tilde alias sidesteps this problem for the Sonnet track — you're always on a supported version. This is one genuine advantage of the alias: you'll never get hit with a deprecated model error because the alias always routes to a current, supported version.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       CODE EXAMPLE
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Code Examples — Using the Sonnet Alias</h2>
+    <p>The following examples show how to use <code>~anthropic/claude-sonnet-latest</code> via OpenRouter, and Anthropic's own native alias via the Anthropic SDK. Both examples demonstrate how to read the resolved model from the response — a critical practice when using any auto-updating alias.</p>
+
+    <div class="code-block-wrap">
+      <div class="code-block-header">
+        <span class="code-block-lang">Python — Anthropic SDK (direct) + OpenRouter</span>
+        <span class="code-block-note">Reads resolved model from response</span>
+      </div>
+      <pre><code><span class="code-keyword">import</span> anthropic
+client = anthropic.Anthropic(api_key=<span class="code-string">"YOUR_KEY"</span>)
+
+<span class="code-comment"># Using Anthropic's native alias (direct API, no tilde needed)</span>
+resp = client.messages.<span class="code-func">create</span>(
+    <span class="code-attr">model</span>=<span class="code-string">"claude-sonnet-latest"</span>,  <span class="code-comment"># Anthropic's own alias (no tilde)</span>
+    <span class="code-attr">max_tokens</span>=1024,
+    <span class="code-attr">messages</span>=[{<span class="code-string">"role"</span>: <span class="code-string">"user"</span>, <span class="code-string">"content"</span>: <span class="code-string">"Hello"</span>}]
+)
+<span class="code-func">print</span>(resp.model)  <span class="code-comment"># Reveals the actual version used, e.g. "claude-sonnet-4-6-20260515"</span>
+
+<span class="code-comment">───────────────────────────────────────────────────────────</span>
+
+<span class="code-comment"># Via OpenRouter — tilde prefix required here</span>
+<span class="code-keyword">import</span> openai
+
+or_client = openai.OpenAI(
+    <span class="code-attr">base_url</span>=<span class="code-string">"https://openrouter.ai/api/v1"</span>,
+    <span class="code-attr">api_key</span>=<span class="code-string">"OPENROUTER_KEY"</span>
+)
+
+or_resp = or_client.chat.completions.<span class="code-func">create</span>(
+    <span class="code-attr">model</span>=<span class="code-string">"<span class="code-tilde">~</span>anthropic/claude-sonnet-latest"</span>,  <span class="code-comment"># tilde = auto-updating alias</span>
+    <span class="code-attr">messages</span>=[{<span class="code-string">"role"</span>: <span class="code-string">"user"</span>, <span class="code-string">"content"</span>: <span class="code-string">"Hello"</span>}]
+)
+
+<span class="code-comment"># Always log the resolved model — it's your audit trail and change detector</span>
+resolved = or_resp.model
+<span class="code-func">print</span>(resolved)  <span class="code-comment"># e.g. "anthropic/claude-sonnet-4-6"</span>
+
+<span class="code-comment"># Optional: alert if the alias target changes</span>
+KNOWN_TARGET = <span class="code-string">"anthropic/claude-sonnet-4-6"</span>
+<span class="code-keyword">if</span> resolved != KNOWN_TARGET:
+    <span class="code-func">print</span>(<span class="code-string">f"Alias now routes to {resolved} (was {KNOWN_TARGET})"</span>)
+    <span class="code-comment"># Review: new pricing, behavior changes, prompt regressions</span></code></pre>
+    </div>
+
+    <div class="code-block-wrap" style="margin-top:16px;">
+      <div class="code-block-header">
+        <span class="code-block-lang">TypeScript / Node.js</span>
+        <span class="code-block-note">Via OpenRouter</span>
+      </div>
+      <pre><code><span class="code-keyword">import</span> OpenAI <span class="code-keyword">from</span> <span class="code-string">'openai'</span>;
+
+<span class="code-keyword">const</span> client = <span class="code-keyword">new</span> <span class="code-func">OpenAI</span>({
+  <span class="code-attr">baseURL</span>: <span class="code-string">'https://openrouter.ai/api/v1'</span>,
+  <span class="code-attr">apiKey</span>: process.env.<span class="code-attr">OPENROUTER_API_KEY</span>,
+});
+
+<span class="code-keyword">const</span> resp = <span class="code-keyword">await</span> client.chat.completions.<span class="code-func">create</span>({
+  <span class="code-attr">model</span>: <span class="code-string">'~anthropic/claude-sonnet-latest'</span>,
+  <span class="code-attr">messages</span>: [{ <span class="code-attr">role</span>: <span class="code-string">'user'</span>, <span class="code-attr">content</span>: <span class="code-string">'Hello'</span> }],
+});
+
+<span class="code-comment">// Log which Sonnet version actually handled the request</span>
+console.<span class="code-func">log</span>(<span class="code-string">'Resolved model:'</span>, resp.model);
+<span class="code-comment">// → 'anthropic/claude-sonnet-4-6' (or whatever Sonnet is current)</span></code></pre>
+    </div>
+
+    <p style="font-size:.84rem;color:var(--text-secondary);line-height:1.6;">The pattern of reading and logging <code>resp.model</code> (or <code>or_resp.model</code>) is the simplest change detector you can build. No external monitoring service required — just a string comparison between your known baseline and the returned model ID. The first time the alias routes to a new Sonnet version, this comparison catches it.</p>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       FULL ANTHROPIC ALIAS FAMILY
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>The Full Anthropic Alias Family on OpenRouter</h2>
+    <p>OpenRouter maintains tilde aliases for all three active Anthropic model tiers. Each covers a different capability and price point. Understanding the full picture helps you choose the right alias — or the right pinned ID — for your use case.</p>
+
+    <div class="alias-family-wrap">
+      <table class="alias-family-table">
+        <thead>
+          <tr>
+            <th>Alias (OpenRouter)</th>
+            <th>Track</th>
+            <th>Current resolution (May 2026)</th>
+            <th>Approx. pricing</th>
+            <th>Tier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>~anthropic/claude-opus-latest</td>
+            <td>Opus — flagship</td>
+            <td>Claude Opus 4.7</td>
+            <td>$15/$75/1M</td>
+            <td><span class="tier-badge tier-premium">Premium</span></td>
+          </tr>
+          <tr class="current-alias-row">
+            <td>~anthropic/claude-sonnet-latest</td>
+            <td>Sonnet — mid-tier</td>
+            <td>Claude Sonnet 4.6 <em style="font-size:.74rem;color:var(--neon-cyan);font-style:normal;">← this article</em></td>
+            <td>$3/$15/1M</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+          </tr>
+          <tr>
+            <td>~anthropic/claude-haiku-latest</td>
+            <td>Haiku — fast &amp; cheap</td>
+            <td>Claude Haiku 4.5</td>
+            <td>$0.25/$1.25/1M</td>
+            <td><span class="tier-badge tier-budget">Budget</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Each alias covers a distinct positioning in Anthropic's lineup:</p>
+    <ul style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;padding-left:1.4em;margin:16px 0;">
+      <li><strong style="color:var(--text-primary);">Opus alias</strong> — the flag­ship track, always the most capable (and most expensive) Claude available. Use when you need top-tier reasoning and can accept premium pricing. Not cost-effective for high-volume production use.</li>
+      <li><strong style="color:var(--text-primary);">Sonnet alias (this article)</strong> — the workhorse track. Most Claude production deployments land here. Capable enough for demanding tasks, priced for sustainable usage, and historically more predictable in behavior changes than the Opus tier.</li>
+      <li><strong style="color:var(--text-primary);">Haiku alias</strong> — the speed and cost track. Use for high-volume classification, extraction, summarization, or any task where latency matters more than maximum capability. Excellent cost-per-token for throughput-heavy workloads.</li>
+    </ul>
+
+    <p style="font-size:.82rem;color:var(--text-muted);">Pricing figures are approximate and reflect the underlying model at the time of writing. Check the <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" style="color:var(--amber);">OpenRouter model list</a> for current rates and confirmed alias targets.</p>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       WHEN SONNET SITS IN THE LINEUP
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Where Sonnet Sits in the Anthropic Lineup</h2>
+    <p>The Sonnet tier exists because most real production workloads don't need Opus-level capability. Opus is Anthropic's research and frontier model — exceptional at complex multi-step reasoning, difficult creative tasks, and problems that require genuine depth of understanding. That capability comes at $15/$75 per 1M tokens.</p>
+    <p>Haiku is Anthropic's speed tier — excellent latency, very low cost, strong for structured tasks. But for production applications where response quality matters (customer-facing interfaces, content generation, complex question answering), Haiku sometimes falls short on nuance.</p>
+    <p>Sonnet is the answer to "I need reliable, high-quality Claude outputs at a price that doesn't blow my budget." At $3/$15 per 1M tokens — one-fifth the cost of Opus — Sonnet handles the vast majority of professional-grade tasks: code generation, summarization, analysis, extraction, RAG, and conversational AI. The Sonnet alias keeps you on the best version of this tier automatically.</p>
+
+    <div class="alias-highlight">
+      <div class="alias-highlight-label">The Sonnet sweet spot</div>
+      <p>The practical rule of thumb: <strong>start with Sonnet.</strong> Benchmark it against your actual task. Only upgrade to Opus if you can measure a meaningful quality improvement that justifies 5x the cost. Only step down to Haiku if your task is highly structured and latency or cost is the primary constraint. The Sonnet alias covers most of the middle ground where real production workloads live.</p>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       TRY IT BAND
+  ═══════════════════════════════════════════════════ -->
+  <div class="try-it-band">
+    <div>
+      <h3>Try Claude Sonnet Latest via BYOK</h3>
+      <p>Call <code>~anthropic/claude-sonnet-latest</code> directly with your OpenRouter API key. The playground passes your key directly to OpenRouter — nothing is stored server-side.</p>
+      <p class="try-it-note">Pricing reflects the currently active Sonnet version. Check the resolved <code>model</code> field in the response to confirm which Sonnet handled your request.</p>
+    </div>
+    <button class="try-btn" onclick="window.byok?.openByokModal('~anthropic/claude-sonnet-latest', 'Claude Sonnet Latest')">Try Sonnet Latest</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       RELATED MODELS
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Related Models</h2>
+    <p>If you're evaluating whether to use the Sonnet alias or an alternative, these are the most relevant comparisons.</p>
+
+    <div class="related-grid">
+      <a href="/models/claude-sonnet-4-6/" class="related-card">
+        <span class="rc-tag rc-tag-anthropic">Anthropic</span>
+        <h4>Claude Sonnet 4.6</h4>
+        <p>The pinned version the Sonnet alias currently resolves to. Use this in production when you need stable, predictable Sonnet behavior. $3/$15/1M, 1M context.</p>
+      </a>
+      <a href="/models/claude-haiku-4-5/" class="related-card">
+        <span class="rc-tag rc-tag-anthropic">Anthropic</span>
+        <h4>Claude Haiku 4.5</h4>
+        <p>Anthropic's fast, budget-tier model. 5-10x cheaper than Sonnet for high-volume tasks — classification, extraction, structured output. Also available as <code>~anthropic/claude-haiku-latest</code>.</p>
+      </a>
+      <a href="/models/claude-opus-4-7/" class="related-card">
+        <span class="rc-tag rc-tag-anthropic">Anthropic</span>
+        <h4>Claude Opus 4.7</h4>
+        <p>Anthropic's flagship, top-capability model. 5x the cost of Sonnet for tasks that demand deeper reasoning. Also available as <code>~anthropic/claude-opus-latest</code>.</p>
+      </a>
+      <a href="/models/gpt-chat-latest/" class="related-card">
+        <span class="rc-tag rc-tag-openai">OpenAI</span>
+        <h4>GPT Chat Latest</h4>
+        <p>OpenAI's equivalent auto-updating alias — routes to the current best GPT chat model. Compare alias semantics and stability characteristics across providers.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════ -->
+  <footer class="article-footer">
+    <p style="font-size:.78rem;color:var(--text-muted);line-height:1.6;margin:0;">
+      This article is maintained by <strong style="color:var(--text-secondary);">Aether Intel</strong> at
+      <a href="https://ai.quantummerlin.com" style="color:var(--amber);text-decoration:none;">ai.quantummerlin.com</a>.
+      Model data reflects availability as of May 2026. Pricing, alias targets, and model capabilities change over time — verify current information at
+      <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" style="color:var(--amber);text-decoration:none;">openrouter.ai/models</a> and
+      <a href="https://anthropic.com" target="_blank" rel="noopener noreferrer" style="color:var(--amber);text-decoration:none;">anthropic.com</a>.
+    </p>
+  </footer>
+
+</main>
+</body>
+</html>

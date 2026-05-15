@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grok 3 Mini Review — xAI's Deprecated Budget Reasoning Model | Aether Intel</title>
+  <meta name="description" content="Grok 3 Mini reviewed: $0.30/$0.50/1M, 128K context, reasoning enabled. Now deprecated on OpenRouter — what it was, why it mattered, and what to use instead.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/grok-3-mini/">
+  <meta property="og:title" content="Grok 3 Mini Review — xAI's Deprecated Budget Reasoning Model | Aether Intel">
+  <meta property="og:description" content="Grok 3 Mini reviewed: $0.30/$0.50/1M, 128K context, reasoning enabled. Now deprecated on OpenRouter — what it was, why it mattered, and what to use instead.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/grok-3-mini/">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/models/grok-3-mini-hero.png">
+  <meta property="article:published_time" content="2026-05">
+  <meta property="article:author" content="Aether Intel">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Grok 3 Mini Review — xAI's Deprecated Budget Reasoning Model | Aether Intel">
+  <meta name="twitter:description" content="Grok 3 Mini: $0.30/$0.50/1M, 128K context, reasoning enabled. Now deprecated. What it was, the 4x price cliff, and migration options.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/models/grok-3-mini-hero.png">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    /* ─── Design tokens ─── */
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+
+      /* xAI brand tokens */
+      --xai: #e2e8f0;
+      --xai-glow: rgba(226,232,240,0.08);
+      --xai-border: rgba(226,232,240,0.18);
+    }
+
+    /* ─── Deprecated badge ─── */
+    .badge-deprecated {
+      background: rgba(248,113,113,0.12);
+      border: 1px solid rgba(248,113,113,0.3);
+      color: #f87171;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: .76rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+    }
+
+    /* ─── Deprecation alert block ─── */
+    .deprecation-alert {
+      background: rgba(248,113,113,0.06);
+      border: 1px solid rgba(248,113,113,0.25);
+      border-left: 3px solid #f87171;
+      border-radius: 0 12px 12px 0;
+      padding: 18px 20px;
+      margin: 20px 0;
+    }
+    .deprecation-alert-title {
+      font-family: var(--font-display);
+      font-size: .9rem;
+      font-weight: 700;
+      color: #f87171;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .deprecation-alert-body {
+      font-size: .87rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .deprecation-alert-body code {
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: .88em;
+      color: #f87171;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ─── Spec grid ─── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px,1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .spec-value {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-value.sv-red    { color: #f87171; }
+    .spec-value.sv-cyan   { color: #22d3ee; }
+    .spec-value.sv-indigo { color: var(--neon-indigo); }
+    .spec-value.sv-green  { color: #34d399; }
+    .spec-value.sv-muted  { color: var(--text-secondary); font-size: .88rem; }
+
+    /* ─── bc-cheap badge ─── */
+    .benchmark-cost-badge.bc-cheap {
+      color: #22d3ee;
+      background: rgba(34,211,238,.08);
+      border: 1px solid rgba(34,211,238,.3);
+      border-radius: 7px;
+      padding: 4px 12px;
+      font-weight: 700;
+      font-size: .82rem;
+    }
+
+    /* ─── Benchmark block ─── */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid rgba(34,211,238,.15);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #22d3ee;
+    }
+
+    /* ─── Price cliff visualization ─── */
+    .price-cliff-block {
+      background: var(--surface);
+      border: 1px solid rgba(248,113,113,.18);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .price-cliff-title {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #f87171;
+      margin-bottom: 16px;
+    }
+    .price-cliff-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(129,140,248,.07);
+      flex-wrap: wrap;
+    }
+    .price-cliff-row:last-child { border-bottom: none; }
+    .price-cliff-model {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      min-width: 170px;
+    }
+    .price-cliff-model.deprecated-model { color: var(--text-secondary); }
+    .price-cliff-val {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      min-width: 70px;
+    }
+    .price-cliff-val.old { color: var(--text-secondary); }
+    .price-cliff-val.new { color: #f87171; }
+    .price-cliff-multiplier {
+      font-family: var(--font-display);
+      font-size: .68rem;
+      font-weight: 700;
+      color: #f87171;
+      background: rgba(248,113,113,.1);
+      border: 1px solid rgba(248,113,113,.25);
+      border-radius: 5px;
+      padding: 2px 8px;
+      letter-spacing: .04em;
+    }
+
+    /* ─── Comparison/pricing table ─── */
+    .comparison-table-wrap { overflow-x: auto; margin: 24px 0; }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .84rem;
+    }
+    .comparison-table th {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+    }
+    .comparison-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(129,140,248,.07);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+    .comparison-table tr.this-model td {
+      background: rgba(248,113,113,.025);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .comparison-table tr.this-model td:first-child {
+      border-left: 2px solid #f87171;
+    }
+    .comparison-table td .deprecated-badge-sm {
+      color: #f87171;
+      background: rgba(248,113,113,.08);
+      border: 1px solid rgba(248,113,113,.25);
+      border-radius: 5px;
+      padding: 2px 8px;
+      font-size: .72rem;
+      font-weight: 700;
+      font-family: var(--font-body);
+    }
+    .comparison-table td .active-badge-sm {
+      color: #34d399;
+      background: rgba(52,211,153,.08);
+      border: 1px solid rgba(52,211,153,.25);
+      border-radius: 5px;
+      padding: 2px 8px;
+      font-size: .72rem;
+      font-weight: 700;
+      font-family: var(--font-body);
+    }
+    .comparison-table td .free-badge-sm {
+      color: #22d3ee;
+      background: rgba(34,211,238,.08);
+      border: 1px solid rgba(34,211,238,.25);
+      border-radius: 5px;
+      padding: 2px 8px;
+      font-size: .72rem;
+      font-weight: 700;
+      font-family: var(--font-body);
+    }
+
+    /* ─── Migration band ─── */
+    .migration-band {
+      background: linear-gradient(135deg, rgba(34,211,238,.05), rgba(129,140,248,.03));
+      border: 1px solid rgba(34,211,238,.2);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .migration-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .migration-band p {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ─── Migration options list ─── */
+    .migration-options { list-style: none; padding: 0; margin: 16px 0; }
+    .migration-options li {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(129,140,248,.08);
+      font-size: .87rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      align-items: flex-start;
+    }
+    .migration-options li:last-child { border-bottom: none; }
+    .migration-num {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      color: #22d3ee;
+      background: rgba(34,211,238,.08);
+      border: 1px solid rgba(34,211,238,.25);
+      border-radius: 5px;
+      padding: 3px 8px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ─── Key takeaways ─── */
+    .takeaways-list { list-style: none; padding: 0; margin: 16px 0; }
+    .takeaways-list li {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(129,140,248,.08);
+      font-size: .87rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .takeaways-list li:last-child { border-bottom: none; }
+    .tk-num {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 5px;
+      padding: 3px 7px;
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-top: 1px;
+    }
+
+    /* ─── Callout boxes ─── */
+    .info-callout {
+      background: rgba(129,140,248,.04);
+      border: 1px solid rgba(129,140,248,.18);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+    }
+    .info-callout-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon-indigo);
+      margin-bottom: 7px;
+    }
+    .info-callout p {
+      font-size: .84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0 0 8px;
+    }
+    .info-callout p:last-child { margin: 0; }
+
+    /* ─── Related models ─── */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .related-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-decoration: none;
+      display: block;
+      transition: border-color .2s;
+    }
+    .related-card:hover { border-color: rgba(255,255,255,.25); }
+    .related-card-provider {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #aaaaaa;
+      margin-bottom: 6px;
+    }
+    .related-card-name {
+      font-family: var(--font-body);
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .related-card-desc {
+      font-size: .78rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 700px) {
+      .model-specs-grid { grid-template-columns: repeat(2,1fr); }
+      .migration-band { flex-direction: column; align-items: flex-start; }
+      .price-cliff-row { flex-direction: column; gap: 6px; }
+      .related-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── SITE HEADER ─── -->
+<header class="site-header">
+  <a href="/" class="site-logo">AETHER<span>INTEL</span></a>
+  <nav class="site-nav">
+    <a href="/models/">Models</a>
+    <a href="/tools/">Tools</a>
+    <a href="/news/">News</a>
+  </nav>
+</header>
+
+<main style="max-width:860px;margin:0 auto;padding:32px 20px 72px;">
+
+  <!-- ─── BREADCRUMB ─── -->
+  <nav class="breadcrumb" style="font-size:.78rem;color:var(--text-muted);margin-bottom:20px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+    <a href="/" style="color:var(--text-muted);text-decoration:none;">Home</a>
+    <span style="color:var(--text-muted);">/</span>
+    <a href="/models/" style="color:var(--text-muted);text-decoration:none;">Models</a>
+    <span style="color:var(--text-muted);">/</span>
+    <span style="color:var(--text-primary);">Grok 3 Mini</span>
+  </nav>
+
+  <!-- ─── HERO BADGES ─── -->
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    <span style="font-family:var(--font-display);font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--xai);background:var(--xai-glow);border:1px solid var(--xai-border);border-radius:6px;padding:4px 10px;">XAI</span>
+    <span class="badge-deprecated">&#9888; DEPRECATED</span>
+    <span style="font-family:var(--font-display);font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#22d3ee;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);border-radius:6px;padding:4px 10px;">REASONING</span>
+    <span style="font-family:var(--font-display);font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--neon-indigo);background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.25);border-radius:6px;padding:4px 10px;">128K CTX</span>
+  </div>
+
+  <!-- ─── TITLE ─── -->
+  <h1 style="font-family:var(--font-heading);font-size:clamp(1.8rem,4vw,2.5rem);font-weight:800;color:var(--text-primary);margin:0 0 14px;line-height:1.15;">
+    Grok 3 Mini
+  </h1>
+
+  <!-- ─── LEAD ─── -->
+  <p style="font-size:1.05rem;color:var(--text-secondary);line-height:1.75;margin:0 0 16px;">
+    xAI's lightweight reasoning model — affordable thinking traces at <strong style="color:var(--text-primary);">$0.30/$0.50/1M</strong> — served developers well as a budget reasoning entry before being deprecated in favor of Grok 4.3. This page documents what it was, what happened to it, and migration paths.
+  </p>
+
+  <!-- ─── DEPRECATION HERO HIGHLIGHT ─── -->
+  <div style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.28);border-radius:10px;padding:16px 20px;margin:0 0 24px;display:flex;gap:12px;align-items:flex-start;">
+    <span style="font-size:1.1rem;flex-shrink:0;margin-top:2px;">⚠️</span>
+    <div style="font-size:.9rem;color:var(--text-secondary);line-height:1.65;">
+      <strong style="color:#f87171;">This model is deprecated on OpenRouter.</strong> The <code style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);border-radius:4px;padding:1px 6px;font-size:.88em;color:#f87171;font-family:'Courier New',monospace;">x-ai/grok-3-mini</code> endpoint returns a 404. On xAI's direct API, <code style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);border-radius:4px;padding:1px 6px;font-size:.88em;color:#f87171;font-family:'Courier New',monospace;">grok-3-mini</code> now aliases to <code style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);border-radius:4px;padding:1px 6px;font-size:.88em;color:#f87171;font-family:'Courier New',monospace;">grok-4.3</code> ($1.25/$2.50/1M — a <strong style="color:#f87171;">4x price increase</strong>).
+    </div>
+  </div>
+
+  <!-- ─── META LINE ─── -->
+  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:32px;font-size:.8rem;color:var(--text-muted);">
+    <span>Published: May 2026</span>
+    <span style="color:var(--border);">|</span>
+    <span>Reference article</span>
+    <span style="color:var(--border);">|</span>
+    <span>By Aether Intel</span>
+  </div>
+
+  <!-- ─── DEPRECATION ALERT BLOCK ─── -->
+  <div class="deprecation-alert">
+    <div class="deprecation-alert-title">&#9888; DEPRECATED — May 2026</div>
+    <div class="deprecation-alert-body">
+      <p style="margin:0 0 6px;"><code>x-ai/grok-3-mini</code> returns <strong style="color:#f87171;">HTTP 404</strong> on OpenRouter.</p>
+      <p style="margin:0 0 6px;">OpenRouter message: <em style="color:var(--text-primary);">"Grok 3 Mini is deprecated. xAI recommends switching to Grok 4.3 (https://openrouter.ai/x-ai/grok-4.3)"</em></p>
+      <p style="margin:0 0 6px;">On xAI API directly: <code>grok-3-mini</code> is now an alias for <code>grok-4.3</code>. Calls to xAI's API using this name are silently routed to the $1.25/$2.50/1M flagship.</p>
+      <p style="margin:0;">Migration: Use <code>x-ai/grok-4.3</code> ($1.25/$2.50/1M) or see alternatives below.</p>
+    </div>
+  </div>
+
+  <!-- ─── SPEC GRID ─── -->
+  <div class="model-specs-grid">
+    <div class="spec-card">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value sv-muted">$0.30<span style="font-size:.65rem;font-weight:500;color:var(--text-muted);"> /1M</span></div>
+      <div style="font-size:.65rem;color:var(--text-muted);margin-top:3px;">(historical)</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value sv-muted">$0.50<span style="font-size:.65rem;font-weight:500;color:var(--text-muted);"> /1M</span></div>
+      <div style="font-size:.65rem;color:var(--text-muted);margin-top:3px;">(historical)</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value sv-indigo">128K<span style="font-size:.65rem;font-weight:500;color:var(--text-muted);"> tokens</span></div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Bench Cost</div>
+      <div class="spec-value sv-cyan">$0.00145</div>
+      <div style="margin-top:4px;"><span class="benchmark-cost-badge bc-cheap">bc-cheap</span></div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Reasoning</div>
+      <div class="spec-value" style="font-size:.9rem;color:#34d399;">Yes — lightweight</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Status</div>
+      <div class="spec-value sv-red">DEPRECATED</div>
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--border);margin:32px 0;">
+
+  <!-- ─── WHAT GROK 3 MINI WAS ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:0 0 14px;">What Grok 3 Mini Was</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    Grok 3 Mini was xAI's lightweight reasoning entry — designed for logic-based tasks that don't require deep domain knowledge. It was the counterpart to Grok 3 (the full flagship), offering visible thinking traces at roughly one quarter the cost. The model had a 131,072-token context window, function calling support, and structured output support. At <strong style="color:var(--text-primary);">$0.30/$0.50/1M</strong>, it was competitive with DeepSeek R1's budget tiers and sat squarely in the <span style="color:#22d3ee;font-weight:700;">bc-cheap</span> tier.
+  </p>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    The model was text-to-text only — no image input, no audio, no file ingestion. Its value proposition was narrow and deliberate: <em>cheap reasoning</em>. Teams that needed visible chain-of-thought at low cost could route logic tasks, math problems, and structured analysis to Grok 3 Mini while reserving heavier flagships for generation-intensive workloads.
+  </p>
+
+  <div class="info-callout">
+    <div class="info-callout-label">Model Capabilities at a Glance</div>
+    <p>Modality: Text → Text only &nbsp;|&nbsp; Function calling: Yes &nbsp;|&nbsp; Structured outputs: Yes &nbsp;|&nbsp; Reasoning: Yes (lightweight thinking model with visible traces) &nbsp;|&nbsp; Parameters: Not publicly disclosed</p>
+    <p>OpenRouter model ID: <code style="font-family:monospace;font-size:.88em;color:var(--text-secondary);background:var(--surface-2);padding:1px 5px;border-radius:3px;">x-ai/grok-3-mini</code> (now 404) &nbsp;|&nbsp; Context: 131,072 tokens (128K)</p>
+  </div>
+
+  <!-- ─── THE BUDGET REASONING NICHE ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">The Budget Reasoning Niche</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    In early-to-mid 2026, reasoning-capable models were split into two clear price bands: expensive flagships at $1.00/1M or more, and budget reasoning models priced between $0.30–$0.50/1M. Grok 3 Mini held a strong position in the second band, alongside Qwen3 variants, DeepSeek V4 Flash, and Gemini Flash Lite. Teams that needed visible chain-of-thought at low cost had real, production-grade options.
+  </p>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    The case for Grok 3 Mini over non-reasoning budget models was straightforward: for logic-heavy workloads — math validation, code review, structured analysis — you pay a small premium over a pure generation model and get traceable reasoning in return. At $0.30 input and $0.50 output, the <em>reasoning tax</em> felt reasonable.
+  </p>
+
+  <!-- ─── WHAT HAPPENED ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">What Happened</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    In May 2026, xAI deprecated Grok 3 Mini on OpenRouter. The <code style="font-family:monospace;color:var(--text-secondary);background:var(--surface-2);padding:1px 5px;border-radius:3px;font-size:.88em;">x-ai/grok-3-mini</code> slug now returns HTTP 404 with the message:
+  </p>
+
+  <div class="deprecation-alert" style="margin:16px 0 20px;">
+    <div class="deprecation-alert-title">OpenRouter Error — HTTP 404</div>
+    <div class="deprecation-alert-body">
+      <p style="margin:0;font-style:italic;color:var(--text-primary);">"Grok 3 Mini is deprecated. xAI recommends switching to Grok 4.3 (https://openrouter.ai/x-ai/grok-4.3)"</p>
+    </div>
+  </div>
+
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    On xAI's own API, the <code style="font-family:monospace;color:var(--text-secondary);background:var(--surface-2);padding:1px 5px;border-radius:3px;font-size:.88em;">grok-3-mini</code> model name is now an alias for Grok 4.3 — meaning calls using that hardcoded name are silently routed to the $1.25/$2.50/1M flagship. For teams using xAI's API directly with model names in config files or environment variables, this constitutes a <strong style="color:#f87171;">silent price increase of 4x or more</strong>. No API-level error is thrown; billing just gets larger.
+  </p>
+
+  <!-- ─── THE PRICE CLIFF ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">The Price Cliff</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 16px;">
+    For teams that built on Grok 3 Mini's pricing, the deprecation is a meaningful cost event. The numbers are not subtle.
+  </p>
+
+  <div class="price-cliff-block">
+    <div class="price-cliff-title">Input / Output Price Comparison</div>
+    <div class="price-cliff-row">
+      <div class="price-cliff-model deprecated-model">Grok 3 Mini <span style="font-size:.72rem;font-weight:400;">(deprecated)</span></div>
+      <div class="price-cliff-val old">$0.30 in</div>
+      <div class="price-cliff-val old">$0.50 out</div>
+      <div class="price-cliff-val old">~$0.0015 / exchange</div>
+    </div>
+    <div class="price-cliff-row">
+      <div class="price-cliff-model">Grok 4.3 <span style="font-size:.72rem;color:#34d399;font-weight:400;">(replacement)</span></div>
+      <div class="price-cliff-val new">$1.25 in</div>
+      <div class="price-cliff-val new">$2.50 out</div>
+      <div class="price-cliff-val new">~$0.0069 / exchange</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="price-cliff-multiplier">4.2× input</span>
+        <span class="price-cliff-multiplier">5× output</span>
+        <span class="price-cliff-multiplier">4.7× bench</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-callout" style="border-left-color:#f87171;background:rgba(248,113,113,.04);border-color:rgba(248,113,113,.18);">
+    <div class="info-callout-label" style="color:#f87171;">Real-World Cost Impact</div>
+    <p>For a team running 1,000,000 exchanges per month at Grok 3 Mini benchmark rates, the historical monthly bill was approximately <strong style="color:var(--text-primary);">$1,450/month</strong>. At Grok 4.3 rates on the same volume, that bill rises to approximately <strong style="color:#f87171;">$6,875/month</strong> — a delta of $5,425/month without any increase in usage.</p>
+    <p>That gap is the cost of the deprecation, assuming teams migrate to xAI's recommended replacement and do not find a cheaper alternative for their workload.</p>
+  </div>
+
+  <!-- ─── BENCHMARK BLOCK ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">Benchmark — Theoretical Cost Only</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 16px;">
+    Grok 3 Mini was deprecated before our benchmark run could complete. No live API result is available for this model. However, using published pricing, we can document its theoretical benchmark cost within our standardized tier system.
+  </p>
+
+  <div class="benchmark-block">
+    <div class="benchmark-block-header">
+      <span class="benchmark-block-title">Theoretical Benchmark Cost — x-ai/grok-3-mini</span>
+      <span class="benchmark-cost-badge bc-cheap">bc-cheap &nbsp;|&nbsp; $0.001450</span>
+    </div>
+
+    <div style="font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Cost Formula (Standardized Benchmark Prompt)</div>
+
+    <div style="background:rgba(7,7,15,.5);border:1px solid var(--border);border-radius:8px;padding:14px 16px;font-size:.85rem;color:var(--text-secondary);line-height:1.8;font-family:monospace;">
+      Input:  1,500 tokens × $0.30/1M = <strong style="color:var(--text-primary);">$0.000450</strong><br>
+      Output: 2,000 tokens × $0.50/1M = <strong style="color:var(--text-primary);">$0.001000</strong><br>
+      <span style="border-top:1px solid var(--border);display:block;margin:8px 0;"></span>
+      Total:  <strong style="color:#22d3ee;font-size:.95rem;">$0.001450</strong>  &nbsp;←&nbsp; bc-cheap tier (cyan)
+    </div>
+
+    <p style="font-size:.8rem;color:var(--text-muted);margin:14px 0 0;line-height:1.55;">
+      This is a theoretical projection based on published pricing, not a live API result. The benchmark could not be completed as the model was deprecated and the OpenRouter endpoint returned 404 before testing. The tier classification and cost are based on what the model would have cost had it been available.
+    </p>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--border);margin:32px 0;">
+
+  <!-- ─── MIGRATION OPTIONS ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:0 0 14px;">Migration Options</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 16px;">
+    The right replacement depends on what you were using Grok 3 Mini for. If reasoning traces were essential, the path narrows. If budget was the primary constraint, several alternatives undercut even Grok 3 Mini's historical pricing.
+  </p>
+
+  <ul class="migration-options">
+    <li>
+      <span class="migration-num">01</span>
+      <div>
+        <strong style="color:var(--text-primary);">Grok 4.3</strong> &mdash; xAI's official recommendation. Better reasoning capability, 1M context window (vs 128K), and three reasoning depth levels (low / medium / high). Use <code style="font-family:monospace;font-size:.88em;color:var(--text-secondary);background:var(--surface-2);padding:1px 5px;border-radius:3px;">reasoning_effort: "low"</code> to approximate Grok 3 Mini's lightweight trace depth at the lowest cost tier. Still 4x more expensive at $1.25/$2.50/1M, but xAI's only in-family reasoning option now that Grok 3 Mini is gone. OpenRouter: <code style="font-family:monospace;font-size:.88em;color:var(--text-secondary);background:var(--surface-2);padding:1px 5px;border-radius:3px;">x-ai/grok-4.3</code>.
+      </div>
+    </li>
+    <li>
+      <span class="migration-num">02</span>
+      <div>
+        <strong style="color:var(--text-primary);">DeepSeek V4 Flash (free)</strong> &mdash; $0.00/1M on OpenRouter's free tier, with visible reasoning. If cost is the primary concern and you can tolerate the rate limits and latency of the free tier, this is the lowest-cost reasoning option available. Benchmark tier: <span style="color:#22d3ee;font-weight:700;">bc-free</span>. Caveats: free tier has stricter rate limits and is not suitable for high-throughput production workloads.
+      </div>
+    </li>
+    <li>
+      <span class="migration-num">03</span>
+      <div>
+        <strong style="color:var(--text-primary);">Gemini 3.1 Flash Lite</strong> &mdash; $0.25/$1.50/1M, ultra-fast, no visible reasoning chain but excellent throughput and strong instruction following. Best choice if you were using Grok 3 Mini for structured generation tasks (function calling, JSON outputs) rather than true reasoning traces. Output pricing is 3x Grok 3 Mini's historical rate but significantly cheaper than Grok 4.3.
+      </div>
+    </li>
+    <li>
+      <span class="migration-num">04</span>
+      <div>
+        <strong style="color:var(--text-primary);">Qwen3.6 27B</strong> &mdash; $0.325/$3.25/1M with visible reasoning chain. Mid-tier capability and the closest pricing match to Grok 3 Mini on the input side. Output is more expensive ($3.25 vs $0.50) but reasoning traces are visible and the context window is competitive. A reasonable choice for teams that primarily care about reasoning trace access at near-budget pricing.
+      </div>
+    </li>
+  </ul>
+
+  <!-- ─── PRICING COMPARISON TABLE ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">Pricing Comparison</h2>
+  <p style="font-size:.9rem;color:var(--text-secondary);line-height:1.65;margin:0 0 16px;">Grok 3 Mini's historical pricing vs. the models most relevant for migration decisions.</p>
+
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Input / 1M</th>
+          <th>Output / 1M</th>
+          <th>Per Exchange</th>
+          <th>Reasoning</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="this-model">
+          <td><strong>Grok 3 Mini</strong> <span style="font-size:.7rem;color:#f87171;font-weight:400;">← deprecated</span></td>
+          <td style="color:var(--text-muted);text-decoration:line-through;">$0.30</td>
+          <td style="color:var(--text-muted);text-decoration:line-through;">$0.50</td>
+          <td style="color:var(--text-muted);">$0.0015</td>
+          <td style="font-size:.82rem;">Yes &mdash; lightweight</td>
+          <td><span class="deprecated-badge-sm">Deprecated</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-primary);">Grok 4.3</strong> <span style="font-size:.7rem;color:#34d399;font-weight:400;">(xAI recommended)</span></td>
+          <td style="color:#f87171;font-weight:600;">$1.25</td>
+          <td style="color:#f87171;font-weight:600;">$2.50</td>
+          <td style="color:var(--text-secondary);">$0.0069</td>
+          <td style="font-size:.82rem;">Yes &mdash; 3 levels</td>
+          <td><span class="active-badge-sm">Active</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-primary);">DeepSeek V4 Flash</strong> <span style="font-size:.7rem;color:#22d3ee;font-weight:400;">:free</span></td>
+          <td style="color:#22d3ee;font-weight:600;">$0.00</td>
+          <td style="color:#22d3ee;font-weight:600;">$0.00</td>
+          <td style="color:#22d3ee;font-weight:600;">$0.00</td>
+          <td style="font-size:.82rem;">Yes &mdash; visible</td>
+          <td><span class="free-badge-sm">Free tier</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-primary);">Gemini 3.1 Flash Lite</strong></td>
+          <td style="color:#34d399;font-weight:600;">$0.25</td>
+          <td style="color:var(--text-secondary);">$1.50</td>
+          <td style="color:var(--text-secondary);">$0.0034</td>
+          <td style="font-size:.82rem;color:var(--text-muted);">No</td>
+          <td><span class="active-badge-sm">Active</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-primary);">Qwen3.6 27B</strong></td>
+          <td style="color:var(--text-secondary);">$0.325</td>
+          <td style="color:var(--text-secondary);">$3.25</td>
+          <td style="color:var(--text-secondary);">$0.0070</td>
+          <td style="font-size:.82rem;">Yes &mdash; visible</td>
+          <td><span class="active-badge-sm">Active</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:.8rem;color:var(--text-muted);margin:8px 0 0;line-height:1.6;">
+    Per-exchange cost assumes a standardized 1,500 input + 2,000 output token exchange. Grok 3 Mini historical prices used for reference only; model is no longer available at those rates.
+  </p>
+
+  <!-- ─── ADSENSE MID ─── -->
+  <div style="margin:32px 0;text-align:center;">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- ─── LESSONS FOR PRODUCTION TEAMS ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:0 0 14px;">Lessons for Production Teams</h2>
+  <p style="font-size:.93rem;color:var(--text-secondary);line-height:1.75;margin:0 0 14px;">
+    The <code style="font-family:monospace;color:var(--text-secondary);background:var(--surface-2);padding:1px 5px;border-radius:3px;font-size:.88em;">grok-3-mini</code> &#8594; <code style="font-family:monospace;color:var(--text-secondary);background:var(--surface-2);padding:1px 5px;border-radius:3px;font-size:.88em;">grok-4.3</code> silent alias redirect on xAI's API is a canonical example of why model name hygiene matters in production systems. There was no API error — just a 4x billing increase starting from the moment the alias went live. Teams that had not set up cost alerting likely discovered the change only at invoice time.
+  </p>
+
+  <ul class="takeaways-list">
+    <li>
+      <span class="tk-num">1</span>
+      <span><strong style="color:var(--text-primary);">Pin specific versioned model IDs, not aliases.</strong> If a provider offers a versioned ID (e.g., <code style="font-family:monospace;font-size:.88em;">grok-4.3-20260430</code>), use it instead of the convenience alias (<code style="font-family:monospace;font-size:.88em;">grok-3-mini</code>). Aliases get reassigned; versioned IDs do not.</span>
+    </li>
+    <li>
+      <span class="tk-num">2</span>
+      <span><strong style="color:var(--text-primary);">Set up monthly cost alerts.</strong> A 4x silent price increase that goes unmonitored for 30 days is a significant budget event. Most cloud billing systems support threshold alerts — use them. Set alerts at 120% of your typical monthly model spend.</span>
+    </li>
+    <li>
+      <span class="tk-num">3</span>
+      <span><strong style="color:var(--text-primary);">Subscribe to provider deprecation notifications.</strong> OpenRouter, xAI, and most major providers offer email or webhook notifications for model deprecations. These are almost never enabled by default. Find the notification settings and opt in.</span>
+    </li>
+    <li>
+      <span class="tk-num">4</span>
+      <span><strong style="color:var(--text-primary);">Maintain a model abstraction layer.</strong> Teams with a thin abstraction (a config constant or environment variable for model ID) can migrate in minutes. Teams with model names scattered across ten services across three codebases learn this lesson the hard way.</span>
+    </li>
+    <li>
+      <span class="tk-num">5</span>
+      <span><strong style="color:var(--text-primary);">Budget reasoning models have shorter lifespans.</strong> The sub-$0.50/1M reasoning tier is highly competitive and providers iterate quickly. Grok 3 Mini lasted less than a year before being absorbed upward. Build for replaceability.</span>
+    </li>
+  </ul>
+
+  <!-- ─── MIGRATION BAND (replaces try-it band) ─── -->
+  <div class="migration-band">
+    <div>
+      <h3>&#8594; Migrating from Grok 3 Mini?</h3>
+      <p>Use <code style="font-family:monospace;font-size:.88em;color:#22d3ee;">x-ai/grok-4.3</code> with <code style="font-family:monospace;font-size:.88em;color:#22d3ee;">reasoning_effort: "low"</code> for similar quality at lower cost than the high reasoning setting.<br>
+      Or try <strong>DeepSeek V4 Flash Free</strong> for zero-cost reasoning on the free tier.</p>
+    </div>
+    <button onclick="window.byok?.openByokModal('x-ai/grok-4.3', 'Grok 4.3')"
+            style="display:inline-block;background:#22d3ee;color:#07070f;font-family:var(--font-body);font-weight:700;font-size:.9rem;padding:12px 22px;border-radius:8px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+      Try Grok 4.3 with BYOK &rarr;
+    </button>
+  </div>
+
+  <!-- ─── RELATED MODELS ─── -->
+  <h2 style="font-family:var(--font-heading);font-size:1.45rem;font-weight:700;color:var(--text-primary);margin:32px 0 14px;">Related Models</h2>
+  <div class="related-grid">
+    <a href="/models/grok-4-3.html" class="related-card">
+      <div class="related-card-provider">xAI — Replacement</div>
+      <div class="related-card-name">Grok 4.3</div>
+      <div class="related-card-desc">$1.25/$2.50/1M &middot; 1M context &middot; 3 reasoning levels &middot; xAI's official migration target from Grok 3 Mini.</div>
+    </a>
+    <a href="/models/deepseek-v4-flash-free.html" class="related-card">
+      <div class="related-card-provider">DeepSeek — Budget Alternative</div>
+      <div class="related-card-name">DeepSeek V4 Flash Free</div>
+      <div class="related-card-desc">$0.00/1M &middot; Visible reasoning &middot; bc-free tier &middot; Best choice if cost remains the primary constraint after deprecation.</div>
+    </a>
+    <a href="/models/gemini-3-1-flash-lite.html" class="related-card">
+      <div class="related-card-provider">Google — Speed Alternative</div>
+      <div class="related-card-name">Gemini 3.1 Flash Lite</div>
+      <div class="related-card-desc">$0.25/$1.50/1M &middot; Ultra-fast throughput &middot; No reasoning chain &middot; Excellent for structured outputs and function calling at low cost.</div>
+    </a>
+    <a href="/models/qwen3-6-27b.html" class="related-card">
+      <div class="related-card-provider">Alibaba Cloud — Reasoning Alternative</div>
+      <div class="related-card-name">Qwen3.6 27B</div>
+      <div class="related-card-desc">$0.325/$3.25/1M &middot; Visible reasoning chain &middot; Mid-tier capability &middot; Closest in-class reasoning option at near-budget input pricing.</div>
+    </a>
+  </div>
+
+  <!-- ─── SCHEMA.ORG ─── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Grok 3 Mini — xAI's Deprecated Budget Reasoning Model",
+    "description": "Grok 3 Mini reviewed: $0.30/$0.50/1M, 128K context, reasoning enabled. Deprecated on OpenRouter May 2026 — what it was, why it mattered, the 4x price cliff, and what to use instead.",
+    "datePublished": "2026-05",
+    "author": {
+      "@type": "Organization",
+      "name": "Aether Intel"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Aether Intel",
+      "url": "https://ai.quantummerlin.com"
+    },
+    "url": "https://ai.quantummerlin.com/models/grok-3-mini/",
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": "Grok 3 Mini",
+      "applicationCategory": "AI Language Model",
+      "operatingSystem": "API",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00030",
+        "priceCurrency": "USD",
+        "description": "Historical input price per 1M tokens (deprecated)"
+      }
+    }
+  }
+  </script>
+
+</main>
+
+<!-- ─── SITE FOOTER ─── -->
+<footer class="site-footer">
+  <div class="page-wrap">
+    <p class="footer-copy">&#169; 2026 Aether Intel &middot; <a href="/privacy/">Privacy</a> &middot; <a href="/about/">About</a></p>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>

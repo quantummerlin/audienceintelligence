@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>openai/gpt-chat-latest Guide — When to Use OpenAI's Auto-Updating Chat Alias | Aether Intel</title>
+  <meta name="description" content="Everything about openai/gpt-chat-latest on OpenRouter: what it resolves to, how auto-update aliases work, when to use them vs pinned model IDs, and production best practices.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/gpt-chat-latest/">
+  <meta property="og:title" content="openai/gpt-chat-latest — Auto-Updating Chat Alias Guide">
+  <meta property="og:description" content="What openai/gpt-chat-latest resolves to, how routing aliases work on OpenRouter, and when to use aliases vs pinned model IDs.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/gpt-chat-latest/">
+  <meta property="article:published_time" content="2026-05-16">
+  <meta property="article:author" content="Aether Intel">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="openai/gpt-chat-latest — Routing Alias Guide">
+  <meta name="twitter:description" content="How OpenAI's auto-updating chat alias works on OpenRouter, what it routes to in May 2026, and production best practices.">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+/* ── Design tokens ─────────────────────────────────────── */
+:root{
+  --bg:#07070f;
+  --surface:#0d0d1a;
+  --surface-2:#131326;
+  --border:rgba(129,140,248,0.12);
+  --neon-indigo:#818cf8;
+  --neon-cyan:#22d3ee;
+  --neon-gold:#f59e0b;
+  --text-primary:#e2e8f0;
+  --text-secondary:#94a3b8;
+  --text-muted:#475569;
+  --openai:#74aa9c;
+  --openai-glow:rgba(116,170,156,0.12);
+  --openai-border:rgba(116,170,156,0.3);
+}
+
+/* ── Alias-specific badges ─────────────────────────────── */
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.badge{display:inline-block;padding:4px 11px;border-radius:6px;font-family:var(--font-display,Orbitron,monospace);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.badge-openai{background:var(--openai-glow);border:1px solid var(--openai-border);color:var(--openai)}
+.badge-alias{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);color:var(--neon-gold)}
+.badge-auto{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.3);color:var(--neon-cyan)}
+.badge-chat{background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.25);color:var(--neon-indigo)}
+
+/* ── Alias warning highlight ───────────────────────────── */
+.alias-highlight{
+  background:linear-gradient(135deg,rgba(116,170,156,.07),rgba(116,170,156,.03));
+  border:1px solid var(--openai-border);
+  border-left:3px solid var(--openai);
+  border-radius:0 10px 10px 0;
+  padding:16px 20px;
+  margin:24px 0;
+}
+.alias-highlight-label{
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--openai);margin-bottom:8px;
+}
+.alias-highlight p{
+  font-size:.88rem;color:var(--text-secondary);line-height:1.6;margin:0;
+}
+.alias-highlight strong{color:var(--text-primary)}
+
+/* ── Flow diagram ──────────────────────────────────────── */
+.flow-diagram{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 24px;
+  margin:24px 0;
+  overflow-x:auto;
+}
+.flow-title{
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:20px;
+}
+.flow-track{
+  display:flex;align-items:flex-start;gap:0;
+  min-width:540px;
+}
+.flow-node{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 14px;
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.68rem;font-weight:700;
+  color:var(--text-primary);
+  white-space:nowrap;
+  text-align:center;
+  flex-shrink:0;
+}
+.flow-node.fn-api{border-color:rgba(129,140,248,.3);color:var(--neon-indigo)}
+.flow-node.fn-alias{border-color:var(--openai-border);color:var(--openai)}
+.flow-node.fn-router{border-color:rgba(245,158,11,.3);color:var(--neon-gold)}
+.flow-arrow{
+  display:flex;align-items:center;
+  padding:0 6px;
+  color:var(--text-muted);
+  font-size:1.1rem;
+  flex-shrink:0;
+  align-self:center;
+}
+.flow-outcomes{
+  display:flex;flex-direction:column;gap:8px;
+  flex-shrink:0;
+}
+.flow-outcome{
+  display:flex;align-items:center;gap:8px;
+}
+.flow-outcome-arrow{color:var(--text-muted);font-size:.9rem;flex-shrink:0}
+.flow-outcome-node{
+  background:var(--surface-2);
+  border:1px solid rgba(116,170,156,.2);
+  border-radius:7px;
+  padding:7px 12px;
+  font-size:.7rem;font-weight:600;
+  color:var(--text-secondary);
+  white-space:nowrap;
+}
+.flow-outcome-node.fon-today{border-color:var(--openai-border);color:var(--openai)}
+.flow-outcome-node.fon-future{border-color:var(--border);color:var(--text-muted);font-style:italic}
+.flow-note{font-size:.76rem;color:var(--text-muted);margin-top:14px;line-height:1.5}
+
+/* ── Characteristics grid ──────────────────────────────── */
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin:24px 0}
+.char-card{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px;
+}
+.char-label{
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:6px;
+}
+.char-value{font-size:.95rem;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.char-note{font-size:.74rem;color:var(--text-secondary);line-height:1.4}
+.char-value.cv-variable{color:var(--neon-gold)}
+.char-value.cv-warning{color:#f87171}
+.char-value.cv-cyan{color:var(--neon-cyan)}
+.char-value.cv-indigo{color:var(--neon-indigo)}
+
+/* ── Decision guide ────────────────────────────────────── */
+.decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.decision-panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+}
+.decision-panel h4{
+  font-family:var(--font-body,Sora,sans-serif);
+  font-size:.9rem;font-weight:700;margin:0 0 14px;
+}
+.decision-panel.dp-alias h4{color:var(--openai)}
+.decision-panel.dp-pin h4{color:var(--neon-indigo)}
+.decision-list{list-style:none;margin:0;padding:0}
+.decision-list li{
+  font-size:.82rem;color:var(--text-secondary);
+  line-height:1.55;padding:5px 0 5px 1.5em;position:relative;
+}
+.decision-list li::before{position:absolute;left:0;font-weight:700}
+.dp-alias .decision-list li::before{content:"✓";color:var(--openai)}
+.dp-pin .decision-list li::before{content:"✓";color:var(--neon-indigo)}
+
+/* ── Risk list ─────────────────────────────────────────── */
+.risk-list{list-style:none;margin:0;padding:0}
+.risk-item{
+  display:flex;gap:14px;align-items:flex-start;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px 18px;
+  margin-bottom:10px;
+}
+.risk-icon{font-size:1.2rem;flex-shrink:0;line-height:1.2;margin-top:1px}
+.risk-body{}
+.risk-title{font-size:.88rem;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.risk-desc{font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin:0}
+
+/* ── Best-practices list ───────────────────────────────── */
+.bp-list{list-style:none;margin:0;padding:0;counter-reset:bp-counter}
+.bp-item{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.bp-item:last-child{border-bottom:none}
+.bp-num{
+  flex-shrink:0;width:28px;height:28px;
+  background:var(--openai-glow);border:1px solid var(--openai-border);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.65rem;font-weight:700;color:var(--openai);
+  margin-top:1px;
+}
+.bp-body{}
+.bp-title{font-size:.88rem;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.bp-desc{font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin:0}
+
+/* ── Code block ────────────────────────────────────────── */
+.code-block-wrap{
+  background:rgba(7,7,15,.85);
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  margin:20px 0;
+}
+.code-block-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;
+  background:var(--surface-2);
+  border-bottom:1px solid var(--border);
+}
+.code-block-lang{
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);
+}
+.code-block-note{font-size:.75rem;color:var(--text-secondary)}
+.code-block-wrap pre{margin:0;padding:20px;overflow-x:auto}
+.code-block-wrap code{
+  font-family:var(--font-mono,'Space Mono','Courier New',monospace);
+  font-size:.82rem;line-height:1.7;color:var(--text-primary);
+  display:block;
+}
+.code-comment{color:var(--text-muted)}
+.code-string{color:#a3e635}
+.code-keyword{color:var(--neon-indigo)}
+.code-func{color:var(--neon-cyan)}
+.code-attr{color:var(--neon-gold)}
+
+/* ── Comparison table ──────────────────────────────────── */
+.comp-table-wrap{
+  overflow-x:auto;
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin:20px 0;
+}
+.comp-table{
+  width:100%;border-collapse:collapse;font-size:.84rem;
+}
+.comp-table th{
+  background:var(--surface-2);
+  padding:12px 16px;text-align:left;
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.comp-table td{
+  padding:11px 16px;color:var(--text-secondary);
+  border-bottom:1px solid rgba(129,140,248,.06);
+  vertical-align:middle;
+}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr:hover td{background:rgba(129,140,248,.03)}
+.comp-table td:first-child{font-weight:600;color:var(--text-primary)}
+.td-yes{color:#34d399;font-weight:700}
+.td-no{color:#f87171;font-weight:700}
+.td-warn{color:var(--neon-gold);font-weight:700}
+.th-alias{color:var(--openai) !important}
+.th-pinned{color:var(--neon-indigo) !important}
+
+/* ── Related aliases section ───────────────────────────── */
+.alias-list{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+.alias-row{
+  display:flex;align-items:center;gap:14px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:13px 16px;
+  transition:border-color .2s;
+}
+.alias-row:hover{border-color:var(--openai-border)}
+.alias-row.current-alias{border-color:var(--openai-border);background:var(--openai-glow)}
+.alias-id{
+  font-family:var(--font-mono,'Space Mono','Courier New',monospace);
+  font-size:.8rem;font-weight:600;color:var(--openai);
+  flex:0 0 220px;white-space:nowrap;
+}
+.alias-desc{font-size:.8rem;color:var(--text-secondary);line-height:1.45;flex:1}
+.alias-current-tag{
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--openai-glow);border:1px solid var(--openai-border);
+  color:var(--openai);border-radius:5px;padding:3px 8px;flex-shrink:0;
+}
+
+/* ── Try-it band ───────────────────────────────────────── */
+.try-it-band{
+  background:linear-gradient(135deg,rgba(116,170,156,.08),rgba(129,140,248,.04));
+  border:1px solid var(--openai-border);
+  border-radius:14px;padding:28px;margin:32px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;
+}
+.try-it-band h3{
+  font-family:var(--font-heading,Orbitron,monospace);
+  font-size:1.1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px;
+}
+.try-it-band p{color:var(--text-secondary);font-size:.86rem;margin:0 0 6px}
+.try-it-note{font-size:.76rem;color:var(--text-muted);margin-top:6px !important}
+.try-btn{
+  background:var(--openai);border:none;border-radius:8px;
+  padding:12px 24px;
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:#07070f;cursor:pointer;white-space:nowrap;flex-shrink:0;
+  transition:opacity .2s,transform .1s;
+}
+.try-btn:hover{opacity:.85;transform:translateY(-1px)}
+
+/* ── Related models grid ───────────────────────────────── */
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:20px 0}
+.related-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px;
+  text-decoration:none;
+  display:block;
+  transition:border-color .2s;
+}
+.related-card:hover{border-color:rgba(129,140,248,.4)}
+.related-card h4{font-size:.88rem;font-weight:700;color:var(--text-primary);margin:0 0 6px}
+.related-card p{font-size:.78rem;color:var(--text-secondary);line-height:1.5;margin:0}
+
+/* ── Section headers ───────────────────────────────────── */
+.section-label{
+  font-family:var(--font-display,Orbitron,monospace);
+  font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:12px;display:block;
+}
+
+/* ── Accent color helper ───────────────────────────────── */
+.accent{color:var(--openai)}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media(max-width:700px){
+  .decision-grid{grid-template-columns:1fr}
+  .char-grid{grid-template-columns:repeat(2,1fr)}
+  .flow-track{min-width:420px}
+  .alias-row{flex-direction:column;align-items:flex-start}
+  .alias-id{flex:none}
+  .try-it-band{flex-direction:column;align-items:flex-start}
+  .comp-table th,.comp-table td{padding:9px 12px}
+}
+  </style>
+</head>
+<body>
+<main class="article-main">
+
+  <!-- ══════════════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════════════ -->
+  <div class="article-hero">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="/models/">Models</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>gpt-chat-latest</span>
+    </nav>
+
+    <div class="article-hero-meta">
+      <span class="provider-badge" style="background:rgba(116,170,156,.12);border:1px solid rgba(116,170,156,.35);color:#74aa9c;">OpenAI</span>
+      <span class="article-meta-date">May 2026</span>
+      <span class="article-meta-sep">·</span>
+      <span class="article-meta-badge">Developer guide</span>
+      <span class="article-meta-sep">·</span>
+      <span class="article-meta-read">By Aether Intel</span>
+    </div>
+
+    <div class="badge-row">
+      <span class="badge badge-openai">OpenAI</span>
+      <span class="badge badge-alias">Routing Alias</span>
+      <span class="badge badge-auto">Auto-Update</span>
+      <span class="badge badge-chat">Chat</span>
+    </div>
+
+    <h1 class="article-title">openai/<span class="accent">gpt-chat-latest</span></h1>
+    <p class="article-subtitle"><code>openai/gpt-chat-latest</code> is OpenRouter's auto-updating alias that always routes requests to OpenAI's current best chat model. It's the "set it and forget it" option for teams that want to stay on the latest GPT without changing their API calls.</p>
+
+    <div class="alias-highlight">
+      <div class="alias-highlight-label">Important — routing alias</div>
+      <p><strong>This is not a fixed model — it's a routing alias.</strong> The underlying model changes as OpenAI releases new versions. As of May 2026, it routes to GPT-5/GPT-5.5 pricing territory. Your costs, context limits, and model behavior will change silently whenever OpenAI publishes a new flagship chat model and OpenRouter updates the alias target.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       HOW ROUTING ALIASES WORK
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>How Routing Aliases Work</h2>
+    <p>A routing alias is a stable model ID string that OpenRouter maps to a real model behind the scenes. When you call <code>openai/gpt-chat-latest</code>, OpenRouter's routing layer intercepts the request and transparently forwards it to whichever concrete model is currently designated as the "best GPT chat model." You never update your API client code — the underlying model changes on OpenRouter's side.</p>
+
+    <div class="flow-diagram">
+      <div class="flow-title">Request routing — how gpt-chat-latest resolves</div>
+      <div class="flow-track">
+        <div class="flow-node fn-api">Your API call<br><small style="font-size:.6rem;color:var(--text-muted);font-family:monospace;">gpt-chat-latest</small></div>
+        <div class="flow-arrow">──►</div>
+        <div class="flow-node fn-alias">openai/<br>gpt-chat-latest<br><small style="font-size:.58rem;color:var(--text-muted);">alias</small></div>
+        <div class="flow-arrow">──►</div>
+        <div class="flow-node fn-router">OpenRouter<br>routing layer</div>
+        <div class="flow-arrow">──►</div>
+        <div class="flow-outcomes">
+          <div class="flow-outcome">
+            <span class="flow-outcome-arrow">┌►</span>
+            <span class="flow-outcome-node fon-today">GPT-5.5 Pro (today, May 2026)</span>
+          </div>
+          <div class="flow-outcome">
+            <span class="flow-outcome-arrow">├►</span>
+            <span class="flow-outcome-node fon-future">GPT-6 (when released)</span>
+          </div>
+          <div class="flow-outcome">
+            <span class="flow-outcome-arrow">└►</span>
+            <span class="flow-outcome-node fon-future">GPT-X (future)</span>
+          </div>
+        </div>
+      </div>
+      <p class="flow-note">The alias target is updated by OpenRouter when OpenAI publishes a new flagship chat model. You receive the <strong>resolved model ID</strong> back in the API response — see the code example below for how to read it.</p>
+    </div>
+
+    <p>The key detail: the alias is transparent from an API-call perspective but opaque from a cost and behavior perspective. OpenRouter returns the resolved model ID in the response's <code>model</code> field, so you can always inspect what you actually got — but there's no pre-call way to know if the alias target changed since yesterday.</p>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       CHARACTERISTICS GRID
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <span class="section-label">Alias characteristics</span>
+    <div class="char-grid">
+      <div class="char-card">
+        <div class="char-label">Pricing</div>
+        <div class="char-value cv-variable">Variable</div>
+        <div class="char-note">Inherits from underlying model. Changes when alias target changes.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-label">Capabilities</div>
+        <div class="char-value cv-indigo">Inherited</div>
+        <div class="char-note">Always reflects the current flagship GPT chat model's feature set.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-label">Context window</div>
+        <div class="char-value cv-cyan">Inherited</div>
+        <div class="char-note">As of May 2026: up to 1M tokens (GPT-5.5 range). May change.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-label">Stability</div>
+        <div class="char-value cv-warning">Changes over time ⚠</div>
+        <div class="char-note">Not appropriate as a stable production dependency.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       DECISION GUIDE
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Decision Guide: Alias vs Pinned Model ID</h2>
+    <p>The core question is whether you need <strong>currency</strong> (always the latest and greatest) or <strong>stability</strong> (predictable, auditable, testable). Aliases optimize for currency; pinned IDs optimize for stability. Neither is universally better — the right choice depends on your deployment context.</p>
+
+    <div class="decision-grid">
+      <div class="decision-panel dp-alias">
+        <h4>Use <code>gpt-chat-latest</code> when:</h4>
+        <ul class="decision-list">
+          <li>Building prototypes or demos where you want the best model available without managing versioning</li>
+          <li>Running experiments where "best available" matters more than session-to-session consistency</li>
+          <li>Internal tools where your team accepts that behavior may shift over time</li>
+          <li>Development and staging environments where you want to test against upcoming changes before they hit production</li>
+          <li>Hackathons or time-boxed projects where long-term maintenance is not a concern</li>
+          <li>You have cost alerting and monitoring in place and are comfortable responding to pricing drift</li>
+        </ul>
+      </div>
+
+      <div class="decision-panel dp-pin">
+        <h4>Use a pinned model ID (e.g., <code>openai/gpt-5.5</code>) when:</h4>
+        <ul class="decision-list">
+          <li>Serving real users in a production application where behavioral consistency is expected</li>
+          <li>Operating in a regulated environment that requires auditability and reproducibility of AI outputs</li>
+          <li>Costs need to be predictable and budgeted month-over-month</li>
+          <li>Your system prompts are tuned to specific model behavior — a model change can break carefully crafted instructions</li>
+          <li>You run automated test suites against your AI pipeline and need stable baselines to compare against</li>
+          <li>You want to test new model versions in staging before rolling them out to production</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alias-highlight">
+      <div class="alias-highlight-label">Rule of thumb</div>
+      <p>A reasonable deployment pattern: use <code>gpt-chat-latest</code> in development and staging so you're always testing against the current model, and pin to a specific versioned ID in production. When OpenRouter updates the alias target, that's your signal to evaluate the new model and deliberately upgrade your production pin — rather than absorbing the change automatically.</p>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       RISKS IN PRODUCTION
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Risks of Using Aliases in Production</h2>
+    <p>The following risks are not hypothetical edge cases — they're normal consequences of how auto-updating aliases work. If you understand and mitigate them, aliases can still be appropriate in some production contexts. If any of them would be unacceptable in your system, pin a specific model ID instead.</p>
+
+    <ul class="risk-list" style="list-style:none;padding:0;">
+      <li class="risk-item">
+        <span class="risk-icon">🔇</span>
+        <div class="risk-body">
+          <div class="risk-title">Silent capability changes</div>
+          <p class="risk-desc">The alias target may be updated without any notification to your application. A task your current model handles well may degrade — or improve — with the new underlying model. You'll only notice through monitoring, user feedback, or cost anomalies.</p>
+        </div>
+      </li>
+      <li class="risk-item">
+        <span class="risk-icon">💸</span>
+        <div class="risk-body">
+          <div class="risk-title">Silent pricing changes</div>
+          <p class="risk-desc">A major model version jump can significantly change per-token costs. If GPT-5.5 is replaced by a hypothetical GPT-6 at a different price point, your monthly AI spend can shift substantially — without any change to your codebase. Set budget threshold alerts in your OpenRouter dashboard.</p>
+        </div>
+      </li>
+      <li class="risk-item">
+        <span class="risk-icon">📉</span>
+        <div class="risk-body">
+          <div class="risk-title">Behavioral drift</div>
+          <p class="risk-desc">Output style, format, verbosity, and default behavior all vary across model versions. A system prompt tuned for GPT-5.5 may produce different structured-output formatting, different JSON adherence, or different tone when the alias routes to a newer model. This is especially risky for applications that parse model output programmatically.</p>
+        </div>
+      </li>
+      <li class="risk-item">
+        <span class="risk-icon">⚠️</span>
+        <div class="risk-body">
+          <div class="risk-title">Breaking changes</div>
+          <p class="risk-desc">Rare, but possible: a new underlying model may interpret certain prompt patterns differently, refuse requests the previous model would have completed, or change tool-calling behavior. Unlike a deliberate upgrade you control and test, alias updates expose you to breaking changes without a rollback path (you'd need to switch from the alias to a pinned older model ID).</p>
+        </div>
+      </li>
+      <li class="risk-item">
+        <span class="risk-icon">🔄</span>
+        <div class="risk-body">
+          <div class="risk-title">Rate limit changes</div>
+          <p class="risk-desc">Different underlying models may carry different rate limits on OpenRouter or on OpenAI's infrastructure. A model change could lower your effective throughput without any API error indicating why. If you're near rate limits today, an alias update could push you over.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       BEST PRACTICES
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Best Practices When Using Aliases</h2>
+    <p>If you decide aliases are appropriate for your use case, the following practices will significantly reduce the blast radius of an unexpected alias update.</p>
+
+    <div style="margin:20px 0;">
+      <ul class="bp-list">
+        <li class="bp-item">
+          <div class="bp-num">1</div>
+          <div class="bp-body">
+            <div class="bp-title">Set cost alerts on your OpenRouter account</div>
+            <p class="bp-desc">Configure a budget threshold alert so you're notified if daily or monthly spend jumps unexpectedly. A pricing change in the underlying model will show up immediately in your spend curve — this is your earliest signal that the alias target changed.</p>
+          </div>
+        </li>
+        <li class="bp-item">
+          <div class="bp-num">2</div>
+          <div class="bp-body">
+            <div class="bp-title">Use aliases in dev/staging; pin model IDs in production</div>
+            <p class="bp-desc">This pattern gives you the best of both worlds: your development environment stays current so you discover compatibility issues before they're critical, while production remains stable and auditable. When you're ready to upgrade production, it becomes a deliberate, tested deployment.</p>
+          </div>
+        </li>
+        <li class="bp-item">
+          <div class="bp-num">3</div>
+          <div class="bp-body">
+            <div class="bp-title">Subscribe to OpenRouter's changelog and OpenAI's release announcements</div>
+            <p class="bp-desc">OpenRouter publishes alias target changes in their changelog. OpenAI announces new flagship models on their blog and via their developer mailing list. Staying subscribed means you'll know about alias updates before they happen, giving you time to test the incoming model against your workloads.</p>
+          </div>
+        </li>
+        <li class="bp-item">
+          <div class="bp-num">4</div>
+          <div class="bp-body">
+            <div class="bp-title">Maintain a prompt regression test suite</div>
+            <p class="bp-desc">Keep a set of representative prompts with expected outputs (or output criteria) that you can run against any new model version. When an alias target changes, run your suite against the new underlying model explicitly before it reaches production. This converts silent behavioral drift into a detectable, actionable signal.</p>
+          </div>
+        </li>
+        <li class="bp-item">
+          <div class="bp-num">5</div>
+          <div class="bp-body">
+            <div class="bp-title">Log the resolved model ID from every API response</div>
+            <p class="bp-desc">OpenRouter returns the actual underlying model ID in the <code>model</code> field of every response. Log this field in your application. If the alias target changes overnight, you'll see the new model ID appear in your logs — without needing to check a changelog manually. This also gives you per-request auditability even when using an alias.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       CODE EXAMPLE
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Detecting What <code>gpt-chat-latest</code> Resolves To</h2>
+    <p>OpenRouter returns the actual resolved model ID in the <code>model</code> field of every response. This is your runtime source of truth — use it to log what model was actually used, detect alias target changes, and build alerting on top of it.</p>
+
+    <div class="code-block-wrap">
+      <div class="code-block-header">
+        <span class="code-block-lang">Python · OpenAI SDK via OpenRouter</span>
+        <span class="code-block-note">Reads resolved model from response</span>
+      </div>
+      <pre><code><span class="code-keyword">import</span> openai
+<span class="code-keyword">import</span> logging
+
+<span class="code-comment"># Configure logging so you capture the resolved model ID</span>
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+client = openai.OpenAI(
+    base_url=<span class="code-string">"https://openrouter.ai/api/v1"</span>,
+    api_key=<span class="code-string">"YOUR_OPENROUTER_KEY"</span>
+)
+
+resp = client.<span class="code-func">chat</span>.<span class="code-func">completions</span>.<span class="code-func">create</span>(
+    <span class="code-attr">model</span>=<span class="code-string">"openai/gpt-chat-latest"</span>,
+    <span class="code-attr">messages</span>=[{<span class="code-string">"role"</span>: <span class="code-string">"user"</span>, <span class="code-string">"content"</span>: <span class="code-string">"Hello"</span>}]
+)
+
+<span class="code-comment"># The alias resolves — the actual model used is returned here</span>
+resolved_model = resp.model
+<span class="code-func">print</span>(resolved_model)  <span class="code-comment"># e.g., "openai/gpt-5.5-2026-05"</span>
+
+<span class="code-comment"># Log it for auditing and change detection</span>
+logger.<span class="code-func">info</span>(<span class="code-string">f"Used model: {resolved_model}"</span>)
+
+<span class="code-comment"># Optionally: alert if the resolved model changes</span>
+KNOWN_ALIAS_TARGET = <span class="code-string">"openai/gpt-5.5-2026-05"</span>  <span class="code-comment"># update when you confirm</span>
+<span class="code-keyword">if</span> resolved_model != KNOWN_ALIAS_TARGET:
+    logger.<span class="code-func">warning</span>(
+        <span class="code-string">f"gpt-chat-latest now resolves to {resolved_model} "
+        f"(was {KNOWN_ALIAS_TARGET}) — review behavior and costs"</span>
+    )</code></pre>
+    </div>
+
+    <p style="font-size:.84rem;color:var(--text-secondary);line-height:1.6;">The warning pattern above is a lightweight change detector: the first time the alias target shifts, your logs will show a mismatch between what you expected and what OpenRouter returned. No external monitoring service required — just structured logging and a known baseline value.</p>
+
+    <div class="code-block-wrap" style="margin-top:16px;">
+      <div class="code-block-header">
+        <span class="code-block-lang">TypeScript / Node.js</span>
+        <span class="code-block-note">Same pattern, TypeScript SDK</span>
+      </div>
+      <pre><code><span class="code-keyword">import</span> OpenAI <span class="code-keyword">from</span> <span class="code-string">'openai'</span>;
+
+<span class="code-keyword">const</span> client = <span class="code-keyword">new</span> <span class="code-func">OpenAI</span>({
+  <span class="code-attr">baseURL</span>: <span class="code-string">'https://openrouter.ai/api/v1'</span>,
+  <span class="code-attr">apiKey</span>: process.env.<span class="code-attr">OPENROUTER_API_KEY</span>,
+});
+
+<span class="code-keyword">const</span> resp = <span class="code-keyword">await</span> client.chat.completions.<span class="code-func">create</span>({
+  <span class="code-attr">model</span>: <span class="code-string">'openai/gpt-chat-latest'</span>,
+  <span class="code-attr">messages</span>: [{ <span class="code-attr">role</span>: <span class="code-string">'user'</span>, <span class="code-attr">content</span>: <span class="code-string">'Hello'</span> }],
+});
+
+<span class="code-comment">// Always log the resolved model — it's your audit trail</span>
+console.<span class="code-func">log</span>(<span class="code-string">'Resolved model:'</span>, resp.model);
+<span class="code-comment">// → 'openai/gpt-5.5-2026-05' (or whatever is current)</span></code></pre>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       COMPARISON TABLE
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Alias vs Pinned Model ID: Full Comparison</h2>
+    <p>This table summarizes the practical tradeoffs. Neither column is inherently "better" — choose based on what matters most for your specific context.</p>
+
+    <div class="comp-table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th class="th-alias">gpt-chat-latest (alias)</th>
+            <th class="th-pinned">openai/gpt-5.5 (pinned)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Always current model</td>
+            <td class="td-yes">✓ Yes</td>
+            <td class="td-no">✗ No — stays on version</td>
+          </tr>
+          <tr>
+            <td>Predictable pricing</td>
+            <td class="td-no">✗ Changes with alias</td>
+            <td class="td-yes">✓ Fixed per-token rates</td>
+          </tr>
+          <tr>
+            <td>Consistent behavior</td>
+            <td class="td-no">✗ May drift on updates</td>
+            <td class="td-yes">✓ Stable until you upgrade</td>
+          </tr>
+          <tr>
+            <td>Good for prototyping</td>
+            <td class="td-yes">✓ Ideal</td>
+            <td class="td-warn">⚠ Overkill to manage</td>
+          </tr>
+          <tr>
+            <td>Good for production</td>
+            <td class="td-warn">⚠ Risk — use with caution</td>
+            <td class="td-yes">✓ Recommended</td>
+          </tr>
+          <tr>
+            <td>Auditable</td>
+            <td class="td-warn">⚠ Only via response logging</td>
+            <td class="td-yes">✓ Known model version</td>
+          </tr>
+          <tr>
+            <td>Regulated environments</td>
+            <td class="td-no">✗ Not appropriate</td>
+            <td class="td-yes">✓ Meets auditability needs</td>
+          </tr>
+          <tr>
+            <td>Zero code changes to upgrade</td>
+            <td class="td-yes">✓ Upgrade is automatic</td>
+            <td class="td-no">✗ Must update model ID string</td>
+          </tr>
+          <tr>
+            <td>Requires monitoring</td>
+            <td class="td-warn">⚠ Strongly recommended</td>
+            <td class="td-yes">✓ Less critical</td>
+          </tr>
+          <tr>
+            <td>Rollback if issues found</td>
+            <td class="td-no">✗ Must switch to pinned ID</td>
+            <td class="td-yes">✓ Pin to previous version</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       RELATED ALIASES ON OPENROUTER
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Related OpenAI Aliases on OpenRouter</h2>
+    <p>OpenRouter maintains several auto-updating aliases for the OpenAI model family. Each covers a different slice of the lineup. Understanding the distinction prevents accidentally using the wrong alias for your use case.</p>
+
+    <div class="alias-list">
+      <div class="alias-row">
+        <span class="alias-id">openai/gpt-latest</span>
+        <span class="alias-desc">Routes to the latest GPT model across all variants — including reasoning-focused and multi-modal variants. Use when you want the absolute current top-of-line model regardless of whether it includes extended reasoning. Broader scope than gpt-chat-latest.</span>
+      </div>
+      <div class="alias-row">
+        <span class="alias-id">openai/gpt-mini-latest</span>
+        <span class="alias-desc">Routes to the latest compact or budget-tier GPT model — currently in the GPT-4o mini / GPT-5 mini range. Use when you need low-cost, fast inference and always want the most current efficient option. Good fit for high-volume tasks like classification or extraction.</span>
+      </div>
+      <div class="alias-row current-alias">
+        <span class="alias-id">openai/gpt-chat-latest</span>
+        <span class="alias-desc">Routes to OpenAI's current best chat-optimized model. Scoped specifically to conversational chat capability — excludes dedicated reasoning or coding variants. This is the article you're reading.</span>
+        <span class="alias-current-tag">This article</span>
+      </div>
+    </div>
+
+    <p style="font-size:.82rem;color:var(--text-muted);margin-top:14px;">Alias IDs are maintained by OpenRouter and may change. Check the <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" style="color:var(--openai);">OpenRouter model list</a> for the current target and available aliases.</p>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       TRY IT BAND
+  ═══════════════════════════════════════════════════ -->
+  <div class="try-it-band">
+    <div>
+      <h3>Try via BYOK — always the latest model</h3>
+      <p>Call <code>openai/gpt-chat-latest</code> directly using your OpenRouter API key. The playground passes your key directly to OpenRouter — nothing is stored server-side.</p>
+      <p class="try-it-note">Rate limits and pricing reflect the underlying model at time of call. Check the resolved <code>model</code> field in the response to confirm what you got.</p>
+    </div>
+    <button class="try-btn" onclick="window.byok?.openByokModal('openai/gpt-chat-latest', 'GPT Chat Latest')">Try GPT Chat Latest</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       WHEN THIS MAKES SENSE — PRACTICAL SCENARIOS
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Practical Scenarios Where Aliases Shine</h2>
+    <p>To make the decision guide more concrete, here are specific real-world scenarios where <code>gpt-chat-latest</code> is the better choice — and a few where it isn't.</p>
+
+    <h3 style="font-size:1rem;color:var(--text-primary);margin:24px 0 12px;">Scenarios where the alias is a good fit</h3>
+
+    <p><strong style="color:var(--text-primary);">Internal Slack bot for Q&amp;A.</strong> Your team uses a Slack bot to answer questions against your internal wiki. Behavioral drift is tolerable — if the answers improve with a model upgrade, that's fine. Cost fluctuation is visible on your monthly billing summary and acceptable within your budget envelope. Here, the alias saves you the ongoing work of evaluating and re-deploying new model versions.</p>
+
+    <p><strong style="color:var(--text-primary);">Hackathon project with a 48-hour lifespan.</strong> The project won't exist long enough to care about model stability. You want the best model available right now without spending time on model selection. Use the alias freely.</p>
+
+    <p><strong style="color:var(--text-primary);">Demo environment for sales prospects.</strong> Prospects want to see the most impressive output possible. An alias ensures your demo always uses the current best model. If the demo breaks due to a model update, you'll notice during QA and can pin a specific ID at that point.</p>
+
+    <h3 style="font-size:1rem;color:var(--text-primary);margin:24px 0 12px;">Scenarios where you should pin</h3>
+
+    <p><strong style="color:var(--text-primary);">Healthcare app generating patient-facing summaries.</strong> Output must be consistent, auditable, and reviewed against specific model behavior. A silent model change could alter how medical information is phrased, creating regulatory and liability risk. Pin a specific, versioned model ID and have a formal upgrade process.</p>
+
+    <p><strong style="color:var(--text-primary);">E-commerce product description generation at scale.</strong> You run 50,000 generations per day. A 10% pricing increase in the underlying model adds thousands of dollars to your monthly bill without warning. Pin the model, budget precisely, and evaluate upgrades deliberately.</p>
+
+    <p><strong style="color:var(--text-primary);">Structured data extraction pipeline.</strong> Your pipeline extracts JSON from unstructured text and feeds it to downstream systems. A model behavior change in JSON schema adherence or field naming conventions would break the downstream parsing. Pin the model and test any upgrades against your extraction prompts before deploying.</p>
+  </section>
+
+  <hr class="article-divider">
+
+  <!-- ══════════════════════════════════════════════════
+       KEY TAKEAWAYS
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Key Takeaways</h2>
+    <div class="article-takeaways">
+      <ul>
+        <li><code>openai/gpt-chat-latest</code> is a routing alias, not a model. It always resolves to OpenAI's current best chat model — as of May 2026, in the GPT-5/GPT-5.5 range. The resolved model ID is returned in every API response.</li>
+        <li>Aliases are designed for development, prototyping, and internal tooling — not for production applications where consistency, cost predictability, and auditability are required.</li>
+        <li>The biggest production risks are silent capability drift, silent pricing changes, and behavioral shifts that can break prompt-tuned workflows or structured-output parsers.</li>
+        <li>Mitigate risk by logging the resolved <code>model</code> field from every response, setting cost alerts, and maintaining a prompt regression test suite you can run against any new underlying model.</li>
+        <li>A safe hybrid: use <code>gpt-chat-latest</code> in dev/staging to stay current, and pin a specific versioned model ID in production. Treat alias target changes as your cue to deliberately evaluate and upgrade your production pin.</li>
+        <li>OpenRouter provides multiple OpenAI aliases: <code>gpt-latest</code> (broadest), <code>gpt-chat-latest</code> (chat-optimized), and <code>gpt-mini-latest</code> (budget tier). Choose the alias scope that matches your use case.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       RELATED MODELS
+  ═══════════════════════════════════════════════════ -->
+  <section class="article-section">
+    <h2>Related Models</h2>
+    <div class="related-grid">
+      <a href="/models/openai-gpt-5-5-pro.html" class="related-card">
+        <h4>GPT-5.5 Pro</h4>
+        <p>The current underlying model for gpt-chat-latest in May 2026. 1M context, OpenAI's strongest reasoning. If you want to pin the current alias target, this is the ID to use.</p>
+      </a>
+      <a href="/models/openai-gpt-5.html" class="related-card">
+        <h4>GPT-5</h4>
+        <p>The predecessor flagship — released August 2025. 400K context, $1.25/$10.00 per 1M tokens. If you need a stable pinned model one tier below the current flagship, this is the stable option.</p>
+      </a>
+      <a href="/models/gpt-4o.html" class="related-card">
+        <h4>GPT-4o</h4>
+        <p>OpenAI's previous-generation multimodal model. Widely tested, heavily production-deployed, and well-documented. A solid conservative pin for teams that don't need the latest reasoning capabilities.</p>
+      </a>
+      <a href="/models/claude-sonnet-4-6.html" class="related-card">
+        <h4>Claude Sonnet 4.6</h4>
+        <p>Anthropic's equivalent mid-tier alias target — Anthropic also maintains auto-routing aliases. 1M context, opt-in extended reasoning. A useful benchmark for evaluating OpenAI's routing alias against cross-provider alternatives.</p>
+      </a>
+    </div>
+  </section>
+
+</main>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>

@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qwen3 235B Free Review — Alibaba's Flagship MoE at $0.00 (Retired) | Aether Intel</title>
+  <meta name="description" content="Qwen3 235B A22B Free reviewed: the free tier of Alibaba's flagship 235B MoE model. Same weights as paid, $0.00, rate-limited. Now retired — what it was and what to use instead." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/qwen3-235b-free/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Qwen3 235B A22B Free: Alibaba's Flagship MoE at $0.00 (Retired)" />
+  <meta property="og:description" content="The free tier of Alibaba's 235B MoE flagship — same weights, zero cost, rate-limited. Now retired on OpenRouter. What it was and what to use instead." />
+  <meta property="og:url" content="https://ai.quantummerlin.com/models/qwen3-235b-free/" />
+  <meta property="og:site_name" content="Aether Intel" />
+
+  <!-- Article schema -->
+  <meta property="article:published_time" content="2026-05-16T00:00:00Z" />
+  <meta property="article:author" content="Aether Intel" />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --qwen: #9c27b0;
+      --qwen-glow: rgba(156,39,176,0.12);
+      --qwen-border: rgba(156,39,176,0.3);
+      --free-green: #22c55e;
+      --amber: #f59e0b;
+      --amber-glow: rgba(245,158,11,0.08);
+      --amber-border: rgba(245,158,11,0.3);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.7;
+    }
+
+    /* ── Site Header ── */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(7,7,15,0.95);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: .85rem;
+      font-weight: 900;
+      letter-spacing: .15em;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+    .site-logo span { color: var(--neon-indigo); }
+    .site-nav { display: flex; gap: 28px; }
+    .site-nav a {
+      font-family: var(--font-body);
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .site-nav a:hover { color: var(--text-primary); }
+
+    /* ── Main Layout ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      font-size: .75rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .breadcrumb a:hover { color: var(--neon-indigo); }
+    .breadcrumb span { color: var(--text-muted); }
+
+    /* ── Hero ── */
+    .hero { margin-bottom: 40px; }
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .badge-provider {
+      background: var(--qwen-glow);
+      border: 1px solid var(--qwen-border);
+      color: var(--qwen);
+    }
+    .badge-free {
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--free-green);
+    }
+    .badge-retired {
+      background: var(--amber-glow);
+      border: 1px solid var(--amber-border);
+      color: var(--amber);
+    }
+    .badge-meta {
+      background: rgba(129,140,248,0.1);
+      border: 1px solid rgba(129,140,248,0.25);
+      color: var(--neon-indigo);
+    }
+
+    h1.model-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    h1.model-title .accent-green { color: var(--free-green); }
+
+    .hero-lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 720px;
+      margin-bottom: 18px;
+    }
+
+    .hero-highlight-amber {
+      background: var(--amber-glow);
+      border: 1px solid var(--amber-border);
+      border-left: 3px solid var(--amber);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      font-size: .92rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+    .hero-highlight-amber strong { color: var(--text-primary); }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      font-size: .78rem;
+      color: var(--text-muted);
+    }
+    .hero-meta .dot { color: var(--text-muted); }
+
+    /* ── Status Alert ── */
+    .status-alert {
+      background: var(--amber-glow);
+      border: 1px solid var(--amber-border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin: 28px 0;
+    }
+    .status-alert-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .status-alert-icon {
+      font-size: 1.1rem;
+    }
+    .status-alert-title {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+    .status-alert p {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .status-alert p:last-child { margin-bottom: 0; }
+    .status-alert code {
+      font-family: 'Courier New', monospace;
+      font-size: .82em;
+      background: rgba(245,158,11,0.1);
+      color: var(--amber);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .status-alert strong { color: var(--text-primary); }
+    .status-alert a { color: var(--neon-indigo); text-decoration: none; }
+    .status-alert a:hover { color: var(--neon-cyan); }
+
+    /* ── Section headings ── */
+    h2.section-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 40px 0 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3.sub-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 26px 0 10px;
+    }
+    p.body-copy {
+      font-size: .93rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    p.body-copy strong { color: var(--text-primary); }
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    /* ── Spec Grid ── */
+    .model-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .spec-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .spec-card.spec-qwen {
+      border-color: var(--qwen-border);
+      background: linear-gradient(135deg, var(--qwen-glow), rgba(7,7,15,0));
+    }
+    .spec-card.spec-amber {
+      border-color: var(--amber-border);
+      background: linear-gradient(135deg, var(--amber-glow), rgba(7,7,15,0));
+    }
+    .spec-card.spec-green {
+      border-color: rgba(34,197,94,0.3);
+      background: linear-gradient(135deg, rgba(34,197,94,0.05), rgba(7,7,15,0));
+    }
+    .spec-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .spec-value {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .spec-value.sv-green { color: var(--free-green); font-size: 1.3rem; }
+    .spec-value.sv-qwen  { color: var(--qwen); }
+    .spec-value.sv-amber { color: var(--amber); }
+    .spec-value.sv-indigo { color: var(--neon-indigo); }
+    .spec-value.sv-cyan { color: var(--neon-cyan); }
+    .spec-note {
+      font-size: .68rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .spec-note.retired {
+      color: var(--amber);
+      opacity: .85;
+    }
+
+    /* ── Benchmark Block (no-run version) ── */
+    .benchmark-block {
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 14px;
+      padding: 26px;
+      margin: 28px 0;
+    }
+    .benchmark-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .benchmark-block-title {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--qwen);
+    }
+    .bc-badge {
+      padding: 4px 12px;
+      border-radius: 7px;
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .bc-badge.bc-free {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--free-green);
+    }
+    .bc-badge.bc-mid {
+      background: rgba(129,140,248,0.08);
+      border: 1px solid rgba(129,140,248,0.3);
+      color: var(--neon-indigo);
+    }
+    .bc-badge.bc-amber {
+      background: var(--amber-glow);
+      border: 1px solid var(--amber-border);
+      color: var(--amber);
+    }
+    .benchmark-subheader {
+      font-size: .75rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .bench-cost-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .84rem;
+      margin: 14px 0;
+    }
+    .bench-cost-table th {
+      font-family: var(--font-display);
+      font-size: .56rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .bench-cost-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(129,140,248,0.06);
+      color: var(--text-secondary);
+    }
+    .bench-cost-table td strong { color: var(--text-primary); }
+    .bench-cost-table tr.total-row td {
+      border-top: 1px solid var(--border);
+      border-bottom: none;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+    .bench-cost-table .td-free { color: var(--free-green); font-weight: 700; }
+    .bench-cost-table .td-amber { color: var(--amber); }
+    .bench-cost-table .td-qwen { color: var(--qwen); font-weight: 700; }
+
+    /* ── Info / Warning / Success Callouts ── */
+    .info-callout {
+      background: rgba(129,140,248,0.06);
+      border: 1px solid rgba(129,140,248,0.2);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 16px 0;
+    }
+    .info-callout strong { color: var(--text-primary); }
+
+    .warning-callout {
+      background: var(--amber-glow);
+      border: 1px solid var(--amber-border);
+      border-left: 3px solid var(--amber);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 16px 0;
+    }
+    .warning-callout strong { color: var(--text-primary); }
+    .warning-callout code {
+      font-family: 'Courier New', monospace;
+      font-size: .82em;
+      background: rgba(245,158,11,0.1);
+      color: var(--amber);
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    .qwen-callout {
+      background: var(--qwen-glow);
+      border: 1px solid var(--qwen-border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+    }
+    .qwen-callout-header {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--qwen);
+      margin-bottom: 10px;
+    }
+    .qwen-callout p {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .qwen-callout p:last-child { margin-bottom: 0; }
+    .qwen-callout strong { color: var(--text-primary); }
+
+    /* ── Pricing Table ── */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: .85rem;
+    }
+    .pricing-table th {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(129,140,248,0.06);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+    .pricing-table td strong { color: var(--text-primary); }
+    .pricing-table td.td-free { color: var(--free-green); font-weight: 700; }
+    .pricing-table td.td-qwen { color: var(--qwen); font-weight: 600; }
+    .pricing-table tr.this-row td { background: rgba(156,39,176,0.04); }
+    .pricing-table tr.this-row td:first-child { border-left: 2px solid var(--qwen); }
+    .pricing-table tr:last-child td { border-bottom: none; }
+    .pricing-table tr:hover td { background: rgba(129,140,248,0.03); }
+
+    .status-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-family: var(--font-display);
+      font-size: .55rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .status-pill.retired {
+      background: var(--amber-glow);
+      border: 1px solid var(--amber-border);
+      color: var(--amber);
+    }
+    .status-pill.active {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--free-green);
+    }
+
+    /* ── Migration Band ── */
+    .migration-band {
+      background: linear-gradient(135deg, var(--qwen-glow), rgba(7,7,15,0));
+      border: 1px solid var(--qwen-border);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 32px 0;
+    }
+    .migration-band-header {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 10px;
+    }
+    .migration-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .migration-band p {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .migration-band p:last-of-type { margin-bottom: 0; }
+    .migration-band strong { color: var(--text-primary); }
+    .migration-band-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .migration-btn {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      transition: opacity .2s, transform .15s;
+    }
+    .migration-btn:hover { opacity: .85; transform: translateY(-1px); }
+    .migration-btn.btn-primary {
+      background: var(--qwen);
+      color: #fff;
+    }
+    .migration-btn.btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(34,197,94,0.4);
+      color: var(--free-green);
+    }
+
+    /* ── Related Grid ── */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .related-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-decoration: none;
+      display: block;
+      transition: border-color .2s, transform .15s;
+    }
+    .related-card:hover { border-color: rgba(129,140,248,0.35); transform: translateY(-2px); }
+    .related-card.related-qwen:hover { border-color: var(--qwen-border); }
+    .related-card-provider {
+      font-family: var(--font-display);
+      font-size: .55rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .related-card-name {
+      font-family: var(--font-heading);
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .related-card-desc {
+      font-size: .78rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+    .related-card-status {
+      margin-top: 8px;
+    }
+
+    /* ── Use Case Grid ── */
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .use-case-card .uc-icon { font-size: 1.2rem; margin-bottom: 8px; display: block; }
+    .use-case-card h4 {
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .use-case-card p {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'Courier New', monospace;
+      font-size: .82em;
+      background: rgba(129,140,248,0.08);
+      color: var(--neon-indigo);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* ── AdSense ── */
+    .adsense-mid { margin: 36px 0; text-align: center; }
+
+    /* ── Site Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 32px;
+      margin-top: 60px;
+    }
+    .footer-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .footer-copy {
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
+    .footer-copy a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-copy a:hover { color: var(--neon-indigo); }
+
+    /* ── Architecture boxes ── */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .arch-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .arch-card-title {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--qwen);
+      margin-bottom: 8px;
+    }
+    .arch-card p {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── Mode Switch Block ── */
+    .mode-switch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .mode-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .mode-card.thinking-card { border-color: var(--qwen-border); }
+    .mode-card.fast-card     { border-color: rgba(34,211,238,0.25); }
+    .mode-card-header {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .thinking-card .mode-card-header { color: var(--qwen); }
+    .fast-card     .mode-card-header { color: var(--neon-cyan); }
+    .mode-card p {
+      font-size: .85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .mode-card p:last-child { margin: 0; }
+    .mode-card strong { color: var(--text-primary); }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .site-header { padding: 14px 16px; }
+      .site-nav { gap: 16px; }
+      main { padding: 28px 16px 60px; }
+      .model-specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .use-case-grid { grid-template-columns: 1fr; }
+      .mode-switch-grid { grid-template-columns: 1fr; }
+      .related-grid { grid-template-columns: 1fr; }
+      .arch-grid { grid-template-columns: 1fr; }
+      .migration-band-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Site Header -->
+<header class="site-header">
+  <a href="/" class="site-logo">AETHER<span>INTEL</span></a>
+  <nav class="site-nav">
+    <a href="/models/">Models</a>
+    <a href="/tools/">Tools</a>
+    <a href="/news/">News</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span>›</span>
+    <a href="/models/">Models</a>
+    <span>›</span>
+    <span>Qwen3 235B Free</span>
+  </nav>
+
+  <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-badges">
+      <span class="badge badge-provider">ALIBABA / QWEN</span>
+      <span class="badge badge-free">FREE TIER</span>
+      <span class="badge badge-retired">RETIRED</span>
+      <span class="badge badge-meta">REASONING</span>
+      <span class="badge badge-meta">131K CTX</span>
+    </div>
+
+    <h1 class="model-title">Qwen3 235B A22B <span class="accent-green">Free</span></h1>
+
+    <p class="hero-lead">
+      The free tier of Alibaba's 235B MoE flagship — same weights as the paid model, zero cost, rate-limited. What was briefly accessible at $0.00 now returns "no endpoints found" on OpenRouter. This page documents what Qwen3 235B Free was, why it mattered, and how to access the same capability today.
+    </p>
+
+    <div class="hero-highlight-amber">
+      <strong>Free tier retired — no endpoints on OpenRouter.</strong> The <code style="background:rgba(245,158,11,0.1);color:var(--amber);font-family:monospace;font-size:.85em;padding:1px 5px;border-radius:3px;">qwen/qwen3-235b-a22b:free</code> model ID returns HTTP 404. The paid tier (<code style="background:rgba(245,158,11,0.1);color:var(--amber);font-family:monospace;font-size:.85em;padding:1px 5px;border-radius:3px;">qwen/qwen3-235b-a22b</code> at $0.455/$1.82 per 1M tokens) remains fully active.
+    </div>
+
+    <div class="hero-meta">
+      <span>Published: May 2026</span>
+      <span class="dot">·</span>
+      <span>Reference article</span>
+      <span class="dot">·</span>
+      <span>By Aether Intel</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STATUS ALERT
+  ═══════════════════════════════════════ -->
+  <div class="status-alert">
+    <div class="status-alert-header">
+      <span class="status-alert-icon">⚠</span>
+      <span class="status-alert-title">FREE TIER NO LONGER AVAILABLE</span>
+    </div>
+    <p><code>qwen/qwen3-235b-a22b:free</code> returns: <code>No endpoints found for qwen/qwen3-235b-a22b:free</code></p>
+    <p>The free tier has been retired on OpenRouter. No provider is currently routing this model ID at zero cost.</p>
+    <p><strong>Migration paths:</strong> Use <a href="/models/qwen3-235b/"><code style="color:var(--neon-indigo);background:rgba(129,140,248,0.08);">qwen/qwen3-235b-a22b</code></a> (paid, $0.455/$1.82 per 1M) for full capability, or <a href="/models/deepseek-v4-flash-free/"><code style="color:var(--free-green);background:rgba(34,197,94,0.08);">deepseek/deepseek-v4-flash:free</code></a> for zero-cost reasoning.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SPEC GRID
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">Specifications — Free Tier (Retired)</h2>
+
+  <div class="model-specs-grid">
+    <div class="spec-card spec-green">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value sv-green">$0.00</div>
+      <div class="spec-note retired">retired</div>
+    </div>
+    <div class="spec-card spec-green">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value sv-green">$0.00</div>
+      <div class="spec-note retired">retired</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value sv-indigo">131K</div>
+      <div class="spec-note">131,072 tokens</div>
+    </div>
+    <div class="spec-card spec-qwen">
+      <div class="spec-label">Parameters</div>
+      <div class="spec-value sv-qwen">235B</div>
+      <div class="spec-note">22B active per pass</div>
+    </div>
+    <div class="spec-card spec-qwen">
+      <div class="spec-label">Reasoning</div>
+      <div class="spec-value sv-qwen">Yes</div>
+      <div class="spec-note">thinking + non-thinking</div>
+    </div>
+    <div class="spec-card spec-amber">
+      <div class="spec-label">Status</div>
+      <div class="spec-value sv-amber">RETIRED</div>
+      <div class="spec-note retired">no endpoints on OpenRouter</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Paid Tier Input</div>
+      <div class="spec-value" style="font-size:.95rem;">$0.455</div>
+      <div class="spec-note">per 1M — active</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Paid Tier Output</div>
+      <div class="spec-value" style="font-size:.95rem;">$1.82</div>
+      <div class="spec-note">per 1M — active</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       BENCHMARK STATUS
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">Benchmark Status</h2>
+
+  <div class="benchmark-block">
+    <div class="benchmark-block-header">
+      <span class="benchmark-block-title">Aether Intel Benchmark — qwen/qwen3-235b-a22b:free</span>
+      <span class="bc-badge bc-amber">NOT RUN</span>
+    </div>
+    <div class="benchmark-subheader">Free tier unavailable at time of testing · Model ID: <code class="inline">qwen/qwen3-235b-a22b:free</code></div>
+
+    <div class="warning-callout">
+      <strong>Benchmark not run.</strong> The free tier returned <code>No endpoints found</code> when we attempted to test it. No response data was collected. The cost metrics shown here are theoretical — what the benchmark would have cost if the free tier were available.
+    </div>
+
+    <table class="bench-cost-table">
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>Benchmark Token Cost</th>
+          <th>Status</th>
+          <th>Tier</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Free tier (:free)</strong></td>
+          <td class="td-free">$0.00 (theoretical)</td>
+          <td class="td-amber">No endpoints — retired</td>
+          <td><span class="bc-badge bc-free" style="font-size:.56rem;padding:2px 8px;">bc-free</span></td>
+        </tr>
+        <tr>
+          <td><strong>Paid tier</strong></td>
+          <td class="td-qwen">$0.004323</td>
+          <td style="color:var(--free-green);">Active</td>
+          <td><span class="bc-badge bc-mid" style="font-size:.56rem;padding:2px 8px;">bc-mid</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:.8rem;color:var(--text-muted);margin-top:8px;">Paid tier bench cost: 1,500 input × $0.455/1M + 2,000 output × $1.82/1M = $0.000683 + $0.003640 = $0.004323. See <a href="/models/qwen3-235b/" style="color:var(--neon-indigo);">Qwen3 235B A22B (paid)</a> for the full live benchmark.</p>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════
+       WHAT IS QWEN3 235B A22B
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">What Is Qwen3 235B A22B?</h2>
+
+  <p class="body-copy">
+    Qwen3 235B A22B is Alibaba's flagship open-weight language model, released on April 28, 2025 as the crown jewel of the Qwen3 model family. The name is precise: <strong>235B</strong> refers to 235 billion total parameters, and <strong>A22B</strong> refers to 22 billion <em>active</em> parameters per forward pass — the key to understanding why this model is both powerful and cost-accessible.
+  </p>
+
+  <p class="body-copy">
+    It is a <strong>Mixture-of-Experts (MoE)</strong> architecture, meaning the 235 billion parameters are organized into specialized expert sub-networks. Only a subset of those experts activates for any given input, and in Qwen3 235B that active subset adds up to roughly 22 billion parameters — about 9% of the total. The rest of the parameter space sits dormant for that token, waiting to be routed for inputs that match their specialization.
+  </p>
+
+  <p class="body-copy">
+    The result is a model with the representational depth of 235 billion parameters, but the inference cost profile of a much smaller 22 billion parameter dense model. At launch in April 2025, Qwen3 235B A22B was competitive with or better than frontier models costing $10–20 per million output tokens, at a fraction of the price.
+  </p>
+
+  <div class="arch-grid">
+    <div class="arch-card">
+      <div class="arch-card-title">Architecture</div>
+      <p>235B total parameters, Mixture-of-Experts design. 22B active per forward pass. Approximately 9% parameter utilization per token — delivering dense-model expressiveness at sparse-model compute cost.</p>
+    </div>
+    <div class="arch-card">
+      <div class="arch-card-title">Context Window</div>
+      <p>32K tokens natively, extended to 131,072 tokens via YaRN-based positional scaling. Long-context performance degrades gracefully across the full range.</p>
+    </div>
+    <div class="arch-card">
+      <div class="arch-card-title">Multilingual</div>
+      <p>100+ languages and dialects. Strong on major European languages, Chinese, Japanese, Korean, Arabic, and regional Asian languages — not just English-dominant performance.</p>
+    </div>
+    <div class="arch-card">
+      <div class="arch-card-title">Capabilities</div>
+      <p>Math, coding, logical reasoning, instruction following, agent tool-calling, and multilingual tasks. Knowledge cutoff: March 31, 2025. Open-weight: self-hostable.</p>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════
+       THE FREE TIER
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">The Free Tier: What It Was</h2>
+
+  <p class="body-copy">
+    The <code class="inline">:free</code> variant of OpenRouter models provides access to the same underlying model weights at $0.00, with operational constraints instead of pricing gates. For <code class="inline">qwen/qwen3-235b-a22b:free</code>, that meant accessing the full Qwen3 235B A22B model — 235 billion parameters, dual-mode reasoning, 131K context — without paying a single cent per token.
+  </p>
+
+  <p class="body-copy">
+    The trade-offs of the free tier versus the paid tier were operational, not qualitative:
+  </p>
+
+  <ul style="list-style:none;margin:0 0 18px;padding:0;">
+    <li style="display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(129,140,248,0.06);font-size:.88rem;color:var(--text-secondary);">
+      <span style="color:var(--amber);font-weight:700;margin-top:2px;flex-shrink:0;">—</span>
+      <span><strong style="color:var(--text-primary);">Lower rate limits:</strong> Fewer requests per minute and a daily token cap. Fine for development and low-volume workloads; a constraint for high-throughput production.</span>
+    </li>
+    <li style="display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(129,140,248,0.06);font-size:.88rem;color:var(--text-secondary);">
+      <span style="color:var(--amber);font-weight:700;margin-top:2px;flex-shrink:0;">—</span>
+      <span><strong style="color:var(--text-primary);">Higher latency:</strong> Free-tier traffic was routed lower-priority than paid traffic on shared provider infrastructure. Expect longer time-to-first-token, especially during peak hours.</span>
+    </li>
+    <li style="display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(129,140,248,0.06);font-size:.88rem;color:var(--text-secondary);">
+      <span style="color:var(--amber);font-weight:700;margin-top:2px;flex-shrink:0;">—</span>
+      <span><strong style="color:var(--text-primary);">No SLA:</strong> No contractual uptime guarantees. Service could be degraded or unavailable without notice. Not suitable for customer-facing production deployments.</span>
+    </li>
+    <li style="display:flex;gap:12px;align-items:flex-start;padding:9px 0;font-size:.88rem;color:var(--text-secondary);">
+      <span style="color:var(--amber);font-weight:700;margin-top:2px;flex-shrink:0;">—</span>
+      <span><strong style="color:var(--text-primary);">Model quality: identical.</strong> The weights are the same. The same 235 billion parameters, the same MoE routing, the same thinking mode — just served differently.</span>
+    </li>
+  </ul>
+
+  <p class="body-copy">
+    For researchers, independent developers, and small teams, the free tier was the most accessible point of entry to a genuinely flagship-class model. The rate limits that constrain high-throughput production use cases are invisible for exploratory or low-volume work.
+  </p>
+
+  <!-- ═══════════════════════════════════════
+       WHY IT WAS REMARKABLE
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">Why It Was Remarkable</h2>
+
+  <p class="body-copy">
+    At the time Qwen3 235B A22B launched in April 2025, it was competing with models that cost $10 to $20 per million output tokens. OpenAI's GPT-4o was priced at $10/1M output. Claude 3 Opus had been even higher. Gemini Ultra was similarly expensive. Getting access to that tier of capability for free — even with rate limits — represented an extraordinary value proposition.
+  </p>
+
+  <p class="body-copy">
+    For researchers, the free tier meant running evaluations and ablations without burning API budget. For small startups, it meant prototyping with flagship reasoning capability before committing to production costs. For individual developers, it meant building with the best available open-weight model at $0.00 per token.
+  </p>
+
+  <div class="qwen-callout">
+    <div class="qwen-callout-header">Why Alibaba Offered It Free</div>
+    <p>Free tiers on OpenRouter exist because the provider absorbs the inference cost strategically. For Alibaba and Qwen, free-tier access accelerates developer adoption of Qwen models globally. Every developer who builds something meaningful with Qwen3 235B Free is a potential long-term customer for the paid API, a researcher who cites Qwen in publications, or an engineer who advocates for Qwen in enterprise procurement discussions.</p>
+    <p>The model quality available at $0.00 reflects how strong Alibaba's adoption incentive was — and how confident they were in the model's ability to convert free-tier users into long-term advocates.</p>
+  </div>
+
+  <p class="body-copy">
+    Qwen3 235B specifically stood out because it offered thinking mode on the free tier. Visible chain-of-thought reasoning — where the model writes out its deliberations before answering — was typically a paid premium feature at the time. Getting it for free, on a 235B-parameter model, was genuinely unprecedented.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- AdSense -->
+  <div class="adsense-mid">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MoE ARCHITECTURE EXPLAINED
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">MoE Architecture Explained</h2>
+
+  <p class="body-copy">
+    Mixture-of-Experts is the architectural innovation that makes Qwen3 235B both powerful and cost-accessible. In a conventional dense language model, every parameter participates in processing every token. A 235B dense model would require activating all 235 billion parameters for each forward pass — expensive to serve and slow to run.
+  </p>
+
+  <p class="body-copy">
+    MoE models work differently. The parameters are divided into "expert" sub-networks, and a learned routing mechanism decides which experts to activate for each token. In Qwen3 235B A22B, only approximately 22 billion parameters are active per forward pass — about 9% of the total. The remaining 213 billion are dormant for that token, not consuming compute.
+  </p>
+
+  <div class="info-callout">
+    <strong>A useful analogy:</strong> Think of a massive reference library where each book is an expert sub-network. A dense model reads every book for every question. A MoE model uses a smart routing system to identify the most relevant shelf and reads only those books — faster, cheaper, and in practice often just as thorough, because the right books are the ones that matter.
+  </div>
+
+  <p class="body-copy">
+    The practical consequence for pricing is significant. Inference cost scales primarily with <em>active</em> parameters, not total parameter count. A 235B MoE model with 22B active parameters has a cost profile much closer to a 22B dense model than to a 235B dense model. This is why <code class="inline">qwen/qwen3-235b-a22b</code> can be priced at $0.455/$1.82 per million tokens while delivering capabilities that compete with models at 10–20× the cost.
+  </p>
+
+  <p class="body-copy">
+    The model stores the knowledge and representational capacity of 235 billion parameters but only burns the compute of approximately 22 billion per token. You are accessing 235B of distilled knowledge through a 22B compute window — and paying only for the compute.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════
+       THINKING VS NON-THINKING MODE
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">Thinking vs Non-Thinking Mode</h2>
+
+  <p class="body-copy">
+    One of Qwen3 235B A22B's most distinctive features is its dual-mode reasoning design. Unlike models where either all responses are fast or all responses are deliberative, Qwen3 235B lets callers choose on a per-request basis.
+  </p>
+
+  <div class="mode-switch-grid">
+    <div class="mode-card thinking-card">
+      <div class="mode-card-header">Thinking Mode</div>
+      <p>The model generates a structured internal reasoning chain before producing the visible response. This chain — visible as reasoning tokens in the API response — covers assumption analysis, constraint checking, alternative exploration, and self-correction.</p>
+      <p><strong>Best for:</strong> Complex multi-step reasoning, math problems, code architecture, research synthesis, any task where deliberation improves accuracy.</p>
+      <p>Reasoning tokens count toward output billing. At $1.82/1M, extensive thinking adds cost — but often improves result quality substantially for hard tasks.</p>
+    </div>
+    <div class="mode-card fast-card">
+      <div class="mode-card-header">Non-Thinking Mode</div>
+      <p>The model responds directly without generating a reasoning chain. Faster time-to-first-token, lower total token count, and cheaper per exchange when the task doesn't benefit from extended deliberation.</p>
+      <p><strong>Best for:</strong> Conversational responses, simple Q&A, classification tasks, summarization, and any request where the answer is straightforward enough that reasoning overhead adds no value.</p>
+      <p>Same model weights, same knowledge — just without the scratchpad. Ideal for high-throughput use cases where cost-per-exchange matters more than analytical depth.</p>
+    </div>
+  </div>
+
+  <p class="body-copy">
+    This flexibility is what makes Qwen3 235B uniquely versatile. It can serve as a high-depth reasoning model when you need it — think o1-class deliberation — and as a fast chat model when you don't, all within the same API endpoint and the same model ID. The free tier would have supported both modes.
+  </p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════
+       CURRENT STATUS: NO ENDPOINTS
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">Current Status: "No Endpoints Found"</h2>
+
+  <p class="body-copy">
+    As of the time of writing, querying <code class="inline">qwen/qwen3-235b-a22b:free</code> via the OpenRouter API returns the following error response:
+  </p>
+
+  <div style="background:var(--surface-2);border:1px solid var(--amber-border);border-radius:8px;padding:16px 18px;margin:18px 0;font-family:'Courier New',monospace;font-size:.82rem;color:var(--text-secondary);line-height:1.6;">
+    <span style="color:var(--text-muted);display:block;font-family:var(--font-display);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">OpenRouter API Error Response</span>
+    {<br>
+    &nbsp;&nbsp;"error": {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;"message": "No endpoints found for qwen/qwen3-235b-a22b:free.",<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;"code": 404<br>
+    &nbsp;&nbsp;}<br>
+    }
+  </div>
+
+  <p class="body-copy">
+    This 404 error is OpenRouter's way of saying that no provider is currently routing this model ID at the free tier. On OpenRouter, model availability depends on providers — inference infrastructure operators who agree to serve requests for a given model. The <code class="inline">:free</code> suffix indicates that the provider absorbs the cost; when no provider is willing to do so for a given model, the free tier returns "no endpoints."
+  </p>
+
+  <p class="body-copy">
+    This can theoretically be temporary — if a provider were to re-add the model to their free-tier routing, the model ID would come back online. In practice, free tiers for flagship 235B models are expensive to maintain and tend to be retired permanently rather than intermittently unavailable. The economics of serving a 235B MoE for free at scale are challenging, and Alibaba and OpenRouter providers have apparently concluded that the paid tier is the appropriate access point going forward.
+  </p>
+
+  <div class="warning-callout">
+    <strong>What "no endpoints" means in practice:</strong> It is not a rate limit error, not a temporary outage, and not a geographic restriction. The model ID <code>qwen/qwen3-235b-a22b:free</code> is simply not routed anywhere. Any application using this model ID as a string constant will fail with a 404 until and unless a provider re-adds it — which is unlikely for this model.
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════
+       THE PAID TIER: STILL ACTIVE
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">The Paid Tier: Still Active</h2>
+
+  <p class="body-copy">
+    Everything that made the free tier remarkable — the 235B MoE architecture, thinking mode, 131K context, multilingual capability, open weights — remains available via <code class="inline">qwen/qwen3-235b-a22b</code> at $0.455 per million input tokens and $1.82 per million output tokens.
+  </p>
+
+  <p class="body-copy">
+    The benchmark cost for a standard exchange (1,500 input tokens + 2,000 output tokens) is <strong>$0.004323</strong> — placing it in the bc-mid tier by Aether Intel's benchmark cost classification. That is under half a cent per exchange for a 235B flagship reasoning model. For most practical workloads, the cost per meaningful interaction will be in the range of $0.002 to $0.01.
+  </p>
+
+  <p class="body-copy">
+    Teams that relied on the free tier for development, testing, or low-volume production should find the transition to the paid tier manageable. The pricing is deliberately competitive — Alibaba designed the paid tier to be accessible, and the MoE architecture keeps inference costs well below what a comparable dense model would cost.
+  </p>
+
+  <div class="qwen-callout">
+    <div class="qwen-callout-header">Paid Tier Cost Reference</div>
+    <p><strong>Benchmark cost calculation (bc-mid, gold):</strong></p>
+    <p>1,500 input tokens × $0.455/1M = $0.000683<br>2,000 output tokens × $1.82/1M = $0.003640<br><strong>Total: $0.004323 per benchmark exchange</strong></p>
+    <p>At 10,000 exchanges per month: ~$43.23. At 100,000 exchanges: ~$432. These numbers assume the benchmark token distribution — real workloads will vary based on prompt length and output verbosity.</p>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════
+       PRICING TABLE
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">Pricing Comparison</h2>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Input / 1M</th>
+        <th>Output / 1M</th>
+        <th>Per Exchange</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="this-row">
+        <td><strong>Qwen3 235B A22B :free</strong></td>
+        <td class="td-free">$0.00</td>
+        <td class="td-free">$0.00</td>
+        <td class="td-free">$0.00</td>
+        <td><span class="status-pill retired">RETIRED</span></td>
+      </tr>
+      <tr>
+        <td><strong>Qwen3 235B A22B (paid)</strong></td>
+        <td>$0.455</td>
+        <td>$1.82</td>
+        <td class="td-qwen">$0.0043</td>
+        <td><span class="status-pill active">ACTIVE</span></td>
+      </tr>
+      <tr>
+        <td><strong>Qwen3.6 27B</strong></td>
+        <td>$0.325</td>
+        <td>$3.25</td>
+        <td>$0.0070</td>
+        <td><span class="status-pill active">ACTIVE</span></td>
+      </tr>
+      <tr>
+        <td><strong>DeepSeek V4 Flash :free</strong></td>
+        <td class="td-free">$0.00</td>
+        <td class="td-free">$0.00</td>
+        <td class="td-free">$0.00</td>
+        <td><span class="status-pill active">ACTIVE</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:.78rem;color:var(--text-muted);margin-top:8px;">Per exchange cost based on 1,500 input + 2,000 output tokens. Free tier costs shown as historical reference. Pricing current as of May 2026; subject to change.</p>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════
+       USE CASES THAT STILL APPLY
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">What Qwen3 235B Is Best Used For</h2>
+
+  <p class="body-copy">
+    Whether accessed via the now-retired free tier or the active paid tier, the use cases for Qwen3 235B A22B remain the same. The model excels at tasks that benefit from large-scale knowledge, deep reasoning, and multilingual versatility.
+  </p>
+
+  <div class="use-case-grid">
+    <div class="use-case-card">
+      <span class="uc-icon">&#x1F9E0;</span>
+      <h4>Complex Reasoning</h4>
+      <p>Multi-step math, logical inference chains, and analysis tasks where the model's thinking mode adds depth that pattern-matching cannot replicate.</p>
+    </div>
+    <div class="use-case-card">
+      <span class="uc-icon">&#x1F4BB;</span>
+      <h4>Code Architecture</h4>
+      <p>System design, algorithm selection, debugging complex codebases, and generating well-reasoned implementation plans with trade-off analysis.</p>
+    </div>
+    <div class="use-case-card">
+      <span class="uc-icon">&#x1F30D;</span>
+      <h4>Multilingual Tasks</h4>
+      <p>100+ languages and dialects with strong performance on non-English tasks. Translation, localization, and cross-lingual analysis.</p>
+    </div>
+    <div class="use-case-card">
+      <span class="uc-icon">&#x1F4DA;</span>
+      <h4>Research Synthesis</h4>
+      <p>Summarizing multi-document research, comparing methodologies, and generating structured analytical outputs across long contexts.</p>
+    </div>
+    <div class="use-case-card">
+      <span class="uc-icon">&#x1F527;</span>
+      <h4>Agent Tool-Calling</h4>
+      <p>Strong function-calling and instruction-following capabilities make it suitable as the reasoning backbone in AI agent architectures.</p>
+    </div>
+    <div class="use-case-card">
+      <span class="uc-icon">&#x1F4AC;</span>
+      <h4>Instruction Following</h4>
+      <p>Precise compliance with complex formatting requirements, structured output generation, and multi-constraint tasks that require careful adherence.</p>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ═══════════════════════════════════════
+       MIGRATION BAND
+  ═══════════════════════════════════════ -->
+  <div class="migration-band">
+    <div class="migration-band-header">⚠ FREE TIER RETIRED — MIGRATION OPTIONS</div>
+    <h3>Access Qwen3 235B A22B — Paid Tier</h3>
+    <p>
+      The free tier is no longer available. The same 235B MoE weights, thinking mode, and 131K context are available via the paid tier at $0.455/$1.82 per million tokens. For most workloads, the cost per meaningful exchange is well under one cent.
+    </p>
+    <p>
+      <strong>For zero-cost reasoning:</strong> <a href="/models/deepseek-v4-flash-free/" style="color:var(--free-green);text-decoration:none;">DeepSeek V4 Flash Free</a> (<code class="inline">deepseek/deepseek-v4-flash:free</code>) remains active on OpenRouter and provides visible reasoning tokens at $0.00. It delivered the highest-quality benchmark response in our entire test series.
+    </p>
+    <div class="migration-band-actions">
+      <button class="migration-btn btn-primary" onclick="window.byok?.openByokModal('qwen/qwen3-235b-a22b', 'Qwen3 235B A22B')">
+        Access Qwen3 235B A22B — Paid Tier
+      </button>
+      <button class="migration-btn btn-secondary" onclick="window.byok?.openByokModal('deepseek/deepseek-v4-flash:free', 'DeepSeek V4 Flash Free')">
+        Try DeepSeek V4 Flash Free
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       CHOOSING A FREE REASONING ALTERNATIVE
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">Choosing a Free Reasoning Alternative</h2>
+
+  <p class="body-copy">
+    If the $0.00 price point was what made Qwen3 235B Free attractive, the best current alternative is <code class="inline">deepseek/deepseek-v4-flash:free</code>. DeepSeek V4 Flash Free is actively routed on OpenRouter, provides 64K context, and exposes visible reasoning tokens — the same chain-of-thought feature that made Qwen3 235B Free compelling.
+  </p>
+
+  <p class="body-copy">
+    In Aether Intel's benchmark series, DeepSeek V4 Flash Free produced the highest-quality response of any model tested — 1,717 tokens, naturally completed with <code class="inline">finish_reason: stop</code>, including 458 visible reasoning tokens. It is the current recommended zero-cost option for developers who need reasoning capability without API spend.
+  </p>
+
+  <p class="body-copy">
+    If you specifically need Qwen3-class reasoning or multilingual capability for 100+ languages, the paid tier at $0.455/$1.82 per million tokens is the appropriate path. The benchmark cost of $0.004323 per exchange is competitive for a flagship 235B model.
+  </p>
+
+  <div class="info-callout">
+    <strong>Key comparison — free tier options as of May 2026:</strong><br><br>
+    <strong>DeepSeek V4 Flash Free</strong> (<code class="inline">deepseek/deepseek-v4-flash:free</code>): Active. 64K context. 458 reasoning tokens in benchmark. Best free-tier quality in our series.<br><br>
+    <strong>Qwen3 235B Free</strong> (<code class="inline">qwen/qwen3-235b-a22b:free</code>): Retired. 131K context (when available). No endpoints. Use the paid tier or an alternative.
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- AdSense -->
+  <div class="adsense-mid">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       RELATED MODELS
+  ═══════════════════════════════════════ -->
+  <h2 class="section-title">Related Models</h2>
+
+  <div class="related-grid">
+    <a href="/models/qwen3-235b/" class="related-card related-qwen">
+      <div class="related-card-provider">Qwen / Alibaba</div>
+      <div class="related-card-name">Qwen3 235B A22B</div>
+      <div class="related-card-desc">The paid tier — same 235B MoE weights, full capability at $0.455/$1.82 per 1M tokens. Active.</div>
+      <div class="related-card-status"><span class="status-pill active">ACTIVE</span></div>
+    </a>
+    <a href="/models/qwen3-6-27b/" class="related-card related-qwen">
+      <div class="related-card-provider">Qwen / Alibaba</div>
+      <div class="related-card-name">Qwen3.6 27B</div>
+      <div class="related-card-desc">Smaller Qwen3 family model at $0.325/$3.25 per 1M. Strong reasoning at a lower parameter count.</div>
+      <div class="related-card-status"><span class="status-pill active">ACTIVE</span></div>
+    </a>
+    <a href="/models/deepseek-v4-flash-free/" class="related-card">
+      <div class="related-card-provider">DeepSeek</div>
+      <div class="related-card-name">DeepSeek V4 Flash Free</div>
+      <div class="related-card-desc">The recommended free reasoning alternative. Active. 64K context, 458 reasoning tokens, $0.00.</div>
+      <div class="related-card-status"><span class="status-pill active" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.35);color:var(--free-green);">FREE · ACTIVE</span></div>
+    </a>
+    <a href="/models/grok-3-mini/" class="related-card">
+      <div class="related-card-provider">xAI</div>
+      <div class="related-card-name">Grok 3 Mini</div>
+      <div class="related-card-desc">Another retired/deprecated model — a useful reference for the lifecycle of free-tier and low-cost reasoning models.</div>
+      <div class="related-card-status"><span class="status-pill retired">DEPRECATED</span></div>
+    </a>
+  </div>
+
+  <p style="font-size:.78rem;color:var(--text-muted);margin-top:12px;">
+    Published May 2026 &nbsp;|&nbsp; Reference article &nbsp;|&nbsp; Aether Intel &nbsp;|&nbsp; <a href="/methodology/" style="color:var(--text-muted);">Benchmark Methodology</a>
+  </p>
+
+</main>
+
+<!-- Site Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-copy">
+      &copy; 2026 <a href="/">Aether Intel</a> &nbsp;—&nbsp; Independent AI model analysis and benchmarks &nbsp;|&nbsp; <a href="https://ai.quantummerlin.com">ai.quantummerlin.com</a>
+    </p>
+    <p class="footer-copy" style="margin-top:6px;">
+      Model availability, pricing, and status are accurate as of publish date. OpenRouter routing may change without notice. Not affiliated with Alibaba, Qwen, or any model provider. &nbsp;|&nbsp; <a href="/privacy/">Privacy</a> &nbsp;|&nbsp; <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
