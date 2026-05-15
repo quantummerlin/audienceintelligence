@@ -906,7 +906,7 @@
       </svg>
     </div>
     <div class="benchmark-strip-text">
-      <strong>Benchmark cost</strong> = a single 650-token technical Q&amp;A exchange (250 tokens in, 400 tokens out). Use it as a quick gauge — multiply by your daily volume to estimate real costs.
+      <strong>Benchmark cost</strong> = one realistic task: 1,500 input tokens (your prompt + context) and 2,000 output tokens (the response). Multiply by your daily volume to estimate real costs.
     </div>
   </div>
 
@@ -914,7 +914,7 @@
   <div class="models-filter-bar">
     <div class="filter-search-wrap">
       <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="modelSearch" placeholder="Search models…" autocomplete="off">
+      <input type="text" id="modelSearch" placeholder="Search models..." autocomplete="off">
     </div>
     <div class="filter-divider"></div>
     <span class="filter-group-label">Provider</span>
@@ -941,8 +941,8 @@
     <span class="sort-label">Sort</span>
     <div class="filter-btn-group">
       <button class="sort-btn active" data-sort="newest">Newest</button>
-      <button class="sort-btn" data-sort="price_asc">Price ↑</button>
-      <button class="sort-btn" data-sort="price_desc">Price ↓</button>
+      <button class="sort-btn" data-sort="price_asc">Price &uarr;</button>
+      <button class="sort-btn" data-sort="price_desc">Price &darr;</button>
       <button class="sort-btn" data-sort="context">Context</button>
       <button class="sort-btn" data-sort="az">A → Z</button>
     </div>
@@ -954,7 +954,7 @@
     <div id="modelsFullGrid" class="models-full-grid">
       <div class="models-loading">
         <div class="models-loading-spinner"></div>
-        Fetching models from OpenRouter…
+        Fetching models from OpenRouter...
       </div>
     </div>
   </div>
@@ -999,7 +999,7 @@
       <div class="chat-messages" id="chatMessages"></div>
       <!-- Input row -->
       <div class="chat-input-row" id="chatInputRow" style="display:none">
-        <textarea id="chatInput" placeholder="Ask anything…" rows="1"></textarea>
+        <textarea id="chatInput" placeholder="Ask anything..." rows="1"></textarea>
         <button class="chat-send-btn" id="chatSendBtn">Send</button>
       </div>
     </div>
@@ -1011,9 +1011,9 @@
 (function () {
   'use strict';
 
-  /* ─── Benchmark: 250 prompt tokens + 400 completion tokens ─── */
-  var BENCH_IN  = 250;
-  var BENCH_OUT = 400;
+  /* ─── Benchmark: 1,500 prompt tokens + 2,000 completion tokens = 3,500 total ─── */
+  var BENCH_IN  = 1500;
+  var BENCH_OUT = 2000;
 
   /* ─── Curated enrichment for the models people actually care about ─── */
   var MODEL_META = {
@@ -1367,9 +1367,9 @@
   }
 
   function benchClass(cost) {
-    if (cost === 0)   return 'bc-free';
-    if (cost < 0.001) return 'bc-cheap';
-    if (cost < 0.01)  return 'bc-mid';
+    if (cost === 0)    return 'bc-free';
+    if (cost < 0.005)  return 'bc-cheap';
+    if (cost < 0.05)   return 'bc-mid';
     return 'bc-prem';
   }
 
@@ -1429,7 +1429,7 @@
   }
 
   /* ─── Build a full model card ─── */
-  var MAX_BENCH   = 0.1;
+  var MAX_BENCH   = 0.5;
   var allModels   = [];
   var currentSort = 'newest';
 
@@ -1511,8 +1511,8 @@
     var tierLabels = { 'bc-free':'Free','bc-cheap':'Cheap','bc-mid':'Mid','bc-prem':'Premium' };
     var tierLabel  = tierLabels[bClass] || 'Mid';
     var benchHtml = pFree
-      ? '<div class="model-card-benchmark bc-free"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 650 tok</span><span class="benchmark-tier-badge">Free</span></div><div class="benchmark-cost-big">Free</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill bc-free" style="width:2%"></div></div></div>'
-      : '<div class="model-card-benchmark ' + bClass + '"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 650 tok</span><span class="benchmark-tier-badge">' + tierLabel + '</span></div><div class="benchmark-cost-big">' + fmtBench(cost) + '</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill ' + bClass + '" style="width:' + barPct + '%"></div></div></div>';
+      ? '<div class="model-card-benchmark bc-free"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 3,500 tokens</span><span class="benchmark-tier-badge">Free</span></div><div class="benchmark-cost-big">Free</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill bc-free" style="width:2%"></div></div></div>'
+      : '<div class="model-card-benchmark ' + bClass + '"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 3,500 tokens</span><span class="benchmark-tier-badge">' + tierLabel + '</span></div><div class="benchmark-cost-big">' + fmtBench(cost) + '</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill ' + bClass + '" style="width:' + barPct + '%"></div></div></div>';
 
     /* article button */
     var articleBtn = article
@@ -1546,7 +1546,7 @@
       '  <div class="model-card-pricing">' + pricingHtml + '</div>',
       benchHtml,
       '  <div class="model-card-actions">',
-      '    <button class="model-btn model-btn-use" onclick="openModelChat(\'" + safeId + "\',\'" + safeName + "\')">⚡ Use Now</button>',
+      '    <button class="model-btn model-btn-use" onclick="openModelChat(\'\'' + safeId + '\'\',\'\'' + safeName + '\'\')">⚡ Use Now</button>',
       '    ' + articleBtn,
       '  </div>',
       '</div>'
