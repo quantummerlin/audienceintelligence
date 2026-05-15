@@ -471,43 +471,66 @@
     }
     .pricing-value.price-free { color: #34d399; }
 
-    /* Card: benchmark */
+    /* Card: benchmark — hero block */
     .model-card-benchmark {
       margin-bottom: 14px;
+      border-radius: 10px;
+      padding: 14px 16px 13px;
+      border: 1px solid transparent;
     }
-    .benchmark-row {
+    .model-card-benchmark.bc-free  { background: rgba(52,211,153,.06);  border-color: rgba(52,211,153,.2); }
+    .model-card-benchmark.bc-cheap { background: rgba(34,211,238,.05);  border-color: rgba(34,211,238,.18); }
+    .model-card-benchmark.bc-mid   { background: rgba(245,158,11,.05);  border-color: rgba(245,158,11,.18); }
+    .model-card-benchmark.bc-prem  { background: rgba(249,115,22,.05);  border-color: rgba(249,115,22,.18); }
+    .benchmark-top-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
     .benchmark-label {
       font-family: var(--font-display);
-      font-size: .6rem;
+      font-size: .58rem;
       font-weight: 700;
       letter-spacing: .1em;
       text-transform: uppercase;
       color: var(--text-muted);
     }
-    .benchmark-cost {
-      font-family: var(--font-body);
-      font-size: .82rem;
+    .benchmark-tier-badge {
+      font-family: var(--font-display);
+      font-size: .58rem;
       font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
     }
-    .benchmark-cost.bc-free  { color: #34d399; }
-    .benchmark-cost.bc-cheap { color: var(--neon-cyan); }
-    .benchmark-cost.bc-mid   { color: var(--neon-gold); }
-    .benchmark-cost.bc-prem  { color: #f97316; }
+    .bc-free  .benchmark-tier-badge { background: rgba(52,211,153,.15);  color: #34d399;          border: 1px solid rgba(52,211,153,.3); }
+    .bc-cheap .benchmark-tier-badge { background: rgba(34,211,238,.12);  color: var(--neon-cyan); border: 1px solid rgba(34,211,238,.28); }
+    .bc-mid   .benchmark-tier-badge { background: rgba(245,158,11,.12);  color: var(--neon-gold); border: 1px solid rgba(245,158,11,.28); }
+    .bc-prem  .benchmark-tier-badge { background: rgba(249,115,22,.12);  color: #f97316;          border: 1px solid rgba(249,115,22,.28); }
+    .benchmark-cost-big {
+      font-family: var(--font-body);
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -.035em;
+      line-height: 1;
+      margin-bottom: 11px;
+    }
+    .bc-free  .benchmark-cost-big { color: #34d399; }
+    .bc-cheap .benchmark-cost-big { color: var(--neon-cyan); }
+    .bc-mid   .benchmark-cost-big { color: var(--neon-gold); }
+    .bc-prem  .benchmark-cost-big { color: #f97316; }
     .benchmark-bar-track {
-      height: 4px;
-      background: rgba(255,255,255,.06);
-      border-radius: 2px;
+      height: 7px;
+      background: rgba(255,255,255,.07);
+      border-radius: 4px;
       overflow: hidden;
     }
     .benchmark-bar-fill {
       height: 100%;
-      border-radius: 2px;
-      transition: width .4s ease;
+      border-radius: 4px;
+      transition: width .5s cubic-bezier(.4,0,.2,1);
     }
     .benchmark-bar-fill.bc-free  { background: #34d399; }
     .benchmark-bar-fill.bc-cheap { background: var(--neon-cyan); }
@@ -1484,10 +1507,12 @@
       if (pOut) pricingHtml += '<div class="pricing-item"><div class="pricing-label">Output /1M</div><div class="pricing-value">' + pOut + '</div></div>';
     }
 
-    /* benchmark */
+    /* benchmark — hero block */
+    var tierLabels = { 'bc-free':'Free','bc-cheap':'Cheap','bc-mid':'Mid','bc-prem':'Premium' };
+    var tierLabel  = tierLabels[bClass] || 'Mid';
     var benchHtml = pFree
-      ? '<div class="model-card-benchmark"><div class="benchmark-row"><span class="benchmark-label">Benchmark (650 tok)</span><span class="benchmark-cost bc-free">Free</span></div><div class="benchmark-bar-track"><div class="benchmark-bar-fill bc-free" style="width:2%"></div></div></div>'
-      : '<div class="model-card-benchmark"><div class="benchmark-row"><span class="benchmark-label">Benchmark (650 tok)</span><span class="benchmark-cost ' + bClass + '">' + fmtBench(cost) + '</span></div><div class="benchmark-bar-track"><div class="benchmark-bar-fill ' + bClass + '" style="width:' + barPct + '%"></div></div></div>';
+      ? '<div class="model-card-benchmark bc-free"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 650 tok</span><span class="benchmark-tier-badge">Free</span></div><div class="benchmark-cost-big">Free</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill bc-free" style="width:2%"></div></div></div>'
+      : '<div class="model-card-benchmark ' + bClass + '"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 650 tok</span><span class="benchmark-tier-badge">' + tierLabel + '</span></div><div class="benchmark-cost-big">' + fmtBench(cost) + '</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill ' + bClass + '" style="width:' + barPct + '%"></div></div></div>';
 
     /* article button */
     var articleBtn = article
@@ -1521,7 +1546,7 @@
       '  <div class="model-card-pricing">' + pricingHtml + '</div>',
       benchHtml,
       '  <div class="model-card-actions">',
-      '    <button class="model-btn model-btn-use" onclick="openModelChat(\'' + safeId + '\',\'' + safeName + '\')\">⚡ Use Now</button>',
+      '    <button class="model-btn model-btn-use" onclick="openModelChat(\'" + safeId + "\',\'" + safeName + "\')">⚡ Use Now</button>',
       '    ' + articleBtn,
       '  </div>',
       '</div>'
