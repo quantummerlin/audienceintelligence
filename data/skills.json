@@ -1,113 +1,569 @@
 {
-  "updated": "2026-05-16",
+  "updated": "2026-05-17",
+  "schema_version": "2.0",
   "skills": [
     {
-      "title": "Jailbreak-Proof System Prompts",
-      "slug": "jailbreak-proof",
-      "desc": "If you're shipping AI products, adversarial users will try to break your prompts. Learn the full attack surface and how to build defences that actually hold.",
-      "hero": "/images/skills/jailbreak-proof-hero.webp",
-      "badge": "badge-dev",
-      "cat": "Security",
-      "diff": "Advanced",
-      "time": "~45 min",
-      "date": "2025-04-01",
-      "url": "/skills/jailbreak-proof.html"
+      "slug": "humanizer-skill",
+      "title": "The Humanizer",
+      "outcome": "Strips AI tells from any text before it ships to humans",
+      "why": "Anything AI-generated that ships to real humans needs a humanizer pass first.",
+      "desc": "Detects and rewrites the most common AI tells — filler openers, vague power words, corporate padding — based on Wikipedia's documented signs of AI writing. Chain it as the final step in every copywriting skill.",
+      "hero": "/images/skills/humanizer-skill-hero.webp",
+      "category": "prompts",
+      "category_label": "Prompts",
+      "tags": ["writing", "editing", "ai-tells", "humanize", "copy"],
+      "cost_tier": "cheap",
+      "cost_estimate": {
+        "tier": "cheap",
+        "label": "Cheap",
+        "per_1k_outputs": "~$0.002",
+        "tokens_per_run": "~800 input + ~800 output",
+        "note": "Runs on any model. Gemini Flash keeps this near-free at scale."
+      },
+      "temperature": 0.4,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Best quality — catches subtle structural tells",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o mini",
+          "provider": "openai",
+          "best_for": "Great budget option for bulk editing passes",
+          "cost_tier": "cheap",
+          "rating": 4,
+          "recommended": true
+        },
+        {
+          "model": "Gemini 1.5 Flash",
+          "provider": "google",
+          "best_for": "Fastest option — ideal for high-volume automation",
+          "cost_tier": "cheap",
+          "rating": 4,
+          "recommended": true
+        },
+        {
+          "model": "Llama 3.1 70B",
+          "provider": "meta",
+          "best_for": "Free via Groq — good for personal use",
+          "cost_tier": "free",
+          "rating": 3,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Small local models under 7B params (miss subtle patterns)",
+        "o1 / o3 reasoning models (overkill + expensive for editing)"
+      ],
+      "works_best_with": ["claude-sonnet", "gpt-4o-mini", "gemini-flash"],
+      "install_formats": ["prompt_copy", "claude_playground", "json_download", "openrouter"],
+      "system_prompt": "You are a professional editor who specialises in making AI-generated text indistinguishable from human writing.\n\nYour task: rewrite the text I give you so it reads as authentic human writing while preserving every factual claim and the original intent.\n\nWHAT TO FIX — detect and rewrite these AI tells:\n\n1. FILLER OPENERS\n   Remove: \"Certainly!\", \"Of course!\", \"Absolutely!\", \"Great question!\", \"Sure thing!\", \"Definitely!\", \"I'd be happy to...\"\n   Remove: \"I hope this email finds you well\", \"I hope you're doing well\", \"Feel free to reach out\", \"Please don't hesitate to contact me\"\n\n2. VAGUE POWER WORDS — replace with specific, concrete language\n   Remove: unlock, unleash, leverage, streamline, revolutionise, transform, empower, harness, elevate, amplify, synergise\n   Remove: game-changer, groundbreaking, cutting-edge, innovative solution, state-of-the-art, best-in-class, world-class\n   Remove: robust, seamlessly, holistically, comprehensively, proactively\n\n3. CORPORATE PADDING — delete entirely\n   Remove: \"It's worth noting that...\", \"It goes without saying...\", \"Needless to say...\", \"It is important to note...\"\n   Remove: \"Moving forward\", \"Going forward\", \"At the end of the day\", \"In today's [adjective] world...\"\n   Remove: \"The biggest takeaway is...\", \"It is what it is\"\n\n4. STRUCTURAL TELLS\n   - If every section has a bullet list, convert some to prose\n   - Delete summary paragraphs that repeat what was just said\n   - Remove \"In conclusion\" sections unless the piece genuinely needs one\n   - Remove \"I hope this helps!\" and similar sign-off filler\n\n5. DIVE / DELVE CLICHÉS\n   Remove: dive deep, delve into, embark on, explore the nuances, unpack, breakdown, dissect\n\n6. OVER-HEDGING — one qualifier is enough\n   Simplify triple qualifications and excessive hedging language\n\nSTYLE RULES:\n- Preserve ALL factual content — never change meaning\n- Keep technical terms that have no cleaner alternative\n- Vary sentence length — short punchy sentences work alongside longer ones\n- A single sentence can stand alone as its own paragraph for emphasis\n- Active voice preferred, but don't force it unnaturally\n\nVOICE STYLE:\n[Add your voice notes here]\n\nWhen finished, output ONLY the rewritten text. No commentary. No explanation. Just the clean output.",
+      "chain_with": ["voice-skill-fingerprint", "prompt-chaining", "content-pipeline"],
+      "examples": [
+        {
+          "label": "Email opener",
+          "before": "I hope this email finds you well! I wanted to reach out to discuss a potential opportunity that I believe could be a game-changer for your business. Our cutting-edge solution seamlessly integrates with your existing workflow to unlock significant value.",
+          "after": "Quick one — we built something that might save your ops team about four hours a week. It plugs into the tools you're already using. Worth a 20-minute call?"
+        },
+        {
+          "label": "Blog intro",
+          "before": "In today's rapidly evolving digital landscape, businesses must leverage cutting-edge AI tools to remain competitive. It's worth noting that the biggest takeaway from recent research is that organisations that fail to adapt risk being left behind.",
+          "after": "Most companies using AI are still running it like a fancy search engine. The ones pulling ahead are doing something different — they're building reusable skills that compound. Here's what that looks like."
+        }
+      ],
+      "installs": 1247,
+      "date": "2026-05-16",
+      "url": "/skills/humanizer-skill.html",
+      "guide_live": true
     },
     {
-      "title": "System Prompts",
-      "slug": "system-prompts",
-      "desc": "Most AI products misbehave because the system prompt is a loose list of rules rather than an architectural foundation. Build them properly here.",
-      "hero": "/images/skills/system-prompts-hero.webp",
-      "badge": "badge-secondary",
-      "cat": "Prompts",
-      "diff": "Intermediate",
-      "time": "~25 min",
-      "date": "2025-03-15",
-      "url": "/skills/system-prompts.html"
-    },
-    {
-      "title": "AI Content Pipeline",
-      "slug": "content-pipeline",
-      "desc": "Manual content creation doesn't scale. A pipeline lets one person do the work of a content team \u2014 research to draft to published with AI at every step.",
-      "hero": "/images/skills/content-pipeline-hero.webp",
-      "badge": "badge-business",
-      "cat": "Automation",
-      "diff": "Intermediate",
-      "time": "~35 min",
-      "date": "2025-03-01",
-      "url": "/skills/content-pipeline.html"
-    },
-    {
-      "title": "Cost-Optimised Model Routing",
-      "slug": "model-routing",
-      "desc": "You don't need GPT-4o for a yes/no question. Smart routing cuts your API bill by 60\u201380% while keeping quality exactly where it matters.",
-      "hero": "/images/skills/model-routing-hero.webp",
-      "badge": "badge-tools",
-      "cat": "Tools",
-      "diff": "Intermediate",
-      "time": "~30 min",
-      "date": "2025-02-15",
-      "url": "/skills/model-routing.html"
-    },
-    {
-      "title": "RAG: Retrieval-Augmented Generation",
-      "slug": "rag-basics",
-      "desc": "LLMs don't know your documents. RAG fixes that without fine-tuning \u2014 connect your knowledge base directly to any AI workflow in under an hour.",
-      "hero": "/images/skills/rag-basics-hero.webp",
-      "badge": "badge-dev",
-      "cat": "Tools",
-      "diff": "Intermediate",
-      "time": "~35 min",
-      "date": "2025-02-01",
-      "url": "/skills/rag-basics.html"
-    },
-    {
-      "title": "Agent Memory Architecture",
-      "slug": "agent-memory",
-      "desc": "Stateless agents forget everything. Add memory and they become exponentially more useful \u2014 handling long projects, user preferences, and cross-session context.",
-      "hero": "/images/skills/agent-memory-hero.webp",
-      "badge": "badge-agents",
-      "cat": "Agents",
-      "diff": "Advanced",
-      "time": "~40 min",
-      "date": "2025-01-15",
-      "url": "/skills/agent-memory.html"
-    },
-    {
-      "title": "Few-Shot Prompting",
-      "slug": "few-shot-prompting",
-      "desc": "Give the model 2\u20133 examples and watch output quality jump. One of the highest-ROI prompting techniques used by every serious AI practitioner.",
-      "hero": "/images/skills/few-shot-prompting-hero.webp",
-      "badge": "badge-secondary",
-      "cat": "Prompts",
-      "diff": "Beginner",
-      "time": "~15 min",
-      "date": "2025-01-01",
-      "url": "/skills/few-shot-prompting.html"
-    },
-    {
-      "title": "Chain-of-Thought Prompting",
-      "slug": "chain-of-thought",
-      "desc": "Force the model to reason step-by-step before committing to an answer. Significantly improves accuracy on maths, logic, and multi-step reasoning tasks.",
-      "hero": "/images/skills/chain-of-thought-hero.webp",
-      "badge": "badge-secondary",
-      "cat": "Prompts",
-      "diff": "Beginner",
-      "time": "~15 min",
-      "date": "2024-12-15",
-      "url": "/skills/chain-of-thought.html"
-    },
-    {
-      "title": "Prompt Chaining for Complex Tasks",
       "slug": "prompt-chaining",
-      "desc": "Break multi-step problems into sequential prompts where each output feeds the next. Reduces hallucinations, keeps complex workflows auditable at every stage.",
+      "title": "Prompt Chaining for Complex Tasks",
+      "outcome": "Breaks any complex AI task into auditable sequential steps",
+      "why": "Most prompts fail because you're asking one model to do too much in one shot.",
+      "desc": "Break multi-step problems into sequential prompts where each output feeds the next input. Reduces hallucinations, keeps LLMs on-task across long workflows, and makes outputs auditable at every step.",
       "hero": "/images/skills/prompt-chaining-hero.webp",
-      "badge": "badge-secondary",
-      "cat": "Prompts",
-      "diff": "Intermediate",
-      "time": "~30 min",
+      "category": "prompts",
+      "category_label": "Prompts",
+      "tags": ["chaining", "pipeline", "workflow", "multi-step"],
+      "cost_tier": "variable",
+      "cost_estimate": {
+        "tier": "variable",
+        "label": "Variable",
+        "per_1k_outputs": "Depends on chain depth",
+        "tokens_per_run": "Multiplies by number of steps",
+        "note": "Use model routing to cut chain costs by 60–80%."
+      },
+      "temperature": 0.3,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Orchestrator step — best at following JSON contracts",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "Gemini 1.5 Flash",
+          "provider": "google",
+          "best_for": "Worker steps — fast, cheap, reliable for simple tasks",
+          "cost_tier": "cheap",
+          "rating": 4,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o mini",
+          "provider": "openai",
+          "best_for": "Classification and routing steps",
+          "cost_tier": "cheap",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Single large models for all steps (expensive, slower)",
+        "Models without reliable JSON output for extraction steps"
+      ],
+      "works_best_with": ["claude-sonnet", "gemini-flash", "gpt-4o-mini"],
+      "install_formats": ["prompt_copy", "claude_playground", "json_download", "openrouter"],
+      "system_prompt": "See full guide at /skills/prompt-chaining.html",
+      "chain_with": ["humanizer-skill", "model-routing", "rag-basics"],
+      "examples": [],
+      "installs": 3891,
+      "date": "2025-04-15",
+      "url": "/skills/prompt-chaining.html",
+      "guide_live": true
+    },
+    {
+      "slug": "voice-skill-fingerprint",
+      "title": "Voice Fingerprint Skill",
+      "outcome": "Makes AI write in your exact voice — not generic AI prose",
+      "why": "Generic AI voice makes every creator sound the same. Your voice is the differentiator.",
+      "desc": "Capture your writing style as a structured fingerprint — sentence length, hedging habits, punctuation patterns, vocabulary level — and inject it into any AI writing skill. Your voice, at AI speed.",
+      "hero": "/images/skills/voice-skill-fingerprint-hero.webp",
+      "category": "prompts",
+      "category_label": "Prompts",
+      "tags": ["voice", "writing", "style", "brand", "creator"],
+      "cost_tier": "cheap",
+      "cost_estimate": {
+        "tier": "cheap",
+        "label": "Cheap",
+        "per_1k_outputs": "~$0.003",
+        "tokens_per_run": "~1,200 input + ~1,000 output",
+        "note": "Fingerprint setup is one-time. Running cost is minimal."
+      },
+      "temperature": 0.6,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Best at capturing and reproducing subtle voice patterns",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o",
+          "provider": "openai",
+          "best_for": "Strong alternative for creative and personal writing",
+          "cost_tier": "moderate",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Gemini Flash (misses nuanced style patterns)",
+        "Small local models under 13B (poor style reproduction)"
+      ],
+      "works_best_with": ["claude-sonnet", "gpt-4o"],
+      "install_formats": ["prompt_copy", "claude_playground", "json_download", "openrouter"],
+      "system_prompt": "See full guide at /skills/voice-skill-fingerprint.html",
+      "chain_with": ["humanizer-skill", "content-pipeline"],
+      "examples": [],
+      "installs": 0,
+      "date": "2026-05-17",
+      "url": "/skills/voice-skill-fingerprint.html",
+      "guide_live": false
+    },
+    {
+      "slug": "agent-memory",
+      "title": "Agent Memory Architecture",
+      "outcome": "Gives AI agents persistent memory across every session",
+      "why": "Stateless agents forget everything. Add memory and they become genuinely useful.",
+      "desc": "Design persistent, retrievable memory layers for autonomous agents using vector stores and structured summaries. Covers short-term context windows, episodic recall, and long-term knowledge bases built for production.",
+      "hero": "/images/skills/agent-memory-hero.webp",
+      "category": "agents",
+      "category_label": "Agents",
+      "tags": ["memory", "agents", "vector", "persistent", "production"],
+      "cost_tier": "moderate",
+      "cost_estimate": {
+        "tier": "moderate",
+        "label": "Moderate",
+        "per_1k_outputs": "~$0.02–0.08",
+        "tokens_per_run": "Varies by memory retrieval depth",
+        "note": "Vector store costs are separate (Pinecone free tier is sufficient for most use cases)."
+      },
+      "temperature": 0.2,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Best reasoning for memory retrieval decisions",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o",
+          "provider": "openai",
+          "best_for": "Strong for multi-session summarization",
+          "cost_tier": "moderate",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Flash models for memory orchestration (too prone to retrieval errors)",
+        "Stateless chat interfaces without system prompt persistence"
+      ],
+      "works_best_with": ["claude-sonnet", "gpt-4o"],
+      "install_formats": ["prompt_copy", "json_download"],
+      "system_prompt": "See full guide at /skills/agent-memory.html",
+      "chain_with": ["rag-basics", "prompt-chaining"],
+      "examples": [],
+      "installs": 2104,
+      "date": "2025-01-15",
+      "url": "/skills/agent-memory.html",
+      "guide_live": true
+    },
+    {
+      "slug": "rag-basics",
+      "title": "RAG: Retrieval-Augmented Generation",
+      "outcome": "Connects any AI to your own documents without fine-tuning",
+      "why": "LLMs don't know your documents. RAG fixes that without fine-tuning or retraining.",
+      "desc": "Connect any LLM to your own knowledge base using vector search. Answer questions grounded in your specific data — PDFs, wikis, codebases, customer records — with citations and minimal hallucination.",
+      "hero": "/images/skills/rag-basics-hero.webp",
+      "category": "tools",
+      "category_label": "Tools",
+      "tags": ["rag", "retrieval", "vector", "knowledge-base", "embeddings"],
+      "cost_tier": "moderate",
+      "cost_estimate": {
+        "tier": "moderate",
+        "label": "Moderate",
+        "per_1k_outputs": "~$0.01–0.05",
+        "tokens_per_run": "Retrieval + generation combined",
+        "note": "Embedding cost is one-time. Query cost scales with document chunk size."
+      },
+      "temperature": 0.1,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Best grounding — stays within retrieved context",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o mini",
+          "provider": "openai",
+          "best_for": "Cost-effective for high-volume RAG queries",
+          "cost_tier": "cheap",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Models without strong instruction following (hallucinate outside retrieved context)",
+        "Very large context windows for small document sets (wastes tokens)"
+      ],
+      "works_best_with": ["claude-sonnet", "gpt-4o-mini"],
+      "install_formats": ["prompt_copy", "json_download"],
+      "system_prompt": "See full guide at /skills/rag-basics.html",
+      "chain_with": ["agent-memory", "prompt-chaining"],
+      "examples": [],
+      "installs": 1856,
+      "date": "2025-02-01",
+      "url": "/skills/rag-basics.html",
+      "guide_live": true
+    },
+    {
+      "slug": "model-routing",
+      "title": "Cost-Optimised Model Routing",
+      "outcome": "Cuts your AI API bill by 60–80% without touching quality",
+      "why": "You don't need GPT-4o for a yes/no question. Smart routing is one of the highest-ROI skills.",
+      "desc": "Send different tasks to the right model tier automatically. Simple classification to Haiku, complex reasoning to Sonnet, creative generation to GPT-4o. Real routing logic with fallback handling.",
+      "hero": "/images/skills/model-routing-hero.webp",
+      "category": "tools",
+      "category_label": "Tools",
+      "tags": ["routing", "cost", "optimization", "models", "inference"],
+      "cost_tier": "cheap",
+      "cost_estimate": {
+        "tier": "cheap",
+        "label": "Cheap (saves money)",
+        "per_1k_outputs": "Reduces cost by 60–80%",
+        "tokens_per_run": "Router adds <50 tokens overhead",
+        "note": "This skill pays for itself immediately."
+      },
+      "temperature": 0.0,
+      "recommended_models": [
+        {
+          "model": "Claude Haiku 3.5",
+          "provider": "anthropic",
+          "best_for": "Router decision layer — near-zero cost",
+          "cost_tier": "cheap",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "Gemini 1.5 Flash",
+          "provider": "google",
+          "best_for": "Budget worker model for simple tasks",
+          "cost_tier": "cheap",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Using one model for all tasks (defeats the purpose)"
+      ],
+      "works_best_with": ["claude-haiku", "gemini-flash", "gpt-4o-mini"],
+      "install_formats": ["prompt_copy", "json_download"],
+      "system_prompt": "See full guide at /skills/model-routing.html",
+      "chain_with": ["prompt-chaining", "rag-basics"],
+      "examples": [],
+      "installs": 2673,
+      "date": "2025-02-15",
+      "url": "/skills/model-routing.html",
+      "guide_live": true
+    },
+    {
+      "slug": "system-prompts",
+      "title": "System Prompts That Actually Work",
+      "outcome": "Builds AI products that behave consistently in production",
+      "why": "Most AI products misbehave because the system prompt is a loose list of rules rather than a structured identity.",
+      "desc": "Build production-ready system prompts using a four-layer structure: role/persona, context, constraints, and output format. Includes jailbreak resistance patterns and an output validation template.",
+      "hero": "/images/skills/system-prompts-hero.webp",
+      "category": "prompts",
+      "category_label": "Prompts",
+      "tags": ["system-prompt", "production", "persona", "constraints"],
+      "cost_tier": "free",
+      "cost_estimate": {
+        "tier": "free",
+        "label": "One-time Setup",
+        "per_1k_outputs": "No ongoing cost",
+        "tokens_per_run": "Adds ~300–800 tokens to every request",
+        "note": "A well-designed system prompt actually reduces token waste from re-prompting."
+      },
+      "temperature": 0.3,
+      "recommended_models": [
+        {
+          "model": "Any",
+          "provider": "all",
+          "best_for": "Works with any frontier model",
+          "cost_tier": "variable",
+          "rating": 5,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [],
+      "works_best_with": ["claude-sonnet", "gpt-4o", "gemini-pro"],
+      "install_formats": ["prompt_copy", "claude_playground", "json_download"],
+      "system_prompt": "See full guide at /skills/system-prompts.html",
+      "chain_with": ["jailbreak-proof", "prompt-chaining"],
+      "examples": [],
+      "installs": 4512,
+      "date": "2025-03-15",
+      "url": "/skills/system-prompts.html",
+      "guide_live": true
+    },
+    {
+      "slug": "jailbreak-proof",
+      "title": "Jailbreak-Proof System Prompts",
+      "outcome": "Hardens any AI product against adversarial users",
+      "why": "If you're shipping AI products, adversarial users will try to break your prompts. Most system prompts have no real defence.",
+      "desc": "Harden your AI-powered products against adversarial user inputs using layered system prompt design, input sanitization patterns, and output validation guards.",
+      "hero": "/images/skills/jailbreak-proof-hero.webp",
+      "category": "coding",
+      "category_label": "Coding",
+      "tags": ["security", "jailbreak", "adversarial", "production", "safety"],
+      "cost_tier": "free",
+      "cost_estimate": {
+        "tier": "free",
+        "label": "One-time Setup",
+        "per_1k_outputs": "No ongoing cost",
+        "tokens_per_run": "Adds ~200–500 tokens per request",
+        "note": "Defence layers add minimal token overhead vs. the cost of a jailbreak going undetected."
+      },
+      "temperature": 0.0,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Best constitutional AI alignment for refusals",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Uncensored local models (no safety layers)",
+        "Fine-tuned models without alignment training"
+      ],
+      "works_best_with": ["claude-sonnet", "gpt-4o"],
+      "install_formats": ["prompt_copy", "json_download"],
+      "system_prompt": "See full guide at /skills/jailbreak-proof.html",
+      "chain_with": ["system-prompts"],
+      "examples": [],
+      "installs": 1987,
+      "date": "2025-04-01",
+      "url": "/skills/jailbreak-proof.html",
+      "guide_live": true
+    },
+    {
+      "slug": "few-shot-prompting",
+      "title": "Few-Shot Prompting",
+      "outcome": "Locks exact output format and tone with 2–5 examples",
+      "why": "When you can't fully describe what you want in words, show the model.",
+      "desc": "Include 2–5 worked examples directly in your prompt and the model infers format, tone, and edge-case handling from them. No fine-tuning required. The fastest way to lock in exact output schemas.",
+      "hero": "/images/skills/few-shot-prompting-hero.webp",
+      "category": "prompts",
+      "category_label": "Prompts",
+      "tags": ["few-shot", "examples", "format", "tone", "classification"],
+      "cost_tier": "cheap",
+      "cost_estimate": {
+        "tier": "cheap",
+        "label": "Cheap",
+        "per_1k_outputs": "~$0.003–0.01",
+        "tokens_per_run": "Examples add 200–1,000 tokens overhead",
+        "note": "Fewer examples = cheaper. 3 high-quality examples beat 10 mediocre ones."
+      },
+      "temperature": 0.2,
+      "recommended_models": [
+        {
+          "model": "Any frontier model",
+          "provider": "all",
+          "best_for": "Works universally — even small models improve with examples",
+          "cost_tier": "variable",
+          "rating": 5,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [],
+      "works_best_with": ["claude-sonnet", "gpt-4o-mini", "gemini-flash"],
+      "install_formats": ["prompt_copy", "claude_playground", "json_download"],
+      "system_prompt": "See full guide at /skills/few-shot-prompting.html",
+      "chain_with": ["prompt-chaining", "system-prompts"],
+      "examples": [],
+      "installs": 3210,
+      "date": "2024-12-15",
+      "url": "/skills/few-shot-prompting.html",
+      "guide_live": true
+    },
+    {
+      "slug": "chain-of-thought",
+      "title": "Chain-of-Thought Prompting",
+      "outcome": "Makes AI show its reasoning before committing to an answer",
+      "why": "LLMs give better answers when they show their working — just like humans.",
+      "desc": "A simple but powerful technique that forces the model to reason step-by-step before committing to an answer. Significantly improves accuracy on maths, logic, and multi-step reasoning tasks with almost zero extra effort.",
+      "hero": "/images/skills/chain-of-thought-hero.webp",
+      "category": "prompts",
+      "category_label": "Prompts",
+      "tags": ["reasoning", "chain-of-thought", "logic", "accuracy"],
+      "cost_tier": "cheap",
+      "cost_estimate": {
+        "tier": "cheap",
+        "label": "Cheap",
+        "per_1k_outputs": "~$0.005–0.02",
+        "tokens_per_run": "Reasoning adds 100–500 tokens",
+        "note": "Token overhead is worth it — accuracy gains usually outweigh the cost."
+      },
+      "temperature": 0.3,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Extended thinking mode for deep reasoning",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o",
+          "provider": "openai",
+          "best_for": "Strong reasoning for structured problems",
+          "cost_tier": "moderate",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Flash models for complex multi-step logic (skip reasoning steps)"
+      ],
+      "works_best_with": ["claude-sonnet", "gpt-4o"],
+      "install_formats": ["prompt_copy", "claude_playground", "json_download"],
+      "system_prompt": "See full guide at /skills/chain-of-thought.html",
+      "chain_with": ["prompt-chaining", "few-shot-prompting"],
+      "examples": [],
+      "installs": 2788,
       "date": "2024-12-01",
-      "url": "/skills/prompt-chaining.html"
+      "url": "/skills/chain-of-thought.html",
+      "guide_live": true
+    },
+    {
+      "slug": "content-pipeline",
+      "title": "AI Content Pipeline",
+      "outcome": "One person doing the output of a full content team",
+      "why": "Manual content creation doesn't scale. A pipeline does the work of a team — research to draft to published.",
+      "desc": "Build a fully automated content pipeline from topic discovery to published article. Research, outline, draft, SEO-optimize, and humanize — each step handled by the right model at the right cost.",
+      "hero": "/images/skills/content-pipeline-hero.webp",
+      "category": "automation",
+      "category_label": "Automation",
+      "tags": ["content", "pipeline", "automation", "seo", "creator"],
+      "cost_tier": "moderate",
+      "cost_estimate": {
+        "tier": "moderate",
+        "label": "Moderate",
+        "per_1k_outputs": "~$0.05–0.20 per article",
+        "tokens_per_run": "Multi-step chain, 5,000–15,000 tokens total",
+        "note": "Model routing cuts this by 50–70% vs. running all steps on Sonnet."
+      },
+      "temperature": 0.6,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Outline and final draft steps",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "Gemini 1.5 Flash",
+          "provider": "google",
+          "best_for": "Research and extraction steps",
+          "cost_tier": "cheap",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Single model for all steps (expensive and slow)"
+      ],
+      "works_best_with": ["claude-sonnet", "gemini-flash"],
+      "install_formats": ["prompt_copy", "json_download"],
+      "system_prompt": "See full guide at /skills/content-pipeline.html",
+      "chain_with": ["humanizer-skill", "model-routing", "prompt-chaining"],
+      "examples": [],
+      "installs": 1543,
+      "date": "2025-03-01",
+      "url": "/skills/content-pipeline.html",
+      "guide_live": true
     }
   ]
 }

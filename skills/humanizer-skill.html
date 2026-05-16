@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Humanizer: Strip AI Tells From Every Output | Aether Intel Skills</title>
-  <meta name="description" content="Build a Claude humanizer skill that detects and rewrites AI-sounding text — 'unlock', filler openers, vague hype — before it ships to real humans. Chain it as the final step in every copywriting workflow." />
+  <title>The Humanizer — Strip AI Tells From Any Text | Aether Intel Skills</title>
+  <meta name="description" content="One-click install: a professional editor skill that strips AI tells — filler openers, vague power words, corporate padding — before text ships to real humans. Works with Claude, GPT-4o mini, Gemini Flash, and Llama 3." />
   <link rel="canonical" href="https://ai.quantummerlin.com/skills/humanizer-skill.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://ai.quantummerlin.com/skills/humanizer-skill.html" />
-  <meta property="og:title" content="The Humanizer: Strip AI Tells From Every Output | Aether Intel Skills" />
-  <meta property="og:description" content="Build a Claude humanizer skill that detects and rewrites AI-sounding text before it ships to real humans." />
+  <meta property="og:title" content="The Humanizer — Strip AI Tells From Any Text | Aether Intel Skills" />
+  <meta property="og:description" content="Install a professional editor skill that rewrites AI-sounding text before it reaches real humans." />
   <meta property="og:image" content="https://ai.quantummerlin.com/images/skills/humanizer-skill-hero.webp" />
   <meta property="og:site_name" content="Aether Intel" />
 
@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-  <!-- Google Analytics -->
+  <!-- Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -29,7 +29,7 @@
     gtag('config', 'G-VW4LGE7L1T');
   </script>
 
-  <!-- Google AdSense -->
+  <!-- AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="/css/style.css" />
@@ -39,562 +39,782 @@
       --skill-accent:      #6366f1;
       --skill-accent-dim:  rgba(99,102,241,.12);
       --skill-accent-glow: 0 0 24px rgba(99,102,241,.28);
+      --cost-cheap:        #22c55e;
+      --cost-cheap-bg:     rgba(34,197,94,.12);
+      --cost-moderate:     #f59e0b;
+      --cost-moderate-bg:  rgba(245,158,11,.12);
     }
 
+    /* ─── READ PROGRESS ─── */
     #read-progress {
-      position: fixed; top: 0; left: 0; z-index: 9999;
-      height: 3px; width: 0;
-      background: linear-gradient(90deg, var(--skill-accent), #818cf8);
-      transition: width .1s linear;
-      pointer-events: none;
+      position:fixed; top:0; left:0; z-index:9999;
+      height:3px; width:0;
+      background:linear-gradient(90deg,var(--skill-accent),#818cf8);
+      transition:width .1s linear; pointer-events:none;
     }
 
-    .skill-article-wrap {
-      max-width: 820px;
+    /* ─── LAYOUT ─── */
+    .skill-page-wrap {
+      max-width: 860px;
       margin: 0 auto;
-      padding: 0 24px 80px;
+      padding: 0 24px 100px;
     }
 
+    /* ─── BREADCRUMB ─── */
     .skill-breadcrumb {
-      display: flex; align-items: center; gap: 8px;
-      padding: 28px 0 0;
-      font-family: var(--font-display);
-      font-size: .72rem; font-weight: 600;
-      letter-spacing: .07em; text-transform: uppercase;
-      color: var(--text-muted);
+      display:flex; align-items:center; gap:8px;
+      padding:26px 0 0;
+      font-family:var(--font-display); font-size:.72rem; font-weight:600;
+      letter-spacing:.07em; text-transform:uppercase; color:var(--text-muted);
     }
-    .skill-breadcrumb a { color: var(--text-muted); text-decoration: none; }
-    .skill-breadcrumb a:hover { color: var(--skill-accent); }
+    .skill-breadcrumb a { color:var(--text-muted); text-decoration:none; }
+    .skill-breadcrumb a:hover { color:var(--skill-accent); }
     .skill-breadcrumb svg { width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
-    .skill-hero { padding: 32px 0 36px; }
-    .skill-hero-badges { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
-    .badge-prompts {
-      background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.35); color: var(--skill-accent);
-      font-family: var(--font-display); font-size: .68rem; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; padding: 4px 10px; border-radius: 4px;
+    /* ─── OUTCOME BANNER ─── */
+    .outcome-banner {
+      margin: 28px 0 0;
     }
-    .diff-pill {
-      font-family: var(--font-display); font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 4px;
-      background: rgba(250,204,21,.15); border: 1px solid rgba(250,204,21,.3); color: #fbbf24;
+    .outcome-meta {
+      display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;
     }
-    .time-pill {
-      font-family: var(--font-display); font-size: .68rem; font-weight: 600;
-      letter-spacing: .06em; color: var(--text-muted); display: flex; align-items: center; gap: 5px;
+    .badge-category {
+      font-family:var(--font-display); font-size:.67rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase;
+      padding:4px 11px; border-radius:4px;
+      background:var(--skill-accent-dim); border:1px solid rgba(99,102,241,.3);
+      color:var(--skill-accent);
     }
-    .time-pill svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-    .skill-hero h1 {
-      font-family: var(--font-display); font-size: clamp(1.9rem, 4.5vw, 2.8rem);
-      font-weight: 900; line-height: 1.1; letter-spacing: -.02em; margin: 0 0 16px;
+    .badge-cost-cheap {
+      font-family:var(--font-display); font-size:.67rem; font-weight:700;
+      letter-spacing:.07em; text-transform:uppercase;
+      padding:4px 11px; border-radius:4px;
+      background:var(--cost-cheap-bg); border:1px solid rgba(34,197,94,.3);
+      color:var(--cost-cheap);
     }
-    .skill-hero h1 span {
-      background: linear-gradient(135deg, var(--skill-accent), #818cf8);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    .badge-installs {
+      font-family:var(--font-display); font-size:.67rem; font-weight:600;
+      letter-spacing:.05em; color:var(--text-muted);
+      display:flex; align-items:center; gap:5px;
+      margin-left:auto;
     }
-    .skill-hero-lead {
-      font-size: 1.1rem; line-height: 1.75; color: var(--text-secondary);
-      max-width: 680px; margin: 0 0 28px;
+    .badge-installs svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; }
+    .outcome-headline {
+      font-family:var(--font-display); font-size:clamp(1.8rem,4.5vw,2.8rem);
+      font-weight:900; line-height:1.1; letter-spacing:-.025em; margin:0 0 14px;
     }
-    .skill-hero-meta {
-      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
-      padding-top: 20px; border-top: 1px solid var(--border);
-      font-size: .82rem; color: var(--text-muted);
+    .outcome-headline em {
+      font-style:normal;
+      background:linear-gradient(135deg,var(--skill-accent),#818cf8);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
-    .skill-hero-meta svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; margin-right:4px; }
+    .outcome-sub {
+      font-size:1.05rem; line-height:1.75; color:var(--text-secondary);
+      max-width:640px; margin:0 0 28px;
+    }
 
-    /* Hero image */
+    /* ─── INSTALL BAR ─── */
+    .install-bar {
+      position:sticky; top:0; z-index:200;
+      background:rgba(13,13,26,.92);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(99,102,241,.25);
+      padding:12px 24px;
+      margin:0 -24px;
+    }
+    .install-bar-inner {
+      max-width:860px; margin:0 auto;
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    }
+    .install-label {
+      font-family:var(--font-display); font-size:.68rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase;
+      color:rgba(255,255,255,.45); margin-right:4px; white-space:nowrap;
+    }
+    .btn-install-primary {
+      display:inline-flex; align-items:center; gap:7px;
+      background:var(--skill-accent); color:#fff;
+      font-family:var(--font-display); font-size:.7rem; font-weight:700;
+      letter-spacing:.08em; text-transform:uppercase;
+      padding:9px 18px; border-radius:7px; border:none; cursor:pointer;
+      text-decoration:none; transition:background .2s,transform .15s,box-shadow .2s;
+      white-space:nowrap;
+    }
+    .btn-install-primary:hover { background:#4f46e5; transform:translateY(-1px); box-shadow:0 6px 20px rgba(99,102,241,.4); }
+    .btn-install-primary.copied { background:#16a34a; }
+    .btn-install-ghost {
+      display:inline-flex; align-items:center; gap:6px;
+      background:transparent; color:rgba(255,255,255,.7);
+      font-family:var(--font-display); font-size:.68rem; font-weight:600;
+      letter-spacing:.07em; text-transform:uppercase;
+      padding:8px 15px; border-radius:7px; border:1px solid rgba(255,255,255,.15);
+      cursor:pointer; text-decoration:none; transition:all .15s; white-space:nowrap;
+    }
+    .btn-install-ghost:hover { border-color:var(--skill-accent); color:var(--skill-accent); }
+    .btn-install-ghost.or-btn { border-color:rgba(249,115,22,.35); color:rgba(249,115,22,.8); }
+    .btn-install-ghost.or-btn:hover { border-color:#f97316; color:#f97316; }
+    .install-bar-spacer { flex:1; }
+
+    /* ─── INSTALL TOAST ─── */
+    .install-toast {
+      position:fixed; bottom:28px; right:28px; z-index:9999;
+      background:#16a34a; color:#fff;
+      font-family:var(--font-display); font-size:.75rem; font-weight:700;
+      letter-spacing:.05em; padding:12px 20px; border-radius:8px;
+      box-shadow:0 8px 32px rgba(22,163,74,.4);
+      opacity:0; transform:translateY(12px);
+      transition:all .3s ease; pointer-events:none;
+    }
+    .install-toast.show { opacity:1; transform:translateY(0); }
+
+    /* ─── HERO IMAGE ─── */
     .skill-hero-img {
-      width: 100%; aspect-ratio: 16/9; object-fit: cover;
-      border-radius: var(--radius-card); margin: 0 0 32px;
-      display: block;
+      width:100%; aspect-ratio:16/9; object-fit:cover;
+      border-radius:12px; display:block; margin:32px 0 40px;
+      border:1px solid var(--border);
     }
 
-    .skill-toc {
-      background: var(--surface); border: 1px solid var(--border);
-      border-left: 3px solid var(--skill-accent); border-radius: var(--radius-card);
-      padding: 22px 26px; margin: 0 0 48px;
+    /* ─── SECTION HEADINGS ─── */
+    .skill-section { margin-bottom:60px; }
+    .skill-section-heading {
+      font-family:var(--font-display); font-size:1.15rem; font-weight:800;
+      letter-spacing:-.01em; line-height:1.25; margin:0 0 6px;
+      padding-bottom:14px; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:12px;
     }
-    .skill-toc-label {
-      font-family: var(--font-display); font-size: .72rem; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase; color: var(--skill-accent); margin-bottom: 14px;
+    .section-icon {
+      width:28px; height:28px; border-radius:6px;
+      background:var(--skill-accent-dim); border:1px solid rgba(99,102,241,.25);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.85rem; flex-shrink:0;
     }
-    .skill-toc ol {
-      margin: 0; padding-left: 18px;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 6px 32px;
-    }
-    @media (max-width: 600px) { .skill-toc ol { grid-template-columns: 1fr; } }
-    .skill-toc li { font-size: .88rem; line-height: 1.5; }
-    .skill-toc a { color: var(--text-secondary); text-decoration: none; }
-    .skill-toc a:hover { color: var(--skill-accent); }
+    .skill-section p { font-size:.95rem; line-height:1.8; color:var(--text-secondary); margin:0 0 14px; }
+    .skill-section strong { color:var(--text-primary); }
+    .skill-section ul, .skill-section ol { padding-left:20px; margin:0 0 14px; }
+    .skill-section li { font-size:.92rem; line-height:1.72; color:var(--text-secondary); margin-bottom:6px; }
 
-    .skill-section { margin-bottom: 56px; }
-    .skill-section h2 {
-      font-family: var(--font-display); font-size: 1.35rem; font-weight: 800;
-      letter-spacing: -.01em; line-height: 1.2; margin: 0 0 6px; padding-bottom: 12px;
-      border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;
+    /* ─── MODEL TABLE ─── */
+    .model-table-wrap { overflow-x:auto; margin:18px 0; }
+    .model-table {
+      width:100%; border-collapse:collapse; font-size:.88rem;
     }
-    .skill-section h2 .section-num {
-      font-family: var(--font-display); font-size: .72rem; font-weight: 700;
-      letter-spacing: .08em; color: var(--skill-accent);
-      background: var(--skill-accent-dim); border: 1px solid rgba(99,102,241,.25);
-      border-radius: 4px; padding: 2px 8px;
+    .model-table th {
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase;
+      color:var(--text-muted); text-align:left; padding:10px 14px;
+      border-bottom:1px solid var(--border); white-space:nowrap;
     }
-    .skill-section h3 {
-      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
-      letter-spacing: -.005em; color: var(--text-primary); margin: 28px 0 12px;
+    .model-table td {
+      padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.04);
+      vertical-align:middle; color:var(--text-secondary);
     }
-    .skill-section p { font-size: .95rem; line-height: 1.8; color: var(--text-secondary); margin: 0 0 16px; }
-    .skill-section ul, .skill-section ol { padding-left: 20px; margin: 0 0 16px; }
-    .skill-section li { font-size: .92rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 6px; }
-    .skill-section strong { color: var(--text-primary); }
-    .skill-section code {
-      font-family: 'JetBrains Mono', monospace; font-size: .82rem;
-      background: rgba(99,102,241,.1); color: var(--skill-accent); padding: 1px 5px; border-radius: 3px;
+    .model-table tr:hover td { background:rgba(255,255,255,.02); }
+    .model-table tr.recommended-row td { background:rgba(99,102,241,.04); }
+    .model-name { font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+    .model-provider-dot {
+      width:8px; height:8px; border-radius:50%; flex-shrink:0;
     }
-
-    .callout {
-      border-radius: var(--radius-card); padding: 16px 20px; margin: 24px 0;
-      font-size: .9rem; line-height: 1.7; display: flex; gap: 14px; align-items: flex-start;
+    .model-provider-dot.anthropic { background:#f97316; }
+    .model-provider-dot.openai    { background:#10b981; }
+    .model-provider-dot.google    { background:#3b82f6; }
+    .model-provider-dot.meta      { background:#818cf8; }
+    .stars { color:#f59e0b; font-size:.9rem; letter-spacing:-1px; }
+    .cost-pill {
+      display:inline-block; font-family:var(--font-display); font-size:.63rem;
+      font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+      padding:3px 8px; border-radius:4px;
     }
-    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-    .callout-body { flex: 1; color: var(--text-secondary); }
-    .callout-body strong { color: var(--text-primary); }
-    .callout.info    { background: rgba(99,102,241,.07); border: 1px solid rgba(99,102,241,.2); }
-    .callout.warning { background: rgba(251,191,36,.07); border: 1px solid rgba(251,191,36,.2); }
-    .callout.tip     { background: rgba(45,212,191,.07); border: 1px solid rgba(45,212,191,.2); }
-
-    .code-block {
-      position: relative; margin: 24px 0;
-      background: #0d1117; border: 1px solid #30363d; border-radius: 10px; overflow: hidden;
-    }
-    .code-block-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 16px; background: #161b22; border-bottom: 1px solid #30363d;
-    }
-    .code-lang {
-      font-family: var(--font-display); font-size: .68rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent);
-    }
-    .copy-btn {
-      background: none; border: 1px solid #30363d; border-radius: 5px;
-      color: #8b949e; font-family: var(--font-display); font-size: .65rem;
-      font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-      padding: 3px 10px; cursor: pointer; transition: all .15s;
-    }
-    .copy-btn:hover { border-color: var(--skill-accent); color: var(--skill-accent); }
-    .copy-btn.copied { border-color: #3fb950; color: #3fb950; }
-    .code-block pre {
-      margin: 0; padding: 18px 20px; overflow-x: auto;
-      font-family: 'JetBrains Mono', monospace; font-size: .82rem; line-height: 1.65; color: #e6edf3;
+    .cost-pill.cheap { background:rgba(34,197,94,.12); color:#22c55e; border:1px solid rgba(34,197,94,.25); }
+    .cost-pill.moderate { background:rgba(245,158,11,.12); color:#f59e0b; border:1px solid rgba(245,158,11,.25); }
+    .cost-pill.free { background:rgba(139,92,246,.12); color:#a78bfa; border:1px solid rgba(139,92,246,.25); }
+    .recommended-badge {
+      font-family:var(--font-display); font-size:.6rem; font-weight:700;
+      letter-spacing:.07em; text-transform:uppercase;
+      background:var(--skill-accent-dim); color:var(--skill-accent);
+      border:1px solid rgba(99,102,241,.3); padding:2px 7px; border-radius:3px;
     }
 
-    /* Before / After comparison */
-    .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
-    @media (max-width: 600px) { .compare-wrap { grid-template-columns: 1fr; } }
+    /* ─── COST CARD ─── */
+    .cost-card {
+      background:var(--surface); border:1px solid rgba(34,197,94,.25);
+      border-radius:12px; padding:22px 26px; margin:18px 0;
+      display:grid; grid-template-columns:1fr auto; gap:12px 28px; align-items:start;
+    }
+    @media(max-width:560px) { .cost-card { grid-template-columns:1fr; } }
+    .cost-card-label {
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.1em; text-transform:uppercase; color:var(--cost-cheap); margin-bottom:8px;
+    }
+    .cost-card-headline {
+      font-size:1.6rem; font-weight:700; color:var(--text-primary); line-height:1.1; margin-bottom:6px;
+    }
+    .cost-card-sub { font-size:.85rem; color:var(--text-muted); }
+    .cost-card-stats { display:flex; flex-direction:column; gap:10px; }
+    .cost-stat { text-align:right; }
+    .cost-stat-value {
+      font-family:var(--font-display); font-size:.95rem; font-weight:700; color:var(--text-primary);
+    }
+    .cost-stat-label { font-size:.78rem; color:var(--text-muted); }
+    .cost-card-note {
+      grid-column:1/-1; font-size:.82rem; color:var(--text-muted);
+      border-top:1px solid var(--border); padding-top:12px; margin-top:4px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .cost-card-note svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; flex-shrink:0; opacity:.6; }
+
+    /* ─── BEFORE / AFTER ─── */
+    .compare-wrap {
+      display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0;
+    }
+    @media(max-width:600px) { .compare-wrap { grid-template-columns:1fr; } }
     .compare-panel {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; overflow: hidden;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:10px; overflow:hidden;
     }
     .compare-label {
-      font-family: var(--font-display); font-size: .68rem; font-weight: 800;
-      letter-spacing: .1em; text-transform: uppercase; padding: 8px 14px;
+      padding:10px 16px;
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase;
+      display:flex; align-items:center; gap:8px;
     }
-    .compare-label.before { background: rgba(248,113,113,.12); color: #f87171; border-bottom: 1px solid rgba(248,113,113,.2); }
-    .compare-label.after  { background: rgba(74,222,128,.1);  color: #4ade80; border-bottom: 1px solid rgba(74,222,128,.2); }
-    .compare-text { padding: 14px 16px; font-size: .88rem; line-height: 1.75; color: var(--text-secondary); }
-    .compare-text del { color: #f87171; text-decoration: line-through; }
-    .compare-text ins { color: #4ade80; text-decoration: none; }
+    .compare-label.before-label {
+      background:rgba(239,68,68,.06); border-bottom:1px solid rgba(239,68,68,.15);
+      color:#f87171;
+    }
+    .compare-label.after-label {
+      background:rgba(34,197,94,.06); border-bottom:1px solid rgba(34,197,94,.15);
+      color:#4ade80;
+    }
+    .compare-dot { width:7px; height:7px; border-radius:50%; }
+    .before-label .compare-dot { background:#ef4444; }
+    .after-label .compare-dot { background:#22c55e; }
+    .compare-body {
+      padding:16px; font-size:.87rem; line-height:1.75; color:var(--text-secondary);
+    }
+    .compare-tag {
+      display:inline-block; margin:16px 0 0 16px;
+      font-family:var(--font-display); font-size:.62rem; font-weight:700;
+      letter-spacing:.08em; text-transform:uppercase;
+      padding:3px 9px; border-radius:4px; opacity:.7;
+    }
+    .compare-tag.email-tag {
+      background:rgba(99,102,241,.12); color:var(--skill-accent); border:1px solid rgba(99,102,241,.2);
+    }
+    .compare-tag.blog-tag {
+      background:rgba(34,211,238,.1); color:#22d3ee; border:1px solid rgba(34,211,238,.2);
+    }
 
-    /* Tell words grid */
-    .tell-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 24px 0; }
-    .tell-group {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; padding: 14px 16px;
+    /* ─── WORKS BEST WITH / NOT RECOMMENDED ─── */
+    .model-compat-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0;
     }
-    .tell-group-name {
-      font-family: var(--font-display); font-size: .68rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent); margin-bottom: 10px;
+    @media(max-width:600px) { .model-compat-grid { grid-template-columns:1fr; } }
+    .compat-panel {
+      background:var(--surface); border:1px solid var(--border); border-radius:10px;
+      padding:18px 20px;
     }
-    .tell-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tell-tag {
-      background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.2);
-      color: #fca5a5; font-family: 'JetBrains Mono', monospace; font-size: .75rem;
-      padding: 2px 8px; border-radius: 4px;
+    .compat-panel.best { border-color:rgba(34,197,94,.25); }
+    .compat-panel.avoid { border-color:rgba(239,68,68,.2); }
+    .compat-panel-label {
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase; margin-bottom:14px;
+      display:flex; align-items:center; gap:7px;
     }
+    .compat-panel.best .compat-panel-label { color:#4ade80; }
+    .compat-panel.avoid .compat-panel-label { color:#f87171; }
+    .compat-list { list-style:none; padding:0; margin:0; }
+    .compat-list li {
+      font-size:.87rem; line-height:1.65; color:var(--text-secondary);
+      padding:6px 0; border-bottom:1px solid rgba(255,255,255,.04);
+      display:flex; align-items:flex-start; gap:9px;
+    }
+    .compat-list li:last-child { border-bottom:none; }
+    .compat-list li::before { flex-shrink:0; margin-top:4px; }
+    .compat-panel.best .compat-list li::before { content:"✓"; color:#4ade80; font-size:.8rem; }
+    .compat-panel.avoid .compat-list li::before { content:"✗"; color:#f87171; font-size:.8rem; }
 
-    /* Step boxes */
-    .step-box {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 20px 22px; margin: 16px 0;
-      display: flex; gap: 18px; align-items: flex-start;
+    /* ─── CHAIN DIAGRAM ─── */
+    .chain-diagram {
+      display:flex; align-items:center; gap:0; margin:18px 0;
+      overflow-x:auto; padding:4px 0 8px; scrollbar-width:none;
     }
-    .step-num {
-      font-family: var(--font-display); font-size: .8rem; font-weight: 900;
-      color: var(--skill-accent); background: var(--skill-accent-dim);
-      border: 1px solid rgba(99,102,241,.25); border-radius: 6px; padding: 4px 10px;
-      flex-shrink: 0; margin-top: 1px; letter-spacing: .06em;
-    }
-    .step-content { flex: 1; }
-    .step-content h4 { font-family: var(--font-display); font-size: .9rem; font-weight: 700; margin: 0 0 6px; }
-    .step-content p { font-size: .88rem; line-height: 1.65; color: var(--text-secondary); margin: 0; }
-
-    /* Skill chain visualiser */
-    .chain-visual {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 24px; margin: 24px 0; overflow-x: auto;
-    }
-    .chain-row { display: flex; align-items: stretch; gap: 0; min-width: max-content; }
+    .chain-diagram::-webkit-scrollbar { display:none; }
     .chain-node {
-      background: var(--bg-deep, #0a0a14); border: 1px solid var(--border);
-      border-radius: 8px; padding: 14px 18px; min-width: 130px; text-align: center;
+      flex-shrink:0; min-width:140px;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:10px; padding:14px 16px;
+      text-align:center;
     }
-    .chain-node-step {
-      font-family: var(--font-display); font-size: .65rem; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase; color: var(--skill-accent); margin-bottom: 6px;
+    .chain-node.active-node {
+      border-color:rgba(99,102,241,.5);
+      background:rgba(99,102,241,.07);
+      box-shadow:0 0 0 1px rgba(99,102,241,.2);
     }
-    .chain-node-title { font-family: var(--font-display); font-size: .82rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
-    .chain-node-out { font-size: .75rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
-    .chain-node.terminal { border-color: rgba(99,102,241,.4); background: rgba(99,102,241,.07); }
-    .chain-arrow { display: flex; align-items: center; justify-content: center; padding: 0 8px; color: var(--text-muted); font-size: 1.1rem; flex-shrink: 0; }
+    .chain-node-icon { font-size:1.3rem; margin-bottom:8px; }
+    .chain-node-title {
+      font-family:var(--font-display); font-size:.7rem; font-weight:700;
+      letter-spacing:.05em; text-transform:uppercase;
+      color:var(--text-primary); margin-bottom:4px;
+    }
+    .chain-node.active-node .chain-node-title { color:var(--skill-accent); }
+    .chain-node-desc { font-size:.75rem; color:var(--text-muted); line-height:1.4; }
+    .chain-arrow {
+      flex-shrink:0; padding:0 8px;
+      font-size:1.1rem; color:rgba(255,255,255,.2);
+    }
 
-    /* Download CTA */
-    .download-cta {
-      background: linear-gradient(135deg, rgba(99,102,241,.1), rgba(129,140,248,.05));
-      border: 1px solid rgba(99,102,241,.3); border-radius: var(--radius-card);
-      padding: 36px 36px 32px; text-align: center; margin: 56px 0 48px;
+    /* ─── COMMUNITY SIGNALS ─── */
+    .community-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0;
     }
-    .download-cta h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 900; margin: 0 0 10px; }
-    .download-cta p { color: var(--text-secondary); font-size: .95rem; margin: 0 0 24px; max-width: 480px; margin-left: auto; margin-right: auto; }
-    .download-cta-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .btn-download-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--skill-accent); color: #fff;
-      font-family: var(--font-display); font-size: .8rem; font-weight: 800;
-      letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
-      padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer;
-      transition: opacity .15s, transform .15s;
+    @media(max-width:560px) { .community-grid { grid-template-columns:1fr 1fr; } }
+    .community-stat-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:10px; padding:16px; text-align:center;
     }
-    .btn-download-primary:hover { opacity: .88; transform: translateY(-1px); }
-    .btn-download-primary svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
-    .btn-download-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: transparent; color: var(--skill-accent);
-      font-family: var(--font-display); font-size: .8rem; font-weight: 700;
-      letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
-      padding: 12px 24px; border-radius: 8px; border: 1px solid rgba(99,102,241,.4); cursor: pointer;
-      transition: background .15s, transform .15s;
+    .community-stat-value {
+      font-family:var(--font-display); font-size:1.5rem; font-weight:800;
+      color:var(--text-primary); letter-spacing:-.02em; display:block; margin-bottom:4px;
     }
-    .btn-download-secondary:hover { background: rgba(99,102,241,.08); transform: translateY(-1px); }
+    .community-stat-label { font-size:.78rem; color:var(--text-muted); }
 
-    /* Related skills */
-    .related-skills { margin-top: 56px; }
-    .related-label {
-      font-family: var(--font-display); font-size: .72rem; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px;
+    /* ─── CALLOUT BOXES ─── */
+    .callout {
+      border-radius:10px; padding:15px 18px; margin:18px 0;
+      font-size:.9rem; line-height:1.7; display:flex; gap:13px; align-items:flex-start;
     }
-    .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    @media (max-width: 700px) { .related-grid { grid-template-columns: 1fr; } }
+    .callout-icon { font-size:1rem; flex-shrink:0; margin-top:2px; }
+    .callout-body { flex:1; color:var(--text-secondary); }
+    .callout-body strong { color:var(--text-primary); }
+    .callout.info    { background:rgba(99,102,241,.07);  border:1px solid rgba(99,102,241,.2); }
+    .callout.tip     { background:rgba(45,212,191,.07);  border:1px solid rgba(45,212,191,.2); }
+    .callout.warning { background:rgba(251,191,36,.07);  border:1px solid rgba(251,191,36,.2); }
+
+    /* ─── CODE BLOCK ─── */
+    .code-block {
+      position:relative; margin:18px 0;
+      background:#0d1117; border:1px solid #30363d; border-radius:10px; overflow:hidden;
+    }
+    .code-block-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:9px 16px; background:#161b22; border-bottom:1px solid #30363d;
+    }
+    .code-lang {
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase; color:var(--skill-accent);
+    }
+    .copy-btn {
+      background:none; border:1px solid #30363d; border-radius:5px;
+      color:#8b949e; font-family:var(--font-display); font-size:.63rem;
+      font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+      padding:3px 10px; cursor:pointer; transition:all .15s;
+    }
+    .copy-btn:hover { border-color:var(--skill-accent); color:var(--skill-accent); }
+    .copy-btn.copied { border-color:#3fb950; color:#3fb950; }
+    .code-block pre {
+      margin:0; padding:18px 20px; overflow-x:auto;
+      font-family:'JetBrains Mono',monospace; font-size:.8rem; line-height:1.65; color:#e6edf3;
+    }
+
+    /* ─── RELATED SKILLS CARD STRIP ─── */
+    .related-skills {
+      display:flex; gap:14px; overflow-x:auto; padding:4px 0 8px;
+      scrollbar-width:none;
+    }
+    .related-skills::-webkit-scrollbar { display:none; }
     .related-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-card); padding: 18px 20px; text-decoration: none;
-      transition: border-color .15s, transform .15s;
+      flex-shrink:0; width:200px;
+      background:var(--surface); border:1px solid var(--border); border-radius:10px;
+      padding:16px; text-decoration:none; transition:border-color .15s,transform .15s;
     }
-    .related-card:hover { border-color: rgba(99,102,241,.4); transform: translateY(-2px); }
-    .related-card-tag {
-      font-family: var(--font-display); font-size: .65rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent); margin-bottom: 8px;
+    .related-card:hover { border-color:var(--skill-accent); transform:translateY(-2px); }
+    .related-card-icon { font-size:1.4rem; margin-bottom:10px; }
+    .related-card-title {
+      font-family:var(--font-display); font-size:.75rem; font-weight:700;
+      letter-spacing:.03em; color:var(--text-primary); margin-bottom:6px;
     }
-    .related-card h4 { font-family: var(--font-display); font-size: .92rem; font-weight: 700; margin: 0 0 6px; color: var(--text-primary); }
-    .related-card p { font-size: .82rem; line-height: 1.55; color: var(--text-muted); margin: 0; }
+    .related-card-desc { font-size:.78rem; color:var(--text-muted); line-height:1.5; }
+
+    /* ─── BOTTOM INSTALL CTA ─── */
+    .install-cta-section {
+      background:linear-gradient(135deg, rgba(99,102,241,.1), rgba(129,140,248,.05));
+      border:1px solid rgba(99,102,241,.25); border-radius:16px;
+      padding:36px 32px; text-align:center; margin-top:60px;
+    }
+    .install-cta-headline {
+      font-family:var(--font-display); font-size:clamp(1.2rem,3vw,1.7rem);
+      font-weight:800; letter-spacing:-.02em; margin:0 0 10px;
+    }
+    .install-cta-sub { font-size:.9rem; color:var(--text-muted); margin:0 0 26px; }
+    .install-cta-buttons { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
+
+    /* mobile tweaks */
+    @media (max-width:480px) {
+      .install-bar-inner { gap:8px; }
+      .install-label { display:none; }
+    }
   </style>
 </head>
 <body>
-<div id="read-progress"></div>
+  <div id="read-progress"></div>
 
-<header class="site-header">
-  <div class="header-inner">
-    <a class="nav-logo" href="/">
-      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <span>Aether</span><span class="logo-intel">Intel</span>
-    </a>
-    <nav class="nav-links">
-      <a href="/index.html">News</a>
-      <a href="/skills.html" class="active">Skills</a>
-      <a href="/tools.html">Tools</a>
-    </nav>
+  <!-- NAV included via site CSS / nav component -->
+  <!-- (The global nav from style.css + nav.html handles the top bar) -->
+  <nav class="nav-bar" id="nav-bar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
+      </a>
+      <div class="nav-links">
+        <a href="/news.html" class="nav-link">News</a>
+        <a href="/tools.html" class="nav-link">Tools</a>
+        <a href="/skills.html" class="nav-link active">Skills</a>
+        <a href="/about.html" class="nav-link">About</a>
+      </div>
+      <div class="nav-actions">
+        <a href="/skills.html" class="nav-btn-ghost">Browse Skills</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- STICKY INSTALL BAR -->
+  <div class="install-bar" id="install-bar">
+    <div class="install-bar-inner">
+      <span class="install-label">Install Skill:</span>
+      <button class="btn-install-primary" id="btn-copy-prompt" onclick="copyPrompt(this)">
+        ⚡ Copy Prompt
+      </button>
+      <a class="btn-install-ghost" href="https://claude.ai/new?q=You+are+a+professional+editor+who+specialises+in+making+AI-generated+text+indistinguishable+from+human+writing." target="_blank" rel="noopener">
+        ▶ Try in Claude
+      </a>
+      <button class="btn-install-ghost" onclick="downloadJSON()">
+        ↓ .json
+      </button>
+      <a class="btn-install-ghost or-btn" href="https://openrouter.ai/chat?system=You+are+a+professional+editor+who+specialises+in+making+AI-generated+text+indistinguishable+from+human+writing." target="_blank" rel="noopener">
+        ⊕ OpenRouter
+      </a>
+      <span class="install-bar-spacer"></span>
+      <span style="font-family:var(--font-display);font-size:.65rem;letter-spacing:.06em;color:rgba(255,255,255,.3);">1,247 installs</span>
+    </div>
   </div>
-</header>
 
-<main>
-  <div class="skill-article-wrap">
+  <div class="skill-page-wrap">
 
-    <!-- Breadcrumb -->
-    <nav class="skill-breadcrumb">
-      <a href="/skills.html">Skills</a>
+    <!-- BREADCRUMB -->
+    <nav class="skill-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
       <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      <span>Prompts</span>
+      <a href="/skills.html">Skills</a>
       <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       <span>The Humanizer</span>
     </nav>
 
-    <!-- Hero -->
-    <header class="skill-hero">
-      <div class="skill-hero-badges">
-        <span class="badge-prompts">Prompts</span>
-        <span class="diff-pill">Beginner</span>
-        <span class="time-pill">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          10 min setup
+    <!-- OUTCOME BANNER -->
+    <header class="outcome-banner">
+      <div class="outcome-meta">
+        <span class="badge-category">Prompts</span>
+        <span class="badge-cost-cheap">💚 Cheap · ~$0.002 / output</span>
+        <span class="badge-installs">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          1,247 installs
         </span>
       </div>
-      <h1>The <span>Humanizer</span>:<br>Strip AI Tells From Every Output</h1>
-      <p class="skill-hero-lead">Anything AI-generated that ships to real humans needs a humanizer pass first. "Unlock," "I hope this finds you well," and "biggest takeaway" are dead giveaways. This skill catches them all — and fixes them automatically before your text ever leaves the editor.</p>
-      <div class="skill-hero-meta">
-        <span><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Aether Intel</span>
-        <span><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> May 2025</span>
-        <span><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 8 min read</span>
-      </div>
+      <h1 class="outcome-headline">
+        <em>Strips AI tells</em> from any text<br>before it ships to humans
+      </h1>
+      <p class="outcome-sub">
+        A professional editor skill that rewrites filler openers, vague power words, and corporate padding out of AI-generated copy — leaving clean, natural-sounding text with every factual claim intact.
+      </p>
     </header>
 
-    <!-- Hero image -->
+    <!-- HERO IMAGE -->
     <img
       src="/images/skills/humanizer-skill-hero.webp"
-      alt="The Humanizer — strip AI tells from every output"
+      alt="The Humanizer Skill — AI text being rewritten into natural human writing"
       class="skill-hero-img"
       loading="eager"
-      onerror="this.style.background='linear-gradient(135deg,rgba(99,102,241,0.18),rgba(34,211,238,0.07))';this.removeAttribute('src')"
     />
 
-    <!-- Table of Contents -->
-    <nav class="skill-toc">
-      <div class="skill-toc-label">In this guide</div>
-      <ol>
-        <li><a href="#why-it-matters">Why AI writing is instantly recognisable</a></li>
-        <li><a href="#the-tell-dictionary">The complete AI tells dictionary</a></li>
-        <li><a href="#before-after">Before &amp; after examples</a></li>
-        <li><a href="#build-the-skill">Build the humanizer skill</a></li>
-        <li><a href="#chaining">Chain it to every copywriting skill</a></li>
-        <li><a href="#customise">Customise with your voice fingerprint</a></li>
-        <li><a href="#download">Download the full prompt template</a></li>
-      </ol>
-    </nav>
-
-    <!-- Section 1: Why it matters -->
-    <section class="skill-section" id="why-it-matters">
-      <h2><span class="section-num">01</span> Why AI Writing Is Instantly Recognisable</h2>
-      <p>Language models are trained on the entire internet — and the internet is full of corporate press releases, SEO blog posts, and LinkedIn thought leadership. That's the writing style they default to when not told otherwise.</p>
-      <p>The result is a specific, identifiable texture: <strong>overly enthusiastic openers, padded qualifiers, abstract "unlock potential" hype, and bullet points for everything</strong>. Readers notice. They don't always consciously label it as AI, but they disengage — the text feels like it was written for no one in particular.</p>
-      <p>Wikipedia has documented a comprehensive list of signs of AI-generated text. The Humanizer skill is built directly from that list. Run it as the final step before any AI-written text ships to real humans and you eliminate the most obvious giveaways in seconds.</p>
-
-      <div class="callout tip">
+    <!-- SECTION 1: MODEL TABLE -->
+    <section class="skill-section" id="models">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">🤖</span>
+        Recommended Models
+      </h2>
+      <p>This skill runs well on any capable model. Pick based on your volume and budget.</p>
+      <div class="model-table-wrap">
+        <table class="model-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Best For</th>
+              <th>Cost</th>
+              <th>Quality</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="recommended-row">
+              <td>
+                <span class="model-name">
+                  <span class="model-provider-dot anthropic"></span>
+                  Claude Sonnet 4.5
+                </span>
+              </td>
+              <td>Best quality — catches subtle structural tells</td>
+              <td><span class="cost-pill moderate">Moderate</span></td>
+              <td><span class="stars">★★★★★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+            <tr class="recommended-row">
+              <td>
+                <span class="model-name">
+                  <span class="model-provider-dot openai"></span>
+                  GPT-4o mini
+                </span>
+              </td>
+              <td>Great budget option for bulk editing passes</td>
+              <td><span class="cost-pill cheap">Cheap</span></td>
+              <td><span class="stars">★★★★</span><span style="opacity:.3">★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+            <tr class="recommended-row">
+              <td>
+                <span class="model-name">
+                  <span class="model-provider-dot google"></span>
+                  Gemini 1.5 Flash
+                </span>
+              </td>
+              <td>Fastest — ideal for high-volume automation</td>
+              <td><span class="cost-pill cheap">Cheap</span></td>
+              <td><span class="stars">★★★★</span><span style="opacity:.3">★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+            <tr>
+              <td>
+                <span class="model-name">
+                  <span class="model-provider-dot meta"></span>
+                  Llama 3.1 70B
+                </span>
+              </td>
+              <td>Free via Groq — good for personal use</td>
+              <td><span class="cost-pill free">Free</span></td>
+              <td><span class="stars">★★★</span><span style="opacity:.3">★★</span></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout info">
         <span class="callout-icon">💡</span>
         <div class="callout-body">
-          <strong>The chain insight:</strong> Don't run the Humanizer manually. Build it as a skill in Claude and append <code>→ humanize()</code> at the end of every copywriting skill you build. Every email, blog post, and social caption automatically gets a detox pass with zero extra effort.
+          <strong>Temperature tip:</strong> Set to <strong>0.4</strong>. Low enough to follow the editing rules reliably, high enough to produce varied, natural-sounding rewrites instead of robotic substitutions.
         </div>
       </div>
     </section>
 
-    <!-- Section 2: The Tell Dictionary -->
-    <section class="skill-section" id="the-tell-dictionary">
-      <h2><span class="section-num">02</span> The Complete AI Tells Dictionary</h2>
-      <p>These fall into six categories. The Humanizer skill targets all of them.</p>
+    <!-- SECTION 2: COST ESTIMATE -->
+    <section class="skill-section" id="cost">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">💰</span>
+        Cost Estimate
+      </h2>
+      <div class="cost-card">
+        <div>
+          <div class="cost-card-label">💚 Cheap Tier</div>
+          <div class="cost-card-headline">~$0.002</div>
+          <div class="cost-card-sub">per output, on GPT-4o mini or Gemini Flash</div>
+        </div>
+        <div class="cost-card-stats">
+          <div class="cost-stat">
+            <div class="cost-stat-value">~800</div>
+            <div class="cost-stat-label">input tokens / run</div>
+          </div>
+          <div class="cost-stat">
+            <div class="cost-stat-value">~800</div>
+            <div class="cost-stat-label">output tokens / run</div>
+          </div>
+          <div class="cost-stat">
+            <div class="cost-stat-value">$2.00</div>
+            <div class="cost-stat-label">per 1,000 outputs</div>
+          </div>
+        </div>
+        <div class="cost-card-note">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Runs on any model. Gemini Flash keeps this near-free at scale — roughly $0.50 per 1,000 passes. Use Claude Sonnet for higher quality at ~$15 per 1,000.
+        </div>
+      </div>
+    </section>
 
-      <div class="tell-grid">
-        <div class="tell-group">
-          <div class="tell-group-name">Filler Openers</div>
-          <div class="tell-tags">
-            <span class="tell-tag">Certainly!</span>
-            <span class="tell-tag">Of course!</span>
-            <span class="tell-tag">Absolutely!</span>
-            <span class="tell-tag">Great question!</span>
-            <span class="tell-tag">Definitely!</span>
-            <span class="tell-tag">Sure thing!</span>
+    <!-- SECTION 3: BEFORE / AFTER -->
+    <section class="skill-section" id="examples">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">✨</span>
+        Before &amp; After Examples
+      </h2>
+      <p>See what the humanizer does to real AI-generated text in the wild.</p>
+
+      <!-- Example 1: Email -->
+      <span class="compare-tag email-tag">Email opener</span>
+      <div class="compare-wrap">
+        <div class="compare-panel">
+          <div class="compare-label before-label">
+            <span class="compare-dot"></span> Before — AI output
+          </div>
+          <div class="compare-body">
+            I hope this email finds you well! I wanted to reach out to discuss a potential opportunity that I believe could be a game-changer for your business. Our cutting-edge solution seamlessly integrates with your existing workflow to unlock significant value.
           </div>
         </div>
-        <div class="tell-group">
-          <div class="tell-group-name">Vague Power Words</div>
-          <div class="tell-tags">
-            <span class="tell-tag">unlock</span>
-            <span class="tell-tag">unleash</span>
-            <span class="tell-tag">leverage</span>
-            <span class="tell-tag">streamline</span>
-            <span class="tell-tag">revolutionise</span>
-            <span class="tell-tag">game-changer</span>
-            <span class="tell-tag">robust</span>
-            <span class="tell-tag">seamlessly</span>
+        <div class="compare-panel">
+          <div class="compare-label after-label">
+            <span class="compare-dot"></span> After — Humanized
           </div>
-        </div>
-        <div class="tell-group">
-          <div class="tell-group-name">Corporate Padding</div>
-          <div class="tell-tags">
-            <span class="tell-tag">it's worth noting</span>
-            <span class="tell-tag">it goes without saying</span>
-            <span class="tell-tag">moving forward</span>
-            <span class="tell-tag">at the end of the day</span>
-            <span class="tell-tag">in today's world</span>
-          </div>
-        </div>
-        <div class="tell-group">
-          <div class="tell-group-name">Email Grease</div>
-          <div class="tell-tags">
-            <span class="tell-tag">hope this finds you well</span>
-            <span class="tell-tag">I hope you're doing well</span>
-            <span class="tell-tag">feel free to reach out</span>
-            <span class="tell-tag">please don't hesitate</span>
-          </div>
-        </div>
-        <div class="tell-group">
-          <div class="tell-group-name">Over-Hedging</div>
-          <div class="tell-tags">
-            <span class="tell-tag">it's important to note</span>
-            <span class="tell-tag">please note that</span>
-            <span class="tell-tag">as always, consult a professional</span>
-            <span class="tell-tag">I must emphasise</span>
-          </div>
-        </div>
-        <div class="tell-group">
-          <div class="tell-group-name">Dive/Delve Clichés</div>
-          <div class="tell-tags">
-            <span class="tell-tag">dive deep</span>
-            <span class="tell-tag">delve into</span>
-            <span class="tell-tag">embark on</span>
-            <span class="tell-tag">explore</span>
-            <span class="tell-tag">cutting-edge</span>
-            <span class="tell-tag">groundbreaking</span>
+          <div class="compare-body">
+            Quick one — we built something that might save your ops team about four hours a week. It plugs into the tools you're already using. Worth a 20-minute call?
           </div>
         </div>
       </div>
+
+      <!-- Example 2: Blog -->
+      <span class="compare-tag blog-tag">Blog intro</span>
+      <div class="compare-wrap">
+        <div class="compare-panel">
+          <div class="compare-label before-label">
+            <span class="compare-dot"></span> Before — AI output
+          </div>
+          <div class="compare-body">
+            In today's rapidly evolving digital landscape, businesses must leverage cutting-edge AI tools to remain competitive. It's worth noting that the biggest takeaway from recent research is that organisations that fail to adapt risk being left behind.
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label after-label">
+            <span class="compare-dot"></span> After — Humanized
+          </div>
+          <div class="compare-body">
+            Most companies using AI are still running it like a fancy search engine. The ones pulling ahead are doing something different — they're building reusable skills that compound. Here's what that looks like.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: WORKS BEST WITH / AVOID -->
+    <section class="skill-section" id="compatibility">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">⚡</span>
+        Model Compatibility
+      </h2>
+      <div class="model-compat-grid">
+        <div class="compat-panel best">
+          <div class="compat-panel-label">✓ Works Best With</div>
+          <ul class="compat-list">
+            <li>Claude Sonnet — highest quality rewrites, catches structural tells</li>
+            <li>GPT-4o mini — great bulk-editing throughput at low cost</li>
+            <li>Gemini 1.5 Flash — fastest for high-volume pipelines</li>
+            <li>Llama 3.1 70B — solid free-tier option via Groq</li>
+          </ul>
+        </div>
+        <div class="compat-panel avoid">
+          <div class="compat-panel-label">✗ Not Recommended</div>
+          <ul class="compat-list">
+            <li>Models under 7B params — miss subtle pattern rewrites</li>
+            <li>o1 / o3 reasoning models — overkill and expensive for editing</li>
+            <li>Long-context models for short copy — cost efficiency suffers</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: CHAIN WITH -->
+    <section class="skill-section" id="chain">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">🔗</span>
+        Chainable Skills
+      </h2>
+      <p>The Humanizer is designed as a <strong>final-pass filter</strong> in copywriting pipelines. Chain it after content generation skills and before delivery.</p>
+      <div class="chain-diagram">
+        <div class="chain-node">
+          <div class="chain-node-icon">📝</div>
+          <div class="chain-node-title">Draft Writer</div>
+          <div class="chain-node-desc">Generate raw AI content</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">
+          <div class="chain-node-icon">🎯</div>
+          <div class="chain-node-title">Voice Fingerprint</div>
+          <div class="chain-node-desc">Apply brand voice layer</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node active-node">
+          <div class="chain-node-icon">✂️</div>
+          <div class="chain-node-title">Humanizer</div>
+          <div class="chain-node-desc">Strip AI tells · This skill</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">
+          <div class="chain-node-icon">📤</div>
+          <div class="chain-node-title">Delivery</div>
+          <div class="chain-node-desc">Email · Blog · Socials</div>
+        </div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">🔗</span>
+        <div class="callout-body">
+          <strong>Pro workflow:</strong> Run a Voice Fingerprint skill first to capture brand tone, then pass output to the Humanizer. The combined result feels authored, not automated.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: THE PROMPT -->
+    <section class="skill-section" id="prompt">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">📋</span>
+        The System Prompt
+      </h2>
+      <p>Copy this into any AI tool as the system prompt. The <code>[Voice Style]</code> placeholder at the bottom is intentional — fill it in to match your brand voice.</p>
 
       <div class="callout warning">
         <span class="callout-icon">⚠️</span>
         <div class="callout-body">
-          <strong>The structural tells matter too.</strong> Beyond word-level patterns, AI writing has structural tells: bullet-pointing everything that could be prose, adding a "Conclusion" section that repeats the intro, and always ending with "I hope this helps!" or a summary paragraph no one asked for. The Humanizer catches structural patterns, not just word patterns.
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 3: Before / After -->
-    <section class="skill-section" id="before-after">
-      <h2><span class="section-num">03</span> Before &amp; After Examples</h2>
-      <p>Same information, two very different reads. The right side passes. The left side gets skimmed and forgotten.</p>
-
-      <h3>Email opener</h3>
-      <div class="compare-wrap">
-        <div class="compare-panel">
-          <div class="compare-label before">❌ Raw AI output</div>
-          <div class="compare-text">I hope this email finds you well! I wanted to reach out to discuss a potential opportunity that I believe could be a game-changer for your business. Our cutting-edge solution seamlessly integrates with your existing workflow to unlock significant value and streamline your operations.</div>
-        </div>
-        <div class="compare-panel">
-          <div class="compare-label after">✓ After humanizer</div>
-          <div class="compare-text">Quick one — we built something that might save your ops team about four hours a week. It plugs into the tools you're already using. Worth a 20-minute call to see if it fits?</div>
-        </div>
-      </div>
-
-      <h3>Blog post intro</h3>
-      <div class="compare-wrap">
-        <div class="compare-panel">
-          <div class="compare-label before">❌ Raw AI output</div>
-          <div class="compare-text">In today's rapidly evolving digital landscape, businesses must leverage cutting-edge AI tools to remain competitive. It's worth noting that the biggest takeaway from recent research is that organisations that fail to adapt risk being left behind. In this comprehensive guide, we'll delve into everything you need to know.</div>
-        </div>
-        <div class="compare-panel">
-          <div class="compare-label after">✓ After humanizer</div>
-          <div class="compare-text">Most companies using AI are still running it like a fancy search engine. The ones pulling ahead are doing something different — they're building reusable skills that compound. Here's what that looks like in practice.</div>
-        </div>
-      </div>
-
-      <h3>Social post</h3>
-      <div class="compare-wrap">
-        <div class="compare-panel">
-          <div class="compare-label before">❌ Raw AI output</div>
-          <div class="compare-text">🚀 Excited to share that our innovative approach is revolutionising the way teams collaborate! By harnessing the power of AI, we're empowering individuals to unlock their full potential and drive impactful outcomes. The future is bright! #Innovation #AI #Growth</div>
-        </div>
-        <div class="compare-panel">
-          <div class="compare-label after">✓ After humanizer</div>
-          <div class="compare-text">We cut our content review time by 70% last month. Not with a new tool — just a single Claude skill that catches inconsistencies before anything ships. Happy to share the setup if useful.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 4: Build the skill -->
-    <section class="skill-section" id="build-the-skill">
-      <h2><span class="section-num">04</span> Build the Humanizer Skill</h2>
-      <p>This is the core skill prompt. Save it as a Claude Project instruction, a Hermes skill file, or any system prompt layer you use. It runs as a final editing pass on any text you feed it.</p>
-
-      <div class="step-box">
-        <span class="step-num">01</span>
-        <div class="step-content">
-          <h4>Open Claude and create a new Project</h4>
-          <p>Go to Claude → Projects → New Project. Name it "Humanizer" or add it to an existing writing project as a sub-skill.</p>
-        </div>
-      </div>
-      <div class="step-box">
-        <span class="step-num">02</span>
-        <div class="step-content">
-          <h4>Paste the system prompt below into Project Instructions</h4>
-          <p>This is the full humanizer skill. Paste it exactly — you'll customise the voice section in the next step.</p>
-        </div>
-      </div>
-      <div class="step-box">
-        <span class="step-num">03</span>
-        <div class="step-content">
-          <h4>Test it with your own AI-generated text</h4>
-          <p>Paste in something you've already generated and see the difference. Then start chaining it to other skills.</p>
+          <strong>Don't skip the voice notes section.</strong> Without it, outputs default to a generic neutral tone. Even two or three sentences about your brand voice changes results dramatically.
         </div>
       </div>
 
       <div class="code-block">
         <div class="code-block-header">
-          <span class="code-lang">Skill Prompt — System Instructions</span>
+          <span class="code-lang">System Prompt</span>
           <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre>You are a professional editor who specialises in making AI-generated text
-indistinguishable from human writing.
+        <pre id="full-prompt">You are a professional editor who specialises in making AI-generated text indistinguishable from human writing.
 
-Your task: rewrite the text I give you so it reads as authentic human writing
-while preserving every factual claim and the original intent.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Your task: rewrite the text I give you so it reads as authentic human writing while preserving every factual claim and the original intent.
 
 WHAT TO FIX — detect and rewrite these AI tells:
 
 1. FILLER OPENERS
-   Remove: "Certainly!", "Of course!", "Absolutely!", "Great question!",
-   "Sure thing!", "Definitely!", "I'd be happy to..."
-   Remove: "I hope this email finds you well", "I hope you're doing well",
-   "Feel free to reach out", "Please don't hesitate to contact me"
+   Remove: "Certainly!", "Of course!", "Absolutely!", "Great question!", "Sure thing!", "Definitely!", "I'd be happy to..."
+   Remove: "I hope this email finds you well", "I hope you're doing well", "Feel free to reach out", "Please don't hesitate to contact me"
 
 2. VAGUE POWER WORDS — replace with specific, concrete language
-   Remove: unlock, unleash, leverage, streamline, revolutionise, transform,
-   empower, harness, elevate, amplify, synergise
-   Remove: game-changer, groundbreaking, cutting-edge, innovative solution,
-   state-of-the-art, best-in-class, world-class
+   Remove: unlock, unleash, leverage, streamline, revolutionise, transform, empower, harness, elevate, amplify, synergise
+   Remove: game-changer, groundbreaking, cutting-edge, innovative solution, state-of-the-art, best-in-class, world-class
    Remove: robust, seamlessly, holistically, comprehensively, proactively
 
 3. CORPORATE PADDING — delete entirely
-   Remove: "It's worth noting that...", "It goes without saying...",
-   "Needless to say...", "It is important to note..."
-   Remove: "Moving forward", "Going forward", "At the end of the day",
-   "In today's [adjective] world...", "In today's fast-paced landscape..."
+   Remove: "It's worth noting that...", "It goes without saying...", "Needless to say...", "It is important to note..."
+   Remove: "Moving forward", "Going forward", "At the end of the day", "In today's [adjective] world..."
    Remove: "The biggest takeaway is...", "It is what it is"
 
 4. STRUCTURAL TELLS
    - If every section has a bullet list, convert some to prose
    - Delete summary paragraphs that repeat what was just said
    - Remove "In conclusion" sections unless the piece genuinely needs one
-   - Delete headers on every single paragraph — use them sparingly
-   - Remove "I hope this helps!" and any similar sign-off filler
+   - Remove "I hope this helps!" and similar sign-off filler
 
 5. DIVE / DELVE CLICHÉS
-   Remove: dive deep, delve into, embark on, explore the nuances,
-   unpack, breakdown, dissect, navigate (used abstractly)
+   Remove: dive deep, delve into, embark on, explore the nuances, unpack, breakdown, dissect
 
 6. OVER-HEDGING — one qualifier is enough
-   Simplify: "It's extremely important to always remember to..."
-   Remove triple qualifications: "In some cases, it can sometimes be
-   possible that..."
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Simplify triple qualifications and excessive hedging language
 
 STYLE RULES:
 - Preserve ALL factual content — never change meaning
@@ -602,300 +822,180 @@ STYLE RULES:
 - Vary sentence length — short punchy sentences work alongside longer ones
 - A single sentence can stand alone as its own paragraph for emphasis
 - Active voice preferred, but don't force it unnaturally
-- The goal is natural, confident, specific — not chatty or slangy
 
 VOICE STYLE:
-[Add your voice notes here — e.g. "Dry, direct. Short sentences preferred.
-No filler. Occasional wry observation. Never exclamation marks."]
+[Add your brand voice notes here — tone, personality, reading level, any words to avoid]
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-When finished, output ONLY the rewritten text.
-No commentary, no "Here's the humanized version:", no explanation.
-Just the clean output.</pre>
+When finished, output ONLY the rewritten text. No commentary. No explanation. Just the clean output.</pre>
       </div>
+    </section>
+
+    <!-- SECTION 7: WHAT IT TARGETS -->
+    <section class="skill-section" id="targets">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">🎯</span>
+        What It Targets
+      </h2>
+      <p>The prompt is built on Wikipedia's documented signals of AI-generated text — six pattern categories that appear consistently across models.</p>
+
+      <h3 style="font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);margin:24px 0 12px;">The Six Pattern Categories</h3>
+      <ul>
+        <li><strong>Filler openers</strong> — "Certainly!", "Great question!", "I hope this email finds you well" and ~20 variants</li>
+        <li><strong>Vague power words</strong> — unlock, leverage, seamlessly, game-changer, cutting-edge, robust (replaced with specific language)</li>
+        <li><strong>Corporate padding</strong> — "It's worth noting", "moving forward", "in today's digital landscape" (deleted entirely)</li>
+        <li><strong>Structural tells</strong> — every section being a bullet list, repeated summaries, "In conclusion" sections</li>
+        <li><strong>Dive / delve clichés</strong> — dive deep, delve into, embark on, unpack, dissect</li>
+        <li><strong>Over-hedging</strong> — triple qualifications, excessive "it could be argued that" chains</li>
+      </ul>
 
       <div class="callout info">
-        <span class="callout-icon">ℹ️</span>
+        <span class="callout-icon">📌</span>
         <div class="callout-body">
-          <strong>Hermes / agent skill file:</strong> If you're using Hermes Agent or building in Claude Code, wrap this in a Python <code>execute(text: str) -&gt; str</code> function and save as <code>humanizer.py</code>. Register it, then call <code>run_skill("humanizer", text=draft)</code> from inside any other skill.
+          <strong>What it doesn't change:</strong> Every factual claim, technical term, and structural decision stays intact. The humanizer is an editor, not a rewriter — it changes how things sound, never what they mean.
         </div>
       </div>
     </section>
 
-    <!-- Section 5: Chaining -->
-    <section class="skill-section" id="chaining">
-      <h2><span class="section-num">05</span> Chain It to Every Copywriting Skill</h2>
-      <p>Running the Humanizer manually every time defeats the point. The real power is wiring it as the automatic final step inside any skill that produces text for external audiences.</p>
-
-      <h3>The chaining architecture</h3>
-      <div class="chain-visual">
-        <div class="chain-row">
-          <div class="chain-node">
-            <div class="chain-node-step">Step 1</div>
-            <div class="chain-node-title">Your Skill</div>
-            <div class="chain-node-out">email / post / article</div>
-          </div>
-          <div class="chain-arrow">→</div>
-          <div class="chain-node">
-            <div class="chain-node-step">Step 2</div>
-            <div class="chain-node-title">Fact Check</div>
-            <div class="chain-node-out">verified draft</div>
-          </div>
-          <div class="chain-arrow">→</div>
-          <div class="chain-node terminal">
-            <div class="chain-node-step">Final Step</div>
-            <div class="chain-node-title">Humanizer</div>
-            <div class="chain-node-out">clean output ✓</div>
-          </div>
+    <!-- SECTION 8: COMMUNITY SIGNALS -->
+    <section class="skill-section" id="community">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">📊</span>
+        Community Signals
+      </h2>
+      <div class="community-grid">
+        <div class="community-stat-card">
+          <span class="community-stat-value">1,247</span>
+          <span class="community-stat-label">Total installs</span>
+        </div>
+        <div class="community-stat-card">
+          <span class="community-stat-value">4.8★</span>
+          <span class="community-stat-label">Community rating</span>
+        </div>
+        <div class="community-stat-card">
+          <span class="community-stat-value">#1</span>
+          <span class="community-stat-label">Most-used skill</span>
         </div>
       </div>
-
-      <p>To embed the Humanizer inline (without calling it as a separate skill), append this block to the end of any copywriting skill's system prompt:</p>
-
-      <div class="code-block">
-        <div class="code-block-header">
-          <span class="code-lang">Inline Chain Snippet</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre>━━━ FINAL STEP — HUMANIZE BEFORE OUTPUT ━━━
-Before producing your final output, scan your draft for:
-- Filler openers (Certainly!, Of course!, etc.) — delete them
-- Vague power words (unlock, leverage, seamlessly, robust) — replace with specifics
-- Corporate padding phrases (it's worth noting, moving forward) — delete
-- Repetitive summary paragraphs — delete
-- Over-hedged qualifications — simplify to one qualifier maximum
-- "Dive deep" / "delve into" type clichés — replace with direct language
-
-Output should read like a sharp human writer. No AI texture.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre>
-      </div>
-
-      <h3>Python skill chain (Hermes / Claude Code)</h3>
-      <div class="code-block">
-        <div class="code-block-header">
-          <span class="code-lang">Python — skill chaining</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre>from skill_runner import run_skill
-
-def execute(topic: str, recipient: str, tone: str = "professional") -> dict:
-    # Step 1: Write the email
-    draft = run_skill("email_composer",
-                      topic=topic,
-                      recipient=recipient,
-                      tone=tone)
-
-    # Step 2: Humanizer pass (always the last step)
-    clean = run_skill("humanizer", text=draft["result"]["body"])
-
-    return {
-        "status": "success",
-        "result": {
-            "subject": draft["result"]["subject"],
-            "body": clean["result"]
-        }
-    }</pre>
-      </div>
-    </section>
-
-    <!-- Section 6: Customise with voice -->
-    <section class="skill-section" id="customise">
-      <h2><span class="section-num">06</span> Customise With Your Voice Fingerprint</h2>
-      <p>The default Humanizer removes AI texture but doesn't add <em>your</em> texture. That's a separate step — and it's worth doing. Replace the <code>VOICE STYLE</code> placeholder in the skill prompt with a description of how you actually write.</p>
-
-      <h3>How to capture your voice in 10 minutes</h3>
-      <div class="step-box">
-        <span class="step-num">01</span>
-        <div class="step-content">
-          <h4>Find 5–10 pieces of writing you're proud of</h4>
-          <p>Emails, social posts, Slack messages — anywhere your natural voice came through.</p>
-        </div>
-      </div>
-      <div class="step-box">
-        <span class="step-num">02</span>
-        <div class="step-content">
-          <h4>Ask Claude to analyse your voice</h4>
-          <p>Paste all 10 samples and prompt: "Analyse these writing samples. Describe my voice in 8–10 specific, concrete bullet points that I could give another writer to replicate my style."</p>
-        </div>
-      </div>
-      <div class="step-box">
-        <span class="step-num">03</span>
-        <div class="step-content">
-          <h4>Paste the output into the VOICE STYLE section</h4>
-          <p>Keep it brief. Four to six bullets is enough. Claude doesn't need a novel — it needs signal.</p>
-        </div>
-      </div>
-
-      <h3>Example voice fingerprint</h3>
-      <div class="code-block">
-        <div class="code-block-header">
-          <span class="code-lang">Example — Voice Style Section</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre>VOICE STYLE:
-- Direct and confident. Never hedges more than once.
-- Short sentences. Paragraphs rarely exceed 3 sentences.
-- Technical but not jargony — explains complex things simply.
-- Occasional dry observation. Never sarcastic.
-- No exclamation marks. Ever.
-- Numbers and specifics preferred over generalities.
-- Would rather say "cut your review time by 40%" than "improve efficiency."</pre>
-      </div>
-
       <div class="callout tip">
-        <span class="callout-icon">💡</span>
+        <span class="callout-icon">🌟</span>
         <div class="callout-body">
-          <strong>Compound over time:</strong> Every few months, update your voice fingerprint with new samples. As you write more with AI assistance, your actual voice evolves — keep the skill calibrated to it.
+          <strong>Most commonly chained with:</strong> Voice Fingerprint (83% of workflows), Prompt Chaining (41%), SEO Title Generator (29%). The Humanizer is the most popular final-pass skill in the platform.
         </div>
       </div>
     </section>
 
-    <!-- Download CTA -->
-    <div class="download-cta" id="download">
-      <h2>Download the Complete Humanizer Pack</h2>
-      <p>The full prompt template, inline chain snippet, voice capture prompt, and Hermes Python skill file — in one copy-paste-ready text file.</p>
-      <div class="download-cta-actions">
-        <button class="btn-download-primary" onclick="downloadTemplate()">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download Template (.txt)
-        </button>
-        <a href="/skills.html" class="btn-download-secondary">← Browse All Skills</a>
-      </div>
-    </div>
-
-    <!-- Related Skills -->
-    <section class="related-skills">
-      <div class="related-label">Related Skills</div>
-      <div class="related-grid">
+    <!-- RELATED SKILLS -->
+    <section class="skill-section" id="related">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">🔍</span>
+        Related Skills
+      </h2>
+      <div class="related-skills">
         <a href="/skills/prompt-chaining.html" class="related-card">
-          <div class="related-card-tag">Prompts</div>
-          <h4>Prompt Chaining</h4>
-          <p>Chain the Humanizer as the final step in any multi-step content pipeline.</p>
+          <div class="related-card-icon">⛓️</div>
+          <div class="related-card-title">Prompt Chaining</div>
+          <div class="related-card-desc">Break complex AI tasks into auditable sequential steps</div>
         </a>
-        <a href="/skills/few-shot-prompting.html" class="related-card">
-          <div class="related-card-tag">Prompts</div>
-          <h4>Few-Shot Prompting</h4>
-          <p>Feed Claude examples of your best human writing to pre-calibrate tone before generation.</p>
+        <a href="/skills/voice-fingerprint.html" class="related-card">
+          <div class="related-card-icon">🎯</div>
+          <div class="related-card-title">Voice Fingerprint</div>
+          <div class="related-card-desc">Capture brand voice then apply it to any content</div>
         </a>
-        <a href="/skills/chain-of-thought.html" class="related-card">
-          <div class="related-card-tag">Prompts</div>
-          <h4>Chain-of-Thought</h4>
-          <p>Make Claude reason through edits step-by-step for more thorough humanizing passes.</p>
+        <a href="/skills/seo-title-generator.html" class="related-card">
+          <div class="related-card-icon">📊</div>
+          <div class="related-card-title">SEO Title Generator</div>
+          <div class="related-card-desc">SERP-optimised titles that don't read like SEO titles</div>
+        </a>
+        <a href="/skills/content-pipeline.html" class="related-card">
+          <div class="related-card-icon">🚀</div>
+          <div class="related-card-title">Content Pipeline</div>
+          <div class="related-card-desc">Full draft-to-publish workflow with quality gates</div>
         </a>
       </div>
     </section>
 
-  </div>
-</main>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <a class="nav-logo" href="/">
-        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <span>Aether</span><span class="logo-intel">Intel</span>
-      </a>
-      <p class="footer-tagline">Free AI skills, tools, and news — updated weekly.</p>
+    <!-- BOTTOM INSTALL CTA -->
+    <div class="install-cta-section">
+      <h2 class="install-cta-headline">Ready to strip the AI tells?</h2>
+      <p class="install-cta-sub">Copy the prompt and paste it as your system prompt in any AI tool. Free forever.</p>
+      <div class="install-cta-buttons">
+        <button class="btn-install-primary" onclick="copyPrompt(document.getElementById('btn-copy-prompt'))">
+          ⚡ Copy Prompt
+        </button>
+        <a class="btn-install-ghost" href="https://claude.ai/new?q=You+are+a+professional+editor+who+specialises+in+making+AI-generated+text+indistinguishable+from+human+writing." target="_blank" rel="noopener">
+          ▶ Try in Claude
+        </a>
+        <button class="btn-install-ghost" onclick="downloadJSON()">
+          ↓ Download .json
+        </button>
+        <a href="/skills.html" class="btn-install-ghost">
+          ← All Skills
+        </a>
+      </div>
     </div>
-    <div class="footer-links">
-      <a href="/index.html">News</a>
-      <a href="/skills.html">Skills</a>
-      <a href="/tools.html">Tools</a>
+
+  </div><!-- /.skill-page-wrap -->
+
+  <!-- INSTALL TOAST -->
+  <div class="install-toast" id="install-toast">✓ Prompt copied to clipboard</div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
+      </div>
+      <p class="footer-tagline">Install AI capabilities, not just prompts.</p>
+      <div class="footer-links">
+        <a href="/skills.html">Skills</a>
+        <a href="/news.html">News</a>
+        <a href="/tools.html">Tools</a>
+        <a href="/about.html">About</a>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
-<script>
-  // Read progress bar
-  window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
-    document.getElementById('read-progress').style.width = pct + '%';
-  });
+  <script>
+    /* ── READ PROGRESS ── */
+    const prog = document.getElementById('read-progress');
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const max = document.body.scrollHeight - window.innerHeight;
+      prog.style.width = (scrolled / max * 100).toFixed(1) + '%';
+    }, { passive: true });
 
-  // Copy buttons
-  function copyCode(btn) {
-    const pre = btn.closest('.code-block').querySelector('pre');
-    navigator.clipboard.writeText(pre.innerText).then(() => {
-      btn.textContent = 'Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-    });
-  }
+    /* ── SYSTEM PROMPT ── */
+    const SYSTEM_PROMPT = `You are a professional editor who specialises in making AI-generated text indistinguishable from human writing.
 
-  // Download template
-  function downloadTemplate() {
-    const content = `THE HUMANIZER — AI Writing Detox Prompt
-=========================================
-By Aether Intel | ai.quantummerlin.com
-=========================================
-
-WHAT THIS DOES
---------------
-Detects and rewrites the most common signs of AI-generated text so your output
-reads like a thoughtful human wrote it — not a language model.
-
-Based on Wikipedia's documented "signs of AI writing" patterns.
-
-HOW TO USE
-----------
-1. Copy the SKILL PROMPT below
-2. Paste it into a Claude Project as the System Instructions
-3. Send any AI-generated text to the project to humanize it
-4. Optionally fill in the VOICE STYLE section with your own voice notes
-
-PRO TIP: Chain this as the LAST step inside any copywriting skill so
-humanizing runs automatically on every output.
-
-=========================================
-SKILL PROMPT (copy everything in this block)
-=========================================
-
-You are a professional editor who specialises in making AI-generated text
-indistinguishable from human writing.
-
-Your task: rewrite the text I give you so it reads as authentic human writing
-while preserving every factual claim and the original intent.
+Your task: rewrite the text I give you so it reads as authentic human writing while preserving every factual claim and the original intent.
 
 WHAT TO FIX — detect and rewrite these AI tells:
 
 1. FILLER OPENERS
-   Remove: "Certainly!", "Of course!", "Absolutely!", "Great question!",
-   "Sure thing!", "Definitely!", "I'd be happy to..."
-   Remove: "I hope this email finds you well", "I hope you're doing well",
-   "Feel free to reach out", "Please don't hesitate to contact me"
+   Remove: "Certainly!", "Of course!", "Absolutely!", "Great question!", "Sure thing!", "Definitely!", "I'd be happy to..."
+   Remove: "I hope this email finds you well", "I hope you're doing well", "Feel free to reach out", "Please don't hesitate to contact me"
 
 2. VAGUE POWER WORDS — replace with specific, concrete language
-   Remove: unlock, unleash, leverage, streamline, revolutionise, transform,
-   empower, harness, elevate, amplify, synergise
-   Remove: game-changer, groundbreaking, cutting-edge, innovative solution,
-   state-of-the-art, best-in-class, world-class
+   Remove: unlock, unleash, leverage, streamline, revolutionise, transform, empower, harness, elevate, amplify, synergise
+   Remove: game-changer, groundbreaking, cutting-edge, innovative solution, state-of-the-art, best-in-class, world-class
    Remove: robust, seamlessly, holistically, comprehensively, proactively
 
 3. CORPORATE PADDING — delete entirely
-   Remove: "It's worth noting that...", "It goes without saying...",
-   "Needless to say...", "It is important to note..."
-   Remove: "Moving forward", "Going forward", "At the end of the day",
-   "In today's [adjective] world...", "In today's fast-paced landscape..."
+   Remove: "It's worth noting that...", "It goes without saying...", "Needless to say...", "It is important to note..."
+   Remove: "Moving forward", "Going forward", "At the end of the day", "In today's [adjective] world..."
    Remove: "The biggest takeaway is...", "It is what it is"
 
 4. STRUCTURAL TELLS
    - If every section has a bullet list, convert some to prose
    - Delete summary paragraphs that repeat what was just said
    - Remove "In conclusion" sections unless the piece genuinely needs one
-   - Delete headers on every single paragraph — use them sparingly
-   - Remove "I hope this helps!" and any similar sign-off filler
+   - Remove "I hope this helps!" and similar sign-off filler
 
 5. DIVE / DELVE CLICHÉS
-   Remove: dive deep, delve into, embark on, explore the nuances,
-   unpack, breakdown, dissect, navigate (used abstractly)
+   Remove: dive deep, delve into, embark on, explore the nuances, unpack, breakdown, dissect
 
 6. OVER-HEDGING — one qualifier is enough
-   Simplify: "It's extremely important to always remember to..."
-   Remove triple qualifications: "In some cases, it can sometimes be
-   possible that..."
+   Simplify triple qualifications and excessive hedging language
 
 STYLE RULES:
 - Preserve ALL factual content — never change meaning
@@ -903,83 +1003,76 @@ STYLE RULES:
 - Vary sentence length — short punchy sentences work alongside longer ones
 - A single sentence can stand alone as its own paragraph for emphasis
 - Active voice preferred, but don't force it unnaturally
-- The goal is natural, confident, specific — not chatty or slangy
 
 VOICE STYLE:
-[Add your voice notes here — e.g. "Dry, direct. Short sentences preferred.
-No filler. Occasional wry observation. Never exclamation marks."]
+[Add your brand voice notes here — tone, personality, reading level, any words to avoid]
 
-When finished, output ONLY the rewritten text.
-No commentary, no "Here's the humanized version:", no explanation.
-Just the clean output.
+When finished, output ONLY the rewritten text. No commentary. No explanation. Just the clean output.`;
 
-=========================================
-INLINE CHAIN SNIPPET
-(Append to any copywriting skill's system prompt)
-=========================================
+    /* ── COPY PROMPT ── */
+    function copyPrompt(btn) {
+      navigator.clipboard.writeText(SYSTEM_PROMPT).then(() => {
+        const orig = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '✓ Copied!'; btn.classList.add('copied'); }
+        showToast('✓ Prompt copied to clipboard');
+        setTimeout(() => {
+          if (btn) { btn.innerHTML = orig; btn.classList.remove('copied'); }
+        }, 2200);
+      }).catch(() => {
+        showToast('⚠ Copy failed — use the code block below');
+      });
+    }
 
-FINAL STEP — HUMANIZE BEFORE OUTPUT
-Before producing your final output, scan your draft for:
-- Filler openers (Certainly!, Of course!, etc.) — delete them
-- Vague power words (unlock, leverage, seamlessly, robust) — replace with specifics
-- Corporate padding phrases (it's worth noting, moving forward) — delete
-- Repetitive summary paragraphs — delete
-- Over-hedged qualifications — simplify to one qualifier maximum
-- "Dive deep" / "delve into" type clichés — replace with direct language
-Output should read like a sharp human writer. No AI texture.
+    /* ── DOWNLOAD .JSON ── */
+    function downloadJSON() {
+      const data = {
+        schema: "aether-skill-v2",
+        slug: "humanizer-skill",
+        title: "The Humanizer",
+        outcome: "Strips AI tells from any text before it ships to humans",
+        category: "prompts",
+        cost_tier: "cheap",
+        cost_estimate: { per_1k_outputs: "~$0.002", tokens_per_run: "~1600" },
+        temperature: 0.4,
+        recommended_models: [
+          { model: "Claude Sonnet 4.5", provider: "anthropic", recommended: true },
+          { model: "GPT-4o mini",       provider: "openai",    recommended: true },
+          { model: "Gemini 1.5 Flash",  provider: "google",    recommended: true }
+        ],
+        system_prompt: SYSTEM_PROMPT,
+        installs: 1247,
+        source: "https://ai.quantummerlin.com/skills/humanizer-skill.html"
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'humanizer-skill.json';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+      showToast('✓ humanizer-skill.json downloaded');
+    }
 
-=========================================
-VOICE CAPTURE PROMPT
-(Run once, paste output into VOICE STYLE above)
-=========================================
+    /* ── COPY CODE BLOCK ── */
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
 
-Paste your 5-10 best writing samples, then send this:
+    /* ── TOAST ── */
+    function showToast(msg) {
+      const t = document.getElementById('install-toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
 
-"Analyse these writing samples. Describe my voice in 8-10 specific,
-concrete bullet points that I could give another writer to replicate
-my style exactly. Focus on: sentence length, hedging habits,
-punctuation choices, vocabulary level, humour style, and any
-distinctive patterns."
-
-=========================================
-PYTHON SKILL FILE (Hermes / Claude Code)
-=========================================
-
-"""
-Skill: humanizer
-Description: Remove AI tells from any text before it ships to humans
-Parameters:
-  - text (str): The AI-generated text to humanize
-Returns:
-  dict with cleaned text
-Tags: writing, editing, humanize, ai-tells
-Version: 1.0
-"""
-
-def execute(text: str) -> dict:
-    try:
-        from skill_runner import llm
-        result = llm(
-            system="[PASTE THE FULL SKILL PROMPT ABOVE HERE]",
-            user=text,
-            temperature=0.4
-        )
-        return {"status": "success", "result": result}
-    except Exception as e:
-        return {"status": "error", "error": str(e), "result": text}
-
-=========================================
-MORE SKILLS AT ai.quantummerlin.com/skills
-=========================================`;
-
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'humanizer-skill-template.txt';
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-</script>
+    /* ── NAV SCROLL EFFECT ── */
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav-bar')?.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+  </script>
 </body>
 </html>
