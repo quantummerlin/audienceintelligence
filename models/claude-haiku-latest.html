@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>~anthropic/claude-haiku-latest Guide — Anthropic's Auto-Updating Haiku Alias | Aether Intel</title>
+  <meta name="description" content="Everything about ~anthropic/claude-haiku-latest: what it resolves to today (Claude Haiku 4.5 at $1/$5/1M), how the tilde alias works, and when to use it vs pinning a specific Haiku version." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/claude-haiku-latest/" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+      --amber: #d97706;
+      --amber-glow: rgba(217,119,6,0.12);
+      --amber-border: rgba(217,119,6,0.35);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(7, 7, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .site-logo span {
+      color: var(--amber);
+    }
+
+    .site-nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .site-nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .site-nav a:hover {
+      color: var(--amber);
+    }
+
+    .breadcrumb {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 1rem 2rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .breadcrumb a {
+      color: var(--neon-indigo);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb span {
+      color: var(--text-muted);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .hero {
+      margin-bottom: 3rem;
+    }
+
+    .badges {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.875rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      color: var(--neon-indigo);
+      text-transform: uppercase;
+    }
+
+    .badge.amber {
+      border-color: var(--amber-border);
+      color: var(--amber);
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-lead {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+      max-width: 700px;
+    }
+
+    .highlight-box {
+      background: var(--surface-2);
+      border-left: 4px solid var(--amber);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+
+    .highlight-box strong {
+      color: var(--amber);
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-top: 2.5rem;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+
+    h3 {
+      font-family: var(--font-heading);
+      font-size: 1.375rem;
+      font-weight: 600;
+      margin-top: 1.75rem;
+      margin-bottom: 0.875rem;
+      color: var(--text-primary);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    a {
+      color: var(--neon-indigo);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    ul, ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    code {
+      background: var(--surface);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-family: 'Monaco', monospace;
+      font-size: 0.875rem;
+      color: var(--neon-cyan);
+    }
+
+    pre {
+      background: var(--surface);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    pre code {
+      padding: 0;
+      background: none;
+      color: var(--text-primary);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+    }
+
+    table th {
+      background: var(--surface-2);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid var(--amber-border);
+      color: var(--text-primary);
+    }
+
+    table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    table tr:hover {
+      background: rgba(217, 119, 6, 0.05);
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .column {
+      padding: 1.5rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+    }
+
+    .column h3 {
+      margin-top: 0;
+      color: var(--amber);
+    }
+
+    .column ul {
+      list-style-position: inside;
+    }
+
+    .column li {
+      margin-bottom: 0.75rem;
+    }
+
+    .try-it {
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.15), rgba(217, 119, 6, 0.05));
+      border: 1px solid var(--amber-border);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+
+    .try-it h3 {
+      margin-top: 0;
+      color: var(--amber);
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--amber);
+      color: #000;
+      padding: 0.75rem 2rem;
+      border-radius: 0.375rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      font-family: var(--font-body);
+    }
+
+    .btn:hover {
+      background: #d97706;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    }
+
+    .related-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2.5rem 0;
+    }
+
+    .card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--amber-border);
+      background: rgba(217, 119, 6, 0.05);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 1.125rem;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .card a {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    .adsense {
+      text-align: center;
+      margin: 2rem 0;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 0.5rem;
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .site-footer {
+      margin-top: 3rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .site-footer a {
+      color: var(--neon-indigo);
+    }
+
+    @media (max-width: 768px) {
+      .site-header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .site-nav {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+
+      .badges {
+        gap: 0.5rem;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="site-logo">AETHER<span>INTEL</span></a>
+    <nav class="site-nav"><a href="/models/">Models</a><a href="/tools/">Tools</a><a href="/news/">News</a></nav>
+  </header>
+
+  <div class="breadcrumb">
+    <a href="/">Home</a> <span>/</span>
+    <a href="/models/">Models</a> <span>/</span>
+    <span>claude-haiku-latest</span>
+  </div>
+
+  <div class="container">
+    <article>
+      <section class="hero">
+        <div class="badges">
+          <span class="badge amber">ANTHROPIC</span>
+          <span class="badge amber">ROUTING ALIAS</span>
+          <span class="badge amber">AUTO-UPDATE</span>
+          <span class="badge">HAIKU TRACK</span>
+        </div>
+
+        <h1>~anthropic/<span style="color:#d97706">claude-haiku-latest</span></h1>
+
+        <p class="hero-lead">
+          The Haiku alias tracks Anthropic's fastest, most cost-efficient Claude — built for high-volume, latency-sensitive workloads. Currently Claude Haiku 4.5 at $1/$5/1M. An auto-updating routing alias that always resolves to the newest fast model without code changes.
+        </p>
+
+        <div class="highlight-box">
+          <strong>Resolves to Claude Haiku 4.5</strong> · $1 input / $5 output per 1M · 1M context · Vision capable · bc-mid benchmark $0.00225
+        </div>
+      </section>
+
+      <section>
+        <h2>What Is the Tilde Prefix?</h2>
+        <p>
+          The <code>~</code> prefix denotes an auto-updating OpenRouter routing alias. When you call <code>~anthropic/claude-haiku-latest</code>, OpenRouter transparently resolves it to Anthropic's current recommended fast model, without any code changes on your end.
+        </p>
+        <p>
+          The routing flow looks like this:
+        </p>
+        <pre><code>~anthropic/claude-haiku-latest
+  ↓ (today)
+Claude Haiku 4.5 (today)
+  ↓ (on upgrade)
+Claude Haiku 4.6 (next)
+  ↓ (eventually)
+Claude Haiku 5.0 (future)</code></pre>
+        <p>
+          For a deeper technical breakdown of how tilde aliases work in OpenRouter, see the <a href="/models/claude-sonnet-latest/">~anthropic/claude-sonnet-latest guide</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Why the Haiku Track Matters</h2>
+        <p>
+          Haiku is Anthropic's tier for teams running millions of requests. At $1/$5/1M, it's the company's most accessible model — designed for rapid prototyping, high-throughput classification, and cost-conscious production systems.
+        </p>
+        <p>
+          The alias is especially useful for applications where you:
+        </p>
+        <ul>
+          <li>Run 10k+ inference calls per day without strict SLA guarantees</li>
+          <li>Want automatic speed improvements as Haiku evolves</li>
+          <li>Prefer not to manually track and upgrade model versions in code</li>
+          <li>Build internal tools, content moderation, or data triage systems at scale</li>
+        </ul>
+        <p>
+          Every Haiku upgrade brings throughput and latency improvements — the philosophy of the fast track is "keep it lean, keep it quick."
+        </p>
+      </section>
+
+      <section>
+        <h2>Current Resolution — Claude Haiku 4.5</h2>
+        <p>
+          <strong>Today's snapshot:</strong>
+        </p>
+        <ul>
+          <li><strong>Input:</strong> $1 per 1M tokens</li>
+          <li><strong>Output:</strong> $5 per 1M tokens</li>
+          <li><strong>Context window:</strong> 1M tokens</li>
+          <li><strong>Vision:</strong> Yes, image analysis included</li>
+          <li><strong>Inference speed:</strong> Fast (latency-optimized)</li>
+          <li><strong>Benchmark (bc-mid):</strong> $0.00225 per call</li>
+        </ul>
+        <p>
+          Haiku 4.5 excels at classification, triage, summarization, extraction, and structured output — tasks where breadth of knowledge matters less than speed and cost. It's the go-to for handling millions of customer support queries, content moderation, or API request logs.
+        </p>
+      </section>
+
+      <section>
+        <h2>Haiku Track Upgrade Pattern</h2>
+        <p>
+          Haiku upgrades have historically focused on <strong>speed and efficiency</strong>, not capability leaps. Unlike Opus (which brings major reasoning breakthroughs) or Sonnet (balanced capability + speed), Haiku upgrades target throughput, latency, and cost-per-token stability.
+        </p>
+        <p>
+          When Haiku 4.6 ships, expect:
+        </p>
+        <ul>
+          <li>Modest latency improvements (5–15% faster inference)</li>
+          <li>Incremental capability gains (better at nuanced classification, extraction edge cases)</li>
+          <li>Possible pricing adjustments (usually small, $1.50/$6 range)</li>
+          <li>Same context window and vision support</li>
+        </ul>
+        <p>
+          The Haiku track is <em>stable</em> — the model you're using today won't break tomorrow, but it will silently become faster as the alias updates.
+        </p>
+      </section>
+
+      <section>
+        <h2>The Anthropic Alias Family</h2>
+        <p>
+          Aether Intel tracks three Anthropic auto-updating aliases. Here's the current state:
+        </p>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Alias</th>
+                <th>Current Model</th>
+                <th>Input / Output (per 1M)</th>
+                <th>Context</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>~anthropic/claude-opus-latest</code></td>
+                <td>Claude Opus 4.7</td>
+                <td>$15 / $45</td>
+                <td>200k</td>
+              </tr>
+              <tr>
+                <td><code>~anthropic/claude-sonnet-latest</code></td>
+                <td>Claude Sonnet 4.6</td>
+                <td>$3 / $15</td>
+                <td>200k</td>
+              </tr>
+              <tr>
+                <td><code>~anthropic/claude-haiku-latest</code></td>
+                <td>Claude Haiku 4.5</td>
+                <td>$1 / $5</td>
+                <td>1M</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Alias vs. Pinned Versions: When to Use Each</h2>
+        <p>
+          The choice between <code>~anthropic/claude-haiku-latest</code> (alias) and <code>anthropic/claude-haiku-4-5</code> (pinned) depends on your deployment model and cost visibility.
+        </p>
+        <div class="two-column">
+          <div class="column">
+            <h3>Use the Alias When</h3>
+            <ul>
+              <li>You're in early prototyping phase and want latest speed</li>
+              <li>Running high-volume production with auto-scaling capacity</li>
+              <li>Cost-per-token is stable across versions</li>
+              <li>You monitor usage metrics actively</li>
+              <li>Building internal tooling (moderation, triage, classification)</li>
+            </ul>
+          </div>
+          <div class="column">
+            <h3>Pin a Version When</h3>
+            <ul>
+              <li>Cost budget is locked for a quarter or year</li>
+              <li>Behavior has been tested and validated against Haiku 4.5</li>
+              <li>Production SLA requires predictable model behavior</li>
+              <li>You want to control upgrade timing manually</li>
+              <li>Regulatory or compliance rules require version pinning</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>The Volume Math: When Upgrades Hit Your Budget</h2>
+        <p>
+          Here's a real scenario: You're running 10,000 inference calls per day with an average benchmark cost of $0.00225 per call.
+        </p>
+        <pre><code>Daily cost: 10,000 calls × $0.00225 = $22.50/day
+Monthly cost: $22.50 × 30 = $675/month</code></pre>
+        <p>
+          Now assume Haiku 4.6 ships with a modest price bump to $1.50 input / $6 output, bumping the benchmark to $0.00315:
+        </p>
+        <pre><code>New daily cost: 10,000 calls × $0.00315 = $31.50/day
+New monthly cost: $31.50 × 30 = $945/month
+Cost increase: 40%</code></pre>
+        <p>
+          If you're using the alias, <strong>this upgrade happens automatically</strong> without any code change — your bill silently goes up 40%. This is why monitoring and alerting on per-model usage is critical for high-volume teams. Set up cost tracking now, and you'll know immediately when an alias upgrade impacts your spend.
+        </p>
+      </section>
+
+      <div class="adsense">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3480541530392777"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+
+      <section>
+        <h2>Code Example: Using Claude Haiku Latest</h2>
+        <p>
+          Here's how to call <code>~anthropic/claude-haiku-latest</code> via the Anthropic SDK (which uses OpenRouter by default for routed aliases):
+        </p>
+        <pre><code>import anthropic
+
+client = anthropic.Anthropic(
+    api_key="your-openrouter-api-key",  # or Anthropic API key for direct calls
+    base_url="https://openrouter.io/api/v1"  # OpenRouter routing
+)
+
+message = client.messages.create(
+    model="~anthropic/claude-haiku-latest",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Classify this customer support ticket..."}
+    ]
+)
+
+print(f"Model used: {message.model}")
+print(f"Usage: {message.usage}")</code></pre>
+        <p>
+          The response will include the actual resolved model ID (e.g., <code>claude-haiku-4-5-20250516</code>), so you can track which version is currently being used.
+        </p>
+      </section>
+
+      <div class="try-it">
+        <h3>Try Claude Haiku Latest via BYOK</h3>
+        <p>Bring your own API key and test the alias with real requests:</p>
+        <button class="btn" onclick="window.byok?.openByokModal('~anthropic/claude-haiku-latest', 'Claude Haiku Latest')">
+          Open BYOK Playground
+        </button>
+      </div>
+
+      <section>
+        <h2>Related Models</h2>
+        <p>
+          Explore other fast and efficient models on the Aether Intel platform:
+        </p>
+        <div class="related-cards">
+          <div class="card">
+            <h3>Claude Haiku 4.5</h3>
+            <p>The current pinned version of Haiku — lock in the exact model version for your production workload.</p>
+            <a href="/models/claude-haiku-4-5.html">View Details →</a>
+          </div>
+          <div class="card">
+            <h3>Claude Sonnet Latest</h3>
+            <p>The balanced auto-updating alias. Sonnet 4.6 offers stronger reasoning and coding than Haiku.</p>
+            <a href="/models/claude-sonnet-latest.html">View Details →</a>
+          </div>
+          <div class="card">
+            <h3>Claude Opus Latest</h3>
+            <p>Anthropic's flagship auto-updating alias for complex reasoning and long-context analysis.</p>
+            <a href="/models/claude-opus-latest.html">View Details →</a>
+          </div>
+          <div class="card">
+            <h3>GPT Mini Latest</h3>
+            <p>OpenAI's budget-friendly auto-updating alias, comparable to Haiku in speed and cost.</p>
+            <a href="/models/gpt-mini-latest.html">View Details →</a>
+          </div>
+        </div>
+      </section>
+    </article>
+  </div>
+
+  <footer class="site-footer">
+    © 2026 Aether Intel · <a href="/privacy/">Privacy</a> · <a href="/about/">About</a>
+  </footer>
+</body>
+</html>

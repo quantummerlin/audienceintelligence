@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>~openai/gpt-mini-latest Guide — OpenAI's Auto-Updating Budget GPT Alias | Aether Intel</title>
+  <meta name="description" content="Everything about ~openai/gpt-mini-latest: what it resolves to (GPT-4o Mini at $0.15/$0.60/1M), how the auto-update alias works, and when to use it vs pinning a specific mini model." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/gpt-mini-latest/" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+      --openai: #74aa9c;
+      --openai-glow: rgba(116,170,156,0.12);
+      --openai-border: rgba(116,170,156,0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 13, 26, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .site-logo:hover {
+      color: var(--neon-indigo);
+    }
+
+    .site-logo span {
+      color: var(--openai);
+    }
+
+    .site-nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .site-nav a {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.3s;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 0.25rem;
+    }
+
+    .site-nav a:hover {
+      color: var(--openai);
+      border-bottom-color: var(--openai);
+    }
+
+    /* Main container */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .breadcrumb a {
+      color: var(--openai);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--neon-cyan);
+    }
+
+    /* Hero section */
+    .hero {
+      margin-bottom: 3rem;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      background: rgba(116, 170, 156, 0.15);
+      border: 1px solid var(--openai-border);
+      color: var(--openai);
+      border-radius: 4px;
+      font-family: var(--font-display);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-lead {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 700px;
+    }
+
+    .resolution-box {
+      background: rgba(116, 170, 156, 0.1);
+      border: 1px solid var(--openai-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+    }
+
+    .resolution-box strong {
+      color: var(--openai);
+      font-weight: 700;
+    }
+
+    /* Content sections */
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    h2::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 3rem;
+      height: 3px;
+      background: linear-gradient(90deg, var(--openai), var(--neon-cyan));
+      border-radius: 2px;
+    }
+
+    h3 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Tilde explanation box */
+    .tilde-box {
+      background: rgba(129, 140, 248, 0.08);
+      border-left: 3px solid var(--neon-indigo);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+    }
+
+    .tilde-box p {
+      margin-bottom: 0.75rem;
+    }
+
+    /* Mini track proposition */
+    .value-prop {
+      background: var(--surface-2);
+      border: 1px solid var(--openai-border);
+      padding: 2rem;
+      border-radius: 8px;
+      margin: 2rem 0;
+    }
+
+    .value-prop h3 {
+      margin-top: 0;
+      color: var(--openai);
+    }
+
+    /* Specifications table */
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .specs-table th {
+      background: rgba(116, 170, 156, 0.1);
+      border: 1px solid var(--openai-border);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--openai);
+      font-family: var(--font-heading);
+    }
+
+    .specs-table td {
+      border: 1px solid var(--border);
+      padding: 1rem;
+      background: rgba(13, 13, 26, 0.5);
+    }
+
+    .specs-table tr:nth-child(even) td {
+      background: rgba(19, 19, 38, 0.5);
+    }
+
+    /* Evolution table */
+    .evolution-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      font-size: 0.9rem;
+    }
+
+    .evolution-table th {
+      background: linear-gradient(90deg, rgba(116, 170, 156, 0.15), rgba(34, 211, 238, 0.1));
+      border: 1px solid var(--openai-border);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--openai);
+      font-family: var(--font-heading);
+    }
+
+    .evolution-table td {
+      border: 1px solid var(--border);
+      padding: 1rem;
+      background: rgba(13, 13, 26, 0.5);
+    }
+
+    .evolution-table tr:nth-child(even) td {
+      background: rgba(19, 19, 38, 0.5);
+    }
+
+    /* Decision guide */
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .decision-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 1.75rem;
+      border-radius: 8px;
+    }
+
+    .decision-card h4 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--openai);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .decision-card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .decision-card li {
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      position: relative;
+      color: var(--text-secondary);
+    }
+
+    .decision-card li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--openai);
+      font-weight: 700;
+    }
+
+    /* Code block */
+    .code-block {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--neon-cyan);
+    }
+
+    .code-block code {
+      color: var(--neon-cyan);
+    }
+
+    /* Try-it band */
+    .try-band {
+      background: linear-gradient(135deg, rgba(116, 170, 156, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%);
+      border: 1px solid var(--openai-border);
+      border-radius: 8px;
+      padding: 2.5rem;
+      text-align: center;
+      margin: 3rem 0;
+    }
+
+    .try-band h3 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      color: var(--openai);
+    }
+
+    .try-band p {
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .try-button {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--openai) 0%, var(--neon-cyan) 100%);
+      color: var(--bg);
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .try-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(116, 170, 156, 0.3);
+    }
+
+    /* Related models */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .model-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .model-card:hover {
+      border-color: var(--openai);
+      background: rgba(116, 170, 156, 0.05);
+      transform: translateY(-4px);
+    }
+
+    .model-card-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--openai);
+    }
+
+    .model-card-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      flex-grow: 1;
+    }
+
+    /* Ad slot */
+    .ad-slot {
+      margin: 2rem 0;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      text-align: center;
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: var(--openai);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: var(--neon-cyan);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .decision-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .site-nav {
+        gap: 1rem;
+        font-size: 0.85rem;
+      }
+
+      main {
+        padding: 2rem 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="site-logo">AETHER<span>INTEL</span></a>
+    <nav class="site-nav"><a href="/models/">Models</a><a href="/tools/">Tools</a><a href="/news/">News</a></nav>
+  </header>
+
+  <main>
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="/">Home</a>
+      <span>/</span>
+      <a href="/models/">Models</a>
+      <span>/</span>
+      <span>gpt-mini-latest</span>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="badges">
+        <span class="badge">OPENAI</span>
+        <span class="badge">ROUTING ALIAS</span>
+        <span class="badge">AUTO-UPDATE</span>
+        <span class="badge">MINI TRACK</span>
+      </div>
+
+      <h1 class="hero-title">~openai/<span style="color:#74aa9c">gpt-mini-latest</span></h1>
+
+      <p class="hero-lead">OpenAI's budget track alias — always the cheapest capable GPT variant. Currently GPT-4o Mini at $0.15/$0.60/1M. Let the alias handle version upgrades automatically while you focus on shipping at scale.</p>
+
+      <div class="resolution-box">
+        <strong>Resolves to GPT-4o Mini</strong> · <strong>$0.15 input / $0.60 output per 1M</strong> · <strong>128K context</strong> · bc-cheap benchmark <strong>$0.001425</strong>
+      </div>
+    </section>
+
+    <!-- Tilde Prefix Section -->
+    <section>
+      <h2>Understanding the Tilde Prefix</h2>
+
+      <p>The tilde prefix (~) denotes an auto-updating routing alias. When you specify <code>~openai/gpt-mini-latest</code>, you're requesting OpenRouter to route your request to whatever OpenAI considers their current mini-track model. This is different from pinning a specific model like <code>openai/gpt-4o-mini</code>, which always uses that exact version.</p>
+
+      <div class="tilde-box">
+        <p><strong>For a complete guide on routing aliases and how they work across providers,</strong> see the <a href="/models/gpt-chat-latest/">~openai/gpt-chat-latest documentation</a>. That guide covers the broader alias ecosystem and decision framework.</p>
+      </div>
+
+      <h3>The Mini Track: Budget-Tier Efficiency</h3>
+      <p>The "mini" track is OpenAI's budget and efficiency tier—distinct from their flagship (GPT-4o) or reasoning models. Mini models are purpose-built for high-volume, cost-sensitive workloads where strong performance on most tasks matters more than peak capability on the hardest problems.</p>
+
+      <p>Routing flow:</p>
+      <ol style="margin: 1rem 0 1rem 2rem; color: var(--text-secondary);">
+        <li>Your request arrives with model <code>~openai/gpt-mini-latest</code></li>
+        <li>OpenRouter resolves the alias to the current mini model (today: GPT-4o Mini)</li>
+        <li>Request routed to OpenAI's API</li>
+        <li>Response returned with actual model name in response metadata</li>
+      </ol>
+    </section>
+
+    <!-- Mini Track Proposition -->
+    <section>
+      <h2>Why the Mini Alias Matters</h2>
+
+      <p>Mini models have a unique property in the LLM market: with each generation, they get simultaneously <strong>better and cheaper</strong>. This creates a powerful case for aliases.</p>
+
+      <div class="value-prop">
+        <h3>The Capability + Cost Curve</h3>
+        <p>Historical progression: GPT-3.5 Turbo → GPT-4o Mini shows a stark example. GPT-3.5 Turbo was the previous budget tier. When OpenAI released GPT-4o Mini, it offered better reasoning, vision support, longer context, and lower pricing—a generational leap that made staying on the old model actively worse.</p>
+        <p>The mini alias captures these improvements automatically. You don't wake up one morning realizing your production system is running last year's cheaper but less capable model. The alias moves you forward as the market evolves.</p>
+      </div>
+
+      <h3>Automatic Improvements Without Code Changes</h3>
+      <p>Every time OpenAI releases a new mini model, your requests automatically benefit from:</p>
+      <ul style="margin: 1rem 0 1rem 2rem; color: var(--text-secondary);">
+        <li>Improved reasoning and accuracy</li>
+        <li>Better context utilization</li>
+        <li>Potentially lower pricing</li>
+        <li>New capabilities (like vision in GPT-4o Mini)</li>
+      </ul>
+      <p>No redeployment, no testing cycles, no explicit version bumps. The alias handles it.</p>
+    </section>
+
+    <!-- Current Resolution -->
+    <section>
+      <h2>Current Resolution: GPT-4o Mini</h2>
+
+      <p>As of 2026, <code>~openai/gpt-mini-latest</code> resolves to <strong>GPT-4o Mini</strong>, OpenAI's current mini-track champion.</p>
+
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Specification</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Input Price</td>
+            <td>$0.15 per 1M tokens</td>
+          </tr>
+          <tr>
+            <td>Output Price</td>
+            <td>$0.60 per 1M tokens</td>
+          </tr>
+          <tr>
+            <td>Context Window</td>
+            <td>128K tokens</td>
+          </tr>
+          <tr>
+            <td>Vision Support</td>
+            <td>Yes, image inputs supported</td>
+          </tr>
+          <tr>
+            <td>Speed Profile</td>
+            <td>Fast (sub-second typical)</td>
+          </tr>
+          <tr>
+            <td>bc-cheap Score</td>
+            <td>$0.001425 (very efficient)</td>
+          </tr>
+          <tr>
+            <td>Best For</td>
+            <td>Classification, extraction, summarization, structured output, high-volume chat</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>GPT-4o Mini excels at:</p>
+      <ul style="margin: 1rem 0 1rem 2rem; color: var(--text-secondary);">
+        <li><strong>Text classification and tagging</strong> — Intent detection, sentiment, category assignment</li>
+        <li><strong>Information extraction</strong> — Pulling structured data from documents, emails, web pages</li>
+        <li><strong>Summarization</strong> — Condensing articles, transcripts, reports to key points</li>
+        <li><strong>Structured output</strong> — Generating JSON, CSV, or schema-compliant responses</li>
+        <li><strong>Conversational AI at scale</strong> — Customer support, chatbots, interactive systems where volume matters</li>
+        <li><strong>Image understanding</strong> — Basic vision tasks like OCR, scene analysis, object counting</li>
+      </ul>
+    </section>
+
+    <!-- Volume Math -->
+    <section>
+      <h2>Volume Economics: Why This Alias Saves Money</h2>
+
+      <p>The mini alias shines at massive scale. Let's walk through realistic math:</p>
+
+      <h3>At 1 Million Exchanges Per Day</h3>
+      <p>Assume average token usage of 150 input + 600 output tokens per exchange (typical for chat with context):</p>
+      <ul style="margin: 1rem 0 1rem 2rem; color: var(--text-secondary);">
+        <li>Daily input tokens: 1M × 150 = 150M tokens → $0.15 × 150 = <strong>$22.50</strong></li>
+        <li>Daily output tokens: 1M × 600 = 600M tokens → $0.60 × 600 = <strong>$360</strong></li>
+        <li><strong>Daily cost: $382.50</strong></li>
+        <li><strong>Annual cost: $139,612.50</strong></li>
+      </ul>
+
+      <h3>Impact of a Price Drop</h3>
+      <p>When the next mini model releases with a 50% price reduction (common for mini-track improvements):</p>
+      <ul style="margin: 1rem 0 1rem 2rem; color: var(--text-secondary);">
+        <li>New daily cost: ~$191</li>
+        <li><strong>Savings: $191.50 per day</strong></li>
+        <li><strong>Annual savings: $69,897.50</strong></li>
+      </ul>
+
+      <p>With the alias, you capture those savings automatically. Without it, you're leaving money on the table every day until you manually update your code and re-deploy.</p>
+
+      <h3>A Paradox of Aliasing</h3>
+      <p>At this scale, the alias is a financial tool, not just a convenience. But cost improvements cut both ways: if the next mini model is 2x more expensive, you absorb that cost automatically too. See the "Special Considerations" section for how to monitor and mitigate this risk.</p>
+    </section>
+
+    <!-- Evolution Table -->
+    <section>
+      <h2>OpenAI Mini Family Evolution</h2>
+
+      <p>This table shows the progression of OpenAI's budget tier, demonstrating why tracking the mini track with an alias is valuable:</p>
+
+      <table class="evolution-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Era</th>
+            <th>Input Price</th>
+            <th>Output Price</th>
+            <th>Context</th>
+            <th>Key Additions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GPT-3.5 Turbo</td>
+            <td>2023</td>
+            <td>$0.0005/1K</td>
+            <td>$0.0015/1K</td>
+            <td>16K</td>
+            <td>Chat-optimized baseline</td>
+          </tr>
+          <tr>
+            <td>GPT-4o Mini</td>
+            <td>2024</td>
+            <td>$0.15/1M</td>
+            <td>$0.60/1M</td>
+            <td>128K</td>
+            <td>Vision, better reasoning, 8x cheaper input</td>
+          </tr>
+          <tr>
+            <td>Next Mini (TBD)</td>
+            <td>2025–2026</td>
+            <td>TBD</td>
+            <td>TBD</td>
+            <td>256K+ (speculated)</td>
+            <td>Further reasoning improvements, multimodal enhancements</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Notice the pattern: each generation brought lower per-token pricing and expanded capabilities. The alias ensures you ride this curve without manual intervention.</p>
+    </section>
+
+    <!-- Decision Guide -->
+    <section>
+      <h2>Alias vs. Pin: When to Use Each</h2>
+
+      <div class="decision-grid">
+        <div class="decision-card">
+          <h4>Use the Alias (~openai/gpt-mini-latest)</h4>
+          <ul>
+            <li>Massive-scale production where cost changes compound quickly</li>
+            <li>Development environments and rapid prototyping</li>
+            <li>Exploratory workloads where silently better quality is welcome</li>
+            <li>Systems that tolerate minor output format changes</li>
+            <li>Cost optimization is a continuous priority</li>
+            <li>Your team tracks model updates and can respond to breaking changes</li>
+          </ul>
+        </div>
+
+        <div class="decision-card">
+          <h4>Pin the Model (openai/gpt-4o-mini)</h4>
+          <ul>
+            <li>Compliance-critical systems where model changes require audit trails</li>
+            <li>Behavior tuned specifically to GPT-4o Mini's outputs</li>
+            <li>Any context where silent behavioral changes are unacceptable</li>
+            <li>Regression testing for production quality assurance</li>
+            <li>Downstream systems expecting consistent output schemas</li>
+            <li>Stability over cost optimization is the priority</li>
+          </ul>
+        </div>
+      </div>
+
+      <p>Many organizations run both: the alias in dev/exploratory work, pinned versions in production. This balances innovation velocity with stability.</p>
+    </section>
+
+    <!-- Special Considerations -->
+    <section>
+      <h2>Special Considerations: Monitoring the Cost Curve</h2>
+
+      <p>Using <code>~openai/gpt-mini-latest</code> at high volume carries an implicit cost risk: if the next mini model is significantly more expensive, you absorb that cost silently.</p>
+
+      <div class="value-prop">
+        <h3>Recommended Monitoring Strategy</h3>
+        <p><strong>1. Cost Alerts</strong> — Set up billing alerts on your OpenRouter account. If daily spend suddenly jumps 20–30%, investigate whether a model change occurred. Cross-reference OpenRouter's changelog.</p>
+        <p><strong>2. Model Resolution Logging</strong> — Every response from OpenAI includes the actual model used in metadata. Log this periodically (e.g., hourly sample) to catch when the alias resolves to a new model.</p>
+        <p><strong>3. Canary Deployments</strong> — Before committing the alias to your entire pipeline, route a small percentage of traffic through it and compare cost and quality metrics to your pinned baseline.</p>
+        <p><strong>4. Quarterly Reviews</strong> — Once per quarter, check OpenRouter's model announcements. If a new mini model exists and your alias hasn't updated yet, contact OpenRouter support to confirm the timeline.</p>
+      </div>
+
+      <h3>Cost Risk Quantified</h3>
+      <p>At 1M exchanges/day, a 2x price increase would double your daily cost from ~$382 to ~$764. Even a 50% increase is noticeable: +$191/day = +$70K/year. For many organizations, this justifies the monitoring overhead.</p>
+
+      <p>Smaller-scale users (under 100K exchanges/day) rarely see significant absolute cost deltas, so the alias carries less financial risk and more pure convenience.</p>
+    </section>
+
+    <!-- Code Example -->
+    <section>
+      <h2>Code Example: Using the Alias with OpenRouter</h2>
+
+      <p>Here's a Python example showing how to use the alias and log which model actually responded:</p>
+
+      <div class="code-block">
+import requests
+import json
+
+# Using the auto-updating mini alias
+model = "~openai/gpt-mini-latest"
+
+response = requests.post(
+    "https://openrouter.io/api/v1/chat/completions",
+    headers={
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "HTTP-Referer": "https://your-app.com",
+        "X-Title": "Your App Name"
+    },
+    json={
+        "model": model,
+        "messages": [
+            {"role": "user", "content": "Classify this email as spam or not: ..."}
+        ]
+    }
+)
+
+data = response.json()
+
+# Log which model actually responded (important for cost tracking)
+actual_model = data.get("model")
+print(f"Alias requested: {model}")
+print(f"Actual model used: {actual_model}")
+print(f"Cost estimate: ${data.get('usage', {}).get('completion_tokens', 0) * 0.0006}")
+
+# Use the response
+completion = data["choices"][0]["message"]["content"]
+      </div>
+
+      <p>The key insight: the alias resolves server-side, and OpenRouter returns the actual model name in the response. Use this to track when resolutions change.</p>
+    </section>
+
+    <!-- Ad Slot -->
+    <div class="ad-slot">
+      <div style="text-align: center;">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+        <ins class="adsbygoogle" style="display:block" data-ad-format="rectangle"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+    </div>
+
+    <!-- Try-it Band -->
+    <section class="try-band">
+      <h3>Try GPT Mini Latest via BYOK</h3>
+      <p>Test the alias directly in our sandbox. Bring your own OpenAI key for zero markup pricing.</p>
+      <button class="try-button" onclick="window.byok?.openByokModal('~openai/gpt-mini-latest', 'GPT Mini Latest')">Launch Sandbox</button>
+    </section>
+
+    <!-- Related Models -->
+    <section>
+      <h2>Related Models & Aliases</h2>
+
+      <div class="related-grid">
+        <a href="/models/gpt-4o-mini.html" class="model-card">
+          <div class="model-card-title">GPT-4o Mini</div>
+          <div class="model-card-desc">Pinned version of the current mini model. Use when you need stability and predictability.</div>
+        </a>
+
+        <a href="/models/gpt-latest.html" class="model-card">
+          <div class="model-card-title">~openai/gpt-latest</div>
+          <div class="model-card-desc">Auto-updating flagship alias. For maximum capability at higher cost.</div>
+        </a>
+
+        <a href="/models/gpt-chat-latest.html" class="model-card">
+          <div class="model-card-title">~openai/gpt-chat-latest</div>
+          <div class="model-card-desc">OpenAI's general-purpose chat alias. Broader capability than mini, mid-range pricing.</div>
+        </a>
+
+        <a href="/models/claude-haiku-latest.html" class="model-card">
+          <div class="model-card-title">~anthropic/claude-haiku-latest</div>
+          <div class="model-card-desc">Anthropic's mini competitor. Comparable speed and cost, different strengths.</div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    © 2026 Aether Intel · <a href="/privacy/">Privacy</a> · <a href="/about/">About</a>
+  </footer>
+</body>
+</html>
