@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>~google/gemini-pro-latest Guide — Google's Auto-Updating Pro Alias | Aether Intel</title>
+  <meta name="description" content="Everything about ~google/gemini-pro-latest: what it resolves to today (Gemini 2.5 Pro, $1.25/$10/1M, 1M context, deep reasoning), how the tilde alias works, and when to use it vs pinning a version." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/gemini-pro-latest/" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+      --google-blue: #4285F4;
+      --google-glow: rgba(66,133,244,0.12);
+      --google-border: rgba(66,133,244,0.3);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Site Header ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(7,7,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--neon-indigo);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+    }
+
+    .site-logo span { color: var(--neon-cyan); }
+
+    .site-nav { display: flex; gap: 1.75rem; }
+
+    .site-nav a {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+
+    .site-nav a:hover { color: var(--text-primary); }
+
+    /* ── Layout ── */
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 2.25rem;
+      font-family: var(--font-heading);
+    }
+
+    .breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover { color: var(--google-blue); }
+
+    .breadcrumb-sep { color: var(--text-muted); font-size: 0.75rem; }
+
+    .breadcrumb-current { color: var(--google-blue); }
+
+    /* ── Hero ── */
+    .hero { margin-bottom: 2.5rem; }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.65rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .badge-google {
+      background: linear-gradient(135deg, rgba(66,133,244,0.12), rgba(52,168,83,0.08), rgba(251,188,5,0.06), rgba(234,67,53,0.06));
+      border: 1px solid rgba(66,133,244,0.35);
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      /* fallback for browsers that don't support bg-clip on inline elements */
+    }
+
+    .badge-google-wrap {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.65rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      background: rgba(66,133,244,0.08);
+      border: 1px solid rgba(66,133,244,0.35);
+    }
+
+    .badge-google-text {
+      background: linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .badge-alias {
+      background: rgba(129,140,248,0.08);
+      border: 1px solid rgba(129,140,248,0.25);
+      color: var(--neon-indigo);
+    }
+
+    .badge-auto {
+      background: rgba(34,211,238,0.08);
+      border: 1px solid rgba(34,211,238,0.25);
+      color: var(--neon-cyan);
+    }
+
+    .badge-pro {
+      background: linear-gradient(135deg, rgba(66,133,244,0.1), rgba(129,140,248,0.12));
+      border: 1px solid rgba(129,140,248,0.35);
+      color: var(--neon-indigo);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin-bottom: 1.5rem;
+      line-height: 1.75;
+    }
+
+    .hero-highlight {
+      background: var(--google-glow);
+      border: 1px solid var(--google-border);
+      border-left: 3px solid var(--google-blue);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      line-height: 1.75;
+    }
+
+    .hero-highlight strong { color: var(--google-blue); }
+
+    /* ── Section headings ── */
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 2.5rem 0 0.9rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 1.75rem 0 0.6rem;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Tilde Section ── */
+    .tilde-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .tilde-symbol {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--neon-indigo);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .routing-flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+    }
+
+    .routing-node {
+      background: var(--surface-2);
+      border: 1px solid var(--google-border);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .routing-node.alias-node {
+      border-color: var(--google-blue);
+      background: var(--google-glow);
+      color: var(--google-blue);
+      font-weight: 600;
+    }
+
+    .routing-node.future-node {
+      border-color: var(--border);
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .routing-arrow {
+      color: var(--neon-indigo);
+      font-size: 1rem;
+    }
+
+    /* ── Spec grid ── */
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      text-align: center;
+    }
+
+    .spec-card .spec-label {
+      font-size: 0.7rem;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .spec-card .spec-value {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--google-blue);
+    }
+
+    .spec-card .spec-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* bc-prem orange spec card */
+    .spec-card.prem-card {
+      border-color: rgba(249,115,22,0.3);
+    }
+    .spec-card.prem-card .spec-value {
+      color: #f97316;
+    }
+
+    /* ── Deep reasoning callout ── */
+    .reasoning-callout {
+      background: linear-gradient(135deg, rgba(66,133,244,0.06), rgba(129,140,248,0.05));
+      border: 1px solid rgba(129,140,248,0.25);
+      border-left: 3px solid var(--neon-indigo);
+      border-radius: 8px;
+      padding: 1.1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+
+    .reasoning-callout .reasoning-label {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--neon-indigo);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .reasoning-callout p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 0;
+    }
+
+    .reasoning-callout strong { color: var(--text-primary); }
+
+    /* ── Reasoning bar visual ── */
+    .reasoning-bar-wrap {
+      margin: 1.5rem 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .reasoning-bar-label {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.85rem;
+    }
+
+    .reasoning-bar-track {
+      width: 100%;
+      height: 28px;
+      background: var(--surface-2);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      margin-bottom: 0.65rem;
+    }
+
+    .reasoning-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-indigo), #4285F4);
+      border-radius: 6px 0 0 6px;
+      display: flex;
+      align-items: center;
+      padding-left: 0.65rem;
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      width: 96.5%; /* 575/596 = ~96.5% */
+    }
+
+    .reasoning-bar-remainder {
+      height: 100%;
+      flex: 1;
+      background: rgba(66,133,244,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .reasoning-bar-legend {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+
+    /* ── Modality pills ── */
+    .modality-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+
+    .modality-pill {
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .modality-pill.active {
+      background: rgba(66,133,244,0.1);
+      border-color: rgba(66,133,244,0.3);
+      color: var(--google-blue);
+    }
+
+    .modality-arrow {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-self: center;
+      padding: 0 0.25rem;
+    }
+
+    /* ── Pro history timeline ── */
+    .pro-timeline {
+      margin: 1.25rem 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .pro-timeline li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .pro-timeline li:last-child { border-bottom: none; }
+
+    .timeline-gen {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--google-blue);
+      white-space: nowrap;
+      min-width: 100px;
+      padding-top: 0.1rem;
+    }
+
+    /* ── Alias family table ── */
+    .alias-table-wrap {
+      overflow-x: auto;
+      margin: 1.25rem 0;
+      border-radius: 10px;
+      border: 1px solid var(--google-border);
+    }
+
+    .alias-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .alias-table thead tr {
+      background: var(--google-glow);
+    }
+
+    .alias-table th {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--google-blue);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .alias-table td {
+      padding: 0.7rem 1rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .alias-table tr.current-row td {
+      background: rgba(66,133,244,0.05);
+      color: var(--text-primary);
+    }
+
+    .alias-table tr.current-row td:first-child {
+      color: var(--google-blue);
+      font-weight: 600;
+    }
+
+    .alias-table .track-flash { color: #FBBC05; font-weight: 600; }
+    .alias-table .track-pro { color: var(--neon-indigo); font-weight: 600; }
+
+    .alias-table .price-val { font-family: var(--font-display); font-size: 0.82rem; color: var(--neon-gold); }
+
+    .bench-prem {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f97316;
+      background: rgba(249,115,22,.08);
+      border: 1px solid rgba(249,115,22,.3);
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+      white-space: nowrap;
+    }
+
+    .bench-mid {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--neon-gold);
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.3);
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+      white-space: nowrap;
+    }
+
+    /* ── Cost implications box ── */
+    .cost-box {
+      background: var(--surface);
+      border: 1px solid rgba(249,115,22,0.25);
+      border-left: 3px solid #f97316;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .cost-box .cost-label {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #f97316;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .cost-box p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .cost-box p:last-child { margin-bottom: 0; }
+
+    .cost-box strong { color: var(--text-primary); }
+
+    /* ── Pro vs Flash comparison ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    @media (max-width: 580px) {
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+
+    .compare-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .compare-card h4 {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .compare-card.pro-card { border-color: rgba(129,140,248,0.3); }
+    .compare-card.pro-card h4 { color: var(--neon-indigo); }
+    .compare-card.flash-card { border-color: rgba(251,188,5,0.25); }
+    .compare-card.flash-card h4 { color: #FBBC05; }
+
+    .compare-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .compare-card li {
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      padding: 0.3rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .compare-card.pro-card li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--neon-indigo);
+      font-weight: 700;
+    }
+
+    .compare-card.flash-card li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #FBBC05;
+      font-weight: 700;
+    }
+
+    /* ── Decision guide ── */
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    @media (max-width: 580px) {
+      .decision-grid { grid-template-columns: 1fr; }
+    }
+
+    .decision-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .decision-card h4 {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .decision-card.use-alias { border-color: rgba(66,133,244,0.3); }
+    .decision-card.use-alias h4 { color: var(--google-blue); }
+    .decision-card.use-pin { border-color: rgba(129,140,248,0.25); }
+    .decision-card.use-pin h4 { color: var(--neon-indigo); }
+
+    .decision-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .decision-card li {
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      padding: 0.3rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .decision-card.use-alias li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--google-blue);
+      font-weight: 700;
+    }
+
+    .decision-card.use-pin li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--neon-indigo);
+    }
+
+    /* ── Code block ── */
+    .code-block {
+      background: #05050e;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block .code-label {
+      font-family: var(--font-heading);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .code-label-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--google-blue);
+    }
+
+    .code-block pre {
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: 0.84rem;
+      line-height: 1.65;
+      color: var(--text-primary);
+      white-space: pre;
+    }
+
+    .code-comment { color: var(--text-muted); }
+    .code-string { color: #86efac; }
+    .code-keyword { color: var(--neon-indigo); }
+    .code-func { color: var(--neon-cyan); }
+    .code-var { color: #fde68a; }
+    .code-google { color: var(--google-blue); }
+    .code-number { color: var(--neon-gold); }
+
+    /* ── AdSense slot ── */
+    .ad-slot {
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+
+    .ad-slot-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      font-family: var(--font-heading);
+    }
+
+    /* ── Try-it band ── */
+    .tryit-band {
+      background: linear-gradient(135deg, rgba(66,133,244,0.14) 0%, rgba(52,168,83,0.06) 30%, rgba(251,188,5,0.05) 60%, rgba(234,67,53,0.06) 100%);
+      border: 1px solid var(--google-border);
+      border-radius: 12px;
+      padding: 2rem 1.75rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+
+    .tryit-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .tryit-band p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-tryit {
+      display: inline-block;
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335);
+      background-size: 200% auto;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 2rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-position 0.4s, transform 0.15s;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-tryit:hover {
+      background-position: right center;
+      transform: translateY(-1px);
+    }
+
+    /* ── Related cards ── */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .related-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.15rem;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      display: block;
+    }
+
+    .related-card:hover {
+      border-color: var(--google-border);
+      background: var(--surface-2);
+      transform: translateY(-2px);
+    }
+
+    .related-card .rc-label {
+      font-size: 0.65rem;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .related-card .rc-name {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--google-blue);
+      margin-bottom: 0.3rem;
+    }
+
+    .related-card .rc-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── Google gradient heading accents ── */
+    .gradient-heading {
+      background: linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Info note box ── */
+    .info-note {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .info-note p { margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .info-note p:last-child { margin-bottom: 0; }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem 1.5rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+    }
+
+    .site-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .site-footer a:hover { color: var(--google-blue); }
+
+    /* ── Responsive tweaks ── */
+    @media (max-width: 600px) {
+      .page-wrap { padding: 1.5rem 1rem 3rem; }
+      .site-header { padding: 0 1rem; }
+      .hero-title { font-size: 1.45rem; }
+      .spec-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Site Header -->
+<header class="site-header">
+  <a href="/" class="site-logo">AETHER<span>INTEL</span></a>
+  <nav class="site-nav"><a href="/models/">Models</a><a href="/tools/">Tools</a><a href="/news/">News</a></nav>
+</header>
+
+<!-- Main Content -->
+<main class="page-wrap">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="/models/">Models</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">gemini-pro-latest</span>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badges">
+      <span class="badge-google-wrap"><span class="badge-google-text">GOOGLE</span></span>
+      <span class="badge badge-alias">ROUTING ALIAS</span>
+      <span class="badge badge-auto">AUTO-UPDATE</span>
+      <span class="badge badge-pro">PRO TRACK</span>
+    </div>
+
+    <h1 class="hero-title">
+      ~google/<span style="color:#4285F4">gemini-pro-latest</span>
+    </h1>
+
+    <p class="hero-lead">
+      Google's flagship Gemini alias — always pointing to the most capable Pro-tier Gemini model. Currently Gemini 2.5 Pro, with deep reasoning that consumed 575 of 596 tokens on our benchmark.
+    </p>
+
+    <div class="hero-highlight">
+      <strong>Resolves to Gemini 2.5 Pro</strong> &nbsp;·&nbsp;
+      <strong>$1.25 input / $10.00 output per 1M</strong> &nbsp;·&nbsp;
+      <strong>1M context</strong> &nbsp;·&nbsp;
+      <strong>5-modality input</strong> &nbsp;·&nbsp;
+      <strong>Deep reasoning</strong> &nbsp;·&nbsp;
+      <strong style="color:#f97316">bc-prem benchmark $0.021875</strong>
+    </div>
+  </section>
+
+  <!-- Tilde Alias Explanation -->
+  <h2>What the <span class="gradient-heading">~ prefix</span> means</h2>
+
+  <p>
+    OpenRouter uses the tilde (<code style="color:var(--neon-indigo)">~</code>) character as a sigil for <strong style="color:var(--text-primary)">auto-updating routing aliases</strong>. When you call a tilde-prefixed model ID, OpenRouter resolves it to the current canonical version of that model family tier at request time — not at deploy time.
+  </p>
+
+  <div class="tilde-box">
+    <span class="tilde-symbol">~</span>
+    <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">
+      An alias is a pointer, not a model. The pointer updates as Google publishes new Pro-tier models; your code stays the same. Contrast with pinned IDs like <code style="color:var(--neon-indigo)">google/gemini-2-5-pro</code>, which are frozen to a specific checkpoint and never silently change.
+    </p>
+
+    <div class="routing-flow">
+      <span class="routing-node alias-node">~google/gemini-pro-latest</span>
+      <span class="routing-arrow">→</span>
+      <span class="routing-node">Gemini 2.5 Pro <small style="color:var(--text-muted)">(today)</small></span>
+      <span class="routing-arrow">→</span>
+      <span class="routing-node future-node">Gemini 3.x Pro <small>(next)</small></span>
+      <span class="routing-arrow">→</span>
+      <span class="routing-node future-node">...</span>
+    </div>
+  </div>
+
+  <p>
+    The key consequence: any system using this alias will automatically receive Google's next Pro upgrade — including reasoning improvements, context window expansions, and new modality support — without any code change. This is the right choice when you want to track the frontier and are prepared to monitor for behavioral changes between Pro generations.
+  </p>
+
+  <!-- Pro Track Identity -->
+  <h2>The Pro track: Google's frontier capability tier</h2>
+
+  <p>
+    Google structures its Gemini lineup into tiers. <strong style="color:var(--neon-indigo)">Pro</strong> is the frontier tier — designed for maximum reasoning depth, the largest context handling, and the highest multimodal capability across the entire Gemini family. <strong style="color:#FBBC05">Flash</strong> is the efficiency tier, optimized for speed and cost. Pro is not an incremental upgrade over Flash; it occupies a distinct design point where quality is the primary constraint and cost is secondary.
+  </p>
+
+  <ul class="pro-timeline">
+    <li>
+      <span class="timeline-gen">Pro 1.5</span>
+      <span>Established the Pro tier's identity: the longest context window in the Gemini line, strong multimodal understanding across documents, images, and video. Set the standard for long-context reasoning workloads.</span>
+    </li>
+    <li>
+      <span class="timeline-gen">Pro 2.0</span>
+      <span>Expanded agentic capabilities and instruction following precision. Improved coding benchmarks substantially over 1.5 Pro. Introduced more nuanced multi-step reasoning chains for complex analytical tasks.</span>
+    </li>
+    <li>
+      <span class="timeline-gen">Pro 2.5</span>
+      <span>Current resolution. Deep reasoning mode as a default characteristic of the model — not a toggle but a core behavior. Full 5-modality input. 1M token context. $1.25/$10.00 per 1M tokens. Our benchmark: 575 of 596 completion tokens spent reasoning.</span>
+    </li>
+  </ul>
+
+  <p>
+    Each Pro generation has delivered major capability ceiling raises — particularly in the depth and thoroughness of reasoning. The alias is designed for teams that want to automatically inherit these improvements as Google ships them.
+  </p>
+
+  <!-- Benchmark Finding -->
+  <h2>The benchmark finding: deep reasoning in practice</h2>
+
+  <p>
+    In our live benchmark of Gemini 2.5 Pro via this alias, we measured the token distribution of the model's response. The result was striking and characteristic of the Pro track.
+  </p>
+
+  <div class="reasoning-bar-wrap">
+    <div class="reasoning-bar-label">Benchmark token distribution — 596 total completion tokens</div>
+    <div class="reasoning-bar-track">
+      <div class="reasoning-bar-fill">575 reasoning tokens (96.5%)</div>
+      <div class="reasoning-bar-remainder">21</div>
+    </div>
+    <div class="reasoning-bar-legend">
+      <span><span class="legend-dot" style="background:linear-gradient(90deg,var(--neon-indigo),#4285F4);"></span>Reasoning tokens: 575 (96.5%)</span>
+      <span><span class="legend-dot" style="background:rgba(66,133,244,0.15);border:1px solid rgba(66,133,244,0.3);"></span>Final output tokens: 21 (3.5%)</span>
+    </div>
+  </div>
+
+  <div class="reasoning-callout">
+    <div class="reasoning-label">Deep Reasoning</div>
+    <p>
+      <strong>575 of 596 completion tokens were reasoning tokens.</strong> The model spent nearly its entire compute budget thinking through the problem before producing output. The result was a thorough, well-structured database comparison — demonstrating that Pro's deep reasoning is not superficial chain-of-thought but extensive internal deliberation before response generation.
+    </p>
+  </div>
+
+  <p>
+    This deep reasoning behavior is characteristic of the Pro track. Flash, by contrast, uses reasoning more selectively and can toggle it per-request. Pro allocates reasoning broadly and deeply as a default, which produces higher quality on complex tasks at the cost of higher latency and token count. At $10.00 per 1M output tokens, those 575 reasoning tokens translate directly to cost — plan accordingly.
+  </p>
+
+  <!-- Current Specs -->
+  <h2>Current resolution — Gemini 2.5 Pro specs</h2>
+
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value">$1.25</div>
+      <div class="spec-sub">per 1M tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value">$10.00</div>
+      <div class="spec-sub">per 1M tokens</div>
+    </div>
+    <div class="spec-card prem-card">
+      <div class="spec-label">bc-prem Benchmark</div>
+      <div class="spec-value">$0.021875</div>
+      <div class="spec-sub">orange · 1500 in + 2000 out</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value">1M</div>
+      <div class="spec-sub">tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Input Modalities</div>
+      <div class="spec-value">5</div>
+      <div class="spec-sub">text, image, audio, video, file</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Reasoning</div>
+      <div class="spec-value" style="font-size:0.88rem;">Deep</div>
+      <div class="spec-sub">extensive chain — default on</div>
+    </div>
+  </div>
+
+  <h3>Benchmark cost breakdown</h3>
+
+  <p>
+    The bc-prem benchmark uses a standard exchange of 1,500 input tokens and 2,000 output tokens. At current Gemini 2.5 Pro pricing:
+  </p>
+
+  <div class="info-note">
+    <p>Input: 1,500 tokens × $1.25/1M = <strong style="color:var(--text-primary);">$0.001875</strong></p>
+    <p>Output: 2,000 tokens × $10.00/1M = <strong style="color:var(--text-primary);">$0.020000</strong></p>
+    <p>Total benchmark cost: <span class="bench-prem">$0.021875</span> — bc-prem tier (orange)</p>
+  </div>
+
+  <h3>Input modalities</h3>
+
+  <div class="modality-pills">
+    <span class="modality-pill active">Text</span>
+    <span class="modality-pill active">Image</span>
+    <span class="modality-pill active">Audio</span>
+    <span class="modality-pill active">Video</span>
+    <span class="modality-pill active">File</span>
+    <span class="modality-arrow">→</span>
+    <span class="modality-pill active" style="background:rgba(66,133,244,0.12); border-color:rgba(66,133,244,0.3); color:#4285F4;">Text Output</span>
+  </div>
+
+  <p style="font-size:0.88rem; color:var(--text-muted);">
+    Five input modalities make Gemini 2.5 Pro suitable for document analysis (file), audio transcription and analysis (audio), video understanding (video), vision tasks (image), and conventional text workloads. All modalities benefit from the 1M token context window and deep reasoning.
+  </p>
+
+  <h3>When this alias is ideal</h3>
+
+  <div class="info-note">
+    <p><strong style="color:var(--text-primary);">Complex analysis</strong> — multi-step reasoning, research synthesis, competitive analysis requiring thoroughness over speed.</p>
+    <p><strong style="color:var(--text-primary);">Long-context documents</strong> — legal documents, codebases, financial reports up to 1M tokens. Pro's reasoning scales well with document complexity.</p>
+    <p><strong style="color:var(--text-primary);">Research and discovery</strong> — when you need the model to surface non-obvious insights, not just retrieve obvious answers.</p>
+    <p><strong style="color:var(--text-primary);">Multimodal tasks needing depth</strong> — analyzing complex diagrams, lengthy audio recordings, or multi-part video content where Flash's lighter touch is insufficient.</p>
+  </div>
+
+  <!-- Google Alias Family Table -->
+  <h2><span class="gradient-heading">Google alias family</span></h2>
+
+  <p>
+    OpenRouter maintains routing aliases for both of Google's active Gemini tiers. The two aliases represent genuinely different design points — not just price tiers.
+  </p>
+
+  <div class="alias-table-wrap">
+    <table class="alias-table">
+      <thead>
+        <tr>
+          <th>Alias</th>
+          <th>Track</th>
+          <th>Resolves to</th>
+          <th>Input</th>
+          <th>Output</th>
+          <th>Bench</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:#FBBC05;">~google/gemini-flash-latest</td>
+          <td><span class="track-flash">Flash (speed)</span></td>
+          <td>Gemini 2.5 Flash</td>
+          <td><span class="price-val">$0.30</span></td>
+          <td><span class="price-val">$2.50</span></td>
+          <td><span class="bench-mid">$0.0055</span></td>
+        </tr>
+        <tr class="current-row">
+          <td>~google/gemini-pro-latest</td>
+          <td><span class="track-pro">Pro (capability)</span></td>
+          <td>Gemini 2.5 Pro</td>
+          <td><span class="price-val">$1.25</span></td>
+          <td><span class="price-val">$10.00</span></td>
+          <td><span class="bench-prem">$0.0219</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:0.85rem; color:var(--text-muted);">
+    Note: A Lite-track alias does not currently exist in OpenRouter's routing schema. Gemini Flash Lite models must be addressed by pinned ID.
+  </p>
+
+  <!-- Pro vs Flash section -->
+  <h2>Pro vs Flash: which alias to choose</h2>
+
+  <p>
+    At bc-prem, Gemini Pro costs $0.021875 per standard exchange. Flash runs at $0.00545 — a <strong style="color:var(--text-primary);">4x cost difference</strong>. Pro is not always the better choice; it is the right choice only when the task genuinely benefits from deep reasoning.
+  </p>
+
+  <div class="compare-grid">
+    <div class="compare-card pro-card">
+      <h4>Pro wins when</h4>
+      <ul>
+        <li>Task requires deep multi-step reasoning</li>
+        <li>Long, complex documents need thorough analysis</li>
+        <li>Multimodal inputs demand depth, not speed</li>
+        <li>Output quality is the primary constraint</li>
+        <li>Single high-stakes requests justify cost</li>
+        <li>Research tasks benefit from extensive deliberation</li>
+      </ul>
+    </div>
+    <div class="compare-card flash-card">
+      <h4>Flash wins when</h4>
+      <ul>
+        <li>High-volume production workloads</li>
+        <li>Latency is a user-facing constraint</li>
+        <li>Cost is a primary operational concern</li>
+        <li>Tasks are well-defined and don't need deep reasoning</li>
+        <li>Standard summarization, classification, extraction</li>
+        <li>Interactive or conversational applications</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>
+    Most production teams should default to Flash for standard workloads and promote to Pro only where the reasoning depth is demonstrably necessary. The alias pattern makes this easy: both Flash and Pro aliases can coexist in the same codebase, routed by task complexity at the application layer.
+  </p>
+
+  <!-- Decision Guide: Alias vs Pin -->
+  <h2>Should you use the alias or pin a version?</h2>
+
+  <p>
+    The alias is appropriate when you want automatic access to Google's latest Pro-tier improvements. Pinning is appropriate when behavioral stability, cost certainty, and prompt consistency are higher priorities.
+  </p>
+
+  <div class="decision-grid">
+    <div class="decision-card use-alias">
+      <h4>Use <code>~google/gemini-pro-latest</code></h4>
+      <ul>
+        <li>Always-frontier AI research pipelines</li>
+        <li>Production apps where latest Pro capability matters over consistency</li>
+        <li>Development and staging environments</li>
+        <li>Exploratory and prototyping projects</li>
+        <li>Teams with active model monitoring and alerting</li>
+        <li>Internal tools where behavioral drift is acceptable</li>
+      </ul>
+    </div>
+    <div class="decision-card use-pin">
+      <h4>Pin <code>google/gemini-2-5-pro</code></h4>
+      <ul>
+        <li>Production serving real users with tuned prompts</li>
+        <li>Cost-budgeted workloads where pricing drift is unacceptable</li>
+        <li>Prompts hand-tuned specifically to Gemini 2.5 Pro behavior</li>
+        <li>Compliance or auditing requirements needing a fixed model version</li>
+        <li>Regression-tested output pipelines</li>
+        <li>Contractual SLAs tied to specific model behavior</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- bc-prem Cost Implications -->
+  <h2>bc-prem cost implications at scale</h2>
+
+  <p>
+    Operating at bc-prem tier means cost monitoring is essential. The output price of $10.00/1M tokens compounds quickly at scale, and Pro's deep reasoning behavior generates more output tokens per request than Flash.
+  </p>
+
+  <div class="cost-box">
+    <div class="cost-label">Cost at scale — bc-prem</div>
+    <p>At $0.021875 per standard exchange (1,500 in / 2,000 out):</p>
+    <p><strong>1,000 exchanges/day</strong> = $21.88/day = $656/month</p>
+    <p><strong>10,000 exchanges/day</strong> = $218.75/day = $6,560/month</p>
+    <p><strong>100,000 exchanges/day</strong> = $2,187.50/day = $65,625/month</p>
+    <p>
+      If the Pro alias upgrades to a model with slightly higher output pricing, the impact compounds at every scale tier. Always set spend alerts on your OpenRouter account when running production workloads at bc-prem. Consider a nightly cost canary: a fixed benchmark prompt whose cost you log and alert on.
+    </p>
+  </div>
+
+  <p>
+    Additionally, because Gemini 2.5 Pro uses deep reasoning by default, real-world exchanges will often exceed the 2,000 output token benchmark — as our benchmark demonstrated, 575 of 596 output tokens were reasoning tokens in a single exchange. Budget for higher token counts than you might expect from a Flash workload of similar task scope.
+  </p>
+
+  <!-- Python Code Example -->
+  <h2>Code example — Python via OpenRouter</h2>
+
+  <p>
+    Use the alias exactly as you would a pinned model ID. Read back the <code style="color:var(--neon-indigo);">model</code> field from the response to log the current resolution — critical for detecting when the alias upgrades to a new Pro model in production.
+  </p>
+
+  <div class="code-block">
+    <div class="code-label"><span class="code-label-dot"></span> Python — Gemini Pro Latest via OpenRouter</div>
+    <pre><code><span class="code-keyword">import</span> openai
+
+client = openai.<span class="code-func">OpenAI</span>(
+    base_url=<span class="code-string">"https://openrouter.ai/api/v1"</span>,
+    api_key=<span class="code-string">"&lt;YOUR_OPENROUTER_KEY&gt;"</span>,
+)
+
+<span class="code-comment"># Use the alias — always resolves to the current Pro-tier model</span>
+resp = client.chat.completions.<span class="code-func">create</span>(
+    model=<span class="code-google">"~google/gemini-pro-latest"</span>,
+    messages=[
+        {
+            <span class="code-string">"role"</span>: <span class="code-string">"user"</span>,
+            <span class="code-string">"content"</span>: <span class="code-string">"Compare PostgreSQL and MongoDB for a time-series workload at 10M events/day. Analyze trade-offs in storage, query performance, operational complexity, and cost."</span>
+        }
+    ],
+    max_tokens=<span class="code-number">4096</span>,
+)
+
+<span class="code-comment"># Log the resolved model name — essential for detecting alias updates</span>
+resolved_model = resp.model
+<span class="code-func">print</span>(<span class="code-string">f"Resolved to: <span class="code-var">{resolved_model}</span>"</span>)
+
+<span class="code-comment"># Inspect token usage — Pro's deep reasoning inflates output counts</span>
+usage = resp.usage
+<span class="code-func">print</span>(<span class="code-string">f"Prompt tokens: <span class="code-var">{usage.prompt_tokens}</span>"</span>)
+<span class="code-func">print</span>(<span class="code-string">f"Completion tokens: <span class="code-var">{usage.completion_tokens}</span>"</span>)
+
+<span class="code-comment"># Estimate cost at current pricing ($1.25 in / $10.00 out per 1M)</span>
+input_cost  = usage.prompt_tokens     / <span class="code-number">1_000_000</span> * <span class="code-number">1.25</span>
+output_cost = usage.completion_tokens / <span class="code-number">1_000_000</span> * <span class="code-number">10.00</span>
+<span class="code-func">print</span>(<span class="code-string">f"Exchange cost: ${<span class="code-var">input_cost + output_cost</span>:.6f}"</span>)
+
+<span class="code-func">print</span>(resp.choices[<span class="code-number">0</span>].message.content)</code></pre>
+  </div>
+
+  <p style="font-size:0.88rem; color:var(--text-muted);">
+    Logging both the resolved model name and per-request cost gives you two early-warning signals: one for alias upgrades (model field changes) and one for cost drift (cost per exchange rises unexpectedly). Both are important when running at bc-prem scale.
+  </p>
+
+  <!-- Mid-article AdSense slot -->
+  <div class="ad-slot">
+    <div class="ad-slot-label">Advertisement</div>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Try-it Band -->
+  <div class="tryit-band">
+    <h3>Try Gemini Pro Latest via BYOK</h3>
+    <p>Connect your own OpenRouter API key and send a live request to the alias. No data stored.</p>
+    <button class="btn-tryit" onclick="window.byok?.openByokModal('~google/gemini-pro-latest', 'Gemini Pro Latest')">
+      Open in BYOK Playground
+    </button>
+  </div>
+
+  <!-- Related Models -->
+  <h2>Related models</h2>
+
+  <div class="related-grid">
+    <a href="/models/gemini-2-5-pro.html" class="related-card">
+      <div class="rc-label">Google · Pro</div>
+      <div class="rc-name">Gemini 2.5 Pro</div>
+      <div class="rc-desc">Pinned version. $1.25/$10.00/1M. Current target of the pro-latest alias. Deep reasoning by default.</div>
+    </a>
+    <a href="/models/gemini-flash-latest.html" class="related-card">
+      <div class="rc-label">Google · Flash Alias</div>
+      <div class="rc-name">Gemini Flash Latest</div>
+      <div class="rc-desc">Auto-updating Flash alias. $0.30/$2.50/1M. 4× cheaper than Pro. Best for high-volume workloads.</div>
+    </a>
+    <a href="/models/gpt-latest.html" class="related-card">
+      <div class="rc-label">OpenAI · Alias</div>
+      <div class="rc-name">GPT Latest</div>
+      <div class="rc-desc">OpenAI's auto-updating GPT alias. Comparable tilde-alias pattern from a competing provider.</div>
+    </a>
+    <a href="/models/claude-opus-latest.html" class="related-card">
+      <div class="rc-label">Anthropic · Alias</div>
+      <div class="rc-name">Claude Opus Latest</div>
+      <div class="rc-desc">Anthropic's flagship auto-updating alias. Premium capability tier, comparable positioning to Gemini Pro.</div>
+    </a>
+  </div>
+
+</main>
+
+<!-- Site Footer -->
+<footer class="site-footer">
+  &copy; 2026 Aether Intel &nbsp;&middot;&nbsp;
+  <a href="/privacy/">Privacy</a> &nbsp;&middot;&nbsp;
+  <a href="/about/">About</a>
+</footer>
+
+</body>
+</html>

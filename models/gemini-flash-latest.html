@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>~google/gemini-flash-latest Guide — Google's Auto-Updating Flash Alias | Aether Intel</title>
+  <meta name="description" content="Everything about ~google/gemini-flash-latest: what it resolves to today (Gemini 2.5 Flash, $0.30/$2.50/1M, 1M context, optional thinking), how the tilde alias works, and when to use it vs pinning a version." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/models/gemini-flash-latest/" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0d0d1a;
+      --surface-2: #131326;
+      --border: rgba(129,140,248,0.12);
+      --neon-indigo: #818cf8;
+      --neon-cyan: #22d3ee;
+      --neon-gold: #f59e0b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+      --google-blue: #4285F4;
+      --google-glow: rgba(66,133,244,0.12);
+      --google-border: rgba(66,133,244,0.3);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Site Header ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(7,7,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--neon-indigo);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+    }
+
+    .site-logo span { color: var(--neon-cyan); }
+
+    .site-nav { display: flex; gap: 1.75rem; }
+
+    .site-nav a {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+
+    .site-nav a:hover { color: var(--text-primary); }
+
+    /* ── Layout ── */
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 2.25rem;
+      font-family: var(--font-heading);
+    }
+
+    .breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover { color: var(--google-blue); }
+
+    .breadcrumb-sep { color: var(--text-muted); font-size: 0.75rem; }
+
+    .breadcrumb-current { color: var(--google-blue); }
+
+    /* ── Hero ── */
+    .hero { margin-bottom: 2.5rem; }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.65rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .badge-google {
+      background: linear-gradient(135deg, rgba(66,133,244,0.12), rgba(52,168,83,0.08));
+      border: 1px solid rgba(66,133,244,0.35);
+      color: #4285F4;
+    }
+
+    .badge-alias {
+      background: rgba(129,140,248,0.08);
+      border: 1px solid rgba(129,140,248,0.25);
+      color: var(--neon-indigo);
+    }
+
+    .badge-auto {
+      background: rgba(34,211,238,0.08);
+      border: 1px solid rgba(34,211,238,0.25);
+      color: var(--neon-cyan);
+    }
+
+    .badge-flash {
+      background: linear-gradient(135deg, rgba(66,133,244,0.1), rgba(251,188,5,0.1));
+      border: 1px solid rgba(251,188,5,0.3);
+      color: #FBBC05;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin-bottom: 1.5rem;
+      line-height: 1.75;
+    }
+
+    .hero-highlight {
+      background: var(--google-glow);
+      border: 1px solid var(--google-border);
+      border-left: 3px solid var(--google-blue);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      line-height: 1.65;
+    }
+
+    .hero-highlight strong { color: var(--google-blue); }
+
+    /* ── Section headings ── */
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 2.5rem 0 0.9rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 1.75rem 0 0.6rem;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Tilde Section ── */
+    .tilde-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .tilde-symbol {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--neon-indigo);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .routing-flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+    }
+
+    .routing-node {
+      background: var(--surface-2);
+      border: 1px solid var(--google-border);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .routing-node.alias-node {
+      border-color: var(--google-blue);
+      background: var(--google-glow);
+      color: var(--google-blue);
+      font-weight: 600;
+    }
+
+    .routing-node.future-node {
+      border-color: var(--border);
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .routing-arrow {
+      color: var(--neon-indigo);
+      font-size: 1rem;
+    }
+
+    /* ── Spec grid ── */
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      text-align: center;
+    }
+
+    .spec-card .spec-label {
+      font-size: 0.7rem;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .spec-card .spec-value {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--google-blue);
+    }
+
+    .spec-card .spec-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .spec-card.gold-card { border-color: rgba(245,158,11,0.25); }
+    .spec-card.gold-card .spec-value { color: var(--neon-gold); }
+
+    /* ── Thinking mode callout ── */
+    .thinking-callout {
+      background: linear-gradient(135deg, rgba(66,133,244,0.06), rgba(34,211,238,0.04));
+      border: 1px solid rgba(34,211,238,0.2);
+      border-left: 3px solid var(--neon-cyan);
+      border-radius: 8px;
+      padding: 1.1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+
+    .thinking-callout .thinking-label {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .thinking-callout p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 0;
+    }
+
+    .thinking-callout strong { color: var(--text-primary); }
+
+    /* ── Modality pills ── */
+    .modality-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+
+    .modality-pill {
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .modality-pill.active {
+      background: rgba(66,133,244,0.1);
+      border-color: rgba(66,133,244,0.3);
+      color: var(--google-blue);
+    }
+
+    .modality-arrow {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-self: center;
+      padding: 0 0.25rem;
+    }
+
+    /* ── Flash history timeline ── */
+    .flash-timeline {
+      margin: 1.25rem 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .flash-timeline li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .flash-timeline li:last-child { border-bottom: none; }
+
+    .timeline-gen {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--google-blue);
+      white-space: nowrap;
+      min-width: 100px;
+      padding-top: 0.1rem;
+    }
+
+    /* ── Alias table ── */
+    .alias-table-wrap {
+      overflow-x: auto;
+      margin: 1.25rem 0;
+      border-radius: 10px;
+      border: 1px solid var(--google-border);
+    }
+
+    .alias-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .alias-table thead tr {
+      background: var(--google-glow);
+    }
+
+    .alias-table th {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--google-blue);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .alias-table td {
+      padding: 0.7rem 1rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .alias-table tr.current-row td {
+      background: rgba(66,133,244,0.05);
+      color: var(--text-primary);
+    }
+
+    .alias-table tr.current-row td:first-child {
+      color: var(--google-blue);
+      font-weight: 600;
+    }
+
+    .alias-table .track-flash { color: #FBBC05; font-weight: 600; }
+    .alias-table .track-pro { color: var(--neon-indigo); font-weight: 600; }
+    .alias-table .track-na { color: var(--text-muted); font-style: italic; }
+
+    .alias-table .price-val { font-family: var(--font-display); font-size: 0.82rem; color: var(--neon-gold); }
+
+    /* ── Decision guide ── */
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    @media (max-width: 580px) {
+      .decision-grid { grid-template-columns: 1fr; }
+    }
+
+    .decision-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .decision-card h4 {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .decision-card.use-alias { border-color: rgba(66,133,244,0.3); }
+    .decision-card.use-alias h4 { color: var(--google-blue); }
+    .decision-card.use-pin { border-color: rgba(129,140,248,0.25); }
+    .decision-card.use-pin h4 { color: var(--neon-indigo); }
+
+    .decision-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .decision-card li {
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      padding: 0.3rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .decision-card.use-alias li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--google-blue);
+      font-weight: 700;
+    }
+
+    .decision-card.use-pin li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--neon-indigo);
+    }
+
+    /* ── Code block ── */
+    .code-block {
+      background: #05050e;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block .code-label {
+      font-family: var(--font-heading);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .code-label-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--google-blue);
+    }
+
+    .code-block pre {
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: 0.84rem;
+      line-height: 1.65;
+      color: var(--text-primary);
+      white-space: pre;
+    }
+
+    .code-comment { color: var(--text-muted); }
+    .code-string { color: #86efac; }
+    .code-keyword { color: var(--neon-indigo); }
+    .code-func { color: var(--neon-cyan); }
+    .code-var { color: #fde68a; }
+    .code-google { color: var(--google-blue); }
+    .code-number { color: var(--neon-gold); }
+
+    /* ── AdSense slot ── */
+    .ad-slot {
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+
+    .ad-slot-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      font-family: var(--font-heading);
+    }
+
+    /* ── Try-it band ── */
+    .tryit-band {
+      background: linear-gradient(135deg, rgba(66,133,244,0.14) 0%, rgba(52,168,83,0.06) 50%, rgba(66,133,244,0.08) 100%);
+      border: 1px solid var(--google-border);
+      border-radius: 12px;
+      padding: 2rem 1.75rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+
+    .tryit-band h3 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .tryit-band p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-tryit {
+      display: inline-block;
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 50%, #4285F4 100%);
+      background-size: 200% auto;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 2rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-position 0.4s, transform 0.15s;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-tryit:hover {
+      background-position: right center;
+      transform: translateY(-1px);
+    }
+
+    /* ── Related cards ── */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .related-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.15rem;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      display: block;
+    }
+
+    .related-card:hover {
+      border-color: var(--google-border);
+      background: var(--surface-2);
+      transform: translateY(-2px);
+    }
+
+    .related-card .rc-label {
+      font-size: 0.65rem;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .related-card .rc-name {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--google-blue);
+      margin-bottom: 0.3rem;
+    }
+
+    .related-card .rc-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── Upgrade pattern section ── */
+    .upgrade-note {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .upgrade-note p { margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .upgrade-note p:last-child { margin-bottom: 0; }
+
+    /* ── Google gradient heading accents ── */
+    .gradient-heading {
+      background: linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem 1.5rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+    }
+
+    .site-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .site-footer a:hover { color: var(--google-blue); }
+
+    /* ── Responsive tweaks ── */
+    @media (max-width: 600px) {
+      .page-wrap { padding: 1.5rem 1rem 3rem; }
+      .site-header { padding: 0 1rem; }
+      .hero-title { font-size: 1.45rem; }
+      .spec-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Site Header -->
+<header class="site-header">
+  <a href="/" class="site-logo">AETHER<span>INTEL</span></a>
+  <nav class="site-nav"><a href="/models/">Models</a><a href="/tools/">Tools</a><a href="/news/">News</a></nav>
+</header>
+
+<!-- Main Content -->
+<main class="page-wrap">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="/models/">Models</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">gemini-flash-latest</span>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badges">
+      <span class="badge badge-google">GOOGLE</span>
+      <span class="badge badge-alias">ROUTING ALIAS</span>
+      <span class="badge badge-auto">AUTO-UPDATE</span>
+      <span class="badge badge-flash">FLASH TRACK</span>
+    </div>
+
+    <h1 class="hero-title">
+      ~google/<span style="color:#4285F4">gemini-flash-latest</span>
+    </h1>
+
+    <p class="hero-lead">
+      Google's Gemini Flash track alias — always routing to the latest Flash-tier Gemini. Fast, multimodal, production-grade. Currently Gemini 2.5 Flash with optional thinking mode.
+    </p>
+
+    <div class="hero-highlight">
+      <strong>Resolves to Gemini 2.5 Flash</strong> &nbsp;·&nbsp;
+      <strong>$0.30 input / $2.50 output per 1M</strong> &nbsp;·&nbsp;
+      <strong>1M context</strong> &nbsp;·&nbsp;
+      <strong>5-modality input</strong> &nbsp;·&nbsp;
+      <strong>Optional thinking mode</strong> &nbsp;·&nbsp;
+      <strong style="color:var(--neon-gold)">bc-mid benchmark $0.00545</strong>
+    </div>
+  </section>
+
+  <!-- Tilde Alias Explanation -->
+  <h2>What the <span class="gradient-heading">~ prefix</span> means</h2>
+
+  <p>
+    OpenRouter uses the tilde (<code style="color:var(--neon-indigo)">~</code>) character as a sigil for <strong style="color:var(--text-primary)">auto-updating routing aliases</strong>. When you call a tilde-prefixed model ID, OpenRouter resolves it to the current canonical version of that model family tier at request time — not at deploy time.
+  </p>
+
+  <div class="tilde-box">
+    <span class="tilde-symbol">~</span>
+    <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">
+      An alias is a pointer, not a model. The pointer updates as Google publishes new Flash models; your code stays the same. Contrast this with pinned IDs like <code style="color:var(--neon-indigo)">google/gemini-2-5-flash</code>, which are frozen to a specific checkpoint and never silently change.
+    </p>
+
+    <div class="routing-flow">
+      <span class="routing-node alias-node">~google/gemini-flash-latest</span>
+      <span class="routing-arrow">→</span>
+      <span class="routing-node">Gemini 2.5 Flash <small style="color:var(--text-muted)">(today)</small></span>
+      <span class="routing-arrow">→</span>
+      <span class="routing-node future-node">Gemini 3.x Flash <small>(when released)</small></span>
+      <span class="routing-arrow">→</span>
+      <span class="routing-node future-node">Gemini 4.x Flash <small>(future)</small></span>
+    </div>
+  </div>
+
+  <p>
+    The key consequence: any production system using this alias will automatically receive Google's next Flash upgrade — including context window expansions, modality additions, and quality improvements — without a code change. This is ideal when you want to track the Flash frontier and are prepared to monitor for behavioral changes.
+  </p>
+
+  <!-- Flash Track Identity -->
+  <h2>The Flash track: Google's efficiency tier</h2>
+
+  <p>
+    Google structures its Gemini lineup into tiers. <strong style="color:var(--text-primary)">Flash</strong> is the efficiency tier — prioritizing response speed, cost-per-token, and broad modality support. <strong style="color:var(--neon-indigo)">Pro</strong> is the premium capability tier, delivering maximum reasoning depth at higher cost. Flash is not a compromise; it's an optimized design point for high-throughput, latency-sensitive, and multimodal workloads.
+  </p>
+
+  <ul class="flash-timeline">
+    <li>
+      <span class="timeline-gen">Flash 1.5</span>
+      <span>Introduced the Flash tier concept. Rapid responses, strong instruction following, competitive pricing that undercut most alternatives at the time.</span>
+    </li>
+    <li>
+      <span class="timeline-gen">Flash 2.0</span>
+      <span>Expanded multimodal input. Added audio and video understanding. Improved coding and reasoning benchmarks. Price held stable or dropped slightly.</span>
+    </li>
+    <li>
+      <span class="timeline-gen">Flash 2.5</span>
+      <span>Current resolution. Added optional thinking mode — a first for any Flash-tier model. Full 5-modality input (text, image, audio, video, file). 1M token context. $0.30/$2.50 per 1M tokens.</span>
+    </li>
+  </ul>
+
+  <p>
+    Each Flash generation has delivered meaningful capability gains while keeping prices modest — and sometimes reducing them. The alias is well-suited for teams that want to ride this upgrade curve automatically.
+  </p>
+
+  <!-- What makes Flash unique -->
+  <h2>What distinguishes Flash in its tier</h2>
+
+  <p>
+    Among efficiency-tier multimodal models, Gemini Flash's standout feature is the <strong style="color:var(--text-primary)">optional thinking mode</strong>. No other Flash-class model from a major provider offers this on-demand reasoning toggle as of the current generation.
+  </p>
+
+  <div class="thinking-callout">
+    <div class="thinking-label">Thinking Mode</div>
+    <p>
+      <strong>Disabled by default</strong> — standard Flash responses at <strong>$0.30/$2.50 per 1M</strong> with no reasoning overhead. Enable thinking via API parameter to unlock chain-of-thought reasoning at <strong>+$2.50 per 1M thinking tokens</strong>. Pay only for the thinking you need. No other Flash-tier model offers this toggle.
+    </p>
+  </div>
+
+  <p>
+    The practical implication: you can deploy one model — the alias — and dynamically upgrade individual requests to reasoning mode when the task demands it. A high-volume classification pipeline runs standard Flash; a complex document analysis job in the same codebase can enable thinking. One alias, two operational modes, controlled per call.
+  </p>
+
+  <!-- Current Specs -->
+  <h2>Current resolution — Gemini 2.5 Flash</h2>
+
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-label">Input Price</div>
+      <div class="spec-value">$0.30</div>
+      <div class="spec-sub">per 1M tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Output Price</div>
+      <div class="spec-value">$2.50</div>
+      <div class="spec-sub">per 1M tokens</div>
+    </div>
+    <div class="spec-card gold-card">
+      <div class="spec-label">bc-mid Benchmark</div>
+      <div class="spec-value">$0.00545</div>
+      <div class="spec-sub">gold · 1500 in + 2000 out</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value">1M</div>
+      <div class="spec-sub">tokens</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Input Modalities</div>
+      <div class="spec-value">5</div>
+      <div class="spec-sub">text, image, audio, video, file</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Thinking Mode</div>
+      <div class="spec-value" style="font-size:0.9rem;">Optional</div>
+      <div class="spec-sub">+$2.50/1M thinking tokens</div>
+    </div>
+  </div>
+
+  <h3>Input modalities</h3>
+
+  <div class="modality-pills">
+    <span class="modality-pill active">Text</span>
+    <span class="modality-pill active">Image</span>
+    <span class="modality-pill active">Audio</span>
+    <span class="modality-pill active">Video</span>
+    <span class="modality-pill active">File</span>
+    <span class="modality-arrow">→</span>
+    <span class="modality-pill active" style="background:rgba(66,133,244,0.12); border-color:rgba(66,133,244,0.3); color:#4285F4;">Text Output</span>
+  </div>
+
+  <p style="font-size:0.88rem; color:var(--text-muted);">
+    The 1M-token context window means you can send approximately 750,000 words of text — or hours of audio/video — in a single request. This scales well beyond most production use cases without chunking.
+  </p>
+
+  <!-- Google Alias Family Table -->
+  <h2><span class="gradient-heading">Google alias family</span></h2>
+
+  <p>
+    OpenRouter maintains routing aliases for both of Google's active Gemini tiers. Understanding the family helps you choose the right alias — or decide when a pinned model ID is more appropriate.
+  </p>
+
+  <div class="alias-table-wrap">
+    <table class="alias-table">
+      <thead>
+        <tr>
+          <th>Alias</th>
+          <th>Track</th>
+          <th>Resolves to</th>
+          <th>Input</th>
+          <th>Output</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="current-row">
+          <td>~google/gemini-flash-latest</td>
+          <td><span class="track-flash">Flash (speed)</span></td>
+          <td>Gemini 2.5 Flash</td>
+          <td><span class="price-val">$0.30</span></td>
+          <td><span class="price-val">$2.50</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--neon-indigo);">~google/gemini-pro-latest</td>
+          <td><span class="track-pro">Pro (capability)</span></td>
+          <td>Gemini 2.5 Pro</td>
+          <td><span class="price-val">$1.25</span></td>
+          <td><span class="price-val">$10.00</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-muted); font-style:italic;">(no lite alias)</td>
+          <td><span class="track-na">—</span></td>
+          <td style="color:var(--text-muted);">Gemini 3.1 Flash Lite</td>
+          <td><span class="price-val" style="color:var(--text-muted);">$0.25</span></td>
+          <td><span class="price-val" style="color:var(--text-muted);">$1.50</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    The Flash alias and Pro alias together cover the two primary Gemini tiers. A Lite-track alias does not currently exist in OpenRouter's routing schema — Gemini Flash Lite must be addressed by pinned ID if needed.
+  </p>
+
+  <!-- Decision Guide -->
+  <h2>Should you use the alias or pin a version?</h2>
+
+  <p>
+    The right choice depends on your tolerance for behavioral drift and your operational monitoring posture.
+  </p>
+
+  <div class="decision-grid">
+    <div class="decision-card use-alias">
+      <h4>Use <code>~google/gemini-flash-latest</code></h4>
+      <ul>
+        <li>Prototyping and early-stage development</li>
+        <li>Staying current with each Flash improvement</li>
+        <li>Internal multimodal tools and demos</li>
+        <li>Teams with active model monitoring in place</li>
+        <li>Workloads that benefit from context window upgrades</li>
+        <li>Exploratory research where latest capability matters</li>
+      </ul>
+    </div>
+    <div class="decision-card use-pin">
+      <h4>Pin <code>google/gemini-2-5-flash</code></h4>
+      <ul>
+        <li>Production with hand-tuned system prompts</li>
+        <li>Compliance environments needing behavioral stability</li>
+        <li>Fixed cost budgets where price drift is unacceptable</li>
+        <li>Regression-tested output pipelines</li>
+        <li>Models with specific fine-tuning or eval baselines</li>
+        <li>Contractual SLAs tied to a specific model version</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Flash Upgrade Pattern -->
+  <h2>Flash track upgrade pattern</h2>
+
+  <div class="upgrade-note">
+    <p>
+      Google has historically updated Flash models at a cadence of roughly every 6–10 months. Each upgrade has delivered meaningful quality improvements — particularly in reasoning, multimodal understanding, and instruction adherence.
+    </p>
+    <p>
+      Price movements have been modest and sometimes favorable: the Flash tier has seen price reductions as Google's inference efficiency has improved. The current $0.30/$2.50 pricing represents a competitive position relative to comparable multimodal models.
+    </p>
+    <p>
+      Teams running the alias should set up model response logging with the <code style="color:var(--neon-indigo);">model</code> field captured (see code example below). When the alias resolves to a new model version, you will see it in your logs — giving you a window to validate outputs before any behavioral changes become a production issue.
+    </p>
+  </div>
+
+  <!-- Python Code Example -->
+  <h2>Code example — Python via OpenRouter</h2>
+
+  <p>
+    Use the alias exactly as you would a pinned model ID. Read back the <code style="color:var(--neon-indigo);">model</code> field from the response to detect the current resolution in production logs.
+  </p>
+
+  <div class="code-block">
+    <div class="code-label"><span class="code-label-dot"></span> Python — Standard Flash request</div>
+    <pre><code><span class="code-keyword">import</span> openai
+
+client = openai.<span class="code-func">OpenAI</span>(
+    base_url=<span class="code-string">"https://openrouter.ai/api/v1"</span>,
+    api_key=<span class="code-string">"&lt;YOUR_OPENROUTER_KEY&gt;"</span>,
+)
+
+<span class="code-comment"># Use the alias — always resolves to current Flash</span>
+resp = client.chat.completions.<span class="code-func">create</span>(
+    model=<span class="code-google">"~google/gemini-flash-latest"</span>,
+    messages=[
+        {<span class="code-string">"role"</span>: <span class="code-string">"user"</span>, <span class="code-string">"content"</span>: <span class="code-string">"Summarize the key points of quantum error correction."</span>}
+    ],
+    max_tokens=<span class="code-number">1024</span>,
+)
+
+<span class="code-comment"># Log the resolved model name — useful for monitoring alias updates</span>
+<span class="code-func">print</span>(<span class="code-string">f"Resolved model: <span class="code-var">{resp.model}</span>"</span>)
+<span class="code-func">print</span>(resp.choices[<span class="code-number">0</span>].message.content)</code></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-label"><span class="code-label-dot" style="background:var(--neon-cyan);"></span> Python — Enable thinking mode</div>
+    <pre><code><span class="code-comment"># Enable optional thinking — adds +$2.50/1M thinking tokens</span>
+<span class="code-comment"># Use for complex reasoning, multi-step analysis, or difficult coding tasks</span>
+resp_thinking = client.chat.completions.<span class="code-func">create</span>(
+    model=<span class="code-google">"~google/gemini-flash-latest"</span>,
+    messages=[
+        {
+            <span class="code-string">"role"</span>: <span class="code-string">"user"</span>,
+            <span class="code-string">"content"</span>: <span class="code-string">"Analyze the trade-offs between RAG and fine-tuning for domain adaptation."</span>
+        }
+    ],
+    extra_body={
+        <span class="code-string">"thinking"</span>: {<span class="code-string">"type"</span>: <span class="code-string">"enabled"</span>}  <span class="code-comment"># OpenRouter parameter to enable thinking</span>
+    },
+    max_tokens=<span class="code-number">4096</span>,
+)
+
+<span class="code-func">print</span>(<span class="code-string">f"Resolved model: <span class="code-var">{resp_thinking.model}</span>"</span>)
+<span class="code-func">print</span>(resp_thinking.choices[<span class="code-number">0</span>].message.content)</code></pre>
+  </div>
+
+  <p style="font-size:0.88rem; color:var(--text-muted);">
+    Thinking mode is disabled by default. Only pass the <code style="color:var(--neon-indigo);">thinking</code> parameter when you need chain-of-thought reasoning to keep costs predictable. The standard path at $0.30/$2.50 is appropriate for the large majority of requests.
+  </p>
+
+  <!-- Mid-article AdSense slot -->
+  <div class="ad-slot">
+    <div class="ad-slot-label">Advertisement</div>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3480541530392777"
+         data-ad-slot="auto"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Try-it Band -->
+  <div class="tryit-band">
+    <h3>Try Gemini Flash Latest via BYOK</h3>
+    <p>Connect your own OpenRouter API key and send a live request directly in the browser. No data stored.</p>
+    <button class="btn-tryit" onclick="window.byok?.openByokModal('~google/gemini-flash-latest', 'Gemini Flash Latest')">
+      Open in BYOK Playground
+    </button>
+  </div>
+
+  <!-- Related Models -->
+  <h2>Related models</h2>
+
+  <div class="related-grid">
+    <a href="/models/gemini-2-5-flash.html" class="related-card">
+      <div class="rc-label">Google · Flash</div>
+      <div class="rc-name">Gemini 2.5 Flash</div>
+      <div class="rc-desc">Pinned version. $0.30/$2.50/1M. Current target of the flash-latest alias.</div>
+    </a>
+    <a href="/models/gemini-3-1-flash-lite.html" class="related-card">
+      <div class="rc-label">Google · Flash Lite</div>
+      <div class="rc-name">Gemini 3.1 Flash Lite</div>
+      <div class="rc-desc">Sub-tier below Flash. $0.25/$1.50/1M. Lowest cost multimodal Gemini option.</div>
+    </a>
+    <a href="/models/gemini-pro-latest.html" class="related-card">
+      <div class="rc-label">Google · Pro Alias</div>
+      <div class="rc-name">Gemini Pro Latest</div>
+      <div class="rc-desc">Auto-updating Pro alias. $1.25/$10.00/1M. Maximum Gemini capability tier.</div>
+    </a>
+    <a href="/models/gpt-latest.html" class="related-card">
+      <div class="rc-label">OpenAI · Alias</div>
+      <div class="rc-name">GPT Latest</div>
+      <div class="rc-desc">OpenAI's auto-updating GPT alias. Comparable alias pattern from a competing provider.</div>
+    </a>
+  </div>
+
+</main>
+
+<!-- Site Footer -->
+<footer class="site-footer">
+  &copy; 2026 Aether Intel &nbsp;&middot;&nbsp;
+  <a href="/privacy/">Privacy</a> &nbsp;&middot;&nbsp;
+  <a href="/about/">About</a>
+</footer>
+
+</body>
+</html>
