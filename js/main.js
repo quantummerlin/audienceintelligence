@@ -327,9 +327,9 @@
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
           var tagHtml = item.tag
-            ? '<strong style="color:var(--neon-gold);margin-right:6px">' + item.tag + '</strong>'
+            ? '<strong style="color:var(--neon-cyan);margin-right:6px">' + item.tag + '</strong>'
             : '';
-          html += '<span class="ticker-item">' + tagHtml + item.text + '</span>';
+          html += '<span class="ticker-item">' + tagHtml + '<span class="ticker-text">' + item.text + '</span></span>';
           html += '<span class="ticker-sep">◆</span>';
         }
       }
