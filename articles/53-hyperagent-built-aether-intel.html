@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>How I Built a 52-Article AI News Site Using Only Hyperagent — Aether Intel</title>
+  <meta name="description" content="No developer. No designer. No DevOps. Just a persistent AI agent with GitHub integration, image generation, and a memory that learns from its own mistakes.">
+  <meta name="author" content="Quantum Merlin">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/53-hyperagent-built-aether-intel.html">
+  <meta property="og:title" content="How I Built a 52-Article AI News Site Using Only Hyperagent">
+  <meta property="og:description" content="No developer. No designer. No DevOps. Just a persistent AI agent with GitHub integration, image generation, and a memory that learns from its own mistakes.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/53-hyperagent-built-aether-intel.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/53-hyperagent-built-aether-intel-hero.webp">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0e1a; --surface: #111827; --border: #1e2d40;
+      --text: #e2e8f0; --muted: #8899aa; --accent: #38bdf8;
+      --badge-tools: #0ea5e9; --cat-tools: #0ea5e9;
+      --radius: 8px; --max: 780px;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 17px; line-height: 1.75; }
+    body.standalone-nav .navbar { display: none; }
+
+    /* ── TOP NAV ── */
+    .article-topbar { display:flex; align-items:center; justify-content:space-between; padding:14px 28px; border-bottom:1px solid var(--border); background:var(--bg); position:sticky; top:0; z-index:100; }
+    .topbar-logo { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:800; color:var(--text); text-decoration:none; letter-spacing:-.01em; }
+    .topbar-logo span { color:var(--accent); }
+    .topbar-back { font-size:.85rem; color:var(--muted); text-decoration:none; display:flex; align-items:center; gap:6px; transition:color .2s; }
+    .topbar-back:hover { color:var(--text); }
+
+    /* ── ARTICLE LAYOUT ── */
+    main.article-page { max-width:var(--max); margin:0 auto; padding:0 24px 80px; }
+    article { padding-top: 0; }
+    .article-hero { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-radius:0 0 var(--radius) var(--radius); margin-bottom:40px; }
+
+    .article-wrap { }
+    .article-meta-top { display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+    .badge { display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:4px; }
+    .badge-tools { background:rgba(14,165,233,.15); color:#38bdf8; border:1px solid rgba(14,165,233,.25); }
+    .article-date { font-size:.82rem; color:var(--muted); }
+    .article-read-time { font-size:.82rem; color:var(--muted); }
+
+    h1.article-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.5rem); font-weight:800; line-height:1.2; letter-spacing:-.02em; color:#f1f5f9; margin-bottom:18px; }
+    .article-deck { font-size:1.12rem; color:#94a3b8; line-height:1.65; margin-bottom:36px; padding-bottom:32px; border-bottom:1px solid var(--border); }
+
+    /* ── STAT GRID ── */
+    .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:16px; margin:36px 0; }
+    .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px 16px; text-align:center; }
+    .stat-num { font-family:'Playfair Display',serif; font-size:2rem; font-weight:800; color:var(--accent); line-height:1; }
+    .stat-label { font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:6px; }
+
+    /* ── BODY CONTENT ── */
+    .article-body h2 { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:#f1f5f9; margin:44px 0 16px; }
+    .article-body h3 { font-size:1.1rem; font-weight:600; color:#cbd5e1; margin:28px 0 10px; }
+    .article-body p { margin-bottom:1.4em; color:var(--text); }
+    .article-body ul, .article-body ol { margin:0 0 1.4em 1.5em; }
+    .article-body li { margin-bottom:.5em; color:var(--text); }
+    .article-body a { color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(56,189,248,.3); }
+    .article-body a:hover { border-bottom-color:var(--accent); }
+    .article-body strong { color:#f1f5f9; font-weight:600; }
+
+    /* ── PULL QUOTE ── */
+    .pull-quote { border-left:3px solid var(--accent); background:var(--surface); border-radius:0 var(--radius) var(--radius) 0; padding:20px 24px; margin:32px 0; }
+    .pull-quote p { font-size:1.1rem; font-style:italic; color:#cbd5e1; margin:0; line-height:1.6; }
+    .pull-quote cite { display:block; font-size:.8rem; color:var(--muted); margin-top:10px; font-style:normal; }
+
+    /* ── FEATURE CARD ── */
+    .feature-list { list-style:none; margin:0 0 1.4em; padding:0; }
+    .feature-list li { display:flex; gap:14px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--border); }
+    .feature-list li:last-child { border-bottom:none; }
+    .feature-num { flex-shrink:0; width:28px; height:28px; border-radius:50%; background:rgba(56,189,248,.12); border:1px solid rgba(56,189,248,.25); display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; color:var(--accent); margin-top:2px; }
+    .feature-text strong { display:block; color:#f1f5f9; font-size:.95rem; margin-bottom:4px; }
+    .feature-text span { font-size:.88rem; color:var(--muted); line-height:1.5; }
+
+    /* ── BEFORE/AFTER TABLE ── */
+    .compare-table { width:100%; border-collapse:collapse; margin:28px 0; font-size:.9rem; }
+    .compare-table th { background:var(--surface); color:var(--muted); font-weight:600; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; padding:10px 14px; text-align:left; border-bottom:2px solid var(--border); }
+    .compare-table td { padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .compare-table tr:last-child td { border-bottom:none; }
+    .compare-table .before { color:#f87171; }
+    .compare-table .after { color:#34d399; }
+
+    /* ── STEP TAG ── */
+    .step-tag { display:inline-block; font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:3px 8px; border-radius:3px; margin-right:6px; background:rgba(56,189,248,.12); color:var(--accent); border:1px solid rgba(56,189,248,.2); vertical-align:middle; }
+
+    /* ── RELATED ── */
+    .related-section { margin-top:60px; padding-top:32px; border-top:1px solid var(--border); }
+    .related-section h3 { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:16px; }
+    .related-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+    .related-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; text-decoration:none; transition:border-color .2s; }
+    .related-card:hover { border-color:rgba(56,189,248,.4); }
+    .related-card-cat { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); margin-bottom:6px; }
+    .related-card-title { font-size:.88rem; font-weight:600; color:#cbd5e1; line-height:1.4; }
+
+    /* ── TAGS ── */
+    .article-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:40px; padding-top:28px; border-top:1px solid var(--border); }
+    .article-tag { font-size:.75rem; color:var(--muted); background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:4px 12px; }
+
+    @media(max-width:640px) {
+      .article-topbar { padding:12px 16px; }
+      main.article-page { padding:0 16px 60px; }
+      .stat-grid { grid-template-columns:repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body class="standalone-nav">
+
+  <nav class="article-topbar">
+    <a href="/" class="topbar-logo">Aether<span>Intel</span></a>
+    <a href="/articles.html" class="topbar-back">← All Articles</a>
+  </nav>
+
+  <main class="article-page">
+    <article>
+
+      <img
+        src="/images/articles/53-hyperagent-built-aether-intel-hero.webp"
+        alt="Building Aether Intel with Hyperagent — solo founder at desk with AI agent workflow"
+        class="article-hero"
+        loading="eager"
+      >
+
+      <div class="article-wrap">
+
+        <div class="article-meta-top">
+          <span class="badge badge-tools">Tools</span>
+          <span class="article-date">May 17, 2026</span>
+          <span class="article-read-time">· 9 min read</span>
+        </div>
+
+        <h1 class="article-title">How I Built a 52-Article AI News Site Using Only Hyperagent</h1>
+
+        <p class="article-deck">No developer. No designer. No DevOps. Just a persistent AI agent with GitHub integration, image generation, and a memory that learns from its own mistakes. Here is the exact workflow — and the seven features that made it possible.</p>
+
+        <!-- STAT GRID -->
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-num">52</div><div class="stat-label">Articles Published</div></div>
+          <div class="stat-card"><div class="stat-num">52</div><div class="stat-label">Hero Images Generated</div></div>
+          <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">Files Per Commit</div></div>
+          <div class="stat-card"><div class="stat-num">1</div><div class="stat-label">Person on the Team</div></div>
+        </div>
+
+        <div class="article-body">
+
+          <p>Most people treat AI assistants as fancy autocomplete. Ask a question, get an answer, copy-paste, move on. That's not how this site was built.</p>
+
+          <p>Aether Intel is a GitHub Pages publication covering AI agents, business, tools, and safety. Fifty-two long-form articles. A live homepage with a hero slideshow. An article archive. A scrolling news ticker. AI-generated editorial hero images for every piece. Google Analytics, AdSense, Cloudflare, custom domain, full deployment pipeline.</p>
+
+          <p>All of it, built and maintained through conversation with <a href="https://hyperagent.com" target="_blank" rel="noopener noreferrer">Hyperagent</a> — the autonomous AI agent platform from the makers of Airtable.</p>
+
+          <p>Here is the workflow, and the seven features that made it possible.</p>
+
+          <h2>The Workflow</h2>
+
+          <p>Every article on this site starts the same way. A YouTube transcript from an AI creator or analyst gets uploaded to Hyperagent. From there, a single session handles the entire pipeline:</p>
+
+          <ul class="feature-list">
+            <li>
+              <div class="feature-num">1</div>
+              <div class="feature-text"><strong>Mine the transcript</strong> <span>Hyperagent reads the raw transcript, identifies the strongest angle, and frames it as an editorial story — not a summary, a structured argument with a hook, a thesis, and evidence.</span></div>
+            </li>
+            <li>
+              <div class="feature-num">2</div>
+              <div class="feature-text"><strong>Write the article</strong> <span>Full article HTML: headline, deck, pull quotes, stat grid, data table, related links, SEO tags, canonical URL, Open Graph metadata. Formatted to the site's exact standalone-nav specification.</span></div>
+            </li>
+            <li>
+              <div class="feature-num">3</div>
+              <div class="feature-text"><strong>Generate the hero image</strong> <span>A custom 1280×720 editorial image matched to the article's emotional tone — not stock photography, not generic AI art. The AI delusion article got a bedroom at 3am lit by a chatbot screen. The CEO sycophancy piece got a lone executive surrounded by floating "Yes" screens.</span></div>
+            </li>
+            <li>
+              <div class="feature-num">4</div>
+              <div class="feature-text"><strong>Update the homepage</strong> <span>The 8-slide hero carousel rotates in the new article. The 24-card article grid gets the new card prepended, with the oldest card dropped. The JavaScript data array stays in sync.</span></div>
+            </li>
+            <li>
+              <div class="feature-num">5</div>
+              <div class="feature-text"><strong>Update the archive and ticker</strong> <span>The articles page gets the new card. The scrolling ticker JSON gets the new item. Both updated in the same session.</span></div>
+            </li>
+            <li>
+              <div class="feature-num">6</div>
+              <div class="feature-text"><strong>Commit everything atomically</strong> <span>All seven files — article HTML, hero image, updated homepage, articles page, ticker JSON — committed to GitHub in a single operation. One SHA, one message, no partial states.</span></div>
+            </li>
+          </ul>
+
+          <div class="pull-quote">
+            <p>"A tool waits for you to remember it. An assistant reduces the number of things you have to remember."</p>
+            <cite>— The difference Hyperagent makes in practice</cite>
+          </div>
+
+          <h2>The 7 Features That Made It Possible</h2>
+
+          <h3><span class="step-tag">01</span> Persistent Sandbox</h3>
+          <p>Every other AI tool resets between sessions. You rebuild context from scratch every time. Hyperagent has a persistent file system — a real working directory that survives across conversations. Every script built to manage this site, every article draft, every image, lives there across sessions. Pick up a conversation and you pick up the project.</p>
+
+          <h3><span class="step-tag">02</span> GitHub Integration</h3>
+          <p>Not just text files. Hero images as binary WebP, updated homepage HTML, ticker JSON, article HTML — all committed atomically in a single operation. Hyperagent handles the encoding, the API calls, the error handling. No terminal required. No git commands. Just a description of what needs to happen.</p>
+
+          <h3><span class="step-tag">03</span> Image Generation</h3>
+          <p>Every article on this site has a custom 1280×720 editorial hero image generated in the same session where the article was written. Not sourced from stock libraries. Generated, resized to spec, converted to WebP, and committed — automatically, every time.</p>
+
+          <h3><span class="step-tag">04</span> Skills and Memory</h3>
+          <p>The site has a specific article format: standalone nav, hero image first, stat grid, pull quotes, data table, related articles. Hyperagent learned this format and stored it as a skill. Every new article follows it exactly, without needing to describe it again. The same applies to the commit workflow — which files to update, what encoding to use, how to bump the deploy tag. Preferences persist.</p>
+
+          <h3><span class="step-tag">05</span> Multi-Step Reasoning</h3>
+          <p>Publishing a new article is seven tasks that need to happen in the right order, with the right data flowing between them. Hyperagent executes the full pipeline from a single description. Not one step at a time, prompting each one manually — the whole thing, one session.</p>
+
+          <h3><span class="step-tag">06</span> Self-Debugging</h3>
+          <p>When things broke — and they did — Hyperagent diagnosed the root cause, fixed it, and put a prevention rule in place. When 7 orphaned HTML divs were corrupting the homepage slideshow, it found them, removed them, and established a rule: homepage HTML is never modified by automated scripts. When files were committed with wrong encoding and the site went white-screen, it identified the mismatch, re-committed all seven files correctly, and wrote a verification script to catch the same error in the future.</p>
+
+          <div class="pull-quote">
+            <p>"The tool gets more reliable the longer you use it. Every mistake becomes a rule. Every rule prevents the next mistake."</p>
+            <cite>— After fixing the encoding bug that broke the site</cite>
+          </div>
+
+          <h3><span class="step-tag">07</span> Connected Integrations</h3>
+          <p>Gmail. GitHub. YouTube transcript processing. Image generation APIs. Hyperagent is not a standalone chatbot — it is a connected agent that moves data between systems on your behalf. One user <a href="https://www.youtube.com/watch?v=example" target="_blank" rel="noopener noreferrer">used it to autonomously book a performance venue for his daughter</a> — Hyperagent found open mic nights, created the contact list, drafted the emails, connected to Gmail, sent them, and confirmed the booking. Same architecture, different use case.</p>
+
+          <h2>Before and After</h2>
+
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Before Hyperagent</th>
+                <th>With Hyperagent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Publish a new article</td>
+                <td class="before">Write → hand to dev → wait → review → revisions → deploy. Days.</td>
+                <td class="after">Upload transcript → describe angle → done. One session.</td>
+              </tr>
+              <tr>
+                <td>Hero image</td>
+                <td class="before">Brief a designer, wait, review, export, upload. £80–£200.</td>
+                <td class="after">Generated, resized, committed. Same session as the article.</td>
+              </tr>
+              <tr>
+                <td>Homepage update</td>
+                <td class="before">Developer ticket. Could be days.</td>
+                <td class="after">Part of the article publish pipeline. Automatic.</td>
+              </tr>
+              <tr>
+                <td>Debugging a broken site</td>
+                <td class="before">Stack Overflow, developer, waiting, ticket queue.</td>
+                <td class="after">Root cause identified in minutes. Fix committed. Prevention rule written.</td>
+              </tr>
+              <tr>
+                <td>Cross-article consistency</td>
+                <td class="before">Manual check. Easily missed.</td>
+                <td class="after">Flagged automatically. Fixed in one commit.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>What This Replaced</h2>
+
+          <p>For a site at this scale — 52 articles, custom images, GitHub deployment, live homepage management — the standard team would be:</p>
+
+          <ul>
+            <li><strong>Developer</strong> — GitHub commits, HTML structure, deploy pipeline</li>
+            <li><strong>Designer</strong> — hero images, visual consistency</li>
+            <li><strong>Writer / editor</strong> — article structure, formatting, SEO</li>
+            <li><strong>DevOps / project manager</strong> — keeping 52 articles, 24 homepage cards, and 8 slideshow slots in sync</li>
+          </ul>
+
+          <p>All of that collapsed into one Hyperagent subscription and one person describing what they want.</p>
+
+          <div class="pull-quote">
+            <p>"I built a team of AI agents that brings any startup idea to life... Rowan goes deep on the problem space, delivers non-obvious insights, and spins up sub-agents."</p>
+            <cite>— Hyperagent demo, official channel. The same architecture that runs this site.</cite>
+          </div>
+
+          <h2>The Honest Part</h2>
+
+          <p>It was not always smooth. There were broken commits, a white-screen site crash from an encoding bug, a homepage slideshow corrupted by orphaned HTML. But every time something broke, the diagnostic process was a conversation — not a GitHub issue or a developer call. And every fix came with a prevention rule built into the next session's workflow.</p>
+
+          <p>That compounding reliability is the part that doesn't show up in demos. After enough sessions, the agent knows the site better than most human developers would, because it has seen every failure mode and adapted to it.</p>
+
+          <h2>Try It</h2>
+
+          <p>If you are a solo creator, solo founder, or anyone running a content operation without a team — Hyperagent is what closes the gap between having an idea and having a real thing in the world.</p>
+
+          <p>You are reading the result. Every article on this site. Every image. Every line of HTML. Built in Hyperagent chat.</p>
+
+          <p><strong>→ <a href="https://hyperagent.com" target="_blank" rel="noopener noreferrer">hyperagent.com</a></strong></p>
+
+        </div><!-- /article-body -->
+
+        <!-- TAGS -->
+        <div class="article-tags">
+          <span class="article-tag">Hyperagent</span>
+          <span class="article-tag">AI Tools</span>
+          <span class="article-tag">Solo Founder</span>
+          <span class="article-tag">Case Study</span>
+          <span class="article-tag">GitHub</span>
+          <span class="article-tag">AI Agents</span>
+          <span class="article-tag">No-Code</span>
+        </div>
+
+        <!-- RELATED -->
+        <div class="related-section">
+          <h3>Related Articles</h3>
+          <div class="related-grid">
+            <a href="/articles/46-ai-agents-attention-bottleneck.html" class="related-card">
+              <div class="related-card-cat">Agents</div>
+              <div class="related-card-title">AI Agents Made You The Project Manager. That's The Problem.</div>
+            </a>
+            <a href="/articles/51-consumer-ai-anticipation-gap.html" class="related-card">
+              <div class="related-card-cat">AI Agents</div>
+              <div class="related-card-title">The Anticipation Gap: Why Consumer AI Is Still Waiting for You to Manage It</div>
+            </a>
+            <a href="/articles/42-codex-openai-real-agent.html" class="related-card">
+              <div class="related-card-cat">Dev</div>
+              <div class="related-card-title">Codex for Almost Everything: OpenAI's April Update Changed the Game</div>
+            </a>
+          </div>
+        </div>
+
+      </div><!-- /article-wrap -->
+    </article>
+  </main>
+
+</body>
+</html>
