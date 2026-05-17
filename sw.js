@@ -4,7 +4,7 @@
  * v11: nukes ALL caches on activate (not just aether-*), adds updateViaCache safety
  */
 
-const CACHE_VERSION = 'aether-v11';
+const CACHE_VERSION = 'aether-v12';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
@@ -29,6 +29,7 @@ const STATIC_PATTERNS = [
 const NO_CACHE_PATTERNS = [
   /\/api\//,
   /\/admin\//,
+  /\/cdn-cgi\//,   // Cloudflare infrastructure (RUM, challenge, analytics)
 ];
 
 // ─── Install ────────────────────────────────────────────────────────────────
@@ -69,12 +70,15 @@ self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Only handle GET requests — Cache API does not support POST/PUT/etc.
+  if (request.method !== 'GET') return;
+
   // Only handle same-origin + trusted font CDNs
   const isSameOrigin = url.origin === self.location.origin;
   const isFontCDN    = /fonts\.(googleapis|gstatic)\.com/.test(url.hostname);
   if (!isSameOrigin && !isFontCDN) return;
 
-  // Never intercept these paths
+  // Never intercept these paths (Cloudflare CDN infra, API routes, admin)
   if (NO_CACHE_PATTERNS.some(p => p.test(url.pathname))) return;
 
   // Static assets → cache-first, fallback to network
