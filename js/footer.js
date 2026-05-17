@@ -9,7 +9,7 @@
     '.af-inner{max-width:780px;margin:0 auto;}',
     '.af-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:28px;}',
     '.af-brand{flex:1;min-width:180px;}',
-    '.af-logo{font-family:"Orbitron",sans-serif;font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,#818cf8,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;letter-spacing:.04em;display:inline-block;margin-bottom:8px;}',
+    '.af-logo{font-family:"Orbitron",sans-serif;font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,#f59e0b,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;letter-spacing:.04em;display:inline-block;margin-bottom:8px;}',
     '.af-tagline{font-size:.8rem;color:rgba(148,163,184,0.7);line-height:1.55;max-width:280px;margin:0;}',
     '.af-bmc-wrap{flex-shrink:0;display:flex;align-items:center;}',
     '.af-bmc-btn{display:inline-flex;align-items:center;gap:8px;background:#FFDD00;color:#000;font-size:.82rem;font-weight:700;padding:10px 20px;border-radius:8px;text-decoration:none;transition:opacity .2s,transform .15s;white-space:nowrap;border:none;cursor:pointer;}',
@@ -60,7 +60,7 @@
   bmc.setAttribute('data-id', 'quantummerlin');
   bmc.setAttribute('data-description', 'Support Aether Intel!');
   bmc.setAttribute('data-message', 'Æther Intel is free, no ads. A coffee keeps it that way ☕');
-  bmc.setAttribute('data-color', '#818cf8');
+  bmc.setAttribute('data-color', '#f59e0b');
   bmc.setAttribute('data-position', 'Right');
   bmc.setAttribute('data-x_margin', '18');
   bmc.setAttribute('data-y_margin', '18');
