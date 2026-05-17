@@ -7,11 +7,17 @@
       "title": "The Humanizer",
       "outcome": "Strips AI tells from any text before it ships to humans",
       "why": "Anything AI-generated that ships to real humans needs a humanizer pass first.",
-      "desc": "Detects and rewrites the most common AI tells — filler openers, vague power words, corporate padding — based on Wikipedia's documented signs of AI writing. Chain it as the final step in every copywriting skill.",
+      "desc": "Detects and rewrites the most common AI tells \u2014 filler openers, vague power words, corporate padding \u2014 based on Wikipedia's documented signs of AI writing. Chain it as the final step in every copywriting skill.",
       "hero": "/images/skills/humanizer-skill-hero.webp",
       "category": "prompts",
       "category_label": "Prompts",
-      "tags": ["writing", "editing", "ai-tells", "humanize", "copy"],
+      "tags": [
+        "writing",
+        "editing",
+        "ai-tells",
+        "humanize",
+        "copy"
+      ],
       "cost_tier": "cheap",
       "cost_estimate": {
         "tier": "cheap",
@@ -25,7 +31,7 @@
         {
           "model": "Claude Sonnet 4.5",
           "provider": "anthropic",
-          "best_for": "Best quality — catches subtle structural tells",
+          "best_for": "Best quality \u2014 catches subtle structural tells",
           "cost_tier": "moderate",
           "rating": 5,
           "recommended": true
@@ -41,7 +47,7 @@
         {
           "model": "Gemini 1.5 Flash",
           "provider": "google",
-          "best_for": "Fastest option — ideal for high-volume automation",
+          "best_for": "Fastest option \u2014 ideal for high-volume automation",
           "cost_tier": "cheap",
           "rating": 4,
           "recommended": true
@@ -49,7 +55,7 @@
         {
           "model": "Llama 3.1 70B",
           "provider": "meta",
-          "best_for": "Free via Groq — good for personal use",
+          "best_for": "Free via Groq \u2014 good for personal use",
           "cost_tier": "free",
           "rating": 3,
           "recommended": true
@@ -59,20 +65,33 @@
         "Small local models under 7B params (miss subtle patterns)",
         "o1 / o3 reasoning models (overkill + expensive for editing)"
       ],
-      "works_best_with": ["claude-sonnet", "gpt-4o-mini", "gemini-flash"],
-      "install_formats": ["prompt_copy", "claude_playground", "json_download", "openrouter"],
-      "system_prompt": "You are a professional editor who specialises in making AI-generated text indistinguishable from human writing.\n\nYour task: rewrite the text I give you so it reads as authentic human writing while preserving every factual claim and the original intent.\n\nWHAT TO FIX — detect and rewrite these AI tells:\n\n1. FILLER OPENERS\n   Remove: \"Certainly!\", \"Of course!\", \"Absolutely!\", \"Great question!\", \"Sure thing!\", \"Definitely!\", \"I'd be happy to...\"\n   Remove: \"I hope this email finds you well\", \"I hope you're doing well\", \"Feel free to reach out\", \"Please don't hesitate to contact me\"\n\n2. VAGUE POWER WORDS — replace with specific, concrete language\n   Remove: unlock, unleash, leverage, streamline, revolutionise, transform, empower, harness, elevate, amplify, synergise\n   Remove: game-changer, groundbreaking, cutting-edge, innovative solution, state-of-the-art, best-in-class, world-class\n   Remove: robust, seamlessly, holistically, comprehensively, proactively\n\n3. CORPORATE PADDING — delete entirely\n   Remove: \"It's worth noting that...\", \"It goes without saying...\", \"Needless to say...\", \"It is important to note...\"\n   Remove: \"Moving forward\", \"Going forward\", \"At the end of the day\", \"In today's [adjective] world...\"\n   Remove: \"The biggest takeaway is...\", \"It is what it is\"\n\n4. STRUCTURAL TELLS\n   - If every section has a bullet list, convert some to prose\n   - Delete summary paragraphs that repeat what was just said\n   - Remove \"In conclusion\" sections unless the piece genuinely needs one\n   - Remove \"I hope this helps!\" and similar sign-off filler\n\n5. DIVE / DELVE CLICHÉS\n   Remove: dive deep, delve into, embark on, explore the nuances, unpack, breakdown, dissect\n\n6. OVER-HEDGING — one qualifier is enough\n   Simplify triple qualifications and excessive hedging language\n\nSTYLE RULES:\n- Preserve ALL factual content — never change meaning\n- Keep technical terms that have no cleaner alternative\n- Vary sentence length — short punchy sentences work alongside longer ones\n- A single sentence can stand alone as its own paragraph for emphasis\n- Active voice preferred, but don't force it unnaturally\n\nVOICE STYLE:\n[Add your voice notes here]\n\nWhen finished, output ONLY the rewritten text. No commentary. No explanation. Just the clean output.",
-      "chain_with": ["voice-skill-fingerprint", "prompt-chaining", "content-pipeline"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o-mini",
+        "gemini-flash"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "claude_playground",
+        "json_download",
+        "openrouter"
+      ],
+      "system_prompt": "You are a professional editor who specialises in making AI-generated text indistinguishable from human writing.\n\nYour task: rewrite the text I give you so it reads as authentic human writing while preserving every factual claim and the original intent.\n\nWHAT TO FIX \u2014 detect and rewrite these AI tells:\n\n1. FILLER OPENERS\n   Remove: \"Certainly!\", \"Of course!\", \"Absolutely!\", \"Great question!\", \"Sure thing!\", \"Definitely!\", \"I'd be happy to...\"\n   Remove: \"I hope this email finds you well\", \"I hope you're doing well\", \"Feel free to reach out\", \"Please don't hesitate to contact me\"\n\n2. VAGUE POWER WORDS \u2014 replace with specific, concrete language\n   Remove: unlock, unleash, leverage, streamline, revolutionise, transform, empower, harness, elevate, amplify, synergise\n   Remove: game-changer, groundbreaking, cutting-edge, innovative solution, state-of-the-art, best-in-class, world-class\n   Remove: robust, seamlessly, holistically, comprehensively, proactively\n\n3. CORPORATE PADDING \u2014 delete entirely\n   Remove: \"It's worth noting that...\", \"It goes without saying...\", \"Needless to say...\", \"It is important to note...\"\n   Remove: \"Moving forward\", \"Going forward\", \"At the end of the day\", \"In today's [adjective] world...\"\n   Remove: \"The biggest takeaway is...\", \"It is what it is\"\n\n4. STRUCTURAL TELLS\n   - If every section has a bullet list, convert some to prose\n   - Delete summary paragraphs that repeat what was just said\n   - Remove \"In conclusion\" sections unless the piece genuinely needs one\n   - Remove \"I hope this helps!\" and similar sign-off filler\n\n5. DIVE / DELVE CLICH\u00c9S\n   Remove: dive deep, delve into, embark on, explore the nuances, unpack, breakdown, dissect\n\n6. OVER-HEDGING \u2014 one qualifier is enough\n   Simplify triple qualifications and excessive hedging language\n\nSTYLE RULES:\n- Preserve ALL factual content \u2014 never change meaning\n- Keep technical terms that have no cleaner alternative\n- Vary sentence length \u2014 short punchy sentences work alongside longer ones\n- A single sentence can stand alone as its own paragraph for emphasis\n- Active voice preferred, but don't force it unnaturally\n\nVOICE STYLE:\n[Add your voice notes here]\n\nWhen finished, output ONLY the rewritten text. No commentary. No explanation. Just the clean output.",
+      "chain_with": [
+        "voice-skill-fingerprint",
+        "prompt-chaining",
+        "content-pipeline"
+      ],
       "examples": [
         {
           "label": "Email opener",
           "before": "I hope this email finds you well! I wanted to reach out to discuss a potential opportunity that I believe could be a game-changer for your business. Our cutting-edge solution seamlessly integrates with your existing workflow to unlock significant value.",
-          "after": "Quick one — we built something that might save your ops team about four hours a week. It plugs into the tools you're already using. Worth a 20-minute call?"
+          "after": "Quick one \u2014 we built something that might save your ops team about four hours a week. It plugs into the tools you're already using. Worth a 20-minute call?"
         },
         {
           "label": "Blog intro",
           "before": "In today's rapidly evolving digital landscape, businesses must leverage cutting-edge AI tools to remain competitive. It's worth noting that the biggest takeaway from recent research is that organisations that fail to adapt risk being left behind.",
-          "after": "Most companies using AI are still running it like a fancy search engine. The ones pulling ahead are doing something different — they're building reusable skills that compound. Here's what that looks like."
+          "after": "Most companies using AI are still running it like a fancy search engine. The ones pulling ahead are doing something different \u2014 they're building reusable skills that compound. Here's what that looks like."
         }
       ],
       "installs": 1247,
@@ -89,21 +108,26 @@
       "hero": "/images/skills/prompt-chaining-hero.webp",
       "category": "prompts",
       "category_label": "Prompts",
-      "tags": ["chaining", "pipeline", "workflow", "multi-step"],
+      "tags": [
+        "chaining",
+        "pipeline",
+        "workflow",
+        "multi-step"
+      ],
       "cost_tier": "variable",
       "cost_estimate": {
         "tier": "variable",
         "label": "Variable",
         "per_1k_outputs": "Depends on chain depth",
         "tokens_per_run": "Multiplies by number of steps",
-        "note": "Use model routing to cut chain costs by 60–80%."
+        "note": "Use model routing to cut chain costs by 60\u201380%."
       },
       "temperature": 0.3,
       "recommended_models": [
         {
           "model": "Claude Sonnet 4.5",
           "provider": "anthropic",
-          "best_for": "Orchestrator step — best at following JSON contracts",
+          "best_for": "Orchestrator step \u2014 best at following JSON contracts",
           "cost_tier": "moderate",
           "rating": 5,
           "recommended": true
@@ -111,7 +135,7 @@
         {
           "model": "Gemini 1.5 Flash",
           "provider": "google",
-          "best_for": "Worker steps — fast, cheap, reliable for simple tasks",
+          "best_for": "Worker steps \u2014 fast, cheap, reliable for simple tasks",
           "cost_tier": "cheap",
           "rating": 4,
           "recommended": true
@@ -129,10 +153,23 @@
         "Single large models for all steps (expensive, slower)",
         "Models without reliable JSON output for extraction steps"
       ],
-      "works_best_with": ["claude-sonnet", "gemini-flash", "gpt-4o-mini"],
-      "install_formats": ["prompt_copy", "claude_playground", "json_download", "openrouter"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gemini-flash",
+        "gpt-4o-mini"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "claude_playground",
+        "json_download",
+        "openrouter"
+      ],
       "system_prompt": "See full guide at /skills/prompt-chaining.html",
-      "chain_with": ["humanizer-skill", "model-routing", "rag-basics"],
+      "chain_with": [
+        "humanizer-skill",
+        "model-routing",
+        "rag-basics"
+      ],
       "examples": [],
       "installs": 3891,
       "date": "2025-04-15",
@@ -142,13 +179,19 @@
     {
       "slug": "voice-skill-fingerprint",
       "title": "Voice Fingerprint Skill",
-      "outcome": "Makes AI write in your exact voice — not generic AI prose",
+      "outcome": "Makes AI write in your exact voice \u2014 not generic AI prose",
       "why": "Generic AI voice makes every creator sound the same. Your voice is the differentiator.",
-      "desc": "Capture your writing style as a structured fingerprint — sentence length, hedging habits, punctuation patterns, vocabulary level — and inject it into any AI writing skill. Your voice, at AI speed.",
+      "desc": "Capture your writing style as a structured fingerprint \u2014 sentence length, hedging habits, punctuation patterns, vocabulary level \u2014 and inject it into any AI writing skill. Your voice, at AI speed.",
       "hero": "/images/skills/voice-skill-fingerprint-hero.webp",
       "category": "prompts",
       "category_label": "Prompts",
-      "tags": ["voice", "writing", "style", "brand", "creator"],
+      "tags": [
+        "voice",
+        "writing",
+        "style",
+        "brand",
+        "creator"
+      ],
       "cost_tier": "cheap",
       "cost_estimate": {
         "tier": "cheap",
@@ -180,10 +223,21 @@
         "Gemini Flash (misses nuanced style patterns)",
         "Small local models under 13B (poor style reproduction)"
       ],
-      "works_best_with": ["claude-sonnet", "gpt-4o"],
-      "install_formats": ["prompt_copy", "claude_playground", "json_download", "openrouter"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "claude_playground",
+        "json_download",
+        "openrouter"
+      ],
       "system_prompt": "See full guide at /skills/voice-skill-fingerprint.html",
-      "chain_with": ["humanizer-skill", "content-pipeline"],
+      "chain_with": [
+        "humanizer-skill",
+        "content-pipeline"
+      ],
       "examples": [],
       "installs": 0,
       "date": "2026-05-17",
@@ -199,12 +253,18 @@
       "hero": "/images/skills/agent-memory-hero.webp",
       "category": "agents",
       "category_label": "Agents",
-      "tags": ["memory", "agents", "vector", "persistent", "production"],
+      "tags": [
+        "memory",
+        "agents",
+        "vector",
+        "persistent",
+        "production"
+      ],
       "cost_tier": "moderate",
       "cost_estimate": {
         "tier": "moderate",
         "label": "Moderate",
-        "per_1k_outputs": "~$0.02–0.08",
+        "per_1k_outputs": "~$0.02\u20130.08",
         "tokens_per_run": "Varies by memory retrieval depth",
         "note": "Vector store costs are separate (Pinecone free tier is sufficient for most use cases)."
       },
@@ -231,10 +291,19 @@
         "Flash models for memory orchestration (too prone to retrieval errors)",
         "Stateless chat interfaces without system prompt persistence"
       ],
-      "works_best_with": ["claude-sonnet", "gpt-4o"],
-      "install_formats": ["prompt_copy", "json_download"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "json_download"
+      ],
       "system_prompt": "See full guide at /skills/agent-memory.html",
-      "chain_with": ["rag-basics", "prompt-chaining"],
+      "chain_with": [
+        "rag-basics",
+        "prompt-chaining"
+      ],
       "examples": [],
       "installs": 2104,
       "date": "2025-01-15",
@@ -246,16 +315,22 @@
       "title": "RAG: Retrieval-Augmented Generation",
       "outcome": "Connects any AI to your own documents without fine-tuning",
       "why": "LLMs don't know your documents. RAG fixes that without fine-tuning or retraining.",
-      "desc": "Connect any LLM to your own knowledge base using vector search. Answer questions grounded in your specific data — PDFs, wikis, codebases, customer records — with citations and minimal hallucination.",
+      "desc": "Connect any LLM to your own knowledge base using vector search. Answer questions grounded in your specific data \u2014 PDFs, wikis, codebases, customer records \u2014 with citations and minimal hallucination.",
       "hero": "/images/skills/rag-basics-hero.webp",
       "category": "tools",
       "category_label": "Tools",
-      "tags": ["rag", "retrieval", "vector", "knowledge-base", "embeddings"],
+      "tags": [
+        "rag",
+        "retrieval",
+        "vector",
+        "knowledge-base",
+        "embeddings"
+      ],
       "cost_tier": "moderate",
       "cost_estimate": {
         "tier": "moderate",
         "label": "Moderate",
-        "per_1k_outputs": "~$0.01–0.05",
+        "per_1k_outputs": "~$0.01\u20130.05",
         "tokens_per_run": "Retrieval + generation combined",
         "note": "Embedding cost is one-time. Query cost scales with document chunk size."
       },
@@ -264,7 +339,7 @@
         {
           "model": "Claude Sonnet 4.5",
           "provider": "anthropic",
-          "best_for": "Best grounding — stays within retrieved context",
+          "best_for": "Best grounding \u2014 stays within retrieved context",
           "cost_tier": "moderate",
           "rating": 5,
           "recommended": true
@@ -282,10 +357,19 @@
         "Models without strong instruction following (hallucinate outside retrieved context)",
         "Very large context windows for small document sets (wastes tokens)"
       ],
-      "works_best_with": ["claude-sonnet", "gpt-4o-mini"],
-      "install_formats": ["prompt_copy", "json_download"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o-mini"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "json_download"
+      ],
       "system_prompt": "See full guide at /skills/rag-basics.html",
-      "chain_with": ["agent-memory", "prompt-chaining"],
+      "chain_with": [
+        "agent-memory",
+        "prompt-chaining"
+      ],
       "examples": [],
       "installs": 1856,
       "date": "2025-02-01",
@@ -295,18 +379,24 @@
     {
       "slug": "model-routing",
       "title": "Cost-Optimised Model Routing",
-      "outcome": "Cuts your AI API bill by 60–80% without touching quality",
+      "outcome": "Cuts your AI API bill by 60\u201380% without touching quality",
       "why": "You don't need GPT-4o for a yes/no question. Smart routing is one of the highest-ROI skills.",
       "desc": "Send different tasks to the right model tier automatically. Simple classification to Haiku, complex reasoning to Sonnet, creative generation to GPT-4o. Real routing logic with fallback handling.",
       "hero": "/images/skills/model-routing-hero.webp",
       "category": "tools",
       "category_label": "Tools",
-      "tags": ["routing", "cost", "optimization", "models", "inference"],
+      "tags": [
+        "routing",
+        "cost",
+        "optimization",
+        "models",
+        "inference"
+      ],
       "cost_tier": "cheap",
       "cost_estimate": {
         "tier": "cheap",
         "label": "Cheap (saves money)",
-        "per_1k_outputs": "Reduces cost by 60–80%",
+        "per_1k_outputs": "Reduces cost by 60\u201380%",
         "tokens_per_run": "Router adds <50 tokens overhead",
         "note": "This skill pays for itself immediately."
       },
@@ -315,7 +405,7 @@
         {
           "model": "Claude Haiku 3.5",
           "provider": "anthropic",
-          "best_for": "Router decision layer — near-zero cost",
+          "best_for": "Router decision layer \u2014 near-zero cost",
           "cost_tier": "cheap",
           "rating": 5,
           "recommended": true
@@ -332,10 +422,20 @@
       "not_recommended": [
         "Using one model for all tasks (defeats the purpose)"
       ],
-      "works_best_with": ["claude-haiku", "gemini-flash", "gpt-4o-mini"],
-      "install_formats": ["prompt_copy", "json_download"],
+      "works_best_with": [
+        "claude-haiku",
+        "gemini-flash",
+        "gpt-4o-mini"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "json_download"
+      ],
       "system_prompt": "See full guide at /skills/model-routing.html",
-      "chain_with": ["prompt-chaining", "rag-basics"],
+      "chain_with": [
+        "prompt-chaining",
+        "rag-basics"
+      ],
       "examples": [],
       "installs": 2673,
       "date": "2025-02-15",
@@ -351,13 +451,18 @@
       "hero": "/images/skills/system-prompts-hero.webp",
       "category": "prompts",
       "category_label": "Prompts",
-      "tags": ["system-prompt", "production", "persona", "constraints"],
+      "tags": [
+        "system-prompt",
+        "production",
+        "persona",
+        "constraints"
+      ],
       "cost_tier": "free",
       "cost_estimate": {
         "tier": "free",
         "label": "One-time Setup",
         "per_1k_outputs": "No ongoing cost",
-        "tokens_per_run": "Adds ~300–800 tokens to every request",
+        "tokens_per_run": "Adds ~300\u2013800 tokens to every request",
         "note": "A well-designed system prompt actually reduces token waste from re-prompting."
       },
       "temperature": 0.3,
@@ -372,10 +477,21 @@
         }
       ],
       "not_recommended": [],
-      "works_best_with": ["claude-sonnet", "gpt-4o", "gemini-pro"],
-      "install_formats": ["prompt_copy", "claude_playground", "json_download"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o",
+        "gemini-pro"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "claude_playground",
+        "json_download"
+      ],
       "system_prompt": "See full guide at /skills/system-prompts.html",
-      "chain_with": ["jailbreak-proof", "prompt-chaining"],
+      "chain_with": [
+        "jailbreak-proof",
+        "prompt-chaining"
+      ],
       "examples": [],
       "installs": 4512,
       "date": "2025-03-15",
@@ -391,13 +507,19 @@
       "hero": "/images/skills/jailbreak-proof-hero.webp",
       "category": "coding",
       "category_label": "Coding",
-      "tags": ["security", "jailbreak", "adversarial", "production", "safety"],
+      "tags": [
+        "security",
+        "jailbreak",
+        "adversarial",
+        "production",
+        "safety"
+      ],
       "cost_tier": "free",
       "cost_estimate": {
         "tier": "free",
         "label": "One-time Setup",
         "per_1k_outputs": "No ongoing cost",
-        "tokens_per_run": "Adds ~200–500 tokens per request",
+        "tokens_per_run": "Adds ~200\u2013500 tokens per request",
         "note": "Defence layers add minimal token overhead vs. the cost of a jailbreak going undetected."
       },
       "temperature": 0.0,
@@ -415,10 +537,18 @@
         "Uncensored local models (no safety layers)",
         "Fine-tuned models without alignment training"
       ],
-      "works_best_with": ["claude-sonnet", "gpt-4o"],
-      "install_formats": ["prompt_copy", "json_download"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "json_download"
+      ],
       "system_prompt": "See full guide at /skills/jailbreak-proof.html",
-      "chain_with": ["system-prompts"],
+      "chain_with": [
+        "system-prompts"
+      ],
       "examples": [],
       "installs": 1987,
       "date": "2025-04-01",
@@ -428,19 +558,25 @@
     {
       "slug": "few-shot-prompting",
       "title": "Few-Shot Prompting",
-      "outcome": "Locks exact output format and tone with 2–5 examples",
+      "outcome": "Locks exact output format and tone with 2\u20135 examples",
       "why": "When you can't fully describe what you want in words, show the model.",
-      "desc": "Include 2–5 worked examples directly in your prompt and the model infers format, tone, and edge-case handling from them. No fine-tuning required. The fastest way to lock in exact output schemas.",
+      "desc": "Include 2\u20135 worked examples directly in your prompt and the model infers format, tone, and edge-case handling from them. No fine-tuning required. The fastest way to lock in exact output schemas.",
       "hero": "/images/skills/few-shot-prompting-hero.webp",
       "category": "prompts",
       "category_label": "Prompts",
-      "tags": ["few-shot", "examples", "format", "tone", "classification"],
+      "tags": [
+        "few-shot",
+        "examples",
+        "format",
+        "tone",
+        "classification"
+      ],
       "cost_tier": "cheap",
       "cost_estimate": {
         "tier": "cheap",
         "label": "Cheap",
-        "per_1k_outputs": "~$0.003–0.01",
-        "tokens_per_run": "Examples add 200–1,000 tokens overhead",
+        "per_1k_outputs": "~$0.003\u20130.01",
+        "tokens_per_run": "Examples add 200\u20131,000 tokens overhead",
         "note": "Fewer examples = cheaper. 3 high-quality examples beat 10 mediocre ones."
       },
       "temperature": 0.2,
@@ -448,17 +584,28 @@
         {
           "model": "Any frontier model",
           "provider": "all",
-          "best_for": "Works universally — even small models improve with examples",
+          "best_for": "Works universally \u2014 even small models improve with examples",
           "cost_tier": "variable",
           "rating": 5,
           "recommended": true
         }
       ],
       "not_recommended": [],
-      "works_best_with": ["claude-sonnet", "gpt-4o-mini", "gemini-flash"],
-      "install_formats": ["prompt_copy", "claude_playground", "json_download"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o-mini",
+        "gemini-flash"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "claude_playground",
+        "json_download"
+      ],
       "system_prompt": "See full guide at /skills/few-shot-prompting.html",
-      "chain_with": ["prompt-chaining", "system-prompts"],
+      "chain_with": [
+        "prompt-chaining",
+        "system-prompts"
+      ],
       "examples": [],
       "installs": 3210,
       "date": "2024-12-15",
@@ -469,19 +616,24 @@
       "slug": "chain-of-thought",
       "title": "Chain-of-Thought Prompting",
       "outcome": "Makes AI show its reasoning before committing to an answer",
-      "why": "LLMs give better answers when they show their working — just like humans.",
+      "why": "LLMs give better answers when they show their working \u2014 just like humans.",
       "desc": "A simple but powerful technique that forces the model to reason step-by-step before committing to an answer. Significantly improves accuracy on maths, logic, and multi-step reasoning tasks with almost zero extra effort.",
       "hero": "/images/skills/chain-of-thought-hero.webp",
       "category": "prompts",
       "category_label": "Prompts",
-      "tags": ["reasoning", "chain-of-thought", "logic", "accuracy"],
+      "tags": [
+        "reasoning",
+        "chain-of-thought",
+        "logic",
+        "accuracy"
+      ],
       "cost_tier": "cheap",
       "cost_estimate": {
         "tier": "cheap",
         "label": "Cheap",
-        "per_1k_outputs": "~$0.005–0.02",
-        "tokens_per_run": "Reasoning adds 100–500 tokens",
-        "note": "Token overhead is worth it — accuracy gains usually outweigh the cost."
+        "per_1k_outputs": "~$0.005\u20130.02",
+        "tokens_per_run": "Reasoning adds 100\u2013500 tokens",
+        "note": "Token overhead is worth it \u2014 accuracy gains usually outweigh the cost."
       },
       "temperature": 0.3,
       "recommended_models": [
@@ -505,10 +657,20 @@
       "not_recommended": [
         "Flash models for complex multi-step logic (skip reasoning steps)"
       ],
-      "works_best_with": ["claude-sonnet", "gpt-4o"],
-      "install_formats": ["prompt_copy", "claude_playground", "json_download"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "claude_playground",
+        "json_download"
+      ],
       "system_prompt": "See full guide at /skills/chain-of-thought.html",
-      "chain_with": ["prompt-chaining", "few-shot-prompting"],
+      "chain_with": [
+        "prompt-chaining",
+        "few-shot-prompting"
+      ],
       "examples": [],
       "installs": 2788,
       "date": "2024-12-01",
@@ -519,19 +681,25 @@
       "slug": "content-pipeline",
       "title": "AI Content Pipeline",
       "outcome": "One person doing the output of a full content team",
-      "why": "Manual content creation doesn't scale. A pipeline does the work of a team — research to draft to published.",
-      "desc": "Build a fully automated content pipeline from topic discovery to published article. Research, outline, draft, SEO-optimize, and humanize — each step handled by the right model at the right cost.",
+      "why": "Manual content creation doesn't scale. A pipeline does the work of a team \u2014 research to draft to published.",
+      "desc": "Build a fully automated content pipeline from topic discovery to published article. Research, outline, draft, SEO-optimize, and humanize \u2014 each step handled by the right model at the right cost.",
       "hero": "/images/skills/content-pipeline-hero.webp",
       "category": "automation",
       "category_label": "Automation",
-      "tags": ["content", "pipeline", "automation", "seo", "creator"],
+      "tags": [
+        "content",
+        "pipeline",
+        "automation",
+        "seo",
+        "creator"
+      ],
       "cost_tier": "moderate",
       "cost_estimate": {
         "tier": "moderate",
         "label": "Moderate",
-        "per_1k_outputs": "~$0.05–0.20 per article",
-        "tokens_per_run": "Multi-step chain, 5,000–15,000 tokens total",
-        "note": "Model routing cuts this by 50–70% vs. running all steps on Sonnet."
+        "per_1k_outputs": "~$0.05\u20130.20 per article",
+        "tokens_per_run": "Multi-step chain, 5,000\u201315,000 tokens total",
+        "note": "Model routing cuts this by 50\u201370% vs. running all steps on Sonnet."
       },
       "temperature": 0.6,
       "recommended_models": [
@@ -555,15 +723,429 @@
       "not_recommended": [
         "Single model for all steps (expensive and slow)"
       ],
-      "works_best_with": ["claude-sonnet", "gemini-flash"],
-      "install_formats": ["prompt_copy", "json_download"],
+      "works_best_with": [
+        "claude-sonnet",
+        "gemini-flash"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "json_download"
+      ],
       "system_prompt": "See full guide at /skills/content-pipeline.html",
-      "chain_with": ["humanizer-skill", "model-routing", "prompt-chaining"],
+      "chain_with": [
+        "humanizer-skill",
+        "model-routing",
+        "prompt-chaining"
+      ],
       "examples": [],
       "installs": 1543,
       "date": "2025-03-01",
       "url": "/skills/content-pipeline.html",
       "guide_live": true
+    },
+    {
+      "slug": "memory-hack-skill-extraction",
+      "title": "The Memory Hack",
+      "outcome": "Mines old chat history into a reusable skill you own permanently",
+      "why": "You've already trained Claude your preferences in past conversations \u2014 one prompt extracts that hidden context into a permanent skill.",
+      "desc": "Drop into any old Claude chat and run a single extraction prompt. Claude analyzes everything discussed \u2014 preferences, workflow, feedback, rejections \u2014 and produces a ready-to-install skill.md you can drop into any future project.",
+      "hero": "/images/skills/memory-hack-hero.webp",
+      "category": "agents",
+      "category_label": "Agents",
+      "tags": [
+        "memory",
+        "skill-extraction",
+        "chat-history",
+        "preferences",
+        "workflow"
+      ],
+      "cost_tier": "cheap",
+      "cost_estimate": {
+        "tier": "cheap",
+        "label": "Cheap",
+        "per_1k_outputs": "~$0.01",
+        "tokens_per_run": "~2,000 input + ~800 output",
+        "note": "One-time extraction per conversation. Claude Sonnet gives the richest analysis."
+      },
+      "temperature": 0.3,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Deepest analysis of conversation nuance and preference signals",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "Claude Haiku 3.5",
+          "provider": "anthropic",
+          "best_for": "Fast extraction on shorter chats at a fraction of the cost",
+          "cost_tier": "cheap",
+          "rating": 4,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o",
+          "provider": "openai",
+          "best_for": "Good alternative if you're primarily in the OpenAI ecosystem",
+          "cost_tier": "moderate",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "GPT-4o mini / Flash \u2014 truncate long conversation context",
+        "Models without 100K+ context window (miss early conversation signals)"
+      ],
+      "works_best_with": [
+        "claude-sonnet",
+        "claude-haiku",
+        "gpt-4o"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "claude_playground",
+        "json_download"
+      ],
+      "system_prompt": "You are a skill architect. Your task is to analyze the entire conversation above and extract a reusable Claude skill from it.\n\nLook for:\n1. PREFERENCES \u2014 what the user explicitly liked, approved, or asked for more of\n2. REJECTIONS \u2014 what was changed, pushed back on, or discarded\n3. WORKFLOW PATTERNS \u2014 recurring steps, processes, or sequences the user follows\n4. STYLE SIGNALS \u2014 vocabulary, tone, formatting preferences, level of detail\n5. DOMAIN KNOWLEDGE \u2014 technical context, jargon, constraints specific to this user\n6. IMPLICIT RULES \u2014 things that were never stated but are clearly expected\n\nOutput a complete skill.md file in this exact format:\n\n---\nskill: [descriptive-slug]\ntrigger: [when should Claude automatically invoke this skill \u2014 be specific]\ngotchas: [what commonly goes wrong without this skill]\n---\n\n# [Skill Name]\n\n## Purpose\n[One sentence: what this skill makes Claude do differently]\n\n## Preferences Captured\n[Bulleted list of preferences extracted from the conversation]\n\n## Anti-Patterns to Avoid\n[Bulleted list of things this user explicitly rejected]\n\n## Workflow\n[Step-by-step process this user prefers for this type of work]\n\n## Style Guide\n[Tone, formatting, vocabulary, level of detail]\n\n## Context\n[Domain knowledge, constraints, background that Claude should always have]\n\nOutput the skill.md only. No commentary. No explanation.",
+      "chain_with": [
+        "specialist-skill-stack",
+        "orchestrator-skill-pattern",
+        "voice-skill-fingerprint"
+      ],
+      "examples": [
+        {
+          "label": "Extraction prompt",
+          "before": "Running the skill extraction prompt on a 3-month coding project chat...",
+          "after": "skill: coding-standards\ntrigger: Whenever writing or reviewing code for this project\ngotchas: User prefers TypeScript strict mode, no any types, always wants tests alongside code\n\n# Coding Standards Skill\n## Preferences Captured\n- Always use functional components in React\n- Prefer named exports over default exports\n- Write tests in the same PR as the feature..."
+        }
+      ],
+      "installs": 893,
+      "date": "2026-05-17",
+      "url": "/skills/memory-hack-skill-extraction.html",
+      "guide_live": false
+    },
+    {
+      "slug": "orchestrator-skill-pattern",
+      "title": "Orchestrator Skills",
+      "outcome": "Routes any request to the right sub-agent automatically \u2014 no babysitting",
+      "why": "Move beyond single skills to a top-level skill that fans out work to research, coding, UI, and docs sub-agents automatically.",
+      "desc": "Build a master orchestrator.md skill that analyzes any incoming request, picks the right sub-skills, and spawns sub-agents to execute them in parallel. This is how serious teams scale skills past 10 files without prompt babysitting.",
+      "hero": "/images/skills/orchestrator-hero.webp",
+      "category": "agents",
+      "category_label": "Agents",
+      "tags": [
+        "orchestrator",
+        "routing",
+        "multi-agent",
+        "sub-agents",
+        "automation"
+      ],
+      "cost_tier": "variable",
+      "cost_estimate": {
+        "tier": "variable",
+        "label": "Variable",
+        "per_1k_outputs": "Multiplies by sub-agent count",
+        "tokens_per_run": "Routing: ~500 tokens + sub-agent cost",
+        "note": "Routing itself is cheap. Cost scales with depth of spawned sub-tasks."
+      },
+      "temperature": 0.2,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Best routing logic \u2014 understands sub-skill contracts reliably",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o",
+          "provider": "openai",
+          "best_for": "Strong function-calling and routing on complex projects",
+          "cost_tier": "moderate",
+          "rating": 4,
+          "recommended": true
+        },
+        {
+          "model": "Claude Opus 4",
+          "provider": "anthropic",
+          "best_for": "Complex multi-step orchestration requiring deep planning",
+          "cost_tier": "expensive",
+          "rating": 5,
+          "recommended": false
+        }
+      ],
+      "not_recommended": [
+        "Small models under 30B \u2014 routing logic breaks on edge cases",
+        "High-temperature settings \u2014 inconsistent routing leads to wrong sub-agent selection"
+      ],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "json_download"
+      ],
+      "system_prompt": "You are an orchestrator. Your job is to analyze incoming requests and route them to the right specialist skills.\n\nAVAILABLE SPECIALIST SKILLS:\n[List your specialist skills here with one-line descriptions]\n\nROUTING RULES:\n1. Parse the request and identify the primary task type\n2. Select the appropriate specialist skill(s) \u2014 multiple if the task is compound\n3. If tasks can run in parallel, identify them explicitly\n4. If tasks are sequential, define the handoff points\n5. Never try to do the work yourself \u2014 always delegate to a specialist\n\nOUTPUT FORMAT:\n{\n  \"request_type\": \"[identified task type]\",\n  \"routing\": [\n    {\n      \"skill\": \"[skill-slug]\",\n      \"task\": \"[specific task for this specialist]\",\n      \"priority\": \"[sequential|parallel]\",\n      \"depends_on\": \"[slug of skill that must complete first, if sequential]\"\n    }\n  ],\n  \"notes\": \"[anything the caller should know about this routing decision]\"\n}\n\nWhen routing is ambiguous, ask one clarifying question rather than guessing.",
+      "chain_with": [
+        "specialist-skill-stack",
+        "memory-hack-skill-extraction",
+        "prompt-chaining"
+      ],
+      "examples": [
+        {
+          "label": "Request routing",
+          "before": "User: 'Build me a landing page for a new SaaS product'\nOrchestrator tries to do everything in one prompt \u2014 mediocre result.",
+          "after": "{\n  \"request_type\": \"landing-page-build\",\n  \"routing\": [\n    {\"skill\": \"copywriter\", \"task\": \"Write headline, subheadline, 3 feature sections, CTA\", \"priority\": \"parallel\"},\n    {\"skill\": \"ui-designer\", \"task\": \"Produce Tailwind component layout\", \"priority\": \"parallel\"},\n    {\"skill\": \"seo-optimizer\", \"task\": \"Meta tags and OG image spec\", \"priority\": \"sequential\", \"depends_on\": \"copywriter\"}\n  ]\n}"
+        }
+      ],
+      "installs": 642,
+      "date": "2026-05-17",
+      "url": "/skills/orchestrator-skill-pattern.html",
+      "guide_live": false
+    },
+    {
+      "slug": "ai-flywheel-method",
+      "title": "The AI Flywheel",
+      "outcome": "Surfaces your highest-value automation candidates in a 10-minute interview",
+      "why": "Most people never figure out what to automate first. The flywheel lets AI interview you about your work and surfaces the right candidates \u2014 then builds them.",
+      "desc": "Step 1: have AI interview you about your work to surface candidate automations. Step 2: build one of those tools with Claude Code. Step 3: in the process, ask Claude to teach you the concepts. Each loop compounds your skill stack and your AI literacy simultaneously.",
+      "hero": "/images/skills/ai-flywheel-hero.webp",
+      "category": "automation",
+      "category_label": "Automation",
+      "tags": [
+        "automation",
+        "discovery",
+        "interview",
+        "workflow",
+        "productivity",
+        "beginner"
+      ],
+      "cost_tier": "cheap",
+      "cost_estimate": {
+        "tier": "cheap",
+        "label": "Cheap",
+        "per_1k_outputs": "~$0.003",
+        "tokens_per_run": "~500 input + ~600 output per interview turn",
+        "note": "A full discovery interview is 8-12 turns. Total run cost under $0.10."
+      },
+      "temperature": 0.7,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Best interview depth \u2014 asks the right follow-up questions",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o",
+          "provider": "openai",
+          "best_for": "Strong at synthesizing workflow patterns from unstructured answers",
+          "cost_tier": "moderate",
+          "rating": 4,
+          "recommended": true
+        },
+        {
+          "model": "Gemini 1.5 Pro",
+          "provider": "google",
+          "best_for": "Good if you want to dictate answers via voice on mobile",
+          "cost_tier": "moderate",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Flash / mini models \u2014 surface-level questions, miss deeper workflow patterns",
+        "Reasoning models (o1/o3) \u2014 overly analytical, kills the conversational flow"
+      ],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o",
+        "gemini-pro"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "claude_playground",
+        "json_download"
+      ],
+      "system_prompt": "You are a workflow discovery interviewer. Your goal is to help me identify my top 3 automation opportunities by interviewing me about how I work.\n\nINTERVIEW PROTOCOL:\n1. Start by asking about my primary role and what I spend most time on\n2. Ask about the most repetitive tasks in my week\n3. For each task, probe: frequency, time spent, frustration level, and what the output looks like\n4. Ask what I copy-paste, re-explain, or redo repeatedly\n5. Ask what feels like it 'should be automatic by now'\n6. Ask about handoffs \u2014 where does work get stuck waiting for me?\n\nRULES:\n- Ask ONE question at a time \u2014 never a list of questions\n- Follow the most interesting thread before moving to the next topic\n- When you have enough data (usually 8-12 turns), shift to synthesis mode\n- In synthesis mode, rank the top 3 automation candidates by: (effort to build \u00d7 time saved \u00d7 repeatability)\n\nSYNTHESIS OUTPUT FORMAT:\n# Your Top 3 Automation Candidates\n\n## #1 [Task Name]\n- What it does: [one sentence]\n- Estimated build time: [hours]\n- Estimated weekly time saved: [hours]\n- Suggested tool: [Claude Code / Zapier / n8n / custom]\n- First step: [specific next action]\n\n[Repeat for #2 and #3]\n\nStart by asking: 'What's the work you do most often that still feels completely manual?'",
+      "chain_with": [
+        "claude-skills-creator",
+        "content-pipeline",
+        "orchestrator-skill-pattern"
+      ],
+      "examples": [
+        {
+          "label": "Discovery session output",
+          "before": "Trying to decide what to automate with no structure \u2014 ends up building something nobody uses.",
+          "after": "# Your Top 3 Automation Candidates\n\n## #1 Weekly Client Report\n- What it does: Pulls CRM data, formats into branded PDF, emails automatically every Friday\n- Estimated build time: 3 hours\n- Weekly time saved: 2.5 hours\n- Suggested tool: Claude Code + Google Sheets\n- First step: Export one example report to show Claude the format"
+        }
+      ],
+      "installs": 518,
+      "date": "2026-05-17",
+      "url": "/skills/ai-flywheel-method.html",
+      "guide_live": false
+    },
+    {
+      "slug": "specialist-skill-stack",
+      "title": "The Specialist Stack",
+      "outcome": "Turns any AI project into a domain expert by dropping in a folder of focused skills",
+      "why": "The hottest production pattern in Claude: a folder of small, focused skills that each own a clear contract \u2014 no overlap, no babysitting, no mega-prompts.",
+      "desc": "Bundle 5-15 small skills (PRD writer, ticket decomposer, test author, etc.) into one folder and drop it into any project. The agent invokes the right specialist on demand. Real production example: 50K lines of skills across 50 repos running real-estate operations at scale.",
+      "hero": "/images/skills/specialist-stack-hero.webp",
+      "category": "agents",
+      "category_label": "Agents",
+      "tags": [
+        "specialist",
+        "skill-stack",
+        "composability",
+        "production",
+        "architecture"
+      ],
+      "cost_tier": "variable",
+      "cost_estimate": {
+        "tier": "variable",
+        "label": "Variable",
+        "per_1k_outputs": "Per-skill cost \u00d7 active specialist count",
+        "tokens_per_run": "Each specialist: 500-2000 tokens",
+        "note": "The architecture itself costs nothing. Cost is the sum of specialists invoked per task."
+      },
+      "temperature": 0.3,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Best at following skill contracts without drift between specialists",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "GPT-4o",
+          "provider": "openai",
+          "best_for": "Strong function-calling makes specialist handoffs clean",
+          "cost_tier": "moderate",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Monolithic mega-prompts \u2014 impossible to maintain beyond 3 use cases",
+        "Models without tool-use support \u2014 can't invoke specialists programmatically"
+      ],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "json_download"
+      ],
+      "system_prompt": "# Specialist Skill: [SPECIALIST NAME]\n\n## Trigger\n[Exact condition under which this specialist should be invoked]\n\n## Contract\nThis specialist does exactly ONE thing: [one-sentence job description]\n\nIt does NOT:\n- [List what this specialist explicitly hands off to others]\n- [Scope boundary 2]\n- [Scope boundary 3]\n\n## Input Expected\n[What format/data this specialist needs to start work]\n\n## Output Produced\n[Exact format/structure of what this specialist returns]\n\n## Methodology\n[Step-by-step process this specialist follows]\n\n## Quality Check\nBefore completing, verify:\n- [ ] Output matches the expected format exactly\n- [ ] No scope creep into adjacent specialist territory\n- [ ] Every input requirement was satisfied\n\n## Handoff\nWhen complete, pass output to: [downstream specialist or 'caller']",
+      "chain_with": [
+        "orchestrator-skill-pattern",
+        "memory-hack-skill-extraction",
+        "claude-skills-creator"
+      ],
+      "examples": [
+        {
+          "label": "PRD specialist skill",
+          "before": "Agent prompt: 'You write PRDs, create tickets, write tests, do code review, and document APIs.' \u2014 ends up doing all of these badly.",
+          "after": "# PRD Writer Specialist\n## Trigger: When a new feature needs a product requirements document\n## Contract: Produces exactly one PRD.md per request. Does NOT create tickets (handoff to ticket-decomposer specialist).\n## Output: PRD.md with: background, goals, non-goals, user stories, acceptance criteria, open questions."
+        }
+      ],
+      "installs": 724,
+      "date": "2026-05-17",
+      "url": "/skills/specialist-skill-stack.html",
+      "guide_live": false
+    },
+    {
+      "slug": "claude-skills-creator",
+      "title": "Skills Creator",
+      "outcome": "Builds every other skill for you \u2014 describe a workflow and Claude packages it",
+      "why": "Skills are Anthropic's killer feature for turning any repeatable workflow into a packaged module Claude auto-invokes. This is the skill that builds all the others.",
+      "desc": "Use the official Skill Creator methodology to describe any workflow in plain English. Claude drafts, tests, and packages the skill.md file \u2014 including trigger conditions, gotchas, and methodology \u2014 ready to install in any project.",
+      "hero": "/images/skills/skills-creator-hero.webp",
+      "category": "automation",
+      "category_label": "Automation",
+      "tags": [
+        "skills",
+        "meta-skill",
+        "workflow",
+        "no-code",
+        "skill-creator",
+        "anthropic"
+      ],
+      "cost_tier": "cheap",
+      "cost_estimate": {
+        "tier": "cheap",
+        "label": "Cheap",
+        "per_1k_outputs": "~$0.008",
+        "tokens_per_run": "~1,500 input + ~1,000 output",
+        "note": "One skill creation session typically takes 3-5 turns. Total cost under $0.05."
+      },
+      "temperature": 0.5,
+      "recommended_models": [
+        {
+          "model": "Claude Sonnet 4.5",
+          "provider": "anthropic",
+          "best_for": "Best understanding of skill.md format and trigger logic",
+          "cost_tier": "moderate",
+          "rating": 5,
+          "recommended": true
+        },
+        {
+          "model": "Claude Opus 4",
+          "provider": "anthropic",
+          "best_for": "Most thorough skill design for complex, multi-step workflows",
+          "cost_tier": "expensive",
+          "rating": 5,
+          "recommended": false
+        },
+        {
+          "model": "GPT-4o",
+          "provider": "openai",
+          "best_for": "Good alternative with strong instruction-following",
+          "cost_tier": "moderate",
+          "rating": 4,
+          "recommended": true
+        }
+      ],
+      "not_recommended": [
+        "Small models \u2014 produce vague triggers and incomplete gotchas sections",
+        "Models without system prompt support \u2014 skill format requires full instruction adherence"
+      ],
+      "works_best_with": [
+        "claude-sonnet",
+        "gpt-4o"
+      ],
+      "install_formats": [
+        "prompt_copy",
+        "claude_playground",
+        "json_download"
+      ],
+      "system_prompt": "You are a Claude Skill Creator. Your job is to interview me about a workflow and then produce a complete, production-ready skill.md file.\n\nINTERVIEW PROCESS:\n1. Ask me to describe the workflow I want to turn into a skill\n2. Ask: 'What should trigger Claude to use this skill automatically?'\n3. Ask: 'What does a perfect output look like?'\n4. Ask: 'What commonly goes wrong when you do this without a skill?'\n5. Ask: 'Are there any hard rules \u2014 things Claude must always or never do?'\n\nAfter 4-6 exchanges, you have enough to draft the skill.\n\nSKILL.MD OUTPUT FORMAT:\n---\nskill: [descriptive-slug]\ntrigger: [Precise condition for auto-invocation \u2014 be specific enough that false positives are rare]\ngotchas: [The #1 thing that breaks this workflow when done naively]\n---\n\n# [Skill Name]\n\n## Purpose\n[One sentence: what this skill changes about Claude's default behavior]\n\n## When to Use\n[Specific trigger conditions with examples]\n\n## Methodology\n[Numbered steps \u2014 the exact process Claude should follow]\n\n## Output Format\n[Exact structure of what Claude produces]\n\n## Rules\n- Always: [non-negotiable behaviors]\n- Never: [hard prohibitions]\n- Prefer: [soft preferences]\n\n## Example\n[One concrete input \u2192 output example]\n\nAfter drafting, ask: 'Does this capture your workflow? What should I adjust?'",
+      "chain_with": [
+        "memory-hack-skill-extraction",
+        "specialist-skill-stack",
+        "orchestrator-skill-pattern"
+      ],
+      "examples": [
+        {
+          "label": "Creating a code review skill",
+          "before": "User: 'I want Claude to review my code.'\nClaude: produces a vague 'check for bugs' prompt with no trigger or format spec.",
+          "after": "---\nskill: code-reviewer\ntrigger: When I paste code and ask for a review, or mention 'review this' or 'check my code'\ngotchas: Reviewers often just describe what the code does instead of finding actual issues\n---\n\n# Code Review Skill\n## Methodology\n1. Read the full code before commenting on anything\n2. Check logic correctness first, style second\n3. Group findings by: bugs \u2192 performance \u2192 readability\n4. For each issue, provide a specific fix, not just an observation"
+        }
+      ],
+      "installs": 1089,
+      "date": "2026-05-17",
+      "url": "/skills/claude-skills-creator.html",
+      "guide_live": false
     }
   ]
 }
