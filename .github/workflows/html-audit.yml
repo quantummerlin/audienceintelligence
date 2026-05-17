@@ -1,0 +1,24 @@
+name: HTML Audit
+# Runs on every push and pull request to catch the kinds of bugs that have hit
+# us before: orphan elements after </main>, duplicate IDs, broken tag balance,
+# leftover static markup that JS is supposed to inject.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run HTML audit
+        run: python3 .github/workflows/html-audit.py
