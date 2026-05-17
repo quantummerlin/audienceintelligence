@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Specialist Stack — Turn Any AI Project Into a Domain Expert | Aether Intel Skills</title>
+  <meta name="description" content="One-click install: bundle 5-15 small focused skills into one folder — each specialist owns a clear contract, no overlap, no mega-prompts, no babysitting. Works with Claude Sonnet 4.6 and GPT-5.4." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/skills/specialist-skill-stack.html" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://ai.quantummerlin.com/skills/specialist-skill-stack.html" />
+  <meta property="og:title" content="The Specialist Stack — Turn Any AI Project Into a Domain Expert | Aether Intel Skills" />
+  <meta property="og:description" content="Bundle focused skills into a folder and drop it into any project. The agent invokes the right specialist on demand — no mega-prompts, no babysitting." />
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/skills/specialist-stack-hero.webp" />
+  <meta property="og:site_name" content="Aether Intel" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    :root {
+      --skill-accent:      #10b981;
+      --skill-accent-dim:  rgba(16,185,129,.12);
+      --skill-accent-glow: 0 0 24px rgba(16,185,129,.28);
+      --cost-variable:     #f59e0b;
+    }
+
+    #read-progress { position:fixed; top:0; left:0; z-index:9999; height:3px; width:0; background:linear-gradient(90deg,var(--skill-accent),#34d399); transition:width .1s linear; pointer-events:none; }
+
+    .skill-page-wrap { max-width:860px; margin:0 auto; padding:0 24px 100px; }
+
+    .skill-breadcrumb { display:flex; align-items:center; gap:8px; padding:26px 0 0; font-family:var(--font-display); font-size:.72rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--text-muted); }
+    .skill-breadcrumb a { color:var(--text-muted); text-decoration:none; }
+    .skill-breadcrumb a:hover { color:var(--skill-accent); }
+    .skill-breadcrumb svg { width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    .outcome-banner { margin:28px 0 0; }
+    .outcome-meta { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .badge-category { font-family:var(--font-display); font-size:.67rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; padding:4px 11px; border-radius:4px; background:var(--skill-accent-dim); border:1px solid rgba(16,185,129,.3); color:var(--skill-accent); }
+    .badge-cost-variable { font-family:var(--font-display); font-size:.67rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; padding:4px 11px; border-radius:4px; background:rgba(245,158,11,.12); border:1px solid rgba(245,158,11,.3); color:#f59e0b; }
+    .badge-installs { font-family:var(--font-display); font-size:.67rem; font-weight:600; letter-spacing:.05em; color:var(--text-muted); display:flex; align-items:center; gap:5px; margin-left:auto; }
+    .badge-installs svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; }
+    .outcome-headline { font-family:var(--font-display); font-size:clamp(1.8rem,4.5vw,2.8rem); font-weight:900; line-height:1.1; letter-spacing:-.025em; margin:0 0 14px; }
+    .outcome-headline em { font-style:normal; background:linear-gradient(135deg,var(--skill-accent),#34d399); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .outcome-sub { font-size:1.05rem; line-height:1.75; color:var(--text-secondary); max-width:640px; margin:0 0 28px; }
+
+    .install-bar { position:sticky; top:0; z-index:200; background:rgba(13,13,26,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid rgba(16,185,129,.25); padding:12px 24px; margin:0 -24px; }
+    .install-bar-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .install-label { font-family:var(--font-display); font-size:.68rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:rgba(255,255,255,.45); margin-right:4px; white-space:nowrap; }
+    .btn-install-primary { display:inline-flex; align-items:center; gap:7px; background:var(--skill-accent); color:#fff; font-family:var(--font-display); font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:9px 18px; border-radius:7px; border:none; cursor:pointer; text-decoration:none; transition:background .2s,transform .15s,box-shadow .2s; white-space:nowrap; }
+    .btn-install-primary:hover { background:#059669; transform:translateY(-1px); box-shadow:0 6px 20px rgba(16,185,129,.4); }
+    .btn-install-primary.copied { background:#16a34a; }
+    .btn-install-ghost { display:inline-flex; align-items:center; gap:6px; background:transparent; color:rgba(255,255,255,.7); font-family:var(--font-display); font-size:.68rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; padding:8px 15px; border-radius:7px; border:1px solid rgba(255,255,255,.15); cursor:pointer; text-decoration:none; transition:all .15s; white-space:nowrap; }
+    .btn-install-ghost:hover { border-color:var(--skill-accent); color:var(--skill-accent); }
+    .btn-install-ghost.or-btn { border-color:rgba(249,115,22,.35); color:rgba(249,115,22,.8); }
+    .btn-install-ghost.or-btn:hover { border-color:#f97316; color:#f97316; }
+    .install-bar-spacer { flex:1; }
+
+    .install-toast { position:fixed; bottom:28px; right:28px; z-index:9999; background:#16a34a; color:#fff; font-family:var(--font-display); font-size:.75rem; font-weight:700; letter-spacing:.05em; padding:12px 20px; border-radius:8px; box-shadow:0 8px 32px rgba(22,163,74,.4); opacity:0; transform:translateY(12px); transition:all .3s ease; pointer-events:none; }
+    .install-toast.show { opacity:1; transform:translateY(0); }
+
+    .skill-hero-img { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:12px; display:block; margin:32px 0 40px; border:1px solid var(--border); }
+
+    .skill-section { margin-bottom:60px; }
+    .skill-section-heading { font-family:var(--font-display); font-size:1.15rem; font-weight:800; letter-spacing:-.01em; line-height:1.25; margin:0 0 6px; padding-bottom:14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+    .section-icon { width:28px; height:28px; border-radius:6px; background:var(--skill-accent-dim); border:1px solid rgba(16,185,129,.25); display:flex; align-items:center; justify-content:center; font-size:.85rem; flex-shrink:0; }
+    .skill-section p { font-size:.95rem; line-height:1.8; color:var(--text-secondary); margin:0 0 14px; }
+    .skill-section strong { color:var(--text-primary); }
+    .skill-section ul, .skill-section ol { padding-left:20px; margin:0 0 14px; }
+    .skill-section li { font-size:.92rem; line-height:1.72; color:var(--text-secondary); margin-bottom:6px; }
+
+    .model-table-wrap { overflow-x:auto; margin:18px 0; }
+    .model-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    .model-table th { font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--text-muted); text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); white-space:nowrap; }
+    .model-table td { padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle; color:var(--text-secondary); }
+    .model-table tr:hover td { background:rgba(255,255,255,.02); }
+    .model-table tr.recommended-row td { background:rgba(16,185,129,.04); }
+    .model-name { font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+    .model-provider-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .model-provider-dot.anthropic { background:#f97316; }
+    .model-provider-dot.openai    { background:#10b981; }
+    .model-provider-dot.google    { background:#3b82f6; }
+    .stars { color:#f59e0b; font-size:.9rem; letter-spacing:-1px; }
+    .cost-pill { display:inline-block; font-family:var(--font-display); font-size:.63rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; padding:3px 8px; border-radius:4px; }
+    .cost-pill.cheap    { background:rgba(34,197,94,.12);  color:#22c55e;  border:1px solid rgba(34,197,94,.25); }
+    .cost-pill.moderate { background:rgba(245,158,11,.12); color:#f59e0b;  border:1px solid rgba(245,158,11,.25); }
+    .cost-pill.variable { background:rgba(16,185,129,.12); color:#34d399;  border:1px solid rgba(16,185,129,.25); }
+    .recommended-badge { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; background:var(--skill-accent-dim); color:var(--skill-accent); border:1px solid rgba(16,185,129,.3); padding:2px 7px; border-radius:3px; }
+
+    .cost-card { background:var(--surface); border:1px solid rgba(16,185,129,.25); border-radius:12px; padding:22px 26px; margin:18px 0; display:grid; grid-template-columns:1fr auto; gap:12px 28px; align-items:start; }
+    @media(max-width:560px){ .cost-card { grid-template-columns:1fr; } }
+    .cost-card-label { font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--skill-accent); margin-bottom:8px; }
+    .cost-card-headline { font-size:1.6rem; font-weight:700; color:var(--text-primary); line-height:1.1; margin-bottom:6px; }
+    .cost-card-sub { font-size:.85rem; color:var(--text-muted); }
+    .cost-card-stats { display:flex; flex-direction:column; gap:10px; }
+    .cost-stat { text-align:right; }
+    .cost-stat-value { font-family:var(--font-display); font-size:.95rem; font-weight:700; color:var(--text-primary); }
+    .cost-stat-label { font-size:.78rem; color:var(--text-muted); }
+    .cost-card-note { grid-column:1/-1; font-size:.82rem; color:var(--text-muted); border-top:1px solid var(--border); padding-top:12px; margin-top:4px; display:flex; align-items:center; gap:8px; }
+    .cost-card-note svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; flex-shrink:0; opacity:.6; }
+
+    .compare-wrap { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0; }
+    @media(max-width:600px){ .compare-wrap { grid-template-columns:1fr; } }
+    .compare-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    .compare-label { padding:10px 16px; font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; display:flex; align-items:center; gap:8px; }
+    .compare-label.before-label { background:rgba(239,68,68,.06); border-bottom:1px solid rgba(239,68,68,.15); color:#f87171; }
+    .compare-label.after-label  { background:rgba(34,197,94,.06);  border-bottom:1px solid rgba(34,197,94,.15);  color:#4ade80; }
+    .compare-dot { width:7px; height:7px; border-radius:50%; }
+    .before-label .compare-dot { background:#ef4444; }
+    .after-label  .compare-dot { background:#22c55e; }
+    .compare-body { padding:16px; font-size:.87rem; line-height:1.75; color:var(--text-secondary); }
+    .compare-tag { display:inline-block; margin:16px 0 0 16px; font-family:var(--font-display); font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 9px; border-radius:4px; opacity:.7; }
+    .compare-tag.mega-tag { background:rgba(239,68,68,.12); color:#f87171; border:1px solid rgba(239,68,68,.2); }
+    .compare-tag.stack-tag { background:rgba(16,185,129,.1); color:#34d399; border:1px solid rgba(16,185,129,.2); }
+
+    .model-compat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0; }
+    @media(max-width:600px){ .model-compat-grid { grid-template-columns:1fr; } }
+    .compat-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px 20px; }
+    .compat-panel.best  { border-color:rgba(34,197,94,.25); }
+    .compat-panel.avoid { border-color:rgba(239,68,68,.2); }
+    .compat-panel-label { font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:7px; }
+    .compat-panel.best  .compat-panel-label { color:#4ade80; }
+    .compat-panel.avoid .compat-panel-label { color:#f87171; }
+    .compat-list { list-style:none; padding:0; margin:0; }
+    .compat-list li { font-size:.87rem; line-height:1.65; color:var(--text-secondary); padding:6px 0; border-bottom:1px solid rgba(255,255,255,.04); display:flex; align-items:flex-start; gap:9px; }
+    .compat-list li:last-child { border-bottom:none; }
+    .compat-list li::before { flex-shrink:0; margin-top:4px; }
+    .compat-panel.best  .compat-list li::before { content:"✓"; color:#4ade80; font-size:.8rem; }
+    .compat-panel.avoid .compat-list li::before { content:"✗"; color:#f87171; font-size:.8rem; }
+
+    .chain-diagram { display:flex; align-items:center; gap:0; margin:18px 0; overflow-x:auto; padding:4px 0 8px; scrollbar-width:none; }
+    .chain-diagram::-webkit-scrollbar { display:none; }
+    .chain-node { flex-shrink:0; min-width:130px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; text-align:center; }
+    .chain-node.active-node { border-color:rgba(16,185,129,.5); background:rgba(16,185,129,.07); box-shadow:0 0 0 1px rgba(16,185,129,.2); }
+    .chain-node-icon { font-size:1.3rem; margin-bottom:8px; }
+    .chain-node-title { font-family:var(--font-display); font-size:.7rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--text-primary); margin-bottom:4px; }
+    .chain-node.active-node .chain-node-title { color:var(--skill-accent); }
+    .chain-node-desc { font-size:.75rem; color:var(--text-muted); line-height:1.4; }
+    .chain-arrow { flex-shrink:0; padding:0 8px; font-size:1.1rem; color:rgba(255,255,255,.2); }
+
+    /* Specialist stack visual */
+    .stack-visual { margin:18px 0; display:flex; flex-direction:column; gap:6px; }
+    .stack-layer {
+      background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 18px;
+      display:flex; align-items:center; gap:14px; transition:border-color .15s;
+    }
+    .stack-layer:hover { border-color:var(--skill-accent); }
+    .stack-layer-num { font-family:var(--font-display); font-size:.65rem; font-weight:700; color:var(--skill-accent); min-width:24px; }
+    .stack-layer-name { font-family:var(--font-display); font-size:.8rem; font-weight:700; color:var(--text-primary); min-width:140px; }
+    .stack-layer-desc { font-size:.83rem; color:var(--text-secondary); flex:1; }
+    .stack-layer-scope { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; padding:2px 8px; border-radius:3px; background:var(--skill-accent-dim); color:var(--skill-accent); border:1px solid rgba(16,185,129,.25); white-space:nowrap; }
+
+    .community-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0; }
+    @media(max-width:560px){ .community-grid { grid-template-columns:1fr 1fr; } }
+    .community-stat-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center; }
+    .community-stat-value { font-family:var(--font-display); font-size:1.5rem; font-weight:800; color:var(--text-primary); letter-spacing:-.02em; display:block; margin-bottom:4px; }
+    .community-stat-label { font-size:.78rem; color:var(--text-muted); }
+
+    .callout { border-radius:10px; padding:15px 18px; margin:18px 0; font-size:.9rem; line-height:1.7; display:flex; gap:13px; align-items:flex-start; }
+    .callout-icon { font-size:1rem; flex-shrink:0; margin-top:2px; }
+    .callout-body { flex:1; color:var(--text-secondary); }
+    .callout-body strong { color:var(--text-primary); }
+    .callout.info    { background:rgba(16,185,129,.07); border:1px solid rgba(16,185,129,.2); }
+    .callout.tip     { background:rgba(45,212,191,.07); border:1px solid rgba(45,212,191,.2); }
+    .callout.warning { background:rgba(251,191,36,.07); border:1px solid rgba(251,191,36,.2); }
+
+    .code-block { position:relative; margin:18px 0; background:#0d1117; border:1px solid #30363d; border-radius:10px; overflow:hidden; }
+    .code-block-header { display:flex; align-items:center; justify-content:space-between; padding:9px 16px; background:#161b22; border-bottom:1px solid #30363d; }
+    .code-lang { font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--skill-accent); }
+    .copy-btn { background:none; border:1px solid #30363d; border-radius:5px; color:#8b949e; font-family:var(--font-display); font-size:.63rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; padding:3px 10px; cursor:pointer; transition:all .15s; }
+    .copy-btn:hover  { border-color:var(--skill-accent); color:var(--skill-accent); }
+    .copy-btn.copied { border-color:#3fb950; color:#3fb950; }
+    .code-block pre { margin:0; padding:18px 20px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:.8rem; line-height:1.65; color:#e6edf3; }
+
+    .related-skills { display:flex; gap:14px; overflow-x:auto; padding:4px 0 8px; scrollbar-width:none; }
+    .related-skills::-webkit-scrollbar { display:none; }
+    .related-card { flex-shrink:0; width:200px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-decoration:none; transition:border-color .15s,transform .15s; }
+    .related-card:hover { border-color:var(--skill-accent); transform:translateY(-2px); }
+    .related-card-icon { font-size:1.4rem; margin-bottom:10px; }
+    .related-card-title { font-family:var(--font-display); font-size:.75rem; font-weight:700; letter-spacing:.03em; color:var(--text-primary); margin-bottom:6px; }
+    .related-card-desc { font-size:.78rem; color:var(--text-muted); line-height:1.5; }
+
+    .install-cta-section { background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(52,211,153,.05)); border:1px solid rgba(16,185,129,.25); border-radius:16px; padding:36px 32px; text-align:center; margin-top:60px; }
+    .install-cta-headline { font-family:var(--font-display); font-size:clamp(1.2rem,3vw,1.7rem); font-weight:800; letter-spacing:-.02em; margin:0 0 10px; }
+    .install-cta-sub { font-size:.9rem; color:var(--text-muted); margin:0 0 26px; }
+    .install-cta-buttons { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
+
+    @media(max-width:480px){ .install-bar-inner { gap:8px; } .install-label { display:none; } }
+  </style>
+</head>
+<body>
+  <div id="read-progress"></div>
+
+  <nav class="nav-bar" id="nav-bar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo"><span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span></a>
+      <div class="nav-links">
+        <a href="/news.html" class="nav-link">News</a>
+        <a href="/tools.html" class="nav-link">Tools</a>
+        <a href="/skills.html" class="nav-link active">Skills</a>
+        <a href="/about.html" class="nav-link">About</a>
+      </div>
+      <div class="nav-actions"><a href="/skills.html" class="nav-btn-ghost">Browse Skills</a></div>
+    </div>
+  </nav>
+
+  <div class="install-bar" id="install-bar">
+    <div class="install-bar-inner">
+      <span class="install-label">Install Skill:</span>
+      <button class="btn-install-primary" id="btn-copy-prompt" onclick="copyPrompt(this)">⚡ Copy Template</button>
+      <a class="btn-install-ghost" href="https://claude.ai/new" target="_blank" rel="noopener">▶ Try in Claude</a>
+      <button class="btn-install-ghost" onclick="downloadJSON()">↓ .json</button>
+      <a class="btn-install-ghost or-btn" href="https://openrouter.ai" target="_blank" rel="noopener">⊕ OpenRouter</a>
+      <span class="install-bar-spacer"></span>
+      <span style="font-family:var(--font-display);font-size:.65rem;letter-spacing:.06em;color:rgba(255,255,255,.3);">724 installs</span>
+    </div>
+  </div>
+
+  <div class="skill-page-wrap">
+
+    <nav class="skill-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <a href="/skills.html">Skills</a>
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>The Specialist Stack</span>
+    </nav>
+
+    <header class="outcome-banner">
+      <div class="outcome-meta">
+        <span class="badge-category">Agents</span>
+        <span class="badge-cost-variable">⚡ Variable · per-skill cost × active specialists</span>
+        <span class="badge-installs">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          724 installs
+        </span>
+      </div>
+      <h1 class="outcome-headline">
+        <em>Turns any AI project</em> into a<br>domain expert on demand
+      </h1>
+      <p class="outcome-sub">
+        A folder of small, focused skills — each owning one job with a clear contract, no overlap, no mega-prompts. Drop it into any project and the agent invokes the right specialist on demand. This is how serious teams scale past 10 skill files without prompt chaos.
+      </p>
+    </header>
+
+    <img src="/images/skills/specialist-stack-hero.webp" alt="The Specialist Stack — layered focused skills for production AI projects" class="skill-hero-img" loading="eager" />
+
+    <!-- SECTION 1: MODEL TABLE -->
+    <section class="skill-section" id="models">
+      <h2 class="skill-section-heading"><span class="section-icon">🤖</span>Recommended Models</h2>
+      <p>The Specialist Stack architecture works best with models that reliably follow structured contracts without drifting between specialist roles.</p>
+      <div class="model-table-wrap">
+        <table class="model-table">
+          <thead><tr><th>Model</th><th>Best For</th><th>Cost</th><th>Quality</th><th></th></tr></thead>
+          <tbody>
+            <tr class="recommended-row">
+              <td><span class="model-name"><span class="model-provider-dot anthropic"></span>Claude Sonnet 4.6</span></td>
+              <td>Best at following specialist contracts without drift</td>
+              <td><span class="cost-pill moderate">Moderate</span></td>
+              <td><span class="stars">★★★★★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+            <tr class="recommended-row">
+              <td><span class="model-name"><span class="model-provider-dot openai"></span>GPT-5.4</span></td>
+              <td>Strong function-calling makes specialist handoffs clean</td>
+              <td><span class="cost-pill moderate">Moderate</span></td>
+              <td><span class="stars">★★★★</span><span style="opacity:.3">★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Temperature tip:</strong> Set to <strong>0.3</strong>. Specialists need to stay within their defined contract. Higher temperatures cause drift — the PRD writer starts generating tickets, the test author starts reviewing architecture. Keep it deterministic.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: COST ESTIMATE -->
+    <section class="skill-section" id="cost">
+      <h2 class="skill-section-heading"><span class="section-icon">💰</span>Cost Estimate</h2>
+      <div class="cost-card">
+        <div>
+          <div class="cost-card-label">⚡ Variable Tier</div>
+          <div class="cost-card-headline">$0 architecture</div>
+          <div class="cost-card-sub">cost is sum of specialists invoked per task</div>
+        </div>
+        <div class="cost-card-stats">
+          <div class="cost-stat"><div class="cost-stat-value">500–2,000</div><div class="cost-stat-label">tokens per specialist</div></div>
+          <div class="cost-stat"><div class="cost-stat-value">Multiplies</div><div class="cost-stat-label">by active specialists</div></div>
+          <div class="cost-stat"><div class="cost-stat-value">~60%</div><div class="cost-stat-label">cheaper than mega-prompts</div></div>
+        </div>
+        <div class="cost-card-note">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          The architecture itself costs nothing. Each specialist invocation runs 500–2,000 tokens — far cheaper than sending a 5,000-token mega-prompt to the same model for every request. Focused specialists also waste fewer tokens retrying failed outputs.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: BEFORE / AFTER -->
+    <section class="skill-section" id="examples">
+      <h2 class="skill-section-heading"><span class="section-icon">✨</span>Before &amp; After Examples</h2>
+      <p>The difference between a mega-prompt and a properly designed specialist stack.</p>
+
+      <span class="compare-tag mega-tag">Mega-prompt approach</span>
+      <div class="compare-wrap">
+        <div class="compare-panel">
+          <div class="compare-label before-label"><span class="compare-dot"></span> Before — monolith</div>
+          <div class="compare-body">
+            One 4,000-token system prompt: "You write PRDs, create tickets, write tests, do code review, and document APIs." The agent does all of these — mediocrely. Adding a new use case means editing a prompt nobody wants to touch.
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label after-label"><span class="compare-dot"></span> After — specialist stack</div>
+          <div class="compare-body">
+            <code>skills/<br>
+            ├── prd-writer.md<br>
+            ├── ticket-decomposer.md<br>
+            ├── test-author.md<br>
+            ├── code-reviewer.md<br>
+            └── api-documenter.md</code><br><br>
+            Each specialist does one job. Adding a new use case is a new file.
+          </div>
+        </div>
+      </div>
+
+      <span class="compare-tag stack-tag">PRD specialist contract</span>
+      <div class="compare-wrap">
+        <div class="compare-panel">
+          <div class="compare-label before-label"><span class="compare-dot"></span> Vague specialist</div>
+          <div class="compare-body">
+            "You are a product manager. Help with product requirements." Scope is undefined. The specialist creates tickets, writes tests, and starts doing code review when asked about features.
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label after-label"><span class="compare-dot"></span> Tight specialist contract</div>
+          <div class="compare-body">
+            <strong>Trigger:</strong> When a new feature needs a PRD<br>
+            <strong>Contract:</strong> Produces exactly one PRD.md per request<br>
+            <strong>Does NOT:</strong> Create tickets (→ ticket-decomposer)<br>
+            <strong>Output:</strong> PRD.md with background, goals, non-goals, user stories, acceptance criteria
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: MODEL COMPATIBILITY -->
+    <section class="skill-section" id="compatibility">
+      <h2 class="skill-section-heading"><span class="section-icon">⚡</span>Model Compatibility</h2>
+      <div class="model-compat-grid">
+        <div class="compat-panel best">
+          <div class="compat-panel-label">✓ Works Best With</div>
+          <ul class="compat-list">
+            <li>Claude Sonnet 4.6 — best at staying within specialist scope without drift</li>
+            <li>GPT-5.4 — clean function-calling makes handoffs between specialists reliable</li>
+            <li>Models with strong instruction-following and system prompt fidelity</li>
+          </ul>
+        </div>
+        <div class="compat-panel avoid">
+          <div class="compat-panel-label">✗ Not Recommended</div>
+          <ul class="compat-list">
+            <li>Monolithic mega-prompts — impossible to maintain beyond 3 use cases</li>
+            <li>Models without tool-use support — can't invoke specialists programmatically</li>
+            <li>Models that ignore scope boundaries — specialists bleed into each other's domains</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: WHAT A STACK LOOKS LIKE -->
+    <section class="skill-section" id="anatomy">
+      <h2 class="skill-section-heading"><span class="section-icon">🗂️</span>Anatomy of a Production Stack</h2>
+      <p>Real example: a 5-specialist software development stack. Each specialist has a single trigger, one job, and explicit handoff points.</p>
+
+      <div class="stack-visual">
+        <div class="stack-layer">
+          <span class="stack-layer-num">01</span>
+          <span class="stack-layer-name">prd-writer</span>
+          <span class="stack-layer-desc">Writes product requirements documents from feature requests</span>
+          <span class="stack-layer-scope">→ tickets</span>
+        </div>
+        <div class="stack-layer">
+          <span class="stack-layer-num">02</span>
+          <span class="stack-layer-name">ticket-decomposer</span>
+          <span class="stack-layer-desc">Breaks PRDs into small, actionable engineering tickets</span>
+          <span class="stack-layer-scope">→ test-author</span>
+        </div>
+        <div class="stack-layer">
+          <span class="stack-layer-num">03</span>
+          <span class="stack-layer-name">test-author</span>
+          <span class="stack-layer-desc">Writes unit and integration tests from ticket acceptance criteria</span>
+          <span class="stack-layer-scope">→ code-reviewer</span>
+        </div>
+        <div class="stack-layer">
+          <span class="stack-layer-num">04</span>
+          <span class="stack-layer-name">code-reviewer</span>
+          <span class="stack-layer-desc">Reviews PRs against ticket acceptance criteria and test coverage</span>
+          <span class="stack-layer-scope">→ api-docs</span>
+        </div>
+        <div class="stack-layer">
+          <span class="stack-layer-num">05</span>
+          <span class="stack-layer-name">api-documenter</span>
+          <span class="stack-layer-desc">Generates OpenAPI spec from merged code changes</span>
+          <span class="stack-layer-scope">→ caller</span>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>Real-world scale:</strong> Teams running this pattern in production ship 50K+ lines of skills across 50+ repos. The key insight: skills are code. Version them in git, review them in PRs, test them like functions.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: CHAIN WITH -->
+    <section class="skill-section" id="chain">
+      <h2 class="skill-section-heading"><span class="section-icon">🔗</span>Chainable Skills</h2>
+      <p>The Specialist Stack is the <strong>body</strong> of a multi-agent system. The Orchestrator is the brain that decides which specialist to invoke.</p>
+      <div class="chain-diagram">
+        <div class="chain-node">
+          <div class="chain-node-icon">🎼</div>
+          <div class="chain-node-title">Orchestrator</div>
+          <div class="chain-node-desc">Routes to the right specialist</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node active-node">
+          <div class="chain-node-icon">🗂️</div>
+          <div class="chain-node-title">Specialist Stack</div>
+          <div class="chain-node-desc">Focused experts · This skill</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">
+          <div class="chain-node-icon">📄</div>
+          <div class="chain-node-title">Output</div>
+          <div class="chain-node-desc">Specialist deliverable</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">
+          <div class="chain-node-icon">🔗</div>
+          <div class="chain-node-title">Next Specialist</div>
+          <div class="chain-node-desc">Handoff if sequential</div>
+        </div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">🔗</span>
+        <div class="callout-body">
+          <strong>Build order matters:</strong> Write the specialists first — define their contracts, triggers, inputs, and outputs clearly. Then write the Orchestrator. An orchestrator written before the specialists exists is just a routing guess.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: THE PROMPT TEMPLATE -->
+    <section class="skill-section" id="prompt">
+      <h2 class="skill-section-heading"><span class="section-icon">📋</span>The Specialist Template</h2>
+      <p>Every specialist in your stack follows this structure. Fill in the bracketed fields. The contract section is the most important — it defines the scope boundary that keeps specialists from bleeding into each other.</p>
+
+      <div class="callout warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>The "Does NOT" list is not optional.</strong> Without explicit scope exclusions, specialists will gradually expand their remit. "This specialist does NOT create tickets" prevents the PRD writer from doing ticket-decomposer's job and producing mediocre tickets that nobody asked for.
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Specialist Template</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre id="full-prompt"># Specialist Skill: [SPECIALIST NAME]
+
+## Trigger
+[Exact condition under which this specialist should be invoked]
+
+## Contract
+This specialist does exactly ONE thing: [one-sentence job description]
+
+It does NOT:
+- [List what this specialist explicitly hands off to others]
+- [Scope boundary 2]
+- [Scope boundary 3]
+
+## Input Expected
+[What format/data this specialist needs to start work]
+
+## Output Produced
+[Exact format/structure of what this specialist returns]
+
+## Methodology
+[Step-by-step process this specialist follows]
+
+## Quality Check
+Before completing, verify:
+- [ ] Output matches the expected format exactly
+- [ ] No scope creep into adjacent specialist territory
+- [ ] Every input requirement was satisfied
+
+## Handoff
+When complete, pass output to: [downstream specialist or 'caller']</pre>
+      </div>
+    </section>
+
+    <!-- SECTION 8: COMMUNITY SIGNALS -->
+    <section class="skill-section" id="community">
+      <h2 class="skill-section-heading"><span class="section-icon">📊</span>Community Signals</h2>
+      <div class="community-grid">
+        <div class="community-stat-card"><span class="community-stat-value">724</span><span class="community-stat-label">Total installs</span></div>
+        <div class="community-stat-card"><span class="community-stat-value">4.8★</span><span class="community-stat-label">Community rating</span></div>
+        <div class="community-stat-card"><span class="community-stat-value">7.1</span><span class="community-stat-label">Avg specialists per stack</span></div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">🌟</span>
+        <div class="callout-body">
+          <strong>Most commonly paired with:</strong> Orchestrator (89%), Memory Hack (71%), Skills Creator (62%). The most common starter stacks are software development (PRD → tickets → tests → review) and content production (research → outline → draft → humanize).
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATED SKILLS -->
+    <section class="skill-section" id="related">
+      <h2 class="skill-section-heading"><span class="section-icon">🔍</span>Related Skills</h2>
+      <div class="related-skills">
+        <a href="/skills/orchestrator-skill-pattern.html" class="related-card">
+          <div class="related-card-icon">🎼</div>
+          <div class="related-card-title">Orchestrator Skills</div>
+          <div class="related-card-desc">The brain that routes work to your specialist stack</div>
+        </a>
+        <a href="/skills/memory-hack-skill-extraction.html" class="related-card">
+          <div class="related-card-icon">🧠</div>
+          <div class="related-card-title">Memory Hack</div>
+          <div class="related-card-desc">Mine old chats to discover which specialists you actually need</div>
+        </a>
+        <a href="/skills/claude-skills-creator.html" class="related-card">
+          <div class="related-card-icon">⚗️</div>
+          <div class="related-card-title">Skills Creator</div>
+          <div class="related-card-desc">Build each specialist with the official methodology</div>
+        </a>
+        <a href="/skills/prompt-chaining.html" class="related-card">
+          <div class="related-card-icon">⛓️</div>
+          <div class="related-card-title">Prompt Chaining</div>
+          <div class="related-card-desc">Design the sequential handoffs between specialists</div>
+        </a>
+      </div>
+    </section>
+
+    <div class="install-cta-section">
+      <h2 class="install-cta-headline">Ready to replace your mega-prompt with a real stack?</h2>
+      <p class="install-cta-sub">Copy the specialist template, define your first three specialists, build from there.</p>
+      <div class="install-cta-buttons">
+        <button class="btn-install-primary" onclick="copyPrompt(document.getElementById('btn-copy-prompt'))">⚡ Copy Template</button>
+        <a class="btn-install-ghost" href="https://claude.ai/new" target="_blank" rel="noopener">▶ Try in Claude</a>
+        <button class="btn-install-ghost" onclick="downloadJSON()">↓ Download .json</button>
+        <a href="/skills.html" class="btn-install-ghost">← All Skills</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="install-toast" id="install-toast">✓ Template copied to clipboard</div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand"><span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span></div>
+      <p class="footer-tagline">Install AI capabilities, not just prompts.</p>
+      <div class="footer-links">
+        <a href="/skills.html">Skills</a><a href="/news.html">News</a>
+        <a href="/tools.html">Tools</a><a href="/about.html">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const prog = document.getElementById('read-progress');
+    window.addEventListener('scroll', () => {
+      prog.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100).toFixed(1) + '%';
+    }, { passive:true });
+
+    const SYSTEM_PROMPT = `# Specialist Skill: [SPECIALIST NAME]
+
+## Trigger
+[Exact condition under which this specialist should be invoked]
+
+## Contract
+This specialist does exactly ONE thing: [one-sentence job description]
+
+It does NOT:
+- [List what this specialist explicitly hands off to others]
+- [Scope boundary 2]
+- [Scope boundary 3]
+
+## Input Expected
+[What format/data this specialist needs to start work]
+
+## Output Produced
+[Exact format/structure of what this specialist returns]
+
+## Methodology
+[Step-by-step process this specialist follows]
+
+## Quality Check
+Before completing, verify:
+- [ ] Output matches the expected format exactly
+- [ ] No scope creep into adjacent specialist territory
+- [ ] Every input requirement was satisfied
+
+## Handoff
+When complete, pass output to: [downstream specialist or 'caller']`;
+
+    function copyPrompt(btn) {
+      navigator.clipboard.writeText(SYSTEM_PROMPT).then(() => {
+        const orig = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '✓ Copied!'; btn.classList.add('copied'); }
+        showToast('✓ Template copied to clipboard');
+        setTimeout(() => { if (btn) { btn.innerHTML = orig; btn.classList.remove('copied'); } }, 2200);
+      }).catch(() => showToast('⚠ Copy failed — use the code block below'));
+    }
+
+    function downloadJSON() {
+      const data = {
+        schema: "aether-skill-v2", slug: "specialist-skill-stack",
+        title: "The Specialist Stack",
+        outcome: "Turns any AI project into a domain expert by dropping in a folder of focused skills",
+        category: "agents", cost_tier: "variable",
+        cost_estimate: { per_1k_outputs: "Per-skill cost × active specialist count", tokens_per_run: "500-2000 per specialist" },
+        temperature: 0.3,
+        recommended_models: [
+          { model: "Claude Sonnet 4.6", provider: "anthropic", recommended: true },
+          { model: "GPT-5.4",           provider: "openai",    recommended: true }
+        ],
+        system_prompt: SYSTEM_PROMPT, installs: 724,
+        source: "https://ai.quantummerlin.com/skills/specialist-skill-stack.html"
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'specialist-skill-stack.json'; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+      showToast('✓ specialist-skill-stack.json downloaded');
+    }
+
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('install-toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav-bar')?.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive:true });
+  </script>
+</body>
+</html>

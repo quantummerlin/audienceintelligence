@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The AI Flywheel — Surface Your Top Automation Candidates in 10 Minutes | Aether Intel Skills</title>
+  <meta name="description" content="One-click install: have AI interview you about your work and surface the top 3 automation candidates with ROI estimates. Works with Claude Sonnet 4.6, GPT-5.4, and Gemini 2.5 Pro." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/skills/ai-flywheel-method.html" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://ai.quantummerlin.com/skills/ai-flywheel-method.html" />
+  <meta property="og:title" content="The AI Flywheel — Surface Your Top Automation Candidates in 10 Minutes | Aether Intel Skills" />
+  <meta property="og:description" content="Let AI interview you about your work, rank the best automation opportunities by ROI, then build them. Each loop compounds your skill stack." />
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/skills/ai-flywheel-hero.webp" />
+  <meta property="og:site_name" content="Aether Intel" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    :root {
+      --skill-accent:      #f59e0b;
+      --skill-accent-dim:  rgba(245,158,11,.12);
+      --skill-accent-glow: 0 0 24px rgba(245,158,11,.28);
+    }
+
+    #read-progress { position:fixed; top:0; left:0; z-index:9999; height:3px; width:0; background:linear-gradient(90deg,var(--skill-accent),#fbbf24); transition:width .1s linear; pointer-events:none; }
+
+    .skill-page-wrap { max-width:860px; margin:0 auto; padding:0 24px 100px; }
+
+    .skill-breadcrumb { display:flex; align-items:center; gap:8px; padding:26px 0 0; font-family:var(--font-display); font-size:.72rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--text-muted); }
+    .skill-breadcrumb a { color:var(--text-muted); text-decoration:none; }
+    .skill-breadcrumb a:hover { color:var(--skill-accent); }
+    .skill-breadcrumb svg { width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    .outcome-banner { margin:28px 0 0; }
+    .outcome-meta { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .badge-category { font-family:var(--font-display); font-size:.67rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; padding:4px 11px; border-radius:4px; background:var(--skill-accent-dim); border:1px solid rgba(245,158,11,.3); color:var(--skill-accent); }
+    .badge-cost-cheap { font-family:var(--font-display); font-size:.67rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; padding:4px 11px; border-radius:4px; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3); color:#22c55e; }
+    .badge-installs { font-family:var(--font-display); font-size:.67rem; font-weight:600; letter-spacing:.05em; color:var(--text-muted); display:flex; align-items:center; gap:5px; margin-left:auto; }
+    .badge-installs svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; }
+    .outcome-headline { font-family:var(--font-display); font-size:clamp(1.8rem,4.5vw,2.8rem); font-weight:900; line-height:1.1; letter-spacing:-.025em; margin:0 0 14px; }
+    .outcome-headline em { font-style:normal; background:linear-gradient(135deg,var(--skill-accent),#fbbf24); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .outcome-sub { font-size:1.05rem; line-height:1.75; color:var(--text-secondary); max-width:640px; margin:0 0 28px; }
+
+    .install-bar { position:sticky; top:0; z-index:200; background:rgba(13,13,26,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid rgba(245,158,11,.25); padding:12px 24px; margin:0 -24px; }
+    .install-bar-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .install-label { font-family:var(--font-display); font-size:.68rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:rgba(255,255,255,.45); margin-right:4px; white-space:nowrap; }
+    .btn-install-primary { display:inline-flex; align-items:center; gap:7px; background:var(--skill-accent); color:#1a1a2e; font-family:var(--font-display); font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:9px 18px; border-radius:7px; border:none; cursor:pointer; text-decoration:none; transition:background .2s,transform .15s,box-shadow .2s; white-space:nowrap; }
+    .btn-install-primary:hover { background:#d97706; transform:translateY(-1px); box-shadow:0 6px 20px rgba(245,158,11,.4); }
+    .btn-install-primary.copied { background:#16a34a; color:#fff; }
+    .btn-install-ghost { display:inline-flex; align-items:center; gap:6px; background:transparent; color:rgba(255,255,255,.7); font-family:var(--font-display); font-size:.68rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; padding:8px 15px; border-radius:7px; border:1px solid rgba(255,255,255,.15); cursor:pointer; text-decoration:none; transition:all .15s; white-space:nowrap; }
+    .btn-install-ghost:hover { border-color:var(--skill-accent); color:var(--skill-accent); }
+    .btn-install-ghost.or-btn { border-color:rgba(249,115,22,.35); color:rgba(249,115,22,.8); }
+    .btn-install-ghost.or-btn:hover { border-color:#f97316; color:#f97316; }
+    .install-bar-spacer { flex:1; }
+
+    .install-toast { position:fixed; bottom:28px; right:28px; z-index:9999; background:#16a34a; color:#fff; font-family:var(--font-display); font-size:.75rem; font-weight:700; letter-spacing:.05em; padding:12px 20px; border-radius:8px; box-shadow:0 8px 32px rgba(22,163,74,.4); opacity:0; transform:translateY(12px); transition:all .3s ease; pointer-events:none; }
+    .install-toast.show { opacity:1; transform:translateY(0); }
+
+    .skill-hero-img { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:12px; display:block; margin:32px 0 40px; border:1px solid var(--border); }
+
+    .skill-section { margin-bottom:60px; }
+    .skill-section-heading { font-family:var(--font-display); font-size:1.15rem; font-weight:800; letter-spacing:-.01em; line-height:1.25; margin:0 0 6px; padding-bottom:14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+    .section-icon { width:28px; height:28px; border-radius:6px; background:var(--skill-accent-dim); border:1px solid rgba(245,158,11,.25); display:flex; align-items:center; justify-content:center; font-size:.85rem; flex-shrink:0; }
+    .skill-section p { font-size:.95rem; line-height:1.8; color:var(--text-secondary); margin:0 0 14px; }
+    .skill-section strong { color:var(--text-primary); }
+    .skill-section ul, .skill-section ol { padding-left:20px; margin:0 0 14px; }
+    .skill-section li { font-size:.92rem; line-height:1.72; color:var(--text-secondary); margin-bottom:6px; }
+
+    .model-table-wrap { overflow-x:auto; margin:18px 0; }
+    .model-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    .model-table th { font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--text-muted); text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); white-space:nowrap; }
+    .model-table td { padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle; color:var(--text-secondary); }
+    .model-table tr:hover td { background:rgba(255,255,255,.02); }
+    .model-table tr.recommended-row td { background:rgba(245,158,11,.04); }
+    .model-name { font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+    .model-provider-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .model-provider-dot.anthropic { background:#f97316; }
+    .model-provider-dot.openai    { background:#10b981; }
+    .model-provider-dot.google    { background:#3b82f6; }
+    .stars { color:#f59e0b; font-size:.9rem; letter-spacing:-1px; }
+    .cost-pill { display:inline-block; font-family:var(--font-display); font-size:.63rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; padding:3px 8px; border-radius:4px; }
+    .cost-pill.cheap    { background:rgba(34,197,94,.12);  color:#22c55e;  border:1px solid rgba(34,197,94,.25); }
+    .cost-pill.moderate { background:rgba(245,158,11,.12); color:#f59e0b;  border:1px solid rgba(245,158,11,.25); }
+    .recommended-badge { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; background:var(--skill-accent-dim); color:var(--skill-accent); border:1px solid rgba(245,158,11,.3); padding:2px 7px; border-radius:3px; }
+
+    .cost-card { background:var(--surface); border:1px solid rgba(34,197,94,.25); border-radius:12px; padding:22px 26px; margin:18px 0; display:grid; grid-template-columns:1fr auto; gap:12px 28px; align-items:start; }
+    @media(max-width:560px){ .cost-card { grid-template-columns:1fr; } }
+    .cost-card-label { font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#22c55e; margin-bottom:8px; }
+    .cost-card-headline { font-size:1.6rem; font-weight:700; color:var(--text-primary); line-height:1.1; margin-bottom:6px; }
+    .cost-card-sub { font-size:.85rem; color:var(--text-muted); }
+    .cost-card-stats { display:flex; flex-direction:column; gap:10px; }
+    .cost-stat { text-align:right; }
+    .cost-stat-value { font-family:var(--font-display); font-size:.95rem; font-weight:700; color:var(--text-primary); }
+    .cost-stat-label { font-size:.78rem; color:var(--text-muted); }
+    .cost-card-note { grid-column:1/-1; font-size:.82rem; color:var(--text-muted); border-top:1px solid var(--border); padding-top:12px; margin-top:4px; display:flex; align-items:center; gap:8px; }
+    .cost-card-note svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; flex-shrink:0; opacity:.6; }
+
+    .compare-wrap { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0; }
+    @media(max-width:600px){ .compare-wrap { grid-template-columns:1fr; } }
+    .compare-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    .compare-label { padding:10px 16px; font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; display:flex; align-items:center; gap:8px; }
+    .compare-label.before-label { background:rgba(239,68,68,.06); border-bottom:1px solid rgba(239,68,68,.15); color:#f87171; }
+    .compare-label.after-label  { background:rgba(34,197,94,.06);  border-bottom:1px solid rgba(34,197,94,.15);  color:#4ade80; }
+    .compare-dot { width:7px; height:7px; border-radius:50%; }
+    .before-label .compare-dot { background:#ef4444; }
+    .after-label  .compare-dot { background:#22c55e; }
+    .compare-body { padding:16px; font-size:.87rem; line-height:1.75; color:var(--text-secondary); }
+    .compare-tag { display:inline-block; margin:16px 0 0 16px; font-family:var(--font-display); font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 9px; border-radius:4px; opacity:.7; }
+    .compare-tag.discovery-tag { background:rgba(245,158,11,.12); color:#fbbf24; border:1px solid rgba(245,158,11,.2); }
+    .compare-tag.output-tag    { background:rgba(34,197,94,.1);   color:#4ade80; border:1px solid rgba(34,197,94,.2); }
+
+    .model-compat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0; }
+    @media(max-width:600px){ .model-compat-grid { grid-template-columns:1fr; } }
+    .compat-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px 20px; }
+    .compat-panel.best  { border-color:rgba(34,197,94,.25); }
+    .compat-panel.avoid { border-color:rgba(239,68,68,.2); }
+    .compat-panel-label { font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:7px; }
+    .compat-panel.best  .compat-panel-label { color:#4ade80; }
+    .compat-panel.avoid .compat-panel-label { color:#f87171; }
+    .compat-list { list-style:none; padding:0; margin:0; }
+    .compat-list li { font-size:.87rem; line-height:1.65; color:var(--text-secondary); padding:6px 0; border-bottom:1px solid rgba(255,255,255,.04); display:flex; align-items:flex-start; gap:9px; }
+    .compat-list li:last-child { border-bottom:none; }
+    .compat-list li::before { flex-shrink:0; margin-top:4px; }
+    .compat-panel.best  .compat-list li::before { content:"✓"; color:#4ade80; font-size:.8rem; }
+    .compat-panel.avoid .compat-list li::before { content:"✗"; color:#f87171; font-size:.8rem; }
+
+    .chain-diagram { display:flex; align-items:center; gap:0; margin:18px 0; overflow-x:auto; padding:4px 0 8px; scrollbar-width:none; }
+    .chain-diagram::-webkit-scrollbar { display:none; }
+    .chain-node { flex-shrink:0; min-width:130px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; text-align:center; }
+    .chain-node.active-node { border-color:rgba(245,158,11,.5); background:rgba(245,158,11,.07); box-shadow:0 0 0 1px rgba(245,158,11,.2); }
+    .chain-node-icon { font-size:1.3rem; margin-bottom:8px; }
+    .chain-node-title { font-family:var(--font-display); font-size:.7rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--text-primary); margin-bottom:4px; }
+    .chain-node.active-node .chain-node-title { color:var(--skill-accent); }
+    .chain-node-desc { font-size:.75rem; color:var(--text-muted); line-height:1.4; }
+    .chain-arrow { flex-shrink:0; padding:0 8px; font-size:1.1rem; color:rgba(255,255,255,.2); }
+    .chain-loop-label { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--skill-accent); opacity:.7; }
+
+    .community-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0; }
+    @media(max-width:560px){ .community-grid { grid-template-columns:1fr 1fr; } }
+    .community-stat-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center; }
+    .community-stat-value { font-family:var(--font-display); font-size:1.5rem; font-weight:800; color:var(--text-primary); letter-spacing:-.02em; display:block; margin-bottom:4px; }
+    .community-stat-label { font-size:.78rem; color:var(--text-muted); }
+
+    .callout { border-radius:10px; padding:15px 18px; margin:18px 0; font-size:.9rem; line-height:1.7; display:flex; gap:13px; align-items:flex-start; }
+    .callout-icon { font-size:1rem; flex-shrink:0; margin-top:2px; }
+    .callout-body { flex:1; color:var(--text-secondary); }
+    .callout-body strong { color:var(--text-primary); }
+    .callout.info    { background:rgba(245,158,11,.07); border:1px solid rgba(245,158,11,.2); }
+    .callout.tip     { background:rgba(45,212,191,.07); border:1px solid rgba(45,212,191,.2); }
+    .callout.warning { background:rgba(251,191,36,.07); border:1px solid rgba(251,191,36,.2); }
+
+    .code-block { position:relative; margin:18px 0; background:#0d1117; border:1px solid #30363d; border-radius:10px; overflow:hidden; }
+    .code-block-header { display:flex; align-items:center; justify-content:space-between; padding:9px 16px; background:#161b22; border-bottom:1px solid #30363d; }
+    .code-lang { font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--skill-accent); }
+    .copy-btn { background:none; border:1px solid #30363d; border-radius:5px; color:#8b949e; font-family:var(--font-display); font-size:.63rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; padding:3px 10px; cursor:pointer; transition:all .15s; }
+    .copy-btn:hover  { border-color:var(--skill-accent); color:var(--skill-accent); }
+    .copy-btn.copied { border-color:#3fb950; color:#3fb950; }
+    .code-block pre { margin:0; padding:18px 20px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:.8rem; line-height:1.65; color:#e6edf3; }
+
+    .related-skills { display:flex; gap:14px; overflow-x:auto; padding:4px 0 8px; scrollbar-width:none; }
+    .related-skills::-webkit-scrollbar { display:none; }
+    .related-card { flex-shrink:0; width:200px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-decoration:none; transition:border-color .15s,transform .15s; }
+    .related-card:hover { border-color:var(--skill-accent); transform:translateY(-2px); }
+    .related-card-icon { font-size:1.4rem; margin-bottom:10px; }
+    .related-card-title { font-family:var(--font-display); font-size:.75rem; font-weight:700; letter-spacing:.03em; color:var(--text-primary); margin-bottom:6px; }
+    .related-card-desc { font-size:.78rem; color:var(--text-muted); line-height:1.5; }
+
+    .install-cta-section { background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(251,191,36,.05)); border:1px solid rgba(245,158,11,.25); border-radius:16px; padding:36px 32px; text-align:center; margin-top:60px; }
+    .install-cta-headline { font-family:var(--font-display); font-size:clamp(1.2rem,3vw,1.7rem); font-weight:800; letter-spacing:-.02em; margin:0 0 10px; }
+    .install-cta-sub { font-size:.9rem; color:var(--text-muted); margin:0 0 26px; }
+    .install-cta-buttons { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
+
+    @media(max-width:480px){ .install-bar-inner { gap:8px; } .install-label { display:none; } }
+  </style>
+</head>
+<body>
+  <div id="read-progress"></div>
+
+  <nav class="nav-bar" id="nav-bar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo"><span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span></a>
+      <div class="nav-links">
+        <a href="/news.html" class="nav-link">News</a>
+        <a href="/tools.html" class="nav-link">Tools</a>
+        <a href="/skills.html" class="nav-link active">Skills</a>
+        <a href="/about.html" class="nav-link">About</a>
+      </div>
+      <div class="nav-actions"><a href="/skills.html" class="nav-btn-ghost">Browse Skills</a></div>
+    </div>
+  </nav>
+
+  <div class="install-bar" id="install-bar">
+    <div class="install-bar-inner">
+      <span class="install-label">Install Skill:</span>
+      <button class="btn-install-primary" id="btn-copy-prompt" onclick="copyPrompt(this)">⚡ Copy Prompt</button>
+      <a class="btn-install-ghost" href="https://claude.ai/new?q=You+are+a+workflow+discovery+interviewer." target="_blank" rel="noopener">▶ Try in Claude</a>
+      <button class="btn-install-ghost" onclick="downloadJSON()">↓ .json</button>
+      <a class="btn-install-ghost or-btn" href="https://openrouter.ai" target="_blank" rel="noopener">⊕ OpenRouter</a>
+      <span class="install-bar-spacer"></span>
+      <span style="font-family:var(--font-display);font-size:.65rem;letter-spacing:.06em;color:rgba(255,255,255,.3);">518 installs</span>
+    </div>
+  </div>
+
+  <div class="skill-page-wrap">
+
+    <nav class="skill-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <a href="/skills.html">Skills</a>
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>The AI Flywheel</span>
+    </nav>
+
+    <header class="outcome-banner">
+      <div class="outcome-meta">
+        <span class="badge-category">Automation</span>
+        <span class="badge-cost-cheap">💚 Cheap · full session under $0.10</span>
+        <span class="badge-installs">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          518 installs
+        </span>
+      </div>
+      <h1 class="outcome-headline">
+        <em>Surfaces your best automations</em><br>in a 10-minute interview
+      </h1>
+      <p class="outcome-sub">
+        Most people never figure out what to automate first — so they automate nothing. The AI Flywheel has Claude interview you about your work, rank the top opportunities by time saved × repeatability, then builds them. Each loop compounds your skill stack and AI literacy simultaneously.
+      </p>
+    </header>
+
+    <img src="/images/skills/ai-flywheel-hero.webp" alt="The AI Flywheel — discovering and building automation candidates" class="skill-hero-img" loading="eager" />
+
+    <!-- SECTION 1: MODEL TABLE -->
+    <section class="skill-section" id="models">
+      <h2 class="skill-section-heading"><span class="section-icon">🤖</span>Recommended Models</h2>
+      <p>Conversation quality drives everything here. Use a model that asks genuinely insightful follow-up questions, not one that just checks a list.</p>
+      <div class="model-table-wrap">
+        <table class="model-table">
+          <thead><tr><th>Model</th><th>Best For</th><th>Cost</th><th>Quality</th><th></th></tr></thead>
+          <tbody>
+            <tr class="recommended-row">
+              <td><span class="model-name"><span class="model-provider-dot anthropic"></span>Claude Sonnet 4.6</span></td>
+              <td>Best interview depth — asks the right follow-up questions</td>
+              <td><span class="cost-pill moderate">Moderate</span></td>
+              <td><span class="stars">★★★★★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+            <tr class="recommended-row">
+              <td><span class="model-name"><span class="model-provider-dot openai"></span>GPT-5.4</span></td>
+              <td>Strong at synthesizing workflow patterns from unstructured answers</td>
+              <td><span class="cost-pill moderate">Moderate</span></td>
+              <td><span class="stars">★★★★</span><span style="opacity:.3">★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+            <tr class="recommended-row">
+              <td><span class="model-name"><span class="model-provider-dot google"></span>Gemini 2.5 Pro</span></td>
+              <td>Good for voice input on mobile — dictate answers naturally</td>
+              <td><span class="cost-pill moderate">Moderate</span></td>
+              <td><span class="stars">★★★★</span><span style="opacity:.3">★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Temperature tip:</strong> Set to <strong>0.7</strong>. This is an open-ended discovery interview — you want a conversational, curious interviewer, not a rigid checklist runner. Higher temperature makes follow-up questions feel more human.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: COST ESTIMATE -->
+    <section class="skill-section" id="cost">
+      <h2 class="skill-section-heading"><span class="section-icon">💰</span>Cost Estimate</h2>
+      <div class="cost-card">
+        <div>
+          <div class="cost-card-label">💚 Cheap Tier</div>
+          <div class="cost-card-headline">&lt;$0.10</div>
+          <div class="cost-card-sub">for a full 10-minute discovery session</div>
+        </div>
+        <div class="cost-card-stats">
+          <div class="cost-stat"><div class="cost-stat-value">~500</div><div class="cost-stat-label">input tokens / turn</div></div>
+          <div class="cost-stat"><div class="cost-stat-value">~600</div><div class="cost-stat-label">output tokens / turn</div></div>
+          <div class="cost-stat"><div class="cost-stat-value">8–12</div><div class="cost-stat-label">turns per session</div></div>
+        </div>
+        <div class="cost-card-note">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          A full discovery session runs 8–12 turns, totalling roughly 9,000–13,000 tokens. On Claude Sonnet 4.6 at $15/M that's under $0.10 per session. The automations you find will save that back in minutes.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: BEFORE / AFTER -->
+    <section class="skill-section" id="examples">
+      <h2 class="skill-section-heading"><span class="section-icon">✨</span>Before &amp; After Examples</h2>
+      <p>What a flywheel discovery session produces at the end.</p>
+
+      <span class="compare-tag discovery-tag">No structure</span>
+      <div class="compare-wrap">
+        <div class="compare-panel">
+          <div class="compare-label before-label"><span class="compare-dot"></span> Before — guessing</div>
+          <div class="compare-body">
+            "I should probably automate something with AI..." Builds a social media poster because it sounded easy. Uses it twice. Wasn't actually a bottleneck. Still manually writing the weekly client reports that take 3 hours every Friday.
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label after-label"><span class="compare-dot"></span> After — discovery session</div>
+          <div class="compare-body">
+            <strong>#1 Weekly Client Report</strong><br>
+            Pulls CRM data, formats PDF, emails Friday AM<br>
+            Build time: 3 hrs · Saves: 2.5 hrs/week<br>
+            ROI: 4 weeks to break even<br><br>
+            <strong>Next step:</strong> Export one example report to show Claude the format.
+          </div>
+        </div>
+      </div>
+
+      <span class="compare-tag output-tag">Full session output</span>
+      <div class="compare-wrap">
+        <div class="compare-panel">
+          <div class="compare-label before-label"><span class="compare-dot"></span> The interview question</div>
+          <div class="compare-body">
+            "What's the work you do most often that still feels completely manual?" — followed by 8 progressively deeper questions about frequency, time, handoffs, and repetition.
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label after-label"><span class="compare-dot"></span> Synthesis output</div>
+          <div class="compare-body">
+            Top 3 candidates ranked by effort × time saved × repeatability — each with a specific first step, suggested tool (Claude Code / Zapier / n8n), and realistic time estimate to build.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: MODEL COMPATIBILITY -->
+    <section class="skill-section" id="compatibility">
+      <h2 class="skill-section-heading"><span class="section-icon">⚡</span>Model Compatibility</h2>
+      <div class="model-compat-grid">
+        <div class="compat-panel best">
+          <div class="compat-panel-label">✓ Works Best With</div>
+          <ul class="compat-list">
+            <li>Claude Sonnet 4.6 — asks follow-up questions that reveal hidden bottlenecks</li>
+            <li>GPT-5.4 — strong at synthesizing patterns from unstructured answers</li>
+            <li>Gemini 2.5 Pro — great for voice-first discovery sessions on mobile</li>
+          </ul>
+        </div>
+        <div class="compat-panel avoid">
+          <div class="compat-panel-label">✗ Not Recommended</div>
+          <ul class="compat-list">
+            <li>Flash / mini models — ask surface-level questions, miss deeper workflow signals</li>
+            <li>Reasoning models (o1/o3) — overly analytical, kills conversational flow</li>
+            <li>Low temperature settings — makes the interview feel robotic</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: CHAIN WITH -->
+    <section class="skill-section" id="chain">
+      <h2 class="skill-section-heading"><span class="section-icon">🔗</span>The Flywheel Loop</h2>
+      <p>The flywheel is self-reinforcing. Each automation you build teaches you more — which makes the next interview session richer, which produces better automations.</p>
+      <div class="chain-diagram">
+        <div class="chain-node active-node">
+          <div class="chain-node-icon">🎙️</div>
+          <div class="chain-node-title">Interview</div>
+          <div class="chain-node-desc">AI Flywheel · This skill</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">
+          <div class="chain-node-icon">🏗️</div>
+          <div class="chain-node-title">Build It</div>
+          <div class="chain-node-desc">Skills Creator + Claude Code</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">
+          <div class="chain-node-icon">📚</div>
+          <div class="chain-node-title">Learn It</div>
+          <div class="chain-node-desc">Ask Claude to teach the concepts</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">
+          <div class="chain-node-icon">🔁</div>
+          <div class="chain-node-title">Loop</div>
+          <div class="chain-node-desc">Richer next session</div>
+        </div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">🔁</span>
+        <div class="callout-body">
+          <strong>The compounding effect:</strong> After building your first automation, run the interview again. You'll have new capacity — which means new bottlenecks surface. Most users run 3 flywheel loops in their first month and end up with a personal automation stack worth 6–10 hours a week.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: THE PROMPT -->
+    <section class="skill-section" id="prompt">
+      <h2 class="skill-section-heading"><span class="section-icon">📋</span>The System Prompt</h2>
+      <p>Install this and just start chatting. The interviewer asks one question at a time, follows interesting threads, then synthesizes your top 3 automation candidates at the end.</p>
+
+      <div class="callout warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Answer honestly, not aspirationally.</strong> The best automations come from what you <em>actually</em> do repeatedly right now — not what you wish you did. "Paste the same data into three spreadsheets every Monday" beats "build a machine learning pipeline" every time.
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">System Prompt</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre id="full-prompt">You are a workflow discovery interviewer. Your goal is to help me identify my top 3 automation opportunities by interviewing me about how I work.
+
+INTERVIEW PROTOCOL:
+1. Start by asking about my primary role and what I spend most time on
+2. Ask about the most repetitive tasks in my week
+3. For each task, probe: frequency, time spent, frustration level, and what the output looks like
+4. Ask what I copy-paste, re-explain, or redo repeatedly
+5. Ask what feels like it 'should be automatic by now'
+6. Ask about handoffs — where does work get stuck waiting for me?
+
+RULES:
+- Ask ONE question at a time — never a list of questions
+- Follow the most interesting thread before moving to the next topic
+- When you have enough data (usually 8-12 turns), shift to synthesis mode
+- In synthesis mode, rank the top 3 automation candidates by: (effort to build × time saved × repeatability)
+
+SYNTHESIS OUTPUT FORMAT:
+# Your Top 3 Automation Candidates
+
+## #1 [Task Name]
+- What it does: [one sentence]
+- Estimated build time: [hours]
+- Estimated weekly time saved: [hours]
+- Suggested tool: [Claude Code / Zapier / n8n / custom]
+- First step: [specific next action]
+
+[Repeat for #2 and #3]
+
+Start by asking: 'What's the work you do most often that still feels completely manual?'</pre>
+      </div>
+    </section>
+
+    <!-- SECTION 7: THE THREE LOOPS -->
+    <section class="skill-section" id="loops">
+      <h2 class="skill-section-heading"><span class="section-icon">🎯</span>Three Loops That Compound</h2>
+      <p>The flywheel works because each loop reinforces the others.</p>
+      <ol>
+        <li><strong>Discovery loop</strong> — the interview surfaces candidates you didn't know were worth automating. Most people are surprised by what shows up in the top 3.</li>
+        <li><strong>Build loop</strong> — building automations with Claude Code teaches you what's actually automatable. Practical experience beats theory.</li>
+        <li><strong>Learn loop</strong> — asking Claude to explain concepts while building means every automation session increases your AI literacy, not just your automation count.</li>
+      </ol>
+      <div class="callout info">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>Start with #1 on the list, always.</strong> The model ranks by ROI. Skipping to a "more interesting" candidate is tempting but usually wrong — the boring, repetitive Friday report saves more time than the clever AI feature that runs quarterly.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: COMMUNITY SIGNALS -->
+    <section class="skill-section" id="community">
+      <h2 class="skill-section-heading"><span class="section-icon">📊</span>Community Signals</h2>
+      <div class="community-grid">
+        <div class="community-stat-card"><span class="community-stat-value">518</span><span class="community-stat-label">Total installs</span></div>
+        <div class="community-stat-card"><span class="community-stat-value">4.9★</span><span class="community-stat-label">Community rating</span></div>
+        <div class="community-stat-card"><span class="community-stat-value">2.7</span><span class="community-stat-label">Avg loops per user</span></div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">🌟</span>
+        <div class="callout-body">
+          <strong>Most commonly chained with:</strong> Skills Creator (74%), Content Pipeline (48%), Orchestrator (31%). Most users discover their first automation is a report or data-formatting task — something that takes 1–3 hours a week and has a completely predictable output.
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATED SKILLS -->
+    <section class="skill-section" id="related">
+      <h2 class="skill-section-heading"><span class="section-icon">🔍</span>Related Skills</h2>
+      <div class="related-skills">
+        <a href="/skills/claude-skills-creator.html" class="related-card">
+          <div class="related-card-icon">⚗️</div>
+          <div class="related-card-title">Skills Creator</div>
+          <div class="related-card-desc">Build the automations the flywheel identifies</div>
+        </a>
+        <a href="/skills/content-pipeline.html" class="related-card">
+          <div class="related-card-icon">🚀</div>
+          <div class="related-card-title">Content Pipeline</div>
+          <div class="related-card-desc">Most common first flywheel build — content automation</div>
+        </a>
+        <a href="/skills/orchestrator-skill-pattern.html" class="related-card">
+          <div class="related-card-icon">🎼</div>
+          <div class="related-card-title">Orchestrator Skills</div>
+          <div class="related-card-desc">Connect automations once you have 3+ built</div>
+        </a>
+        <a href="/skills/model-routing.html" class="related-card">
+          <div class="related-card-icon">🔀</div>
+          <div class="related-card-title">Model Routing</div>
+          <div class="related-card-desc">Cut costs on automations you've already built</div>
+        </a>
+      </div>
+    </section>
+
+    <div class="install-cta-section">
+      <h2 class="install-cta-headline">Ready to find out what's actually worth automating?</h2>
+      <p class="install-cta-sub">Copy the prompt, start the interview. The first question asks itself.</p>
+      <div class="install-cta-buttons">
+        <button class="btn-install-primary" onclick="copyPrompt(document.getElementById('btn-copy-prompt'))">⚡ Copy Prompt</button>
+        <a class="btn-install-ghost" href="https://claude.ai/new?q=You+are+a+workflow+discovery+interviewer." target="_blank" rel="noopener">▶ Try in Claude</a>
+        <button class="btn-install-ghost" onclick="downloadJSON()">↓ Download .json</button>
+        <a href="/skills.html" class="btn-install-ghost">← All Skills</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="install-toast" id="install-toast">✓ Prompt copied to clipboard</div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand"><span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span></div>
+      <p class="footer-tagline">Install AI capabilities, not just prompts.</p>
+      <div class="footer-links">
+        <a href="/skills.html">Skills</a><a href="/news.html">News</a>
+        <a href="/tools.html">Tools</a><a href="/about.html">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const prog = document.getElementById('read-progress');
+    window.addEventListener('scroll', () => {
+      prog.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100).toFixed(1) + '%';
+    }, { passive:true });
+
+    const SYSTEM_PROMPT = `You are a workflow discovery interviewer. Your goal is to help me identify my top 3 automation opportunities by interviewing me about how I work.
+
+INTERVIEW PROTOCOL:
+1. Start by asking about my primary role and what I spend most time on
+2. Ask about the most repetitive tasks in my week
+3. For each task, probe: frequency, time spent, frustration level, and what the output looks like
+4. Ask what I copy-paste, re-explain, or redo repeatedly
+5. Ask what feels like it 'should be automatic by now'
+6. Ask about handoffs — where does work get stuck waiting for me?
+
+RULES:
+- Ask ONE question at a time — never a list of questions
+- Follow the most interesting thread before moving to the next topic
+- When you have enough data (usually 8-12 turns), shift to synthesis mode
+- In synthesis mode, rank the top 3 automation candidates by: (effort to build × time saved × repeatability)
+
+SYNTHESIS OUTPUT FORMAT:
+# Your Top 3 Automation Candidates
+
+## #1 [Task Name]
+- What it does: [one sentence]
+- Estimated build time: [hours]
+- Estimated weekly time saved: [hours]
+- Suggested tool: [Claude Code / Zapier / n8n / custom]
+- First step: [specific next action]
+
+[Repeat for #2 and #3]
+
+Start by asking: 'What's the work you do most often that still feels completely manual?'`;
+
+    function copyPrompt(btn) {
+      navigator.clipboard.writeText(SYSTEM_PROMPT).then(() => {
+        const orig = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '✓ Copied!'; btn.classList.add('copied'); }
+        showToast('✓ Prompt copied to clipboard');
+        setTimeout(() => { if (btn) { btn.innerHTML = orig; btn.classList.remove('copied'); } }, 2200);
+      }).catch(() => showToast('⚠ Copy failed — use the code block below'));
+    }
+
+    function downloadJSON() {
+      const data = {
+        schema: "aether-skill-v2", slug: "ai-flywheel-method",
+        title: "The AI Flywheel",
+        outcome: "Surfaces your highest-value automation candidates in a 10-minute interview",
+        category: "automation", cost_tier: "cheap",
+        cost_estimate: { per_1k_outputs: "~$0.003", tokens_per_run: "~1100 per turn, 8-12 turns" },
+        temperature: 0.7,
+        recommended_models: [
+          { model: "Claude Sonnet 4.6", provider: "anthropic", recommended: true },
+          { model: "GPT-5.4",           provider: "openai",    recommended: true },
+          { model: "Gemini 2.5 Pro",    provider: "google",    recommended: true }
+        ],
+        system_prompt: SYSTEM_PROMPT, installs: 518,
+        source: "https://ai.quantummerlin.com/skills/ai-flywheel-method.html"
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'ai-flywheel-method.json'; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+      showToast('✓ ai-flywheel-method.json downloaded');
+    }
+
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('install-toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav-bar')?.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive:true });
+  </script>
+</body>
+</html>
