@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Stop Writing Bad Prompts: The ICC Formula That Actually Works, Aether Intel</title>
+  <meta name="description" content="The ICC formula — Instructions, Context, Constraints — is the difference between generic AI output and something usable. Plus the context interview technique almost nobody uses.">
+  <meta name="author" content="Quantum Merlin">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/55-icc-prompt-formula.html">
+  <meta property="og:title" content="Stop Writing Bad Prompts: The ICC Formula That Actually Works">
+  <meta property="og:description" content="The ICC formula — Instructions, Context, Constraints — is the difference between generic AI output and something usable. Plus the context interview technique almost nobody uses.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/55-icc-prompt-formula.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/55-icc-prompt-formula-hero.webp">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:32px 0}
+    .stat-card{background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.2);border-radius:12px;padding:20px 16px;text-align:center}
+    .stat-card .num{display:block;font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:700;color:var(--neon-indigo,#818cf8);line-height:1.1;margin-bottom:6px}
+    .stat-card .label{display:block;font-size:.75rem;color:var(--muted,#94a3b8);letter-spacing:.05em;text-transform:uppercase}
+    .pull-quote{border-left:3px solid var(--neon-indigo,#818cf8);margin:32px 0;padding:20px 24px;background:rgba(129,140,248,.06);border-radius:0 8px 8px 0}
+    .pull-quote p{font-size:1.15rem;font-style:italic;color:var(--text,#e2e8f0);margin:0 0 8px}
+    .pull-quote cite{font-size:.8rem;color:var(--muted,#94a3b8);font-style:normal;text-transform:uppercase;letter-spacing:.08em}
+    .data-table-wrap{overflow-x:auto;margin:32px 0}
+    .data-table-wrap table{width:100%;border-collapse:collapse;font-size:.88rem}
+    .data-table-wrap th{background:rgba(129,140,248,.12);color:var(--neon-indigo,#818cf8);font-weight:600;padding:10px 14px;text-align:left;border-bottom:1px solid rgba(129,140,248,.2);text-transform:uppercase;font-size:.75rem;letter-spacing:.06em}
+    .data-table-wrap td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);color:var(--text,#e2e8f0);vertical-align:top}
+    .data-table-wrap tr:last-child td{border-bottom:none}
+    .step-tag{display:inline-block;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.25);border-radius:6px;padding:4px 12px;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:16px 0 8px}
+    .loop-stages{margin:24px 0;display:grid;gap:12px}
+    .loop-stage{display:flex;gap:16px;align-items:flex-start;padding:16px;background:rgba(129,140,248,.05);border:1px solid rgba(129,140,248,.12);border-radius:10px}
+    .loop-arrow{font-family:'Orbitron',sans-serif;font-size:1.2rem;color:var(--neon-indigo,#818cf8);flex-shrink:0;padding-top:2px}
+    .loop-content .loop-label{font-weight:600;color:var(--text,#e2e8f0);font-size:.95rem;margin-bottom:4px}
+    .loop-content .loop-detail{font-size:.85rem;color:var(--muted,#94a3b8);line-height:1.6}
+    .icc-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0}
+    .icc-compare-block{padding:20px;border-radius:10px;font-size:.88rem;line-height:1.7}
+    .icc-compare-block.bad{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2)}
+    .icc-compare-block.good{background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2)}
+    .icc-compare-block .compare-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+    .icc-compare-block.bad .compare-label{color:#ef4444}
+    .icc-compare-block.good .compare-label{color:#10b981}
+    .icc-compare-block p{color:var(--text,#e2e8f0);margin:0;font-style:italic}
+    @media(max-width:640px){.icc-compare{grid-template-columns:1fr}}
+  </style>
+</head>
+<body class="standalone-nav">
+<div class="scroll-progress"></div>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="/index.html" class="logo-link">
+        <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
+      </a>
+      <span class="logo-tagline">AI Signal · Always On</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/index.html" class="nav-item" data-page="news">News</a>
+      <a href="/models.html" class="nav-item" data-page="models">Models</a>
+      <a href="/tools/chat.html" class="nav-item" data-page="playground">Playground</a>
+      <a href="/skills.html" class="nav-item" data-page="skills">Skills</a>
+    </nav>
+  </aside>
+  <div class="main-content">
+    <main class="article-page">
+      <article>
+        <img src="/images/articles/55-icc-prompt-formula-hero.webp" alt="Split screen showing a vague one-line prompt generating generic bullet points on the left, versus a structured ICC prompt generating a tailored business strategy on the right" class="article-hero">
+        <div class="article-wrap">
+          <div class="article-meta">
+            <span class="badge badge-tools">Tools</span>
+            <time datetime="2026-05-17">May 17, 2026</time>
+          </div>
+          <h1>Stop Writing Bad Prompts: The ICC Formula That Actually Works</h1>
+          <p class="article-deck">Most AI users type a question and get generic output, then assume that's just how AI works. It's not. The ICC formula — Instructions, Context, Constraints — is the difference between generic and usable. Plus the hidden technique almost nobody uses: letting AI ask you the questions.</p>
+          <div class="article-byline">By Aether Intel</div>
+          <div class="article-body">
+
+            <p>There is a specific failure mode that quietly shapes how millions of people think about AI. A person opens Claude or ChatGPT, types a question, reads a generic five-bullet answer, and concludes: "I guess this is what AI does." They accept mediocrity not because the model is mediocre, but because they've never seen what a properly structured prompt actually produces. The ceiling they've hit isn't the model's ceiling. It's theirs.</p>
+
+            <p>The gap between a bad prompt and a good one isn't a matter of length or formality. It's a matter of structure. The ICC formula — Instructions, Context, Constraints — is the minimal viable architecture for getting AI to do useful work. It doesn't require any technical knowledge. It requires knowing what information the model actually needs to serve you.</p>
+
+            <div class="stat-grid">
+              <div class="stat-card">
+                <span class="num">305K</span>
+                <span class="label">Views on the source tutorial</span>
+              </div>
+              <div class="stat-card">
+                <span class="num">3</span>
+                <span class="label">Parts of the ICC formula</span>
+              </div>
+              <div class="stat-card">
+                <span class="num">Context<br>Interview</span>
+                <span class="label">The pro technique most skip</span>
+              </div>
+              <div class="stat-card">
+                <span class="num">Ground<br>First</span>
+                <span class="label">Bonus technique for depth</span>
+              </div>
+            </div>
+
+            <h2>The Three Parts of ICC</h2>
+
+            <p>The formula isn't a magic spell. It's a checklist — a way of auditing your prompt before you send it. Each element addresses a different kind of information the model needs to understand what you actually want.</p>
+
+            <div class="loop-stages">
+              <div class="loop-stage">
+                <div class="loop-arrow">01</div>
+                <div class="loop-content">
+                  <div class="loop-label">Instructions — Define the task with precision</div>
+                  <div class="loop-detail">Tell the model what you want it to do, not just what you want to know. "Recommend five ways" is an instruction. "What do you think about AI?" is a conversation opener that invites a survey response. The more specific your verb — analyze, rewrite, rank, generate, extract — the more the model understands the shape of the output you need.</div>
+                </div>
+              </div>
+              <div class="loop-stage">
+                <div class="loop-arrow">02</div>
+                <div class="loop-content">
+                  <div class="loop-label">Context — Err heavily on the side of more</div>
+                  <div class="loop-detail">This is where most prompts fail. Context is your role, your objectives, your situation, your audience, the specific constraints of your world. A "full context dump" is not excessive — it's an investment. Without it, the model has no choice but to give a response that could apply to anyone, because it knows nothing about you specifically. Think of it as briefing a new consultant who has never heard of your company.</div>
+                </div>
+              </div>
+              <div class="loop-stage">
+                <div class="loop-arrow">03</div>
+                <div class="loop-content">
+                  <div class="loop-label">Constraints — Specify the rules of the output</div>
+                  <div class="loop-detail">Format, tone, length, style, what to avoid. Constraints are how you shape the form of the answer, not just the content. Asking for a numbered list of one-sentence summaries changes the interaction: you get something scannable, and you can ask for elaboration only on the items that interest you. Including an example of the output you want is among the most powerful constraints you can provide — it communicates shape better than any adjective can.</div>
+                </div>
+              </div>
+            </div>
+
+            <p>One important clarification: the order doesn't matter. What matters is that all three elements are present. You can lead with context, open with constraints, or front-load the instruction. The formula is a checklist, not a template.</p>
+
+            <h2>Bad Prompt, Good Prompt</h2>
+
+            <p>The difference between a weak prompt and a strong one is often less than fifty words. Consider this marketing agency example:</p>
+
+            <div class="icc-compare">
+              <div class="icc-compare-block bad">
+                <div class="compare-label">Without ICC</div>
+                <p>"Recommend five ways to implement AI in my marketing agency."</p>
+              </div>
+              <div class="icc-compare-block good">
+                <div class="compare-label">With ICC</div>
+                <p>"Recommend five ways to implement AI in my business. [Context: I run a ten-person marketing agency focused on B2B clients in the manufacturing sector. Our biggest bottleneck is client communication and reporting. We have no in-house developers.] Make sure the recommendations are low-cost, require no technical expertise to implement, and format your answer as a numbered list with one sentence explaining each."</p>
+              </div>
+            </div>
+
+            <p>The left prompt generates a response that could appear in any business blog written in 2023. The right prompt generates answers that are actually decision-ready — specific to the agency's size, sector, bottleneck, and capability level. The model hasn't become smarter. It's been given what it needs to be useful.</p>
+
+            <h2>The Context Interview: The Technique Almost Nobody Uses</h2>
+
+            <p>Even with the ICC formula firmly in mind, there's a practical problem: you often don't know what context you're leaving out. You know your own business too well to notice the gaps. You take for granted the details that would most change the answer.</p>
+
+            <p>The context interview solves this elegantly. At the end of your prompt, add a single sentence: "Before you answer, ask me any questions you need to give me the most useful response."</p>
+
+            <div class="pull-quote">
+              <p>"It will know what it needs better than you do, so will ask a series of questions to gather the rest of that information. After it has everything, it will give you an answer that's much more helpful because it's tailored to your specific situation."</p>
+              <cite>Futurepedia — Full Claude Tutorial: Beginner to Advanced</cite>
+            </div>
+
+            <p>The effect in practice is striking. Asked about AI implementation for a marketing agency, the model might ask: What's your current tech stack? Where are you losing the most time? What's your monthly budget for new tools? What does client communication look like today? These are the questions that would change the answer — and without the context interview, you'd never know to include them.</p>
+
+            <p>This is the hidden leverage point. You're not hoping the model will read your mind. You're delegating the task of knowing what to ask back to the system that has seen every possible version of this conversation before.</p>
+
+            <h2>ICC at a Glance</h2>
+
+            <div class="data-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Element</th>
+                    <th>What to include</th>
+                    <th>Common mistake</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Instructions</strong></td>
+                    <td>A specific action verb plus the subject. What do you want done — analyzed, rewritten, ranked, summarized, generated?</td>
+                    <td>Using a vague opener ("Tell me about...") that forces the model to guess the output shape.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Context</strong></td>
+                    <td>Your role, your situation, your goals, your audience, relevant background. More is almost always better.</td>
+                    <td>Assuming the model knows your industry, company size, technical level, or constraints without being told.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Constraints</strong></td>
+                    <td>Format (list, table, paragraph), tone (direct, conversational), length, style, and ideally an example of what good looks like.</td>
+                    <td>Leaving the output format completely open, then being disappointed by an essay when you needed a checklist.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Context Interview</strong></td>
+                    <td>One sentence at the end: "Ask me any questions you need before answering."</td>
+                    <td>Assuming you've already included all the relevant context when you almost certainly haven't.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>Ground First, Ask Second</h2>
+
+            <p>There's a second technique that operates at the session level rather than the prompt level. Before asking a complex question, run a separate grounding prompt first — one that brings the model up to speed on the specific domain you're about to work in.</p>
+
+            <p>For instance: before asking for help with an n8n automation problem, start by asking the model to research n8n thoroughly and summarize its current capabilities. Then ask your question. The grounding changes the quality of every answer that follows because the model is now operating from a richer, more specific knowledge base within your conversation.</p>
+
+            <p>The same principle applies to strategy work. Before asking for a product launch plan, ask the model to research a specific strategist's framework — extract the core tactics, the underlying principles, the patterns. Now when you ask for help with your launch, those frameworks are active context. You're not just getting generic advice; you're getting advice filtered through the strategic lens you've chosen.</p>
+
+            <p>This separates two tasks that most users collapse into one: the task of gathering information and the task of applying it. Keeping them separate produces sharper results at each stage.</p>
+
+            <h2>Where Prompts Fit in the Bigger Picture</h2>
+
+            <p>Once you've written a truly good prompt — one that combines ICC, a context interview, and a grounding pass when needed — you'll notice something: you don't want to write it again from scratch next time you have the same kind of task. This is the natural inflection point toward what skilled AI users call skills or templates. A skill is a codified prompt: the good prompt you built once, saved, and can invoke with a single command.</p>
+
+            <p>The ICC formula is the craft. Skills are the infrastructure that lets you not redo the craft every time.</p>
+
+            <p>The larger insight is this: most people who are disappointed with AI aren't disappointed by the model. They're disappointed by their own prompts, and they've attributed the limitation to the wrong source. The formula doesn't require expertise. It requires slowing down long enough to answer three questions before you hit send: What do I want done? What does the model need to know about my situation? What should the output look like? Answer those three questions clearly, and generic output becomes a choice rather than an inevitability.</p>
+
+          </div>
+        </div>
+      </article>
+    </main>
+  </div>
+</div>
+<script src="/js/app.js"></script>
+</body>
+</html>
