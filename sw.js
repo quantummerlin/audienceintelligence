@@ -4,14 +4,13 @@
  * Version: auto-stamped at build time via CACHE_VERSION
  */
 
-const CACHE_VERSION = 'aether-v9';
+const CACHE_VERSION = 'aether-v10';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
-// Assets to pre-cache on install (app shell)
+// Static assets only — NO HTML. HTML must always come from network so
+// stale pages are never served to users after a deploy.
 const PRECACHE_ASSETS = [
-  '/',
-  '/index.html',
   '/css/style.css',
   '/js/main.js',
   '/images/icons/icon-192.png',
@@ -38,10 +37,10 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then(cache => cache.addAll(PRECACHE_ASSETS))
-      .then(() => self.skipWaiting())
+      .then(() => self.skipWaiting())   // activate immediately, don't wait
       .catch(err => {
-        // Don't fail install if a precache asset is missing
         console.warn('[SW] Precache partial failure:', err);
+        return self.skipWaiting();      // still activate even if precache fails
       })
   );
 });
@@ -49,16 +48,27 @@ self.addEventListener('install', event => {
 // ─── Activate ───────────────────────────────────────────────────────────────
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key.startsWith('aether-') && key !== STATIC_CACHE && key !== PAGE_CACHE)
-          .map(key => {
-            console.log('[SW] Deleting old cache:', key);
-            return caches.delete(key);
-          })
+    // 1. Delete all old aether-* caches
+    caches.keys()
+      .then(keys =>
+        Promise.all(
+          keys
+            .filter(key => key.startsWith('aether-') && key !== STATIC_CACHE && key !== PAGE_CACHE)
+            .map(key => {
+              console.log('[SW] Deleting old cache:', key);
+              return caches.delete(key);
+            })
+        )
       )
-    ).then(() => self.clients.claim())
+      // 2. Claim all open tabs (new SW takes over immediately)
+      .then(() => self.clients.claim())
+      // 3. Force all open windows to reload so they get fresh HTML
+      .then(() =>
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+          .then(clientList =>
+            Promise.all(clientList.map(client => client.navigate(client.url)))
+          )
+      )
   );
 });
 
@@ -68,8 +78,8 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
 
   // Only handle same-origin + trusted font CDNs
-  const isSameOrigin   = url.origin === self.location.origin;
-  const isFontCDN      = /fonts\.(googleapis|gstatic)\.com/.test(url.hostname);
+  const isSameOrigin = url.origin === self.location.origin;
+  const isFontCDN    = /fonts\.(googleapis|gstatic)\.com/.test(url.hostname);
   if (!isSameOrigin && !isFontCDN) return;
 
   // Never cache these patterns
@@ -81,7 +91,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // HTML navigation → network-first, fallback to cache
+  // HTML navigation → network-first, fallback to cache only when offline
   if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
     event.respondWith(networkFirst(request, PAGE_CACHE));
     return;
@@ -121,7 +131,7 @@ async function networkFirst(request, cacheName) {
     if (cached) return cached;
     // Offline fallback for navigations
     if (request.mode === 'navigate') {
-      const fallback = await caches.match('/');
+      const fallback = await caches.match('/index.html');
       if (fallback) return fallback;
     }
     return new Response('You appear to be offline.', {
@@ -132,7 +142,7 @@ async function networkFirst(request, cacheName) {
 }
 
 // ─── Push notifications (future) ─────────────────────────────────────────────
-self.addEventListener('sush', event => {
+self.addEventListener('push', event => {
   if (!event.data) return;
   const data = event.data.json();
   event.waitUntil(
