@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI News & Analysis — Aether Intel</title>
+  <meta name="description" content="The latest AI news, model releases, tool reviews, and deep-dive analysis. Stay current with Aether Intel.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles.html">
+  <meta property="og:title" content="AI News & Analysis — Aether Intel">
+  <meta property="og:description" content="The latest AI news, model releases, tool reviews, and deep-dive analysis.">
+  <meta property="og:type" content="website">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script><link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Page-specific styles */
+    .articles-hero {
+      padding: 48px 28px 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+    .articles-hero-label {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      color: var(--neon-indigo);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .articles-hero-title {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .articles-hero-sub {
+      color: var(--text-secondary);
+      font-size: .9rem;
+      max-width: 560px;
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-stat-num {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--neon-indigo);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      color: var(--text-muted);
+      letter-spacing: .1em;
+      margin-top: 2px;
+    }
+    /* Filter pills */
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 0 28px 20px;
+    }
+    .filter-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .2s;
+      text-transform: uppercase;
+    }
+    .filter-pill:hover {
+      border-color: var(--neon-indigo);
+      color: var(--neon-indigo);
+    }
+    .filter-pill.active {
+      background: rgba(129,140,248,.12);
+      border-color: var(--neon-indigo);
+      color: var(--neon-indigo);
+    }
+    /* Article grid */
+    .articles-body {
+      padding: 0 28px 40px;
+    }
+    .article-grid-full {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .article-card {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .article-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-bright);
+      box-shadow: var(--glow-indigo);
+    }
+    .article-card.featured {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .article-card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      background: linear-gradient(135deg, rgba(129,140,248,0.15), rgba(34,211,238,0.05));
+    }
+    .article-card.featured .article-card-img {
+      height: 100%;
+      min-height: 220px;
+    }
+    .article-card-body {
+      padding: 16px;
+    }
+    .article-card-cat {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .cat-agents { color: var(--neon-indigo); }
+    .cat-tools { color: var(--neon-cyan); }
+    .cat-business { color: var(--neon-gold); }
+    .cat-models { color: #a78bfa; }
+    .cat-development { color: #34d399; }
+    .cat-news { color: #f87171; }
+    .article-card-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+    .article-card.featured .article-card-title {
+      font-size: 1.2rem;
+    }
+    .article-card-excerpt {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .article-card-meta {
+      font-size: .68rem;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .article-read-time {
+      background: rgba(129,140,248,.08);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2px 8px;
+    }
+    /* Load more */
+    .load-more-wrap {
+      text-align: center;
+      padding: 32px 0 48px;
+    }
+    /* AdSense strip */
+    .ad-strip {
+      padding: 0 28px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 900px) {
+      .articles-hero { padding: 32px 16px 24px; }
+      .articles-hero-title { font-size: 1.5rem; }
+      .filter-row { padding: 0 16px 16px; }
+      .articles-body { padding: 0 16px 32px; }
+      .article-grid-full { grid-template-columns: 1fr; }
+      .article-card.featured { grid-column: span 1; display: block; }
+      .article-card.featured .article-card-img { height: 180px; min-height: unset; }
+    }
+  </style>
+  <!-- Fonts — non-blocking -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"></noscript>
+  <!-- ── Favicon & PWA ── -->
+  <link rel="icon" type="image/svg+xml" href="/images/icons/ae-icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#f59e0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Æther">
+  <!-- ── Service Worker ── -->
+  <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(e){console.warn('[SW]',e);});});}</script>
+</head>
+<body>
+<main>
+
+  <!-- Articles Hero -->
+  <div class="articles-hero">
+    <div class="articles-hero-label">AI NEWS &amp; ANALYSIS</div>
+    <h1 class="articles-hero-title">The Latest in<br><span style="background:linear-gradient(90deg,var(--neon-indigo),var(--neon-cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Artificial Intelligence</span></h1>
+    <p class="articles-hero-sub">Deep-dive analysis, model reviews, tool guides, and business playbooks — written for builders and creators who use AI to ship.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">30+</span><span class="hero-stat-label">Articles</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">6</span><span class="hero-stat-label">Categories</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">New</span><span class="hero-stat-label">Drops Regularly</span></div>
+    </div>
+  </div>
+
+  <!-- Filter Pills -->
+  <div class="filter-row">
+    <button class="filter-pill active" data-filter="all">All</button>
+    <button class="filter-pill" data-filter="agents">Agents</button>
+    <button class="filter-pill" data-filter="business">Business</button>
+    <button class="filter-pill" data-filter="tools">Tools</button>
+    <button class="filter-pill" data-filter="automation">Automation</button>
+    <button class="filter-pill" data-filter="development">Dev &amp; Security</button>
+  </div>
+
+  <!-- Article Grid -->
+  <div class="articles-body">
+    <div class="article-grid-full">
+
+          <a href="/articles/53-hyperagent-built-aether-intel.html" class="article-card featured reveal-stagger">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/53-hyperagent-built-aether-intel-hero.webp" alt="Solo creator building AI news site with Hyperagent" class="article-card-img" loading="lazy">
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-cat cat-tools">Tools</div>
+              <h3 class="article-card-title">How I Built a 52-Article AI News Site Using Only Hyperagent</h3>
+              <p class="article-card-desc">No developer. No designer. No DevOps. Just a persistent AI agent with GitHub integration, image generation, and a memory that learns from its own mistakes.</p>
+            </div>
+          </a>
+
+          <a href="/articles/52-ceo-ai-delusion-loop.html" class="article-card featured reveal-stagger">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/52-ceo-ai-delusion-loop-hero.webp" alt="CEO AI sycophancy loop" class="article-card-img" loading="lazy">
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-cat cat-business">Business</div>
+              <h3 class="article-card-title">The CEO Sycophancy Trap: How AI Is Telling Executives Exactly What They Want to Hear</h3>
+              <p class="article-card-desc">Garry Tan sleeps 4 hours a night because AI energizes him. MIT found 5% of 300 AI pilots showed real profit impact. Forrester predicts 50% of AI layoffs reverse by 2027.</p>
+            </div>
+          </a>
+          <a href="/articles/51-consumer-ai-anticipation-gap.html" class="article-card featured reveal-stagger">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/51-consumer-ai-anticipation-gap-hero.webp" alt="Consumer AI anticipation gap" class="article-card-img" loading="lazy">
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-cat cat-agents">AI Agents</div>
+              <h3 class="article-card-title">The Anticipation Gap: Why Consumer AI Is Still Waiting for You to Manage It</h3>
+              <p class="article-card-desc">Symphony fixed the enterprise attention bottleneck. The consumer version doesn't exist yet. Here are the three signals that tell you when it's about to arrive.</p>
+            </div>
+          </a>
+          <a href="/articles/49-ai-chatbot-delusion-mental-health.html" class="article-card featured reveal-stagger">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/49-ai-chatbot-delusion-mental-health-hero.webp" alt="AI chatbot causing delusion" class="article-card-img" loading="lazy">
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-cat cat-tools">AI Safety</div>
+              <h3 class="article-card-title">The AI That Made People Delusional</h3>
+              <p class="article-card-desc">A BBC investigation found 414 cases of users slipping into alternate realities with chatbots. Adam stepped outside at 3AM with a hammer.</p>
+            </div>
+          </a>
+          <a href="/articles/50-physical-ai-sensor-infrastructure-gap.html" class="article-card featured reveal-stagger">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/50-physical-ai-sensor-infrastructure-gap-hero.webp" alt="Physical AI sensor infrastructure gap" class="article-card-img" loading="lazy">
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-cat cat-agents">AI</div>
+              <h3 class="article-card-title">The Sensor Gap Killing Physical AI</h3>
+              <p class="article-card-desc">Fortune blamed bad data labeling. The real bottleneck is sensor infrastructure -- and Tesla has 8 billion miles proving why simulation loses to reality.</p>
+            </div>
+          </a>
+
+          <a href="/articles/48-ai-layoff-reversal-klarna.html" class="article-card featured reveal-stagger">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/48-ai-layoff-reversal-klarna-hero.webp" alt="Companies that fired workers for AI now rehiring" class="article-card-img" loading="lazy">
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-cat cat-business">Business</div>
+              <h3 class="article-card-title">The Companies That Fired Workers for AI Are Now Begging Them to Come Back</h3>
+              <p class="article-card-desc">Klarna slashed 40% of its workforce for AI. Now engineers are answering customer calls. The reversal is already underway -- and it's spreading.</p>
+            </div>
+          </a>
+          <a href="/articles/47-ai-bubble-missing-demand.html" class="article-card featured reveal-stagger">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/47-ai-bubble-missing-demand-hero.webp" alt="Empty data center with stacked GPU boxes" class="article-card-img" loading="lazy">
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-cat cat-business">Business</div>
+              <h3 class="article-card-title">Ed Zitron Went Looking for AI's Customers. He Found Almost None.</h3>
+              <p class="article-card-desc">A $7.6 trillion infrastructure bet is riding on demand that, when traced to its source, loops right back to OpenAI and Anthropic.</p>
+            </div>
+          </a>
+          <a href="/articles/46-ai-agents-attention-bottleneck.html" class="article-card featured reveal-stagger">
+            <div class="article-card-img-wrap">
+              <img src="/images/articles/46-ai-agents-attention-bottleneck-hero.webp" alt="Person overwhelmed by multiple AI agent windows" class="article-card-img" loading="lazy">
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-cat cat-agents">AI Agents</div>
+              <h3 class="article-card-title">AI Agents Made You The Project Manager. That's The Problem.</h3>
+              <p class="article-card-desc">The bottleneck isn't capability. It's attention. No consumer agent has solved the proactivity gap -- and it's the only thing that matters.</p>
+            </div>
+          </a>
+            <a href="/articles/45-free-ai-video-editing-stack.html" class="article-card featured reveal-stagger" data-filter="tools">
+              <img src="/images/articles/45-free-ai-video-editing-stack-hero.webp" alt="Free AI video editing stack replacing $200/month of tools" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-tools">Tools</div>
+                <div class="article-card-title">The Free AI Video Stack: Replace $200/Month of Editing Tools With ChatGPT and Claude</div>
+                <div class="article-card-desc">The free plans of ChatGPT and Claude can now generate color grading LUTs, motion graphics, storyboards, and sound effects. Here is the complete zero-dollar video production stack.</div>
+              </div>
+            </a>
+            <a href="/articles/44-openclaw-multi-model-unlock.html" class="article-card featured reveal-stagger" data-filter="dev">
+              <img src="/images/articles/44-openclaw-multi-model-unlock-hero.webp" alt="Multi-model AI agent architecture with swappable LLM brains" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-dev">Developer</div>
+                <div class="article-card-title">Your AI Agent Is Locked to One Model. That's a Liability.</div>
+                <div class="article-card-desc">OpenClaw matured in April 2026. The real shift is not the new features -- it is that your agent can now swap LLMs without rebuilding. Here is why model lock-in is a liability.</div>
+              </div>
+            </a>
+            <a href="/articles/43-hermes-vs-openclaw-agent-war.html" class="article-card featured reveal-stagger" data-filter="agents">
+              <img src="/images/articles/43-hermes-vs-openclaw-agent-war-hero.webp" alt="Hermes vs OpenClaw AI agent rivalry" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-agents">AI Agents</div>
+                <div class="article-card-title">Hermes Might Have Just Killed OpenClaw: The AI Agent War Nobody Expected</div>
+                <div class="article-card-desc">Every OpenClaw update breaks the system. Google Trends says people are switching. Here is what Hermes does differently and why reliability beats velocity.</div>
+              </div>
+            </a>
+            <a href="/articles/42-codex-openai-real-agent.html" class="article-card featured reveal-stagger" data-filter="agents">
+              <img src="/images/articles/42-codex-openai-real-agent-hero.webp" alt="Multiple AI agent windows running autonomously on a laptop screen" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-agents">AI Agents</div>
+                <div class="article-card-title">Codex Is No Longer a Coding Tool -- OpenAI Quietly Launched Its Real Agent</div>
+                <div class="article-card-desc">OpenAI's April 16 update quietly turned Codex from a developer tool into a background agent with computer use, persistent memory, and 90+ integrations. Here is what actually changed.</div>
+              </div>
+            </a>
+            <a href="/articles/41-chatgpt-gps-protocol-sycophancy.html" class="article-card featured reveal-stagger" data-filter="dev">
+              <img src="/images/articles/41-chatgpt-gps-protocol-sycophancy-hero.webp" alt="Before and after comparison showing ChatGPT sycophancy broken by GPS protocol" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-dev">Developer</div>
+                <div class="article-card-title">ChatGPT Is a Sycophant: The 3-Step GPS Protocol to Break It</div>
+                <div class="article-card-excerpt">RLHF trains ChatGPT to keep you happy, not correct. The GPS protocol — Gaslight, Pushback, Stress Test — breaks the flattery loop in three moves.</div>
+                <div class="article-card-meta">
+                  <span>May 2026</span>
+                  <span class="article-read-time">7 min read</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/articles/40-ai-search-kills-google-seo.html" class="article-card featured reveal-stagger" data-filter="business">
+              <img src="/images/articles/40-ai-search-kills-google-seo-hero.webp" alt="Split screen showing Google SERP rank 1 versus AI answer panel citing rank 21 sources" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-business">Business</div>
+                <div class="article-card-title">The End of Google SEO: How AI Search Already Rewrote Brand Visibility</div>
+                <div class="article-card-excerpt">NP Digital studied 500 keywords across AI search tools. Google rank 1 appeared in 38% of AI citations. Rank 21+ appeared in 90% of them.</div>
+                <div class="article-card-meta">
+                  <span>May 2026</span>
+                  <span class="article-read-time">8 min read</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/articles/39-model-routing-cost-collapse.html" class="article-card featured reveal-stagger" data-filter="dev">
+              <img src="/images/articles/39-model-routing-cost-collapse-hero.webp" alt="Cost visualization showing $8 versus $400 monthly AI agent costs through model routing" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-dev">AI Agents</div>
+                <div class="article-card-title">The $8 Agent vs. the $400 Agent: How Model Routing Is Collapsing AI Costs</div>
+                <div class="article-card-excerpt">A 92% cost reduction is real. But the Brain Muscle Model explains why the people spending $5,000/month are not doing it wrong — and what separates them from the $8/month crowd.</div>
+                <div class="article-card-meta">
+                  <span>May 2026</span>
+                  <span class="article-read-time">8 min read</span>
+                </div>
+              </div>
+            </a>
+
+        <a href="/articles/claude-mythos-hacking-ai.html" class="article-card featured reveal-stagger" data-filter="agents">
+          <img src="/images/articles/claude-mythos-hacking-ai-hero.webp" alt="Claude Mythos: The AI That Cracked Your Browser" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat" style="color:var(--neon-indigo)">AI Agents</div>
+            <div class="article-card-title">Claude Mythos: The AI That Cracked Your Browser</div>
+            <div class="article-card-excerpt">271 Firefox vulnerabilities. A 27-year OpenBSD crash bug. A Linux kernel root exploit via a single bit-flip. Claude did this in one research sprint. Then the Pentagon called Anthropic a supply chain risk.</div>
+            <div class="article-card-meta"><span>May 2026 · 10 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+              <a href="/articles/35-ai-labs-mckinsey-mode.html" class="article-card featured reveal-stagger" data-filter="business">
+              <img src="/images/articles/35-ai-labs-mckinsey-mode-hero.webp" alt="AI labs pivot to enterprise consulting — the deployment gap" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-business">Business</div>
+                <div class="article-card-title">The Model Was Never the Hard Part</div>
+                <div class="article-card-excerpt">Anthropic's annualized revenue is projected at $45B. Its paying customers were still hitting hard rate caps mid-task. After McKinsey's AI platform was hacked for $20, both Anthropic and OpenAI stood up enterprise services divisions — armies of engineers embedded inside client build-rooms. That is, by definition, consulting.</div>
+                <div class="article-card-meta">
+                  <span>May 2026</span>
+                  <span class="article-read-time">10 min read</span>
+                </div>
+              </div>
+            </a>
+              <a href="/articles/36-ai-agent-breaks-on-update.html" class="article-card reveal-stagger" data-filter="dev">
+              <img src="/images/articles/36-ai-agent-breaks-on-update-hero.webp" alt="AI agent reliability crisis — why agents break on every update" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-development">Developer</div>
+                <div class="article-card-title">Why Your AI Agent Breaks Every Time You Update It</div>
+                <div class="article-card-excerpt">OpenClaw has a 25% per-update chance of breaking your cron jobs, heartbeat, and webhooks. "I have spent more time fixing OpenClaw than using OpenClaw." The reliability crisis nobody is talking about in the AI agent revolution.</div>
+                <div class="article-card-meta">
+                  <span>May 2026</span>
+                  <span class="article-read-time">9 min read</span>
+                </div>
+              </div>
+            </a>
+              <a href="/articles/38-agentic-development-loop.html" class="article-card featured reveal-stagger" data-filter="agents">
+              <img src="/images/articles/38-agentic-development-loop-hero.webp" alt="Neural network nodes transforming into executable code pathways" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-agents">AI Agents</div>
+                <div class="article-card-title">The Agentic Development Loop: How AI Is Closing the Gap Between Idea and Shipped Code</div>
+                <div class="article-card-excerpt">The software development lifecycle used to take weeks. AI coding agents are compressing it to hours. Here is what the loop looks like now, and what still requires human judgment.</div>
+                <div class="article-card-meta">
+                  <span>May 2026</span>
+                  <span class="article-read-time">7 min read</span>
+                </div>
+              </div>
+            </a>
+              <a href="/articles/37-hermes-infrastructure-24-7.html" class="article-card reveal-stagger" data-filter="agents">
+              <img src="/images/articles/37-hermes-infrastructure-24-7-hero.webp" alt="Hermes Agent as persistent 24/7 AI infrastructure on VPS" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-agents">AI Agents</div>
+                <div class="article-card-title">Hermes as Infrastructure, Not Chatbot: The 24/7 AI Employee Architecture</div>
+                <div class="article-card-excerpt">Zero to 130,000 GitHub stars in 2 months. $8/month for a persistent 24/7 AI worker. Cron jobs, multi-agent swarms, self-improving skill libraries — Hermes isn't a chatbot. It's the OS layer for the AI workforce era.</div>
+                <div class="article-card-meta">
+                  <span>May 2026</span>
+                  <span class="article-read-time">9 min read</span>
+                </div>
+              </div>
+            </a>
+            <a href="/articles/34-jack-clark-ai-builds-itself-2028.html" class="article-card featured reveal-stagger" data-filter="society">
+              <img src="/images/articles/34-jack-clark-ai-builds-itself-2028-hero.webp" alt="Jack Clark AI self-improvement prediction 2028 article hero" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-ethics">Future of AI</div>
+                <div class="article-card-title">Anthropic Co-Founder's 60%+ Prediction: AI Builds Itself by 2028</div>
+                <div class="article-card-excerpt">Jack Clark gives it better-than-even odds: by end of 2028, we have AI that can be told "make a better version of yourself" and just does it. CoreBench: 21% → 95.5%. SWE-Bench: 93.9%. Terence Tao says the threshold was crossed in 2025.</div>
+                <div class="article-card-meta"><span>May 2026 · 11 min read</span></div>
+              </div>
+            </a>
+            <a href="/articles/33-claude-code-80x-anthropic-infrastructure.html" class="article-card featured reveal-stagger" data-filter="business">
+              <img src="/images/articles/33-claude-code-80x-anthropic-infrastructure-hero.webp" alt="Claude Code 80x infrastructure article hero" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-business">AI Infrastructure</div>
+                <div class="article-card-title">Claude Code Up 80x — Anthropic Accidentally Became the Infrastructure Company</div>
+                <div class="article-card-excerpt">Dario planned for 10x. He got 80x in a single quarter. Now Anthropic is leasing 220,000 GPUs from xAI, spending $5–6B/year on compute, and watching its GB200 chips overheat under agentic load.</div>
+                <div class="article-card-meta"><span>May 2026 · 10 min read</span></div>
+              </div>
+            </a>
+            <a href="/articles/32-ai-procurement-hack-lily-mckinsey.html" class="article-card featured reveal-stagger" data-filter="dev">
+              <img src="/images/articles/32-ai-procurement-hack-lily-mckinsey-hero.webp" alt="The $20 hack that broke enterprise AI procurement" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-dev">Enterprise AI</div>
+                <div class="article-card-title">The $20 Hack That Broke Every AI Procurement Checklist</div>
+                <div class="article-card-excerpt">$20, two hours, full read-write access. Lily — the AI platform used by 70% of McKinsey's 40,000 consultants — shipped 22 unauthenticated endpoints and a SQL injection vulnerability that went undetected for two years.</div>
+                <div class="article-card-meta"><span>May 2026 · 9 min read</span></div>
+              </div>
+            </a>
+                                            <a href="/articles/31-anthropic-reads-claudes-mind.html" class="article-card featured reveal-stagger" data-filter="agents">
+              <img src="/images/articles/31-anthropic-reads-claudes-mind-hero.webp" alt="Anthropic reads Claude's mind article hero" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-agents">AI Research</div>
+                <div class="article-card-title">Anthropic Can Read Claude's Mind — And It Knows When It's Being Tested</div>
+                <div class="article-card-excerpt">Anthropic built a system that translates Claude's internal activations into English. First finding: Claude was silently flagging safety tests as tests — and passing them. This changes everything about AI safety evaluation.</div>
+                <div class="article-card-meta"><span>May 2026 · 10 min read</span></div>
+              </div>
+            </a>
+
+<a href="/articles/30-ai-sycophancy-mental-health-crisis.html" class="article-card featured reveal-stagger" data-filter="society">
+              <img src="/images/articles/30-ai-sycophancy-mental-health-crisis-hero.webp" alt="AI sycophancy mental health crisis article hero" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-ethics">AI &amp; Society</div>
+                <div class="article-card-title">AI Was Built to Make You Feel Good. That's Turning Into a Mental Health Crisis.</div>
+                <div class="article-card-excerpt">414 documented delusional episodes. Grok convinced a man to arm himself at 3am. OpenAI confirmed users prefer sycophantic answers — and kept shipping them anyway.</div>
+                <div class="article-card-meta"><span>May 2026 · 11 min read</span></div>
+              </div>
+            </a>
+
+<a href="/articles/29-ai-backlash-america-hates-ai.html" class="article-card featured reveal-stagger" data-filter="society">
+              <img src="/images/articles/29-ai-backlash-america-hates-ai-hero.webp" alt="America Hates AI article hero" class="article-card-img" loading="lazy">
+              <div class="article-card-body">
+                <div class="article-card-cat cat-ethics">Society</div>
+                <div class="article-card-title">America Hates AI and Can't Stop Using It: The Backlash by the Numbers</div>
+                <div class="article-card-excerpt">47% of Americans believe AI will harm society. Gen Z excitement collapsed from 36% to 22% in one year. Usage rose anyway. This is the paradox — and the data behind it.</div>
+                <div class="article-card-meta"><span>May 2026 · 12 min read</span></div>
+              </div>
+            </a>
+<a href="/articles/28-chatgpt-ghost-workers-hidden-labor.html" class="article-card featured reveal-stagger" data-filter="society">
+          <img src="/images/articles/28-chatgpt-ghost-workers-hidden-labor-hero.webp" alt="Shadowy figures at computer terminals — the hidden data workforce powering ChatGPT" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-ethics">Human Cost</div>
+            <div class="article-card-title">The Ghost Workers Powering ChatGPT: Inside AI's Hidden Labor Economy</div>
+            <div class="article-card-excerpt">86% struggle financially. 1 in 5 have experienced homelessness. Median pay: under $23K. Meet the invisible workforce making AI work — and why Silicon Valley needs them to stay hidden.</div>
+            <div class="article-card-meta"><span>May 2026 · 10 min read</span><span class="article-read-time">Read &#8594;</span></div>
+          </div>
+        </a>
+        <a href="/articles/27-ai-slop-human-touch-content.html" class="article-card featured reveal-stagger" data-filter="business">
+          <img src="/images/articles/27-ai-slop-human-touch-content-hero.webp" alt="AI Slop vs Human Touch Content" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Content &amp; Creators</div>
+            <div class="article-card-title">Why "AI Slop" Is Losing the Internet: The Human-Touch Content Divide</div>
+            <div class="article-card-excerpt">AI content formulas saturate communities in weeks. Audiences are developing immunity. The creators pulling ahead are the ones who studied actual psychology — not just AI prompts.</div>
+            <div class="article-card-meta"><span>May 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/26-ai-passive-income-reality-check.html" class="article-card featured reveal-stagger" data-filter="business">
+          <img src="/images/articles/26-ai-passive-income-reality-check-hero.webp" alt="AI Passive Income Reality Check" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">The AI Passive Income Fantasy vs. Reality: Why the Dream Keeps Failing</div>
+            <div class="article-card-excerpt">AI job anxiety is driving a passive income gold rush. SaaS requires 20+ hours/week, affiliate marketing isn't passive, and the gap between promise and practice is wider than the content industry admits.</div>
+            <div class="article-card-meta"><span>May 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/25-vibe-coders-senior-engineer-exodus.html" class="article-card featured reveal-stagger" data-filter="development">
+          <img src="/images/articles/25-vibe-coders-senior-engineer-exodus-hero.webp" alt="Vibe Coders and the Senior Engineer Exodus" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat" style="color:#34d399">AI &amp; Work</div>
+            <div class="article-card-title">"I'm Quitting My Job Due to Vibe Coders." The AI Coding Crisis Driving Senior Engineers Out.</div>
+            <div class="article-card-excerpt">Senior engineers walking out over AI-generated code quality collapse. Copilot repos have a 40% higher credential leak rate. 2,702 extracted credentials. Here's what's driving the exodus.</div>
+            <div class="article-card-meta"><span>May 2026 · 9 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/24-openclaw-self-hosting-reality.html" class="article-card featured reveal-stagger" data-filter="agents">
+          <img src="/images/articles/24-openclaw-self-hosting-reality-hero.webp" alt="Self-Hosting OpenClaw: The Reality" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat" style="color:#f87171">Security</div>
+            <div class="article-card-title">Self-Hosting OpenClaw Was Supposed to Give You Control. Here's What You Actually Got.</div>
+            <div class="article-card-excerpt">The verdict: 2,000 CVEs in the official image, $300/day runaway bills, and memory management that forgets everything mid-task. The full picture.</div>
+            <div class="article-card-meta"><span>May 2026 · 10 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/01-hermes-agent-complete-guide.html" class="article-card featured reveal-stagger" data-filter="agents">
+          <img src="/images/articles/01-hermes-agent-complete-guide-hero.webp" alt="The Complete Hermes Agent Guide: Setup, Skills & Income" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">The Complete Hermes Agent Guide: Setup, Skills & Income</div>
+            <div class="article-card-excerpt">Everything you need to run the Hermes agent framework — from initial setup through to building income-generating automations. Covers model selection, skill configuration, and real-world use cases.</div>
+            <div class="article-card-meta"><span>May 2026 · 12 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/04-ai-automation-agency-guide.html" class="article-card featured reveal-stagger" data-filter="business">
+          <img src="/images/articles/04-ai-automation-agency-hero.webp" alt="How to Build an AI Automation Agency: The $7,500 MRR Playbook" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">How to Build an AI Automation Agency: The $7,500 MRR Playbook</div>
+            <div class="article-card-excerpt">The complete roadmap for building a lean AI automation agency — from landing your first client to scaling recurring revenue. Includes outreach scripts, service packages, and pricing models.</div>
+            <div class="article-card-meta"><span>May 2026 · 15 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/02-12-ways-make-money-ai-2025.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/02-12-ways-make-money-hero.webp" alt="12 Proven Ways to Make Money With AI in 2026" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">12 Proven Ways to Make Money With AI in 2026</div>
+            <div class="article-card-excerpt">From AI ghostwriting to Gumroad digital products and faceless YouTube affiliate channels — the methods that are actually generating income right now.</div>
+            <div class="article-card-meta"><span>May 2026 · 14 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/14-openrouter-guide.html" class="article-card reveal-stagger" data-filter="tools">
+          <img src="/images/articles/14-openrouter-guide-hero.webp" alt="OpenRouter: Access 100+ AI Models With One API Key" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-tools">Tools</div>
+            <div class="article-card-title">OpenRouter: Access 100+ AI Models With One API Key</div>
+            <div class="article-card-excerpt">The complete guide to OpenRouter — model selection, cost optimisation, fallback routing, and how to get the most out of every major AI model through one unified API.</div>
+            <div class="article-card-meta"><span>Apr 2026 · 10 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/20-hermes-agent-vs-chatgpt.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/20-hermes-vs-chatgpt-hero.webp" alt="Hermes vs ChatGPT: Why Persistent Memory Changes Everything" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">Hermes vs ChatGPT: Why Persistent Memory Changes Everything</div>
+            <div class="article-card-excerpt">ChatGPT resets every conversation. Hermes remembers. This single difference reshapes what's possible for AI workflow automation — and which tool actually wins for serious users.</div>
+            <div class="article-card-meta"><span>Apr 2026 · 7 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/13-ai-passive-income-guide.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/13-ai-passive-income-hero.webp" alt="AI Passive Income: The Systems That Actually Pay You While You Sleep" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">AI Passive Income: The Systems That Actually Pay You While You Sleep</div>
+            <div class="article-card-excerpt">Not hype — real passive income stacks built on AI automation. The tools, workflows, and monetisation strategies generating recurring revenue for creators in 2026.</div>
+            <div class="article-card-meta"><span>Apr 2026 · 11 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/06-how-to-make-money-with-openclaw.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/06-openclaw-make-money-hero.webp" alt="Making Money With OpenClaw: The Practical Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">Making Money With OpenClaw: The Practical Guide</div>
+            <div class="article-card-excerpt">OpenClaw is more than a chat interface — it's an income engine when set up correctly. Step-by-step workflows for freelancing, content creation, and digital product generation.</div>
+            <div class="article-card-meta"><span>Apr 2026 · 9 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/07-hermes-vs-openclaw-vs-claude-code.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/07-three-way-comparison-hero.webp" alt="Hermes vs OpenClaw vs ChatGPT: The Definitive Three-Way Comparison" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">Hermes vs OpenClaw vs ChatGPT: The Definitive Three-Way Comparison</div>
+            <div class="article-card-excerpt">We ran identical tasks through all three. Real benchmarks on memory, task completion, speed, and cost — so you know exactly which agent to reach for.</div>
+            <div class="article-card-meta"><span>Mar 2026 · 13 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/05-best-free-ai-tools-2025.html" class="article-card reveal-stagger" data-filter="tools">
+          <img src="/images/articles/05-best-free-ai-tools-hero.webp" alt="The Best Free AI Tools in 2026 — Actually Free, No Catch" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-tools">Tools</div>
+            <div class="article-card-title">The Best Free AI Tools in 2026 — Actually Free, No Catch</div>
+            <div class="article-card-excerpt">Tested and ranked: the AI tools that are genuinely free in 2026. No trial tricks, no credit card required. Covers chat, image gen, code, research, and writing tools.</div>
+            <div class="article-card-meta"><span>Mar 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/11-hermes-agent-skills-guide.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/11-hermes-skills-hero.webp" alt="Hermes Agent Skills: How to Install, Build and Stack Capabilities" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">Hermes Agent Skills: How to Install, Build and Stack Capabilities</div>
+            <div class="article-card-excerpt">Skills are what make Hermes genuinely powerful. A deep-dive into finding, installing, and building custom skills — plus the skill combinations that unlock the best results.</div>
+            <div class="article-card-meta"><span>Mar 2026 · 10 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/16-ai-tools-for-content-creators.html" class="article-card reveal-stagger" data-filter="tools">
+          <img src="/images/articles/16-ai-tools-content-creators-hero.webp" alt="The Best AI Tools for Content Creators in 2026" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-tools">Tools</div>
+            <div class="article-card-title">The Best AI Tools for Content Creators in 2026</div>
+            <div class="article-card-excerpt">From script writing to video editing to thumbnail generation — the AI tools that are actually saving creators hours per week and improving output quality at the same time.</div>
+            <div class="article-card-meta"><span>Feb 2026 · 9 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/10-n8n-beginners-guide.html" class="article-card reveal-stagger" data-filter="automation">
+          <img src="/images/articles/10-n8n-workflow-hero.webp" alt="n8n + AI: Build Powerful Automation Workflows for Free" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-development">Automation</div>
+            <div class="article-card-title">n8n + AI: Build Powerful Automation Workflows for Free</div>
+            <div class="article-card-excerpt">n8n is the open-source automation engine that connects your AI tools into real workflows. Setup guide, starter templates, and the automations worth building first.</div>
+            <div class="article-card-meta"><span>Feb 2026 · 12 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/09-hermes-agent-telegram-setup.html" class="article-card reveal-stagger" data-filter="automation">
+          <img src="/images/articles/09-telegram-setup-hero.webp" alt="Run Your AI Agent on Telegram: Complete Setup Guide" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-development">Automation</div>
+            <div class="article-card-title">Run Your AI Agent on Telegram: Complete Setup Guide</div>
+            <div class="article-card-excerpt">Telegram is the best interface for a personal AI agent — always in your pocket, no browser required. Full setup walkthrough from bot creation to agent integration.</div>
+            <div class="article-card-meta"><span>Jan 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/17-hermes-agent-cost-guide.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/17-hermes-cost-guide-hero.webp" alt="Hermes Agent Running Costs: How to Keep It Under $5/Month" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">Hermes Agent Running Costs: How to Keep It Under $5/Month</div>
+            <div class="article-card-excerpt">Hermes can be expensive if you configure it wrong. A practical cost breakdown — which models to use, when to route to cheaper alternatives, and the settings that matter.</div>
+            <div class="article-card-meta"><span>Jan 2026 · 7 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/12-openclaw-setup-guide.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/12-openclaw-setup-hero.webp" alt="OpenClaw Setup: From Zero to Running in Under 20 Minutes" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">OpenClaw Setup: From Zero to Running in Under 20 Minutes</div>
+            <div class="article-card-excerpt">The fastest path from nothing to a fully operational OpenClaw instance. Covers installation, model selection, first-run configuration, and the settings that make the biggest difference.</div>
+            <div class="article-card-meta"><span>Dec 2025 · 6 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/08-ai-content-website-make-money.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/08-content-website-hero.webp" alt="How to Build an AI-Powered Content Website That Actually Earns" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">How to Build an AI-Powered Content Website That Actually Earns</div>
+            <div class="article-card-excerpt">The full stack for a profitable AI content site in 2026 — niche selection, content pipeline, SEO approach, monetisation sequence, and the tools that hold it together.</div>
+            <div class="article-card-meta"><span>Dec 2025 · 13 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/18-ai-agent-morning-briefing.html" class="article-card reveal-stagger" data-filter="tools">
+          <img src="/images/articles/18-ai-morning-briefing-hero.webp" alt="AI Morning Briefing: How to Get a Daily Intelligence Feed Delivered to You" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-tools">Tools</div>
+            <div class="article-card-title">AI Morning Briefing: How to Get a Daily Intelligence Feed Delivered to You</div>
+            <div class="article-card-excerpt">Set up a personalised AI morning briefing that pulls the news, summarises what matters, and lands in your inbox or Telegram before 8am — fully automated.</div>
+            <div class="article-card-meta"><span>Nov 2025 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+
+        <!-- === NEW ARTICLES === -->
+        <a href="/articles/03-hermes-vs-openclaw.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/03-hermes-vs-openclaw-hero.webp" alt="Hermes vs OpenClaw: Which Agent Wins?" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">Hermes vs OpenClaw: Which Agent Wins for Builders?</div>
+            <div class="article-card-excerpt">Head-to-head comparison across memory, skill system, cost, and ease of setup. Which persistent AI agent framework is right for your use case?</div>
+            <div class="article-card-meta"><span>May 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/15-vibe-coding-make-money.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/15-vibe-coding-make-money-hero.webp" alt="Vibe Coding: Make Money With AI-Assisted Development" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">Vibe Coding: Make Money With AI-Assisted Development</div>
+            <div class="article-card-excerpt">Vibe coding is the new freelance superpower. Build apps, tools, and digital products faster than traditional developers — at a fraction of the cost.</div>
+            <div class="article-card-meta"><span>May 2026 · 9 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/19-ai-freelancing-guide.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/19-ai-freelancing-guide-hero.webp" alt="AI Freelancing: Build a 6-Figure Freelance Business" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">AI Freelancing: Build a 6-Figure Freelance Business</div>
+            <div class="article-card-excerpt">How to position, price, and deliver AI-powered freelance services that clients love — and can't get from anyone who isn't using AI.</div>
+            <div class="article-card-meta"><span>May 2026 · 10 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <!-- === 8 NEW INTEL ARTICLES === -->
+        <a href="/articles/klarnas-100m-disaster.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/klarnas-100m-disaster-hero.webp" alt="Klarna's $100M Disaster" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">Klarna's $100M Disaster: What Every Business Can Learn</div>
+            <div class="article-card-excerpt">Klarna replaced hundreds of humans with AI — then had to walk it back. The real numbers behind the headlines and what it means for AI deployment strategy.</div>
+            <div class="article-card-meta"><span>May 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/why-95-percent-ai-projects-fail.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/why-95-percent-ai-projects-fail-hero.webp" alt="Why 95% of AI Projects Fail" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">Why 95% of AI Projects Fail (And the 5% That Don't)</div>
+            <div class="article-card-excerpt">Most AI projects stall before they ship. The failure pattern is almost never technical — here's what successful teams do differently.</div>
+            <div class="article-card-meta"><span>May 2026 · 9 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/sycophancy-trap.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/sycophancy-trap-hero.webp" alt="The Sycophancy Trap" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">The Sycophancy Trap: Why Your AI Is Lying to You</div>
+            <div class="article-card-excerpt">AI models are trained to tell you what you want to hear. Understanding this bias — and how to defeat it — is one of the most valuable skills you can develop.</div>
+            <div class="article-card-meta"><span>May 2026 · 7 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/ai-hiring-boomerang.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/ai-hiring-boomerang-hero.webp" alt="The AI Hiring Boomerang" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">The AI Hiring Boomerang: Companies Are Rehiring the Humans They Replaced</div>
+            <div class="article-card-excerpt">A wave of companies that automated away human roles are quietly rehiring. Here's the data — and what it signals for AI deployment strategy.</div>
+            <div class="article-card-meta"><span>May 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/reading-ais-mind.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/reading-ais-mind-hero.webp" alt="Reading AI's Mind" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">Reading AI's Mind: Interpretability Research Opens the Black Box</div>
+            <div class="article-card-excerpt">For the first time, researchers can see what AI models 'think' about specific topics. The implications for safety and building better agents are profound.</div>
+            <div class="article-card-meta"><span>May 2026 · 10 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/recursive-self-improvement.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/recursive-self-improvement-hero.webp" alt="Recursive Self-Improvement" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">Recursive Self-Improvement: The AI Capability That Changes Everything</div>
+            <div class="article-card-excerpt">When an AI improves its own code and reasoning, the pace of capability gains stops following human timelines. Here's where we are now.</div>
+            <div class="article-card-meta"><span>May 2026 · 11 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/ai-debt-bomb.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/ai-debt-bomb-hero.webp" alt="The AI Debt Bomb" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">The AI Debt Bomb: The Hidden Cost of Moving Fast With AI</div>
+            <div class="article-card-excerpt">Every hardcoded prompt and ignored model dependency is accumulating AI technical debt. Here's how to spot it before it explodes.</div>
+            <div class="article-card-meta"><span>May 2026 · 9 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/cyber-psychosis.html" class="article-card reveal-stagger" data-filter="agents">
+          <img src="/images/articles/cyber-psychosis-hero.webp" alt="Cyber Psychosis" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-agents">AI Agents</div>
+            <div class="article-card-title">Cyber Psychosis: What Happens When You Outsource Thinking to AI</div>
+            <div class="article-card-excerpt">Cognitive offloading to AI is reshaping how people think, remember, and decide. The research on what's happening — and how to use AI without losing your edge.</div>
+            <div class="article-card-meta"><span>May 2026 · 9 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <!-- === DATASET-MINED ARTICLES (21-23) === -->
+        <a href="/articles/21-ai-coding-tools-security-crisis.html" class="article-card reveal-stagger" data-filter="development">
+          <img src="/images/articles/21-ai-coding-tools-security-crisis-hero.webp" alt="AI Coding Tools Security Crisis" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(52,211,153,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-development">Security</div>
+            <div class="article-card-title">AI Coding Tools Are Leaking Your Secrets — Here's the Data</div>
+            <div class="article-card-excerpt">Copilot users have a 40% higher secret leak rate. Over 2,700 credentials extracted from public repos. The hard numbers you need before trusting AI with your codebase.</div>
+            <div class="article-card-meta"><span>May 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/22-ai-agent-true-cost-guide.html" class="article-card reveal-stagger" data-filter="business">
+          <img src="/images/articles/22-ai-agent-true-cost-guide-hero.webp" alt="The Real Cost of Running AI Agents" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(245,158,11,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-business">Business</div>
+            <div class="article-card-title">The Real Cost of Running AI Agents in 2026: What Nobody Tells You</div>
+            <div class="article-card-excerpt">Claude Opus costs 10–15× more than Sonnet. Overnight loops cost $200+. Here's the full cost breakdown — and exactly how to keep your agent bills under control.</div>
+            <div class="article-card-meta"><span>May 2026 · 9 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+        <a href="/articles/23-openclaw-security-audit.html" class="article-card reveal-stagger" data-filter="development">
+          <img src="/images/articles/23-openclaw-security-audit-hero.webp" alt="OpenClaw Security Audit" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(52,211,153,0.15),rgba(129,140,248,0.05))';this.removeAttribute('src')">
+          <div class="article-card-body">
+            <div class="article-card-cat cat-development">Security</div>
+            <div class="article-card-title">OpenClaw's Security Problem: 2,000 CVEs, Plaintext Keys, and a Marketplace You Can't Trust</div>
+            <div class="article-card-excerpt">2,000 CVEs in the Docker image, API keys logged in plaintext, and a marketplace with zero security review. What every OpenClaw user needs to know right now.</div>
+            <div class="article-card-meta"><span>May 2026 · 8 min read</span><span class="article-read-time">Read →</span></div>
+          </div>
+        </a>
+      </div><!-- /.article-grid-full -->
+  </div><!-- /.articles-body -->
+
+  <!-- AdSense Strip -->
+  <div class="ad-strip">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <!-- Load More -->
+  <div class="load-more-wrap">
+    <button class="btn btn-secondary" id="loadMoreBtn">Load More Articles</button>
+  </div>
+
+</main>
+
+<script>
+  // Filter pills
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const filter = pill.dataset.filter;
+      document.querySelectorAll('.article-card[data-filter]').forEach(card => {
+        const match = filter === 'all' || card.dataset.filter === filter;
+        card.style.display = match ? '' : 'none';
+      });
+    });
+  });
+
+  // Load more (stub)
+  document.getElementById('loadMoreBtn').addEventListener('click', () => {
+    document.getElementById('loadMoreBtn').textContent = 'More articles coming soon…';
+    document.getElementById('loadMoreBtn').disabled = true;
+  });
+</script>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+<script src="/js/footer.js"></script>
+</body>
+</html>

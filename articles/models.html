@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Models — Aether Intel</title>
+  <meta name="description" content="Browse 360+ AI models via OpenRouter. Compare capabilities, input/output costs, and benchmark performance. Text, vision, image, audio and video models.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/models.html">
+  <meta property="og:title" content="AI Models — Aether Intel">
+  <meta property="og:description" content="Every AI model on OpenRouter — capabilities, pricing, and real benchmark costs compared.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ai.quantummerlin.com/models.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/14-openrouter-guide-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI Models — Aether Intel">
+  <meta name="twitter:description" content="Every AI model on OpenRouter — capabilities, pricing, and benchmark costs.">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script><link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ═══════════════════════════════════════════
+       PAGE HEADER
+    ═══════════════════════════════════════════ */
+    .models-page-header {
+      padding: 40px 32px 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .models-page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--neon-cyan);
+      background: rgba(34,211,238,.07);
+      border: 1px solid rgba(34,211,238,.18);
+      border-radius: 100px;
+      padding: 4px 12px;
+      margin-bottom: 14px;
+    }
+    .models-page-eyebrow-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--neon-cyan);
+      animation: livePulse 1.8s ease-in-out infinite;
+    }
+    .models-page-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin: 0 0 10px;
+    }
+    .models-page-title span { color: var(--neon-indigo); }
+    .models-page-sub {
+      color: var(--text-secondary);
+      font-size: .93rem;
+      line-height: 1.65;
+      max-width: 600px;
+      margin: 0 0 22px;
+    }
+    .models-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .models-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-display);
+      font-size: .68rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: .06em;
+    }
+    .models-meta-item strong {
+      color: var(--text-primary);
+      font-size: .88rem;
+      font-family: var(--font-body);
+    }
+
+    /* ═══════════════════════════════════════════
+       BENCHMARK EXPLAINER STRIP
+    ═══════════════════════════════════════════ */
+    .benchmark-strip {
+      margin: 0 32px;
+      background: linear-gradient(135deg, rgba(129,140,248,.06), rgba(34,211,238,.03));
+      border: 1px solid rgba(129,140,248,.18);
+      border-radius: 10px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .benchmark-strip-icon {
+      width: 28px; height: 28px;
+      background: rgba(129,140,248,.12);
+      border: 1px solid rgba(129,140,248,.25);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .benchmark-strip-icon svg {
+      width: 14px; height: 14px;
+      stroke: var(--neon-indigo);
+      fill: none;
+    }
+    .benchmark-strip-text {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+    .benchmark-strip-text strong { color: var(--text-primary); }
+
+    /* ═══════════════════════════════════════════
+       FILTER BAR
+    ═══════════════════════════════════════════ */
+    .models-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      background: rgba(7,7,15,.9);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin-top: 24px;
+    }
+    .filter-search-wrap {
+      flex: 1;
+      min-width: 200px;
+      max-width: 260px;
+      position: relative;
+    }
+    .filter-search-wrap svg {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px; height: 14px;
+      stroke: var(--text-muted);
+      fill: none;
+    }
+    #modelSearch {
+      width: 100%;
+      background: rgba(7,7,15,.7);
+      border: 1px solid rgba(129,140,248,.18);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: .84rem;
+      padding: 8px 12px 8px 33px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    #modelSearch:focus { border-color: rgba(129,140,248,.45); }
+    #modelSearch::placeholder { color: var(--text-muted); }
+    .filter-group-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .filter-btn-group {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-family: var(--font-display);
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 11px;
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { color: var(--text-secondary); border-color: rgba(255,255,255,.15); }
+    .filter-btn.active { color: var(--neon-indigo); background: rgba(129,140,248,.1); border-color: rgba(129,140,248,.4); }
+    .filter-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+    .models-count-tag {
+      font-family: var(--font-display);
+      font-size: .66rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: .06em;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+    #visibleCount { color: var(--neon-indigo); }
+    .sort-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .sort-btn {
+      font-family: var(--font-display);
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 11px;
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+    }
+    .sort-btn:hover { color: var(--text-secondary); border-color: rgba(255,255,255,.15); }
+    .sort-btn.active { color: var(--neon-gold); background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.3); }
+
+    /* ═══════════════════════════════════════════
+       MODELS GRID
+    ═══════════════════════════════════════════ */
+    .models-grid-section {
+      padding: 24px 32px 40px;
+    }
+    .models-full-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 16px;
+    }
+    .model-full-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: border-color .2s, transform .18s, box-shadow .2s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .model-full-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .model-full-card:hover {
+      border-color: rgba(129,140,248,.35);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(0,0,0,.3);
+    }
+    .model-full-card:hover::before { opacity: 1; }
+    .model-full-card.card-anthropic::before   { background: linear-gradient(90deg, #cc785c, #e8957a); }
+    .model-full-card.card-openai::before      { background: linear-gradient(90deg, #74aa9c, #a8d5c8); }
+    .model-full-card.card-google::before      { background: linear-gradient(90deg, #4285f4, #34a853, #fbbc04, #ea4335); }
+    .model-full-card.card-meta-llama::before  { background: linear-gradient(90deg, #0081fb, #00b4ff); }
+    .model-full-card.card-deepseek::before    { background: linear-gradient(90deg, #536dfe, #03dac6); }
+    .model-full-card.card-x-ai::before        { background: linear-gradient(90deg, #fff, #aaa); }
+    .model-full-card.card-mistralai::before   { background: linear-gradient(90deg, #ff7000, #ffaa00); }
+    .model-full-card.card-qwen::before        { background: linear-gradient(90deg, #7b2d8b, #e040fb); }
+    .model-full-card.card-default::before     { background: linear-gradient(90deg, var(--neon-indigo), var(--neon-cyan)); }
+    .model-full-card.hidden { display: none; }
+
+    /* Card: top row */
+    .model-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .model-card-name {
+      font-family: var(--font-body);
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+      flex: 1;
+      min-width: 0;
+    }
+    .model-card-badges {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .mcb {
+      font-family: var(--font-display);
+      font-size: .56rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .mcb-free     { background: rgba(52,211,153,.12); color: #34d399; border: 1px solid rgba(52,211,153,.25); }
+    .mcb-new      { background: rgba(129,140,248,.12); color: var(--neon-indigo); border: 1px solid rgba(129,140,248,.25); }
+    .mcb-pro      { background: rgba(245,158,11,.08); color: var(--neon-gold); border: 1px solid rgba(245,158,11,.2); }
+    .mcb-reason   { background: rgba(244,63,94,.08); color: #f43f5e; border: 1px solid rgba(244,63,94,.2); }
+
+    /* Card: context badge (prominent) */
+    .ctx-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-display);
+      font-size: .57rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 5px;
+      background: rgba(245,158,11,.07);
+      color: var(--neon-gold);
+      border: 1px solid rgba(245,158,11,.2);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Card: provider row */
+    .model-card-provider {
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 9px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-launch-dot  { color: var(--border); }
+    .card-launch-date { font-weight: 500; color: var(--text-muted); font-size: .62rem; letter-spacing: .04em; }
+
+    /* Card: description */
+    .model-card-desc {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 11px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Card: IO modality rows (NEW) */
+    .card-io-section {
+      margin-bottom: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .card-io-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .io-label {
+      font-family: var(--font-display);
+      font-size: .57rem;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      min-width: 50px;
+      flex-shrink: 0;
+    }
+    .io-pills {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .io-pill {
+      font-family: var(--font-display);
+      font-size: .54rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .io-pill-text  { background: rgba(255,255,255,.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,.1); }
+    .io-pill-image { background: rgba(34,211,238,.07); color: var(--neon-cyan); border: 1px solid rgba(34,211,238,.18); }
+    .io-pill-audio { background: rgba(249,115,22,.07); color: #f97316; border: 1px solid rgba(249,115,22,.18); }
+    .io-pill-video { background: rgba(244,63,94,.07); color: #f43f5e; border: 1px solid rgba(244,63,94,.18); }
+    .io-pill-file  { background: rgba(139,92,246,.07); color: #a78bfa; border: 1px solid rgba(139,92,246,.18); }
+
+    /* Card: good-for chips */
+    .model-card-good {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+    .good-chip {
+      font-size: .72rem;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 2px 8px;
+      white-space: nowrap;
+    }
+
+    /* Card: pricing row */
+    .model-card-pricing {
+      display: flex;
+      gap: 16px;
+      padding: 10px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 11px;
+      flex-wrap: wrap;
+    }
+    .pricing-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .pricing-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .pricing-value {
+      font-family: var(--font-body);
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .pricing-value.price-free { color: #34d399; }
+
+    /* Card: benchmark — hero block */
+    .model-card-benchmark {
+      margin-bottom: 14px;
+      border-radius: 10px;
+      padding: 14px 16px 13px;
+      border: 1px solid transparent;
+    }
+    .model-card-benchmark.bc-free  { background: rgba(52,211,153,.06);  border-color: rgba(52,211,153,.2); }
+    .model-card-benchmark.bc-cheap { background: rgba(34,211,238,.05);  border-color: rgba(34,211,238,.18); }
+    .model-card-benchmark.bc-mid   { background: rgba(245,158,11,.05);  border-color: rgba(245,158,11,.18); }
+    .model-card-benchmark.bc-prem  { background: rgba(249,115,22,.05);  border-color: rgba(249,115,22,.18); }
+    .benchmark-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .benchmark-label {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .benchmark-tier-badge {
+      font-family: var(--font-display);
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .bc-free  .benchmark-tier-badge { background: rgba(52,211,153,.15);  color: #34d399;          border: 1px solid rgba(52,211,153,.3); }
+    .bc-cheap .benchmark-tier-badge { background: rgba(34,211,238,.12);  color: var(--neon-cyan); border: 1px solid rgba(34,211,238,.28); }
+    .bc-mid   .benchmark-tier-badge { background: rgba(245,158,11,.12);  color: var(--neon-gold); border: 1px solid rgba(245,158,11,.28); }
+    .bc-prem  .benchmark-tier-badge { background: rgba(249,115,22,.12);  color: #f97316;          border: 1px solid rgba(249,115,22,.28); }
+    .benchmark-cost-big {
+      font-family: var(--font-body);
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -.035em;
+      line-height: 1;
+      margin-bottom: 11px;
+    }
+    .bc-free  .benchmark-cost-big { color: #34d399; }
+    .bc-cheap .benchmark-cost-big { color: var(--neon-cyan); }
+    .bc-mid   .benchmark-cost-big { color: var(--neon-gold); }
+    .bc-prem  .benchmark-cost-big { color: #f97316; }
+    .benchmark-bar-track {
+      height: 7px;
+      background: rgba(255,255,255,.07);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .benchmark-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .5s cubic-bezier(.4,0,.2,1);
+    }
+    .benchmark-bar-fill.bc-free  { background: #34d399; }
+    .benchmark-bar-fill.bc-cheap { background: var(--neon-cyan); }
+    .benchmark-bar-fill.bc-mid   { background: var(--neon-gold); }
+    .benchmark-bar-fill.bc-prem  { background: #f97316; }
+
+    /* Card: action row */
+    .model-card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+    .model-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      border-radius: 7px;
+      padding: 7px 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all .18s;
+      border: none;
+      white-space: nowrap;
+    }
+    .model-btn-use {
+      background: rgba(129,140,248,.12);
+      border: 1px solid rgba(129,140,248,.3);
+      color: var(--neon-indigo);
+    }
+    .model-btn-use:hover {
+      background: rgba(129,140,248,.22);
+      border-color: rgba(129,140,248,.55);
+      color: #a5b4fc;
+    }
+    .model-btn-article {
+      color: var(--neon-indigo);
+      background: rgba(129,140,248,.06);
+      border: 1px solid rgba(129,140,248,.2);
+    }
+    .model-btn-article:hover { background: rgba(129,140,248,.14); border-color: rgba(129,140,248,.4); }
+    .model-btn-article.btn-coming {
+      color: var(--text-muted);
+      background: rgba(255,255,255,.02);
+      border-color: var(--border);
+      cursor: default;
+      opacity: .55;
+    }
+
+    /* ═══════════════════════════════════════════
+       LOADING / ERROR
+    ═══════════════════════════════════════════ */
+    .models-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 80px 32px;
+      color: var(--text-muted);
+      font-size: .9rem;
+      grid-column: 1 / -1;
+    }
+    .models-loading-spinner {
+      width: 22px; height: 22px;
+      border: 2px solid rgba(129,140,248,.2);
+      border-top-color: var(--neon-indigo);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .models-error-msg {
+      padding: 48px 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: .9rem;
+      grid-column: 1 / -1;
+    }
+    .models-error-msg a { color: var(--neon-indigo); }
+
+    /* ═══════════════════════════════════════════
+       GUIDE BAND
+    ═══════════════════════════════════════════ */
+    .models-guide-band {
+      margin: 0 32px 32px;
+      background: linear-gradient(135deg, rgba(129,140,248,.07), rgba(34,211,238,.04));
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 14px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .models-guide-band-text h3 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 5px;
+    }
+    .models-guide-band-text p {
+      color: var(--text-secondary);
+      font-size: .84rem;
+      margin: 0;
+    }
+
+    /* ═══════════════════════════════════════════
+       BYOK CHAT MODAL
+    ═══════════════════════════════════════════ */
+    .chat-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(10px);
+      z-index: 900;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s;
+    }
+    .chat-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .chat-modal-panel {
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,.28);
+      border-bottom: none;
+      border-radius: 18px 18px 0 0;
+      width: 100%;
+      max-width: 700px;
+      height: 82vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(40px);
+      transition: transform .26s cubic-bezier(.4,0,.2,1);
+      overflow: hidden;
+    }
+    .chat-modal-overlay.open .chat-modal-panel {
+      transform: translateY(0);
+    }
+    .chat-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 22px 14px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .chat-modal-title {
+      font-family: var(--font-body);
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.25;
+    }
+    .chat-modal-sub {
+      font-size: .73rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .chat-modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color .15s, background .15s;
+      flex-shrink: 0;
+    }
+    .chat-modal-close:hover { color: var(--text-primary); background: rgba(255,255,255,.06); }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chat-msg {
+      max-width: 88%;
+      font-size: .88rem;
+      line-height: 1.65;
+      padding: 10px 14px;
+      border-radius: 10px;
+      word-break: break-word;
+    }
+    .chat-msg-user {
+      align-self: flex-end;
+      background: rgba(129,140,248,.14);
+      border: 1px solid rgba(129,140,248,.28);
+      color: var(--text-primary);
+    }
+    .chat-msg-ai {
+      align-self: flex-start;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .chat-msg-ai strong { color: var(--text-primary); }
+    .chat-thinking {
+      align-self: flex-start;
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: .8rem;
+      padding: 4px 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chat-thinking-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--neon-indigo);
+      animation: thinkPulse .9s ease-in-out infinite;
+    }
+    .chat-thinking-dot:nth-child(2) { animation-delay: .2s; }
+    .chat-thinking-dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes thinkPulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+    .chat-key-notice {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      text-align: center;
+    }
+    .chat-key-icon {
+      width: 48px; height: 48px;
+      background: rgba(129,140,248,.1);
+      border: 1px solid rgba(129,140,248,.25);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .chat-key-icon svg { stroke: var(--neon-indigo); }
+    .chat-key-notice h3 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 8px;
+    }
+    .chat-key-notice p {
+      color: var(--text-secondary);
+      font-size: .86rem;
+      line-height: 1.6;
+      max-width: 340px;
+      margin: 0 0 20px;
+    }
+    .chat-key-cta {
+      background: rgba(129,140,248,.12);
+      border: 1px solid rgba(129,140,248,.35);
+      color: var(--neon-indigo);
+      border-radius: 9px;
+      padding: 9px 22px;
+      font-family: var(--font-display);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .chat-key-cta:hover { background: rgba(129,140,248,.22); border-color: rgba(129,140,248,.55); }
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px 14px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    #chatInput {
+      flex: 1;
+      background: rgba(7,7,15,.6);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 9px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: .88rem;
+      padding: 10px 14px;
+      outline: none;
+      resize: none;
+      min-height: 44px;
+      max-height: 130px;
+      transition: border-color .2s;
+      line-height: 1.5;
+    }
+    #chatInput:focus { border-color: rgba(129,140,248,.45); }
+    #chatInput::placeholder { color: var(--text-muted); }
+    .chat-send-btn {
+      background: rgba(129,140,248,.14);
+      border: 1px solid rgba(129,140,248,.32);
+      color: var(--neon-indigo);
+      border-radius: 9px;
+      padding: 0 18px;
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .16s;
+      flex-shrink: 0;
+      min-width: 60px;
+    }
+    .chat-send-btn:hover { background: rgba(129,140,248,.25); border-color: rgba(129,140,248,.55); }
+    .chat-send-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+    /* ─── Benchmark volume estimator ─── */
+    .bench-volume-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      flex-shrink: 0;
+      background: rgba(129,140,248,.07);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 8px;
+      padding: 6px 12px;
+    }
+    .bench-volume-label {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    #benchVolume {
+      width: 68px;
+      background: rgba(7,7,15,.6);
+      border: 1px solid rgba(129,140,248,.25);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: .86rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      outline: none;
+      text-align: center;
+      transition: border-color .2s;
+    }
+    #benchVolume:focus { border-color: rgba(129,140,248,.55); }
+    .bench-volume-unit {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .bench-volume-est {
+      margin-top: 9px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,.07);
+      font-size: .77rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .bench-volume-est strong {
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+    .bench-volume-est.bench-est-free strong {
+      color: #34d399;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .models-page-header { padding-left: 20px; padding-right: 20px; }
+      .models-filter-bar  { padding: 12px 20px; }
+      .models-grid-section { padding: 20px 16px 32px; }
+      .models-full-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+      .models-guide-band { margin: 0 16px 24px; }
+      .benchmark-strip { margin: 16px 20px 0; }
+    }
+    @media (max-width: 700px) {
+      .models-full-grid { grid-template-columns: 1fr; }
+      .filter-divider { display: none; }
+      .filter-group-label { display: none; }
+    }
+    @media (max-width: 480px) {
+      .models-full-grid { gap: 10px; }
+      .chat-modal-panel { height: 90vh; }
+    }
+  </style>
+  <!-- Fonts — non-blocking -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"></noscript>
+  <!-- ── Favicon & PWA ── -->
+  <link rel="icon" type="image/svg+xml" href="/images/icons/ae-icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#f59e0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Æther">
+  <!-- ── Service Worker ── -->
+  <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(e){console.warn('[SW]',e);});});}</script>
+</head>
+<body>
+<main>
+
+  <!-- ══════════════ PAGE HEADER ══════════════ -->
+  <div class="models-page-header">
+    <div class="models-page-eyebrow">
+      <span class="models-page-eyebrow-dot"></span>
+      Live via OpenRouter
+    </div>
+    <h1 class="models-page-title">AI <span>Models</span></h1>
+    <p class="models-page-sub">Every model on OpenRouter — exact input/output capabilities, real pricing, and a benchmark gauge so you can compare what each model actually costs to run.</p>
+    <div class="models-meta-row">
+      <div class="models-meta-item"><strong id="totalCount">—</strong>&nbsp;Models</div>
+      <div class="models-meta-item"><strong id="freeCount">—</strong>&nbsp;Free</div>
+      <div class="models-meta-item"><strong id="newCount">—</strong>&nbsp;New (30 days)</div>
+      <div class="models-meta-item"><strong id="visionCount">—</strong>&nbsp;Vision</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ BENCHMARK EXPLAINER ══════════════ -->
+  <div class="benchmark-strip">
+    <div class="benchmark-strip-icon">
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    </div>
+    <div class="benchmark-strip-text">
+      <strong>Benchmark cost</strong> = one realistic task: 1,500 input tokens (your prompt + context) and 2,000 output tokens (the response).
+    </div>
+    <div class="bench-volume-wrap">
+      <span class="bench-volume-label">Tasks / day</span>
+      <input type="number" id="benchVolume" value="100" min="1" max="1000000" autocomplete="off">
+      <span class="bench-volume-unit">→ daily &amp; monthly est.</span>
+    </div>
+  </div>
+
+  <!-- ══════════════ FILTER BAR ══════════════ -->
+  <div class="models-filter-bar">
+    <div class="filter-search-wrap">
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="modelSearch" placeholder="Search models…" autocomplete="off">
+    </div>
+    <div class="filter-divider"></div>
+    <span class="filter-group-label">Provider</span>
+    <div class="filter-btn-group" id="providerFilters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="free">Free</button>
+      <button class="filter-btn" data-filter="new">New</button>
+      <button class="filter-btn" data-filter="anthropic">Anthropic</button>
+      <button class="filter-btn" data-filter="openai">OpenAI</button>
+      <button class="filter-btn" data-filter="google">Google</button>
+      <button class="filter-btn" data-filter="meta-llama">Meta</button>
+      <button class="filter-btn" data-filter="deepseek">DeepSeek</button>
+    </div>
+    <div class="filter-divider"></div>
+    <span class="filter-group-label">Type</span>
+    <div class="filter-btn-group" id="typeFilters">
+      <button class="filter-btn active" data-type="all">All</button>
+      <button class="filter-btn" data-type="reasoning">Reasoning</button>
+      <button class="filter-btn" data-type="vision">Vision</button>
+      <button class="filter-btn" data-type="multimodal">Multimodal</button>
+      <button class="filter-btn" data-type="audio">Audio</button>
+    </div>
+    <div class="filter-divider"></div>
+    <span class="sort-label">Sort</span>
+    <div class="filter-btn-group">
+      <button class="sort-btn active" data-sort="newest">Newest</button>
+      <button class="sort-btn" data-sort="price_asc">Price ↑</button>
+      <button class="sort-btn" data-sort="price_desc">Price ↓</button>
+      <button class="sort-btn" data-sort="context">Context</button>
+      <button class="sort-btn" data-sort="az">A → Z</button>
+    </div>
+    <div class="models-count-tag"><span id="visibleCount">—</span> shown</div>
+  </div>
+
+  <!-- ══════════════ MODELS GRID ══════════════ -->
+  <div class="models-grid-section">
+    <div id="modelsFullGrid" class="models-full-grid">
+      <div class="models-loading">
+        <div class="models-loading-spinner"></div>
+        Fetching models from OpenRouter…
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ GUIDE CTA ══════════════ -->
+  <div class="models-guide-band">
+    <div class="models-guide-band-text">
+      <h3>New to OpenRouter?</h3>
+      <p>One API key, 360+ models, unified billing. Our guide explains how to set it up in 10 minutes.</p>
+    </div>
+    <a href="/articles/14-openrouter-guide.html" class="btn btn-primary">Read the Guide →</a>
+  </div>
+
+  <!-- ══════════════ ADSENSE ══════════════ -->
+  <div style="padding:0 32px 32px">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3480541530392777" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <!-- ══════════════ BYOK CHAT MODAL ══════════════ -->
+  <div id="chatModalOverlay" class="chat-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="chatModelName">
+    <div class="chat-modal-panel">
+      <div class="chat-modal-header">
+        <div>
+          <div class="chat-modal-title" id="chatModelName">Model</div>
+          <div class="chat-modal-sub">Powered by OpenRouter · Your key, your data</div>
+        </div>
+        <button class="chat-modal-close" id="chatModalClose" aria-label="Close chat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <!-- Key notice (shown when no key) -->
+      <div class="chat-key-notice" id="chatKeyNotice" style="display:none">
+        <div class="chat-key-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        </div>
+        <h3>OpenRouter Key Required</h3>
+        <p>Add your free OpenRouter API key to chat with any model directly. Your key is stored locally — never sent to our servers.</p>
+        <button class="chat-key-cta" id="chatAddKeyBtn">⚡ Add OpenRouter Key</button>
+      </div>
+      <!-- Messages area -->
+      <div class="chat-messages" id="chatMessages"></div>
+      <!-- Input row -->
+      <div class="chat-input-row" id="chatInputRow" style="display:none">
+        <textarea id="chatInput" placeholder="Ask anything…" rows="1"></textarea>
+        <button class="chat-send-btn" id="chatSendBtn">Send</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ─── Benchmark: 1,500 prompt tokens + 2,000 completion tokens = 3,500 total ─── */
+  var BENCH_IN  = 1500;
+  var BENCH_OUT = 2000;
+
+  /* ─── Curated enrichment for the models people actually care about ─── */
+  var MODEL_META = {
+    /* ── ANTHROPIC ─────────────────────────────── */
+    'anthropic/claude-opus-4.7': {
+      tagline: 'Anthropic\'s current flagship — 1M context, frontier reasoning, extended-thinking capable',
+      good: ['Complex reasoning', 'Research & analysis', 'Long documents', 'Agentic tasks'],
+      article: '/models/claude-opus-4-7.html'
+    },
+    'anthropic/claude-opus-4.7-fast': {
+      tagline: 'Claude Opus 4.7 Fast — extended-thinking mode unlocked for the hardest multi-step problems',
+      good: ['Extended thinking', 'Hard reasoning', 'Complex coding', 'Multi-step planning'],
+      article: '/models/claude-opus-4.7-fast.html'
+    },
+    'anthropic/claude-opus-4.6-fast': {
+      tagline: 'Claude Opus 4.6 Fast — previous extended-thinking variant, still premium frontier capability',
+      good: ['Extended thinking', 'Complex reasoning', 'Research', 'Agentic tasks'],
+      article: '/models/claude-opus-4.6-fast.html'
+    },
+    'anthropic/claude-sonnet-4.6': {
+      tagline: 'Claude Sonnet 4.6 — next-gen Sonnet with 1M context and enhanced instruction following',
+      good: ['Writing & editing', 'Data analysis', 'Coding', 'Long-context tasks'],
+      article: '/models/claude-sonnet-4-6.html'
+    },
+    'anthropic/claude-sonnet-4.5': {
+      tagline: 'The sweet spot — frontier intelligence at mid-tier cost, fast and reliable',
+      good: ['Writing & editing', 'Data analysis', 'Coding', 'General tasks'],
+      article: '/models/claude-sonnet-4-5.html'
+    },
+    'anthropic/claude-haiku-4.5': {
+      tagline: 'Blazing fast and cheap — ideal for high-volume production workloads',
+      good: ['Fast responses', 'High-volume tasks', 'Classification', 'Data extraction'],
+      article: '/models/claude-haiku-4-5.html'
+    },
+    '~anthropic/claude-opus-latest': {
+      tagline: 'Always resolves to the latest Claude Opus — auto-updates so your app stays current',
+      good: ['Auto-updated', 'Complex reasoning', 'Long documents', 'Research'],
+      article: '/models/claude-opus-latest.html'
+    },
+    '~anthropic/claude-sonnet-latest': {
+      tagline: 'Always resolves to the latest Claude Sonnet — great for production apps that stay current',
+      good: ['Auto-updated', 'Production apps', 'General tasks', 'Writing'],
+      article: '/models/claude-sonnet-latest.html'
+    },
+    '~anthropic/claude-haiku-latest': {
+      tagline: 'Always resolves to the latest Claude Haiku — fast, cheap, auto-updating',
+      good: ['Auto-updated', 'High-volume', 'Fast responses', 'Classification'],
+      article: '/models/claude-haiku-latest.html'
+    },
+    /* ── OPENAI ─────────────────────────────────── */
+    'openai/gpt-5.5-pro': {
+      tagline: 'OpenAI\'s most powerful model — frontier reasoning, 1M context, maximum capability',
+      good: ['Complex reasoning', 'Research', 'Advanced coding', 'Long documents'],
+      article: '/models/openai-gpt-5-5-pro.html'
+    },
+    'openai/gpt-5.5': {
+      tagline: 'GPT-5.5 — OpenAI\'s balanced flagship, powerful and versatile across all task types',
+      good: ['General tasks', 'Coding', 'Creative writing', 'Analysis'],
+      article: '/models/openai-gpt-5-5.html'
+    },
+    'openai/gpt-5': {
+      tagline: 'GPT-5 — significant capability leap over GPT-4, strong across coding, reasoning, and writing',
+      good: ['Coding', 'Analysis', 'Writing', 'Function calling'],
+      article: '/models/openai-gpt-5.html'
+    },
+    'openai/gpt-chat-latest': {
+      tagline: 'OpenAI latest chat alias — always points to the current best chat model',
+      good: ['Auto-updated', 'Chat apps', 'General tasks', 'Production'],
+      article: '/models/gpt-chat-latest.html'
+    },
+    'openai/gpt-4o': {
+      tagline: 'OpenAI\'s multimodal flagship — versatile, battle-tested across every task type',
+      good: ['Multimodal tasks', 'Creative writing', 'Function calling', 'Coding'],
+      article: '/models/gpt-4o.html'
+    },
+    'openai/gpt-4o-mini': {
+      tagline: 'GPT-4 level quality at a fraction of the cost — ideal for production apps',
+      good: ['Budget tasks', 'Structured output', 'Classification', 'Drafting'],
+      article: '/models/gpt-4o-mini.html'
+    },
+    'openai/o3': {
+      tagline: 'OpenAI\'s advanced reasoning — built for science, math, and hard multi-step problems',
+      good: ['Math & science', 'Complex coding', 'Multi-step reasoning', 'Research'],
+      article: '/models/openai-o3.html'
+    },
+    'openai/o4-mini': {
+      tagline: 'Fast, affordable reasoning — o3-level thinking at o4-mini price',
+      good: ['Code generation', 'Math', 'Fast reasoning', 'Agentic tasks'],
+      article: '/models/openai-o4-mini.html'
+    },
+    '~openai/gpt-latest': {
+      tagline: 'OpenAI latest model alias — always resolves to the current GPT flagship',
+      good: ['Auto-updated', 'Production', 'General tasks', 'Coding'],
+      article: '/models/gpt-latest.html'
+    },
+    '~openai/gpt-mini-latest': {
+      tagline: 'OpenAI mini latest alias — auto-updates to the current fast/cheap GPT variant',
+      good: ['Auto-updated', 'Budget tasks', 'High-volume', 'Classification'],
+      article: '/models/gpt-mini-latest.html'
+    },
+    /* ── GOOGLE ─────────────────────────────────── */
+    'google/gemini-3.1-flash-lite': {
+      tagline: 'Gemini 3.1 Flash Lite — ultra-efficient multimodal at $0.25/$1.50 per 1M, 1M context',
+      good: ['Ultra-cheap', 'High volume', 'Multimodal routing', 'Mobile apps'],
+      article: '/models/gemini-3-1-flash-lite.html'
+    },
+    'google/gemini-2.5-pro': {
+      tagline: 'Google\'s frontier model — massive context window, deep multimodal reasoning',
+      good: ['Multimodal tasks', 'Code generation', 'Long documents', 'Complex analysis'],
+      article: '/models/gemini-2-5-pro.html'
+    },
+    'google/gemini-2.5-flash': {
+      tagline: 'Google\'s fastest production model — exceptional speed-to-capability ratio',
+      good: ['High-speed tasks', 'Structured output', 'Summarisation', 'Multimodal chat'],
+      article: '/models/gemini-2-5-flash.html'
+    },
+    'google/gemini-2.5-flash-lite': {
+      tagline: 'Gemini 2.5 Flash Lite — lightest Gemini variant, lowest latency and cost',
+      good: ['Ultra-fast', 'Budget use cases', 'High throughput', 'Multimodal'],
+      article: '/models/gemini-2-5-flash-lite.html'
+    },
+    '~google/gemini-flash-latest': {
+      tagline: 'Always resolves to the latest Gemini Flash — fast auto-updating multimodal alias',
+      good: ['Auto-updated', 'Fast tasks', 'Multimodal', 'Production'],
+      article: '/models/gemini-flash-latest.html'
+    },
+    '~google/gemini-pro-latest': {
+      tagline: 'Always resolves to the latest Gemini Pro — frontier Google capability, auto-updating',
+      good: ['Auto-updated', 'Complex tasks', 'Multimodal', 'Long documents'],
+      article: '/models/gemini-pro-latest.html'
+    },
+    /* ── DEEPSEEK ───────────────────────────────── */
+    'deepseek/deepseek-v4-pro': {
+      tagline: 'DeepSeek V4 Pro — MoE flagship with 1M context at incredible price-to-performance',
+      good: ['General coding', 'Analysis', 'Long context', 'Cost-efficient tasks'],
+      article: '/models/deepseek-v4-pro.html'
+    },
+    'deepseek/deepseek-v4-flash': {
+      tagline: 'DeepSeek V4 Flash — blazing fast at $0.13/$0.25 per 1M, 1M context window',
+      good: ['Budget tasks', 'High volume', 'Fast inference', 'Classification'],
+      article: '/models/deepseek-v4-flash.html'
+    },
+    'deepseek/deepseek-v4-flash:free': {
+      tagline: 'DeepSeek V4 Flash free tier — frontier speed at zero cost with rate limits',
+      good: ['Free to use', 'Fast inference', 'Budget tasks', 'Testing'],
+      article: '/models/deepseek-v4-flash-free.html'
+    },
+    'deepseek/deepseek-r1': {
+      tagline: 'Chinese frontier reasoning — exceptional chain-of-thought, visible reasoning tokens',
+      good: ['Math & reasoning', 'Code generation', 'Chain of thought', 'Research tasks'],
+      article: '/models/deepseek-r1.html'
+    },
+    'deepseek/deepseek-r1-0528': {
+      tagline: 'DeepSeek R1 (May 2025) — updated reasoning model with extended 163K context',
+      good: ['Math & proofs', 'Complex coding', 'Chain of thought', 'Long-context reasoning'],
+      article: '/models/deepseek-r1-0528.html'
+    },
+    'deepseek/deepseek-chat-v3-0324': {
+      tagline: 'DeepSeek V3 — GPT-4o-level quality at a fraction of the price',
+      good: ['General coding', 'Analysis', 'Writing', 'Cost-efficient tasks'],
+      article: '/models/deepseek-v3.html'
+    },
+    /* ── X-AI / GROK ────────────────────────────── */
+    'x-ai/grok-4.20-multi-agent': {
+      tagline: 'Grok 4.20 Multi-Agent — 2M context built for complex multi-agent pipeline orchestration',
+      good: ['Agentic tasks', '2M context', 'Multi-step planning', 'Real-time info'],
+      article: '/models/grok-4-20-multi-agent.html'
+    },
+    'x-ai/grok-4.20': {
+      tagline: 'Grok 4.20 — xAI\'s latest with 2M context and real-time web grounding',
+      good: ['Real-time web', 'Long context', 'Research', 'Reasoning'],
+      article: '/models/grok-4-20.html'
+    },
+    'x-ai/grok-4.3': {
+      tagline: 'Grok 4.3 — updated xAI model with improved reasoning and instruction following',
+      good: ['Reasoning', 'Coding', 'Real-time info', 'Instruction following'],
+      article: '/models/grok-4-3.html'
+    },
+    'x-ai/grok-3': {
+      tagline: 'Grok 3 — xAI flagship with real-time web access and sharp reasoning',
+      good: ['Current events', 'Web search', 'Research', 'Creative tasks'],
+      article: '/models/grok-3.html'
+    },
+    'x-ai/grok-3-mini': {
+      tagline: 'Grok Mini — fast, cheap reasoning at a fraction of Grok 3\'s cost',
+      good: ['Fast reasoning', 'Math', 'Code', 'Budget frontier tasks'],
+      article: '/models/grok-3-mini.html'
+    },
+    /* ── META ───────────────────────────────────── */
+    'meta-llama/llama-4-maverick': {
+      tagline: 'Llama 4 Maverick — Meta\'s multimodal frontier open-source release',
+      good: ['Multimodal', 'Open source', 'Self-hosting', 'Research'],
+      article: '/models/llama-4-maverick.html'
+    },
+    'meta-llama/llama-3.3-70b-instruct': {
+      tagline: 'Meta\'s best open-weight model — self-hostable, private, highly capable',
+      good: ['Self-hosting', 'Privacy-first', 'General chat', 'Coding'],
+      article: '/models/llama-3-3-70b.html'
+    },
+    /* ── QWEN ───────────────────────────────────── */
+    'qwen/qwen3.6-plus': {
+      tagline: 'Qwen 3.6 Plus — Alibaba\'s latest balanced model, 1M context at competitive price',
+      good: ['Code generation', 'Long context', 'Analysis', 'Multilingual'],
+      article: '/models/qwen-3-6-plus.html'
+    },
+    'qwen/qwen3.6-flash': {
+      tagline: 'Qwen 3.6 Flash — ultra-fast Qwen at near-zero cost, 1M context',
+      good: ['Fast inference', 'High volume', 'Budget tasks', 'Multilingual'],
+      article: '/models/qwen-3-6-flash.html'
+    },
+    'qwen/qwen3.6-max-preview': {
+      tagline: 'Qwen 3.6 Max Preview — Alibaba\'s most capable current model, frontier reasoning',
+      good: ['Complex reasoning', 'Code', 'Long context', 'Multilingual'],
+      article: '/models/qwen-3-6-max-preview.html'
+    },
+    'qwen/qwen3.6-27b': {
+      tagline: 'Qwen 3.6 27B — mid-sized Qwen with excellent price-to-capability ratio',
+      good: ['General tasks', 'Code', 'Multilingual', 'Cost-efficient'],
+      article: '/models/qwen3-6-27b.html'
+    },
+    'qwen/qwen3-235b-a22b': {
+      tagline: 'Qwen3 235B — Alibaba\'s frontier MoE model with exceptional reasoning depth',
+      good: ['Complex reasoning', 'Code', 'Long context', 'Multilingual'],
+      article: '/models/qwen3-235b.html'
+    },
+    'qwen/qwen3-235b-a22b:free': {
+      tagline: 'Qwen3 235B Free — frontier MoE capability at zero cost, rate limited',
+      good: ['Free to use', 'Complex reasoning', 'Code', 'Long context'],
+      article: '/models/qwen3-235b-free.html'
+    },
+    'qwen/qwen-2.5-72b-instruct': {
+      tagline: 'Alibaba\'s best open-weight — top-tier for coding and multilingual tasks',
+      good: ['Code generation', 'Chinese & multilingual', 'Analysis', 'Structured output'],
+      article: '/models/qwen-2-5-72b.html'
+    },
+    /* ── MISTRAL ────────────────────────────────── */
+    'mistralai/mistral-medium-3-5': {
+      tagline: 'Mistral Medium 3.5 — balanced capability and speed from the European AI lab',
+      good: ['Balanced tasks', 'Coding', 'Multilingual', 'Analysis'],
+      article: '/models/mistral-medium-3-5.html'
+    },
+    'mistralai/mistral-large': {
+      tagline: 'Mistral\'s flagship — strong multilingual, function calling, European data sovereignty',
+      good: ['Multilingual', 'Function calling', 'Legal & financial', 'Coding'],
+      article: '/models/mistral-large.html'
+    },
+    'mistralai/mistral-small-3.1-24b-instruct': {
+      tagline: 'Mistral Small — fast, efficient, great for RAG pipelines and structured extraction',
+      good: ['Fast tasks', 'Classification', 'RAG pipelines', 'European data'],
+      article: '/models/mistral-small-3-1.html'
+    },
+    /* ── OTHER NOTABLE ──────────────────────────── */
+    'nousresearch/hermes-3-llama-3.1-405b': {
+      tagline: 'Nous Research flagship agent model — built for persistent memory and agentic workflows',
+      good: ['AI agents', 'Persistent memory', 'Tool use', 'Long-horizon tasks'],
+      article: '/models/hermes-3-405b.html'
+    },
+    'perplexity/sonar-pro': {
+      tagline: 'Perplexity\'s search-grounded model — real-time web access in every response',
+      good: ['Web research', 'Current events', 'Fact-checking', 'Live data'],
+      article: '/models/perplexity-sonar-pro.html'
+    },
+    'nvidia/llama-3.3-nemotron-super-49b-v1.5': {
+      tagline: 'NVIDIA Nemotron Super 49B — ultra-efficient reasoning from NVIDIA',
+      good: ['Reasoning', 'Code', 'Instruction following', 'Research'],
+      article: '/models/nvidia-nemotron-49b.html'
+    }
+  };
+
+  /* ─── Article map ─── */
+  var ARTICLE_MAP = {};
+  Object.keys(MODEL_META).forEach(function (id) {
+    if (MODEL_META[id].article) ARTICLE_MAP[id] = MODEL_META[id].article;
+  });
+
+  /* ─── Helpers ─── */
+  function fmt1M(priceStr) {
+    var p = parseFloat(priceStr);
+    if (!p || isNaN(p)) return null;
+    var pm = p * 1e6;
+    if (pm < 0.001) return '<$0.001';
+    if (pm < 1)     return '$' + pm.toFixed(3);
+    return '$' + pm.toFixed(2);
+  }
+
+  function fmtCtx(n) {
+    if (!n) return null;
+    if (n >= 1e6) return (n / 1e6).toFixed(0) + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(0) + 'K';
+    return '' + n;
+  }
+
+  function getBadge(m) {
+    var pIn  = parseFloat(m.pricing && m.pricing.prompt     || 0);
+    var pOut = parseFloat(m.pricing && m.pricing.completion || 0);
+    if (pIn === 0 && pOut === 0) return 'free';
+    if (m.created && (Date.now() - m.created * 1000) < 30 * 86400000) return 'new';
+    return 'pro';
+  }
+
+  function getProvider(m) {
+    return (m.id || '').replace(/^~/, '').split('/')[0].toLowerCase();
+  }
+
+  /* ─── Explicit input/output modality detection ─── */
+  function getInputModalities(m) {
+    var arch = m.architecture || {};
+    var inp = arch.input_modalities || [];
+    if (!inp.length) {
+      var mod = (arch.modality || '').split('->')[0] || '';
+      inp = mod.split('+').map(function(s){ return s.trim(); });
+    }
+    var known = ['text','image','audio','video','file'];
+    return inp.filter(function(v){ return known.indexOf(v) > -1; });
+  }
+
+  function getOutputModalities(m) {
+    var arch = m.architecture || {};
+    var out = arch.output_modalities || [];
+    if (!out.length) {
+      var parts = (arch.modality || '').split('->');
+      var mod = parts[1] || '';
+      out = mod.split('+').map(function(s){ return s.trim(); });
+    }
+    var known = ['text','image','audio','video','file'];
+    return out.filter(function(v){ return known.indexOf(v) > -1; });
+  }
+
+  /* ─── Reasoning detection ─── */
+  function isReasoning(m) {
+    var id = (m.id || '').toLowerCase();
+    return /\/o3|\/o4|\/r1|r1-|thinking|reason/.test(id);
+  }
+
+  /* ─── Model type for filtering ─── */
+  function getModelType(m) {
+    var inp = getInputModalities(m);
+    var out = getOutputModalities(m);
+    if (isReasoning(m)) return 'reasoning';
+    if (out.indexOf('image') > -1 || out.indexOf('video') > -1 || out.indexOf('audio') > -1) return 'multimodal';
+    if (inp.indexOf('audio') > -1 || out.indexOf('audio') > -1) return 'audio';
+    if (inp.indexOf('image') > -1 || inp.indexOf('video') > -1) return 'vision';
+    return 'text';
+  }
+
+  function benchCost(m) {
+    if (!m.pricing) return 0;
+    var pIn  = parseFloat(m.pricing.prompt     || 0);
+    var pOut = parseFloat(m.pricing.completion || 0);
+    return BENCH_IN * pIn + BENCH_OUT * pOut;
+  }
+
+  function benchClass(cost) {
+    if (cost === 0)    return 'bc-free';
+    if (cost < 0.005)  return 'bc-cheap';
+    if (cost < 0.05)   return 'bc-mid';
+    return 'bc-prem';
+  }
+
+  function fmtBench(cost) {
+    if (cost === 0)     return 'Free';
+    if (cost < 0.00001) return '<$0.00001';
+    if (cost < 0.001)   return '$' + cost.toFixed(5);
+    if (cost < 0.1)     return '$' + cost.toFixed(4);
+    return '$' + cost.toFixed(3);
+  }
+
+  function fmtMoney(v) {
+    if (v <= 0)     return '$0';
+    if (v < 0.005)  return '$' + v.toFixed(4);
+    if (v < 1)      return '$' + v.toFixed(2);
+    if (v < 1000)   return '$' + v.toFixed(2);
+    if (v < 10000)  return '$' + (v / 1000).toFixed(1) + 'K';
+    return '$' + Math.round(v / 1000) + 'K';
+  }
+
+  function updateVolumeEstimates(tasksPerDay) {
+    var n = Math.max(1, Math.round(tasksPerDay || 100));
+    document.querySelectorAll('.bench-volume-est[data-cost]').forEach(function (el) {
+      var costPerTask = parseFloat(el.dataset.cost || '0');
+      if (!costPerTask) return;
+      var daily   = costPerTask * n;
+      var monthly = daily * 30;
+      el.innerHTML = '≈ <strong>' + fmtMoney(daily) + '</strong> / day &nbsp;·&nbsp; <strong>' + fmtMoney(monthly) + '</strong> / mo';
+    });
+  }
+
+  function fmtLaunchDate(ts) {
+    if (!ts) return null;
+    var d = new Date(ts * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return months[d.getUTCMonth()] + ' ' + d.getUTCFullYear();
+  }
+
+  function getGoodFor(m) {
+    var meta = MODEL_META[m.id];
+    if (meta && meta.good) return meta.good.slice(0, 3);
+    var desc  = (m.description || '').toLowerCase();
+    var inp   = getInputModalities(m);
+    var chips = [];
+    if (inp.indexOf('image') > -1 || inp.indexOf('video') > -1) chips.push('Vision input');
+    if (inp.indexOf('audio') > -1) chips.push('Audio input');
+    if (/code|coding|developer|programming/.test(desc))  chips.push('Coding');
+    if (/reason|math|logic|proof/.test(desc))            chips.push('Reasoning');
+    if (/multilingual|language/.test(desc))              chips.push('Multilingual');
+    if (/fast|speed|efficient|lightweight/.test(desc))   chips.push('Fast & efficient');
+    if (getBadge(m) === 'free') chips.push('Free to use');
+    if (!chips.length) chips.push('General purpose');
+    return chips.slice(0, 3);
+  }
+
+  function getTagline(m) {
+    var meta = MODEL_META[m.id];
+    if (meta && meta.tagline) return meta.tagline;
+    var desc = (m.description || '').replace(/[\[\]]/g, '').trim();
+    if (!desc) return 'Available via OpenRouter.';
+    return desc.length > 130 ? desc.slice(0, 127) + '…' : desc;
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /* ─── Build IO pill HTML ─── */
+  function ioPillHtml(mod) {
+    var map = { text:'text', image:'image', audio:'audio', video:'video', file:'file' };
+    var cls = 'io-pill io-pill-' + (map[mod] || 'text');
+    return '<span class="' + cls + '">' + mod + '</span>';
+  }
+
+  /* ─── Build a full model card ─── */
+  var MAX_BENCH   = 0.5;
+  var allModels   = [];
+  var currentSort = 'newest';
+
+  function sortModels(models) {
+    var s = models.slice();
+    if (currentSort === 'newest') {
+      s.sort(function (a, b) { return (b.created || 0) - (a.created || 0); });
+    } else if (currentSort === 'price_asc') {
+      s.sort(function (a, b) { return benchCost(a) - benchCost(b); });
+    } else if (currentSort === 'price_desc') {
+      s.sort(function (a, b) { return benchCost(b) - benchCost(a); });
+    } else if (currentSort === 'context') {
+      s.sort(function (a, b) { return (b.context_length || 0) - (a.context_length || 0); });
+    } else if (currentSort === 'az') {
+      s.sort(function (a, b) { return (a.name || a.id).localeCompare(b.name || b.id); });
+    }
+    return s;
+  }
+
+  function renderGrid() {
+    var grid = document.getElementById('modelsFullGrid');
+    if (!grid) return;
+    grid.innerHTML = sortModels(allModels).map(buildCard).join('');
+    applyFilters();
+    var volEl = document.getElementById('benchVolume');
+    updateVolumeEstimates(volEl ? parseInt(volEl.value, 10) || 100 : 100);
+  }
+
+  function buildCard(m) {
+    var badge     = getBadge(m);
+    var provider  = getProvider(m);
+    var name      = m.name || m.id;
+    var tagline   = getTagline(m);
+    var goodFor   = getGoodFor(m);
+    var cost      = benchCost(m);
+    var bClass    = benchClass(cost);
+    var barPct    = Math.min(cost / MAX_BENCH * 100, 100).toFixed(1);
+    var article   = ARTICLE_MAP[m.id] || null;
+    var mType     = getModelType(m);
+    var reasoning = isReasoning(m);
+    var ctx       = fmtCtx(m.context_length);
+    var pIn       = fmt1M(m.pricing && m.pricing.prompt);
+    var pOut      = fmt1M(m.pricing && m.pricing.completion);
+    var pFree     = badge === 'free';
+    var launchDate = fmtLaunchDate(m.created);
+    var inputMods  = getInputModalities(m);
+    var outputMods = getOutputModalities(m);
+
+    /* badge pills */
+    var badgePills = '';
+    if (badge === 'free')    badgePills += '<span class="mcb mcb-free">Free</span>';
+    else if (badge === 'new') badgePills += '<span class="mcb mcb-new">New</span>';
+    if (reasoning)           badgePills += '<span class="mcb mcb-reason">Reasoning</span>';
+    if (ctx)                 badgePills += '<span class="ctx-badge">' + ctx + ' ctx</span>';
+
+    /* IO rows */
+    var inPills  = inputMods.length  ? inputMods.map(ioPillHtml).join('')  : '<span class="io-pill io-pill-text">text</span>';
+    var outPills = outputMods.length ? outputMods.map(ioPillHtml).join('') : '<span class="io-pill io-pill-text">text</span>';
+    var ioHtml = [
+      '<div class="card-io-section">',
+      '  <div class="card-io-row"><span class="io-label">Accepts</span><div class="io-pills">' + inPills  + '</div></div>',
+      '  <div class="card-io-row"><span class="io-label">Outputs</span><div class="io-pills">' + outPills + '</div></div>',
+      '</div>'
+    ].join('');
+
+    /* good-for chips */
+    var goodHtml = goodFor.map(function (g) {
+      return '<span class="good-chip">' + escHtml(g) + '</span>';
+    }).join('');
+
+    /* pricing */
+    var pricingHtml = '';
+    if (pFree) {
+      pricingHtml = '<div class="pricing-item"><div class="pricing-label">Cost</div><div class="pricing-value price-free">Free</div></div>';
+    } else {
+      if (pIn)  pricingHtml += '<div class="pricing-item"><div class="pricing-label">Input /1M</div><div class="pricing-value">'  + pIn  + '</div></div>';
+      if (pOut) pricingHtml += '<div class="pricing-item"><div class="pricing-label">Output /1M</div><div class="pricing-value">' + pOut + '</div></div>';
+    }
+
+    /* benchmark — hero block */
+    var tierLabels = { 'bc-free':'Free','bc-cheap':'Cheap','bc-mid':'Mid','bc-prem':'Premium' };
+    var tierLabel  = tierLabels[bClass] || 'Mid';
+    var volEstHtml = pFree
+      ? '<div class="bench-volume-est bench-est-free"><strong>Always free</strong> — no cost per task</div>'
+      : '<div class="bench-volume-est" data-cost="' + cost.toFixed(10) + '">Calculating…</div>';
+    var benchHtml = pFree
+      ? '<div class="model-card-benchmark bc-free"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 3,500 tokens</span><span class="benchmark-tier-badge">Free</span></div><div class="benchmark-cost-big">Free</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill bc-free" style="width:2%"></div></div>' + volEstHtml + '</div>'
+      : '<div class="model-card-benchmark ' + bClass + '"><div class="benchmark-top-row"><span class="benchmark-label">Benchmark · 3,500 tokens</span><span class="benchmark-tier-badge">' + tierLabel + '</span></div><div class="benchmark-cost-big">' + fmtBench(cost) + '</div><div class="benchmark-bar-track"><div class="benchmark-bar-fill ' + bClass + '" style="width:' + barPct + '%"></div></div>' + volEstHtml + '</div>';
+
+    /* article button */
+    var articleBtn = article
+      ? '<a href="' + article + '" class="model-btn model-btn-article">Read Article →</a>'
+      : '<span class="model-btn model-btn-article btn-coming">Article Coming</span>';
+
+    /* safe ID/name for onclick */
+    var safeId   = m.id.replace(/'/g, "\\'");
+    var safeName = name.replace(/'/g, "\\'");
+
+    var cardClass = 'model-full-card card-' + (
+      ['anthropic','openai','google','meta-llama','deepseek','x-ai','mistralai','qwen'].indexOf(provider) > -1
+        ? provider : 'default'
+    );
+
+    return [
+      '<div class="' + cardClass + '"',
+      '  data-badge="'    + badge         + '"',
+      '  data-provider="' + provider      + '"',
+      '  data-type="'     + mType         + '"',
+      '  data-name="'     + escHtml(name.toLowerCase()) + '"',
+      '>',
+      '  <div class="model-card-top">',
+      '    <div class="model-card-name" title="' + escHtml(name) + '">' + escHtml(name) + '</div>',
+      '    <div class="model-card-badges">' + badgePills + '</div>',
+      '  </div>',
+      '  <div class="model-card-provider">' + escHtml(provider) + (launchDate ? ' <span class="card-launch-dot">·</span> <span class="card-launch-date">' + launchDate + '</span>' : '') + '</div>',
+      '  <div class="model-card-desc">' + escHtml(tagline) + '</div>',
+      ioHtml,
+      '  <div class="model-card-good">' + goodHtml + '</div>',
+      '  <div class="model-card-pricing">' + pricingHtml + '</div>',
+      benchHtml,
+      '  <div class="model-card-actions">',
+      '    <button class="model-btn model-btn-use" onclick="openModelChat(\'' + safeId + '\',\'' + safeName + '\')">⚡ Use Now</button>',
+      '    ' + articleBtn,
+      '  </div>',
+      '</div>'
+    ].join('\n');
+  }
+
+  /* ─── Filtering ─── */
+  var currentProvider = 'all';
+  var currentType     = 'all';
+  var searchQuery     = '';
+
+  function applyFilters() {
+    var cards = document.querySelectorAll('.model-full-card');
+    var q     = searchQuery.trim().toLowerCase();
+    var visible = 0;
+    cards.forEach(function (card) {
+      var matchP = true;
+      var matchT = true;
+      var matchS = true;
+      /* provider */
+      if (currentProvider === 'free') matchP = card.dataset.badge === 'free';
+      else if (currentProvider === 'new') matchP = card.dataset.badge === 'new';
+      else if (currentProvider !== 'all') matchP = card.dataset.provider === currentProvider;
+      /* type */
+      if (currentType !== 'all') matchT = (card.dataset.type || '') === currentType;
+      /* search */
+      if (q) matchS = (card.dataset.name || '').indexOf(q) > -1 || (card.dataset.provider || '').indexOf(q) > -1;
+      var show = matchP && matchT && matchS;
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    var el = document.getElementById('visibleCount');
+    if (el) el.textContent = visible;
+  }
+
+  /* ─── Render everything ─── */
+  function renderModels(models) {
+    var sorted = models
+      .filter(function (m) { return m && m.id; })
+      .sort(function (a, b) { return (b.created || 0) - (a.created || 0); });
+
+    var free   = sorted.filter(function (m) { return getBadge(m) === 'free'; }).length;
+    var newM   = sorted.filter(function (m) { return getBadge(m) === 'new';  }).length;
+    var vision = sorted.filter(function (m) {
+      return getInputModalities(m).indexOf('image') > -1;
+    }).length;
+
+    var elT = document.getElementById('totalCount');
+    var elF = document.getElementById('freeCount');
+    var elN = document.getElementById('newCount');
+    var elV = document.getElementById('visionCount');
+    if (elT) elT.textContent = sorted.length;
+    if (elF) elF.textContent = free;
+    if (elN) elN.textContent = newM;
+    if (elV) elV.textContent = vision;
+
+    allModels = sorted;
+    renderGrid();
+  }
+
+  /* ─── Event listeners ─── */
+  function initFilters() {
+    /* provider */
+    document.querySelectorAll('#providerFilters .filter-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('#providerFilters .filter-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentProvider = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+    /* type */
+    document.querySelectorAll('#typeFilters .filter-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('#typeFilters .filter-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentType = btn.dataset.type;
+        applyFilters();
+      });
+    });
+    /* search */
+    var searchEl = document.getElementById('modelSearch');
+    if (searchEl) {
+      searchEl.addEventListener('input', function () {
+        searchQuery = searchEl.value;
+        applyFilters();
+      });
+    }
+    /* sort */
+    document.querySelectorAll('.sort-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.sort-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentSort = btn.dataset.sort;
+        renderGrid();
+      });
+    });
+    /* volume estimator */
+    var volEl = document.getElementById('benchVolume');
+    if (volEl) {
+      volEl.addEventListener('input', function () {
+        var v = parseInt(volEl.value, 10);
+        if (v > 0) updateVolumeEstimates(v);
+      });
+    }
+  }
+
+  /* ─── Bootstrap ─── */
+  function init() {
+    initFilters();
+    fetch('https://openrouter.ai/api/v1/models')
+      .then(function (r) { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
+      .then(function (d) { renderModels(Array.isArray(d) ? d : (d.data || [])); })
+      .catch(function () {
+        var g = document.getElementById('modelsFullGrid');
+        if (g) g.innerHTML = '<div class="models-error-msg">Could not load models. <a href="https://openrouter.ai/models" target="_blank" rel="noopener">Browse on OpenRouter directly →</a></div>';
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+
+/* ─────────────────────────────────────────────
+   BYOK CHAT MODAL  (global scope — called from card onclick)
+───────────────────────────────────────────── */
+var _chatModelId  = '';
+var _chatHistory  = [];
+var _chatBusy     = false;
+
+function openModelChat(modelId, modelName) {
+  var overlay   = document.getElementById('chatModalOverlay');
+  var nameEl    = document.getElementById('chatModelName');
+  var keyNotice = document.getElementById('chatKeyNotice');
+  var inputRow  = document.getElementById('chatInputRow');
+  var msgs      = document.getElementById('chatMessages');
+  if (!overlay) return;
+
+  _chatModelId = modelId;
+  _chatHistory = [];
+  _chatBusy    = false;
+
+  if (nameEl) nameEl.textContent = modelName;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  var hasKey = window.byok && typeof window.byok.hasKey === 'function' && window.byok.hasKey();
+  if (!hasKey) {
+    if (msgs)      msgs.innerHTML = '';
+    if (keyNotice) keyNotice.style.display = 'flex';
+    if (inputRow)  inputRow.style.display  = 'none';
+  } else {
+    if (keyNotice) keyNotice.style.display = 'none';
+    if (inputRow)  inputRow.style.display  = 'flex';
+    if (msgs)      msgs.innerHTML = '<div class="chat-msg chat-msg-ai">Hi! I\'m <strong>' + _escH(modelName) + '</strong> — ready to chat. What would you like to explore?</div>';
+    var inp = document.getElementById('chatInput');
+    if (inp) { inp.value = ''; setTimeout(function(){ inp.focus(); }, 80); }
+  }
+}
+
+function _closeChatModal() {
+  var overlay = document.getElementById('chatModalOverlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  _chatBusy = false;
+}
+
+function _escH(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function _sendChat() {
+  if (_chatBusy) return;
+  var input = document.getElementById('chatInput');
+  var msgs  = document.getElementById('chatMessages');
+  var btn   = document.getElementById('chatSendBtn');
+  if (!input || !msgs) return;
+
+  var text = input.value.trim();
+  if (!text) return;
+
+  var key = window.byok && typeof window.byok.getKey === 'function' ? window.byok.getKey() : null;
+  if (!key) {
+    if (window.byok && window.byok.openByokModal) window.byok.openByokModal();
+    return;
+  }
+
+  input.value = '';
+  input.style.height = 'auto';
+  _chatBusy = true;
+  if (btn) btn.disabled = true;
+
+  _chatHistory.push({ role: 'user', content: text });
+
+  var userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg chat-msg-user';
+  userDiv.innerHTML = _escH(text).replace(/\n/g, '<br>');
+  msgs.appendChild(userDiv);
+
+  var thinkDiv = document.createElement('div');
+  thinkDiv.className = 'chat-thinking';
+  thinkDiv.id = 'chatThinking';
+  thinkDiv.innerHTML = '<span class="chat-thinking-dot"></span><span class="chat-thinking-dot"></span><span class="chat-thinking-dot"></span>';
+  msgs.appendChild(thinkDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + key,
+        'HTTP-Referer': location.href,
+        'X-Title': 'Aether Intel'
+      },
+      body: JSON.stringify({
+        model: _chatModelId,
+        messages: _chatHistory,
+        max_tokens: 1500,
+        stream: true
+      })
+    });
+
+    var thinking = document.getElementById('chatThinking');
+    if (thinking) thinking.remove();
+
+    var aiDiv = document.createElement('div');
+    aiDiv.className = 'chat-msg chat-msg-ai';
+    msgs.appendChild(aiDiv);
+
+    var reader  = resp.body.getReader();
+    var decoder = new TextDecoder();
+    var aiText  = '';
+
+    while (true) {
+      var chunk = await reader.read();
+      if (chunk.done) break;
+      var lines = decoder.decode(chunk.value, { stream: true }).split('\n');
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (!line.startsWith('data: ')) continue;
+        var data = line.slice(6).trim();
+        if (data === '[DONE]') continue;
+        try {
+          var parsed = JSON.parse(data);
+          var delta = parsed.choices && parsed.choices[0] && parsed.choices[0].delta && parsed.choices[0].delta.content;
+          if (delta) {
+            aiText += delta;
+            aiDiv.innerHTML = _escH(aiText).replace(/\n/g, '<br>');
+            msgs.scrollTop = msgs.scrollHeight;
+          }
+        } catch(e) {}
+      }
+    }
+
+    _chatHistory.push({ role: 'assistant', content: aiText });
+  } catch (err) {
+    var th = document.getElementById('chatThinking');
+    if (th) th.remove();
+    var errDiv = document.createElement('div');
+    errDiv.className = 'chat-msg chat-msg-ai';
+    errDiv.style.color = '#f97316';
+    errDiv.textContent = 'Error: ' + (err.message || 'Request failed');
+    msgs.appendChild(errDiv);
+  }
+
+  _chatBusy = false;
+  if (btn) btn.disabled = false;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  /* close button */
+  var closeBtn = document.getElementById('chatModalClose');
+  if (closeBtn) closeBtn.addEventListener('click', _closeChatModal);
+
+  /* close on overlay backdrop click */
+  var overlay = document.getElementById('chatModalOverlay');
+  if (overlay) {
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) _closeChatModal();
+    });
+  }
+
+  /* ESC to close */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') _closeChatModal();
+  });
+
+  /* add key button */
+  var addKeyBtn = document.getElementById('chatAddKeyBtn');
+  if (addKeyBtn) {
+    addKeyBtn.addEventListener('click', function () {
+      _closeChatModal();
+      if (window.byok && window.byok.openByokModal) window.byok.openByokModal();
+    });
+  }
+
+  /* send button */
+  var sendBtn = document.getElementById('chatSendBtn');
+  if (sendBtn) sendBtn.addEventListener('click', _sendChat);
+
+  /* Enter to send (Shift+Enter = newline) */
+  var chatInput = document.getElementById('chatInput');
+  if (chatInput) {
+    chatInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        _sendChat();
+      }
+    });
+    /* auto-resize textarea */
+    chatInput.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 130) + 'px';
+    });
+  }
+});
+</script>
+
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+</body>
+</html>
