@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- deploy: 2026-05-17-v7 -->
+<!-- deploy: 2026-05-17-v8 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -767,46 +767,58 @@
 <script>
   (function() {
     // .main-content is now injected by main.js — safe to query it here
-    var root = window.innerWidth > 900 ? document.querySelector('.main-content') : null;
+    var isMobile = window.innerWidth <= 900;
+    var root = isMobile ? null : document.querySelector('.main-content');
 
-    // Article card stagger reveal
+    // Article card reveal
     var cards = Array.from(document.querySelectorAll('.article-card'));
-    if (cards.length && 'IntersectionObserver' in window) {
-      var cardObs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            var idx = parseInt(entry.target.dataset.cardIdx || '0', 10);
-            var delay = (idx % 4) * 80;  // 80ms stagger, resets per row
-            setTimeout(function() {
-              entry.target.classList.add('card-visible');
-            }, delay);
-            cardObs.unobserve(entry.target);
-          }
+    if (cards.length) {
+      if (isMobile) {
+        // Mobile: skip IntersectionObserver — show all cards instantly.
+        // Observer never reliably fires for in-viewport cards on mobile
+        // because the hero consumes most of the first paint.
+        cards.forEach(function(c) { c.classList.add('card-visible'); });
+      } else if ('IntersectionObserver' in window) {
+        // Desktop: stagger-reveal as cards scroll into .main-content
+        var cardObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              var idx = parseInt(entry.target.dataset.cardIdx || '0', 10);
+              var delay = (idx % 4) * 80;  // 80ms stagger, resets per row
+              setTimeout(function() {
+                entry.target.classList.add('card-visible');
+              }, delay);
+              cardObs.unobserve(entry.target);
+            }
+          });
+        }, { root: root, threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        cards.forEach(function(c, i) {
+          c.dataset.cardIdx = i;
+          cardObs.observe(c);
         });
-      }, { root: root, threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-      cards.forEach(function(c, i) {
-        c.dataset.cardIdx = i;
-        cardObs.observe(c);
-      });
-    } else {
-      // Fallback: show all cards immediately if no IntersectionObserver
-      cards.forEach(function(c) { c.classList.add('card-visible'); });
+      } else {
+        cards.forEach(function(c) { c.classList.add('card-visible'); });
+      }
     }
 
     // Section title entrance
     var titles = document.querySelectorAll('.section-title');
-    if (titles.length && 'IntersectionObserver' in window) {
-      var titleObs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('st-visible');
-            titleObs.unobserve(entry.target);
-          }
-        });
-      }, { root: root, threshold: 0.1 });
-      titles.forEach(function(t) { titleObs.observe(t); });
-    } else {
-      titles.forEach(function(t) { t.classList.add('st-visible'); });
+    if (titles.length) {
+      if (isMobile) {
+        titles.forEach(function(t) { t.classList.add('st-visible'); });
+      } else if ('IntersectionObserver' in window) {
+        var titleObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('st-visible');
+              titleObs.unobserve(entry.target);
+            }
+          });
+        }, { root: root, threshold: 0.1 });
+        titles.forEach(function(t) { titleObs.observe(t); });
+      } else {
+        titles.forEach(function(t) { t.classList.add('st-visible'); });
+      }
     }
   })();
 </script>
