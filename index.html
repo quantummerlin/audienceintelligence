@@ -20,11 +20,34 @@
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
   <!-- AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
-  <!-- Fonts -->
+  <!-- Fonts — preconnect + non-blocking async load (eliminates render-blocking) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"></noscript>
   <link rel="stylesheet" href="/css/style.css">
+  <!-- Preload first hero image (LCP) -->
+  <link rel="preload" as="image" href="/images/articles/55-icc-prompt-formula-hero.webp" fetchpriority="high">
+  <!-- ── Favicon & PWA ─────────────────────────────────── -->
+  <link rel="icon" type="image/svg+xml" href="/images/icons/ae-icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#818cf8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Æther">
+  <!-- ── Service Worker ───────────────────────────────── -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function (e) {
+          console.warn('[SW]', e);
+        });
+      });
+    }
+  </script>
   <style>
     /* ── Hero Slideshow (restructured: image track + content below) ── */
     .hero-live-bar { display:flex; align-items:center; gap:8px; padding:8px 28px; background:var(--bg); border-bottom:1px solid var(--border); font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--neon-indigo); }
@@ -124,16 +147,19 @@
   </div>
 
   <!-- Image-only slideshow track -->
-  <div class="hero-slideshow" id="heroSlideshow">
+  <div class="hero-slideshow" id="heroSlideshow" role="region" aria-label="Featured articles slideshow">
     <div class="hero-slides-track" id="heroSlidesTrack">
-      <div class="hero-slide-img" style="background-image:url('/images/articles/53-hyperagent-built-aether-intel-hero.webp');background-color:#0d1020;"></div>
-      <div class="hero-slide-img" style="background-image:url('/images/articles/52-ceo-ai-delusion-loop-hero.webp');background-color:#0d1020;"></div>
-      <div class="hero-slide-img" style="background-image:url('/images/articles/51-consumer-ai-anticipation-gap-hero.webp');background-color:#0d1020;"></div>
-      <div class="hero-slide-img" style="background-image:url('/images/articles/49-ai-chatbot-delusion-mental-health-hero.webp');background-color:#0d1020;"></div>
-      <div class="hero-slide-img" style="background-image:url('/images/articles/50-physical-ai-sensor-infrastructure-gap-hero.webp');background-color:#0d1020;"></div>
-      <div class="hero-slide-img" style="background-image:url('/images/articles/48-ai-layoff-reversal-klarna-hero.webp');background-color:#0d1020;"></div>
-      <div class="hero-slide-img" style="background-image:url('/images/articles/47-ai-bubble-missing-demand-hero.webp');background-color:#0d1020;"></div>
-      <div class="hero-slide-img" style="background-image:url('/images/articles/46-ai-agents-attention-bottleneck-hero.webp');background-color:#0d1020;"></div>
+      <div class="hero-slide-img" style="background-image:url('/images/articles/55-icc-prompt-formula-hero.webp');background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/54-skills-company-infrastructure-hero.webp')" style="background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/53-seven-skills-ai-agent-engineers-hero.webp')" style="background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/53-hyperagent-built-aether-intel-hero.webp')" style="background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/52-ceo-ai-delusion-loop-hero.webp')" style="background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/51-consumer-ai-anticipation-gap-hero.webp')" style="background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/49-ai-chatbot-delusion-mental-health-hero.webp')" style="background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/50-physical-ai-sensor-infrastructure-gap-hero.webp')" style="background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/48-ai-layoff-reversal-klarna-hero.webp')" style="background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/47-ai-bubble-missing-demand-hero.webp')" style="background-color:#0d1020;"></div>
+      <div class="hero-slide-img" data-bg="url('/images/articles/46-ai-agents-attention-bottleneck-hero.webp')" style="background-color:#0d1020;"></div>
     </div>
     <button class="hero-slide-prev" id="heroPrev" aria-label="Previous">&#8249;</button>
     <button class="hero-slide-next" id="heroNext" aria-label="Next">&#8250;</button>
@@ -150,24 +176,27 @@
       <button class="hero-dot" aria-label="Slide 6"></button>
       <button class="hero-dot" aria-label="Slide 7"></button>
       <button class="hero-dot" aria-label="Slide 8"></button>
+      <button class="hero-dot" aria-label="Slide 9"></button>
+      <button class="hero-dot" aria-label="Slide 10"></button>
+      <button class="hero-dot" aria-label="Slide 11"></button>
     </div>
   </div>
 
   <!-- Content panel — populated by JS, sits below dots -->
-  <div class="hero-content-panel" id="heroContentPanel"></div>
+  <div class="hero-content-panel" id="heroContentPanel" aria-live="polite" aria-atomic="true"></div>
 
   <!-- ══════════════════════════════════════════
        2. AI NEWS ARTICLES
   ══════════════════════════════════════════ -->
-  <section class="hub-section reveal-section">
+  <section class="hub-section reveal-section" aria-labelledby="section-news-title">
     <div class="section-header">
-      <h2 class="section-title">Latest AI News</h2>
+      <h2 class="section-title" id="section-news-title">Latest AI News</h2>
     </div>
     <div class="article-grid">
 
       <a href="/articles/53-hyperagent-built-aether-intel.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/53-hyperagent-built-aether-intel-hero.webp" alt="Solo creator building AI news site with Hyperagent" class="article-card-img" loading="lazy">
+          <img src="/images/articles/53-hyperagent-built-aether-intel-hero.webp" alt="Solo creator building AI news site with Hyperagent" class="article-card-img" loading="eager" fetchpriority="high" width="800" height="450">
         </div>
         <div class="article-card-body">
           <div class="article-card-cat cat-tools">Tools</div>
@@ -178,7 +207,7 @@
 
       <a href="/articles/52-ceo-ai-delusion-loop.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/52-ceo-ai-delusion-loop-hero.webp" alt="CEO AI sycophancy loop" class="article-card-img" loading="lazy">
+          <img src="/images/articles/52-ceo-ai-delusion-loop-hero.webp" alt="CEO AI sycophancy loop" class="article-card-img" loading="lazy" width="800" height="450">
         </div>
         <div class="article-card-body">
           <div class="article-card-cat cat-business">Business</div>
@@ -188,7 +217,7 @@
       </a>
       <a href="/articles/51-consumer-ai-anticipation-gap.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/51-consumer-ai-anticipation-gap-hero.webp" alt="Consumer AI anticipation gap" class="article-card-img" loading="lazy">
+          <img src="/images/articles/51-consumer-ai-anticipation-gap-hero.webp" alt="Consumer AI anticipation gap" class="article-card-img" loading="lazy" width="800" height="450">
         </div>
         <div class="article-card-body">
           <div class="article-card-cat cat-agents">AI Agents</div>
@@ -199,7 +228,7 @@
 
       <a href="/articles/49-ai-chatbot-delusion-mental-health.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/49-ai-chatbot-delusion-mental-health-hero.webp" alt="AI chatbot delusion" class="article-card-img" loading="lazy">
+          <img src="/images/articles/49-ai-chatbot-delusion-mental-health-hero.webp" alt="AI chatbot delusion" class="article-card-img" loading="lazy" width="800" height="450">
         </div>
         <div class="article-card-body">
           <div class="article-card-cat cat-tools">AI Safety</div>
@@ -209,7 +238,7 @@
       </a>
       <a href="/articles/50-physical-ai-sensor-infrastructure-gap.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/50-physical-ai-sensor-infrastructure-gap-hero.webp" alt="Physical AI sensor gap" class="article-card-img" loading="lazy">
+          <img src="/images/articles/50-physical-ai-sensor-infrastructure-gap-hero.webp" alt="Physical AI sensor gap" class="article-card-img" loading="lazy" width="800" height="450">
         </div>
         <div class="article-card-body">
           <div class="article-card-cat cat-agents">AI</div>
@@ -219,7 +248,7 @@
       </a>
       <a href="/articles/48-ai-layoff-reversal-klarna.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/48-ai-layoff-reversal-klarna-hero.webp" alt="Companies that fired workers for AI now rehiring" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/48-ai-layoff-reversal-klarna-hero.webp" alt="Companies that fired workers for AI now rehiring" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-business">Business</span>
@@ -230,7 +259,7 @@
 
       <a href="/articles/47-ai-bubble-missing-demand.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/47-ai-bubble-missing-demand-hero.webp" alt="Empty data center with stacked GPU boxes" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/47-ai-bubble-missing-demand-hero.webp" alt="Empty data center with stacked GPU boxes" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-business">Business</span>
@@ -241,7 +270,7 @@
 
       <a href="/articles/46-ai-agents-attention-bottleneck.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/46-ai-agents-attention-bottleneck-hero.webp" alt="Person overwhelmed by multiple AI agent windows" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/46-ai-agents-attention-bottleneck-hero.webp" alt="Person overwhelmed by multiple AI agent windows" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-agents">AI Agents</span>
@@ -252,7 +281,7 @@
 
           <a href="/articles/45-free-ai-video-editing-stack.html" class="article-card">
           <div class="article-card-img-wrap">
-            <img src="/images/articles/45-free-ai-video-editing-stack-hero.webp" alt="The Free AI Video Stack: Replace $200/Month of Editing Tools With ChatGPT and Claude" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            <img src="/images/articles/45-free-ai-video-editing-stack-hero.webp" alt="The Free AI Video Stack: Replace $200/Month of Editing Tools With ChatGPT and Claude" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
           </div>
           <div class="article-card-body">
             <span class="badge badge-tools">Tools</span>
@@ -263,7 +292,7 @@
 
           <a href="/articles/44-openclaw-multi-model-unlock.html" class="article-card">
           <div class="article-card-img-wrap">
-            <img src="/images/articles/44-openclaw-multi-model-unlock-hero.webp" alt="Multi-model AI agent architecture with swappable LLM brains" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            <img src="/images/articles/44-openclaw-multi-model-unlock-hero.webp" alt="Multi-model AI agent architecture with swappable LLM brains" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
           </div>
           <div class="article-card-body">
             <span class="badge badge-dev">Developer</span>
@@ -274,7 +303,7 @@
 
           <a href="/articles/43-hermes-vs-openclaw-agent-war.html" class="article-card">
           <div class="article-card-img-wrap">
-            <img src="/images/articles/43-hermes-vs-openclaw-agent-war-hero.webp" alt="Hermes vs OpenClaw AI agent competition" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            <img src="/images/articles/43-hermes-vs-openclaw-agent-war-hero.webp" alt="Hermes vs OpenClaw AI agent competition" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
           </div>
           <div class="article-card-body">
             <span class="badge badge-agents">AI Agents</span>
@@ -285,7 +314,7 @@
 
           <a href="/articles/42-codex-openai-real-agent.html" class="article-card">
           <div class="article-card-img-wrap">
-            <img src="/images/articles/42-codex-openai-real-agent-hero.webp" alt="Codex Is No Longer a Coding Tool -- OpenAI Quietly Launched Its Real Agent" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            <img src="/images/articles/42-codex-openai-real-agent-hero.webp" alt="Codex Is No Longer a Coding Tool -- OpenAI Quietly Launched Its Real Agent" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
           </div>
           <div class="article-card-body">
             <span class="badge badge-agents">AI Agents</span>
@@ -296,7 +325,7 @@
 
           <a href="/articles/39-model-routing-cost-collapse.html" class="article-card">
           <div class="article-card-img-wrap">
-            <img src="/images/articles/39-model-routing-cost-collapse-hero.webp" alt="The $8 Agent vs. the $400 Agent" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            <img src="/images/articles/39-model-routing-cost-collapse-hero.webp" alt="The $8 Agent vs. the $400 Agent" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
           </div>
           <div class="article-card-body">
             <span class="badge badge-dev">AI Agents</span>
@@ -307,7 +336,7 @@
 
           <a href="/articles/40-ai-search-kills-google-seo.html" class="article-card">
           <div class="article-card-img-wrap">
-            <img src="/images/articles/40-ai-search-kills-google-seo-hero.webp" alt="The End of Google SEO: How AI Search Already Rewrote Brand Visibility" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            <img src="/images/articles/40-ai-search-kills-google-seo-hero.webp" alt="The End of Google SEO: How AI Search Already Rewrote Brand Visibility" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
           </div>
           <div class="article-card-body">
             <span class="badge badge-business">Business</span>
@@ -318,7 +347,7 @@
 
           <a href="/articles/41-chatgpt-gps-protocol-sycophancy.html" class="article-card">
           <div class="article-card-img-wrap">
-            <img src="/images/articles/41-chatgpt-gps-protocol-sycophancy-hero.webp" alt="ChatGPT Is a Sycophant: The 3-Step GPS Protocol" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            <img src="/images/articles/41-chatgpt-gps-protocol-sycophancy-hero.webp" alt="ChatGPT Is a Sycophant: The 3-Step GPS Protocol" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
           </div>
           <div class="article-card-body">
             <span class="badge badge-dev">Developer</span>
@@ -329,7 +358,7 @@
 
           <a href="/articles/38-agentic-development-loop.html" class="article-card">
           <div class="article-card-img-wrap">
-            <img src="/images/articles/38-agentic-development-loop-hero.webp" alt="The Agentic Development Loop: How AI Is Closing the Gap Between Idea and Shipped Code" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+            <img src="/images/articles/38-agentic-development-loop-hero.webp" alt="The Agentic Development Loop: How AI Is Closing the Gap Between Idea and Shipped Code" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
           </div>
           <div class="article-card-body">
             <span class="badge badge-agents">Agents</span>
@@ -341,7 +370,7 @@
 
       <a href="/articles/37-hermes-infrastructure-24-7.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/37-hermes-infrastructure-24-7-hero.webp" alt="Hermes Agent running as persistent 24/7 AI infrastructure on a VPS" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/37-hermes-infrastructure-24-7-hero.webp" alt="Hermes Agent running as persistent 24/7 AI infrastructure on a VPS" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-agents">AI Agents</span>
@@ -352,7 +381,7 @@
 
       <a href="/articles/36-ai-agent-breaks-on-update.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/36-ai-agent-breaks-on-update-hero.webp" alt="AI agent reliability crisis - why agents break on every update" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/36-ai-agent-breaks-on-update-hero.webp" alt="AI agent reliability crisis - why agents break on every update" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-dev">Developer</span>
@@ -363,7 +392,7 @@
 
       <a href="/articles/35-ai-labs-mckinsey-mode.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/35-ai-labs-mckinsey-mode-hero.webp" alt="AI labs pivot to enterprise consulting - the deployment gap" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/35-ai-labs-mckinsey-mode-hero.webp" alt="AI labs pivot to enterprise consulting - the deployment gap" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-business">Business</span>
@@ -374,7 +403,7 @@
 
       <a href="/articles/34-jack-clark-ai-builds-itself-2028.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/34-jack-clark-ai-builds-itself-2028-hero.webp" alt="Jack Clark prediction: AI builds itself by 2028" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/34-jack-clark-ai-builds-itself-2028-hero.webp" alt="Jack Clark prediction: AI builds itself by 2028" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-ethics">Future of AI</span>
@@ -385,7 +414,7 @@
 
       <a href="/articles/33-claude-code-80x-anthropic-infrastructure.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/33-claude-code-80x-anthropic-infrastructure-hero.webp" alt="Anthropic infrastructure crisis - Claude Code 80x growth" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/33-claude-code-80x-anthropic-infrastructure-hero.webp" alt="Anthropic infrastructure crisis - Claude Code 80x growth" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-business">AI Infrastructure</span>
@@ -396,7 +425,7 @@
 
       <a href="/articles/32-ai-procurement-hack-lily-mckinsey.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/32-ai-procurement-hack-lily-mckinsey-hero.webp" alt="The $20 hack that broke McKinsey's AI procurement - Lily platform breach" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/32-ai-procurement-hack-lily-mckinsey-hero.webp" alt="The $20 hack that broke McKinsey's AI procurement - Lily platform breach" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-dev">Enterprise AI</span>
@@ -407,7 +436,7 @@
 
       <a href="/articles/31-anthropic-reads-claudes-mind.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/31-anthropic-reads-claudes-mind-hero.webp" alt="Anthropic activation translation - reading Claude's internal reasoning" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/31-anthropic-reads-claudes-mind-hero.webp" alt="Anthropic activation translation - reading Claude's internal reasoning" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-agents">AI Research</span>
@@ -418,7 +447,7 @@
 
       <a href="/articles/30-ai-sycophancy-mental-health-crisis.html" class="article-card">
         <div class="article-card-img-wrap">
-          <img src="/images/articles/30-ai-sycophancy-mental-health-crisis-hero.webp" alt="AI sycophancy mental health crisis - emotional dependency on AI" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
+          <img src="/images/articles/30-ai-sycophancy-mental-health-crisis-hero.webp" alt="AI sycophancy mental health crisis - emotional dependency on AI" class="article-card-img" loading="lazy" width="800" height="450" onerror="this.style.background='linear-gradient(135deg,rgba(129,140,248,0.15),rgba(34,211,238,0.05))';this.removeAttribute('src')">
         </div>
         <div class="article-card-body">
           <span class="badge badge-ethics">AI and Society</span>
@@ -454,6 +483,27 @@
   (function() {
     var SLIDES_DATA = [
       {
+        badge: "badge-tools",
+        cat:   "Tools",
+        title: "Stop Writing Bad Prompts: The ICC Formula That Actually Works",
+        desc:  "Most AI users type a question and get generic output, then assume that's just how AI works. Instructions, Context, Constraints -- three parts that change everything.",
+        href:  "/articles/55-icc-prompt-formula.html"
+      },
+      {
+        badge: "badge-business",
+        cat:   "Business",
+        title: "Your AI Skills Are No Longer Yours -- They're Company Infrastructure",
+        desc:  "Six months after Anthropic launched skills, the majority of skill calls are made by agents, not humans. The compounding gap between builders and prompters is growing.",
+        href:  "/articles/54-skills-company-infrastructure.html"
+      },
+      {
+        badge: "badge-tools",
+        cat:   "Tools",
+        title: "The 7 Skills That Separate AI Agent Builders from Prompt Engineers",
+        desc:  "IBM mapped the full stack separating demo-mode agents from production ones. Nine out of ten failures trace to system design, not the prompt.",
+        href:  "/articles/53-seven-skills-ai-agent-engineers.html"
+      },
+            {
         badge: "badge-tools",
         cat:   "Tools",
         title: "How I Built Aether Intel With Only Hyperagent",
@@ -532,8 +582,19 @@
         '<a href="' + s.href + '" class="hero-slide-cta">Read Article \u2192</a>';
     }
 
+    function loadSlide(idx) {
+      var slideEls = track ? track.querySelectorAll('.hero-slide-img') : [];
+      var el = slideEls[idx];
+      if (el && el.dataset.bg && !el.style.backgroundImage) {
+        el.style.backgroundImage = el.dataset.bg;
+      }
+    }
+
     function goTo(idx) {
       current = (idx + TOTAL) % TOTAL;
+      // Lazy-load current slide and pre-load next one
+      loadSlide(current);
+      loadSlide((current + 1) % TOTAL);
       if (track) track.style.transform = "translateX(-" + (current * 100) + "%)";
       dots.forEach(function(d, i) { d.classList.toggle("active", i === current); });
       updatePanel(current);
@@ -632,6 +693,5 @@
 </script>
 <script src="/js/main.js"></script>
 <script src="/js/byok.js"></script>
-<script src="/js/footer.js"></script>
 </body>
 </html>
