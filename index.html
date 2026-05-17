@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- deploy: 2026-05-17-v8 -->
+<!-- deploy: 2026-05-17-v9 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -81,18 +81,14 @@
       .hero-slide-prev,.hero-slide-next { display:none; }
     }
 
-    /* ── Article card scroll-reveal + hover ── */
+    /* ── Article card hover effects — always visible, no JS required ── */
     .article-card {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s ease;
-      will-change: transform, opacity;
-    }
-    .article-card.card-visible {
       opacity: 1;
       transform: translateY(0);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      will-change: transform;
     }
-    .article-card.card-visible:hover {
+    .article-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 16px 40px rgba(129,140,248,0.22);
     }
@@ -100,17 +96,12 @@
     .article-card-img {
       transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
     }
-    .article-card.card-visible:hover .article-card-img {
+    .article-card:hover .article-card-img {
       transform: scale(1.06);
     }
 
-    /* ── Section title entrance ── */
+    /* ── Section titles — always visible ── */
     .section-title {
-      opacity: 0;
-      transform: translateY(14px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    .section-title.st-visible {
       opacity: 1;
       transform: translateY(0);
     }
@@ -126,11 +117,9 @@
 
     /* ── Respect reduced motion ── */
     @media (prefers-reduced-motion: reduce) {
-      .article-card { transition: opacity 0.3s ease !important; transform: none !important; }
-      .article-card.card-visible { transform: none !important; }
-      .article-card.card-visible:hover { transform: none !important; }
+      .article-card { transition: none !important; }
+      .article-card:hover { transform: none !important; }
       .article-card-img { transition: none !important; }
-      .section-title { transition: opacity 0.3s ease !important; transform: none !important; }
       .hero-content-panel.panel-fade { animation: none !important; }
     }
   </style>
@@ -763,64 +752,5 @@
 </script>
 <script src="/js/main.js"></script>
 <script src="/js/byok.js"></script>
-<!-- ── Scroll-reveal animations — runs AFTER main.js so .main-content exists ── -->
-<script>
-  (function() {
-    // .main-content is now injected by main.js — safe to query it here
-    var isMobile = window.innerWidth <= 900;
-    var root = isMobile ? null : document.querySelector('.main-content');
-
-    // Article card reveal
-    var cards = Array.from(document.querySelectorAll('.article-card'));
-    if (cards.length) {
-      if (isMobile) {
-        // Mobile: skip IntersectionObserver — show all cards instantly.
-        // Observer never reliably fires for in-viewport cards on mobile
-        // because the hero consumes most of the first paint.
-        cards.forEach(function(c) { c.classList.add('card-visible'); });
-      } else if ('IntersectionObserver' in window) {
-        // Desktop: stagger-reveal as cards scroll into .main-content
-        var cardObs = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              var idx = parseInt(entry.target.dataset.cardIdx || '0', 10);
-              var delay = (idx % 4) * 80;  // 80ms stagger, resets per row
-              setTimeout(function() {
-                entry.target.classList.add('card-visible');
-              }, delay);
-              cardObs.unobserve(entry.target);
-            }
-          });
-        }, { root: root, threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-        cards.forEach(function(c, i) {
-          c.dataset.cardIdx = i;
-          cardObs.observe(c);
-        });
-      } else {
-        cards.forEach(function(c) { c.classList.add('card-visible'); });
-      }
-    }
-
-    // Section title entrance
-    var titles = document.querySelectorAll('.section-title');
-    if (titles.length) {
-      if (isMobile) {
-        titles.forEach(function(t) { t.classList.add('st-visible'); });
-      } else if ('IntersectionObserver' in window) {
-        var titleObs = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('st-visible');
-              titleObs.unobserve(entry.target);
-            }
-          });
-        }, { root: root, threshold: 0.1 });
-        titles.forEach(function(t) { titleObs.observe(t); });
-      } else {
-        titles.forEach(function(t) { t.classList.add('st-visible'); });
-      }
-    }
-  })();
-</script>
 </body>
 </html>
