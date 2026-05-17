@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- deploy: 2026-05-17-v6 -->
+<!-- deploy: 2026-05-17-v7 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -748,10 +748,25 @@
   })();
 </script>
 
-<!-- ── Scroll-reveal animations ── -->
+<!-- ── Hero panel fade — set up BEFORE main.js so it catches slide changes ── -->
 <script>
   (function() {
-    // Aether scroll architecture: .main-content is the scroll container on desktop
+    var heroPanel = document.getElementById('heroContentPanel');
+    if (heroPanel && 'MutationObserver' in window) {
+      new MutationObserver(function() {
+        heroPanel.classList.remove('panel-fade');
+        void heroPanel.offsetWidth;  // force reflow to restart animation
+        heroPanel.classList.add('panel-fade');
+      }).observe(heroPanel, { childList: true });
+    }
+  })();
+</script>
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+<!-- ── Scroll-reveal animations — runs AFTER main.js so .main-content exists ── -->
+<script>
+  (function() {
+    // .main-content is now injected by main.js — safe to query it here
     var root = window.innerWidth > 900 ? document.querySelector('.main-content') : null;
 
     // Article card stagger reveal
@@ -793,19 +808,7 @@
     } else {
       titles.forEach(function(t) { t.classList.add('st-visible'); });
     }
-
-    // Hero content panel fade — MutationObserver on innerHTML changes
-    var heroPanel = document.getElementById('heroContentPanel');
-    if (heroPanel && 'MutationObserver' in window) {
-      new MutationObserver(function() {
-        heroPanel.classList.remove('panel-fade');
-        void heroPanel.offsetWidth;  // force reflow to restart animation
-        heroPanel.classList.add('panel-fade');
-      }).observe(heroPanel, { childList: true });
-    }
   })();
 </script>
-<script src="/js/main.js"></script>
-<script src="/js/byok.js"></script>
 </body>
 </html>
