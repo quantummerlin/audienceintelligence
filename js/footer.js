@@ -5,22 +5,24 @@
   /* ── STYLES ── */
   var s = document.createElement('style');
   s.textContent = [
-    '#aether-footer{background:#07070f;border-top:1px solid rgba(129,140,248,0.15);padding:44px 24px 32px;margin-top:64px;font-family:"Space Grotesk",-apple-system,BlinkMacSystemFont,sans-serif;}',
-    '.af-inner{max-width:780px;margin:0 auto;}',
-    '.af-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:28px;}',
-    '.af-brand{flex:1;min-width:180px;}',
-    '.af-logo{font-family:"Orbitron",sans-serif;font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,#f59e0b,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;letter-spacing:.04em;display:inline-block;margin-bottom:8px;}',
-    '.af-tagline{font-size:.8rem;color:rgba(148,163,184,0.7);line-height:1.55;max-width:280px;margin:0;}',
-    '.af-bmc-wrap{flex-shrink:0;display:flex;align-items:center;}',
+    // Reduced margin-top from 64px → 24px so footer doesn't feel disconnected
+    '#aether-footer{background:#07070f;border-top:1px solid rgba(129,140,248,0.15);padding:32px 24px 28px;margin-top:24px;font-family:"Space Grotesk",-apple-system,BlinkMacSystemFont,sans-serif;}',
+    '.af-inner{max-width:780px;margin:0 auto;text-align:center;}',
+    // Brand block: centred stack
+    '.af-brand{margin-bottom:20px;}',
+    '.af-logo{font-family:"Orbitron",sans-serif;font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,#38bdf8,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;letter-spacing:.04em;display:inline-block;margin-bottom:6px;}',
+    '.af-tagline{font-size:.8rem;color:rgba(148,163,184,0.7);line-height:1.55;margin:0;}',
+    // BMC button: centred
+    '.af-bmc-wrap{margin:18px 0 22px;display:flex;justify-content:center;}',
     '.af-bmc-btn{display:inline-flex;align-items:center;gap:8px;background:#FFDD00;color:#000;font-size:.82rem;font-weight:700;padding:10px 20px;border-radius:8px;text-decoration:none;transition:opacity .2s,transform .15s;white-space:nowrap;border:none;cursor:pointer;}',
     '.af-bmc-btn:hover{opacity:.88;transform:translateY(-1px);}',
-    '.af-hr{border:none;border-top:1px solid rgba(129,140,248,0.12);margin:0 0 20px;}',
-    '.af-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}',
-    '.af-copy{font-size:.76rem;color:rgba(148,163,184,0.4);margin:0;}',
-    '.af-links{display:flex;gap:20px;flex-wrap:wrap;}',
+    '.af-hr{border:none;border-top:1px solid rgba(129,140,248,0.12);margin:0 0 16px;}',
+    // Bottom block: stacked & centred (copy + links)
+    '.af-bottom{display:flex;flex-direction:column;align-items:center;gap:10px;}',
+    '.af-copy{font-size:.76rem;color:rgba(148,163,184,0.4);margin:0;text-align:center;}',
+    '.af-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;}',
     '.af-links a{font-size:.76rem;color:rgba(148,163,184,0.55);text-decoration:none;transition:color .2s;}',
-    '.af-links a:hover{color:#f59e0b;}',
-    '@media(max-width:520px){.af-top{flex-direction:column;}.af-bottom{flex-direction:column;align-items:flex-start;gap:10px;}}'
+    '.af-links a:hover{color:#22d3ee;}',
   ].join('');
   document.head.appendChild(s);
 
@@ -29,16 +31,14 @@
   f.id = 'aether-footer';
   f.innerHTML =
     '<div class="af-inner">' +
-      '<div class="af-top">' +
-        '<div class="af-brand">' +
-          '<a href="/" class="af-logo">Æther Intel</a>' +
-          '<p class="af-tagline">AI signals, decoded. No paywalls. Reader-supported.</p>' +
-        '</div>' +
-        '<div class="af-bmc-wrap">' +
-          '<a href="https://buymeacoffee.com/quantummerlin" target="_blank" rel="noopener noreferrer" class="af-bmc-btn">' +
-            '<span style="font-size:1.1em;">☕</span> Buy me a coffee' +
-          '</a>' +
-        '</div>' +
+      '<div class="af-brand">' +
+        '<a href="/" class="af-logo">Æther Intel</a>' +
+        '<p class="af-tagline">AI signals, decoded. No paywalls. Reader-supported.</p>' +
+      '</div>' +
+      '<div class="af-bmc-wrap">' +
+        '<a href="https://buymeacoffee.com/quantummerlin" target="_blank" rel="noopener noreferrer" class="af-bmc-btn">' +
+          '<span style="font-size:1.1em;">☕</span> Buy me a coffee' +
+        '</a>' +
       '</div>' +
       '<hr class="af-hr">' +
       '<div class="af-bottom">' +
@@ -60,7 +60,7 @@
   bmc.setAttribute('data-id', 'quantummerlin');
   bmc.setAttribute('data-description', 'Support Aether Intel!');
   bmc.setAttribute('data-message', 'Æther Intel is free, no ads. A coffee keeps it that way ☕');
-  bmc.setAttribute('data-color', '#f59e0b');
+  bmc.setAttribute('data-color', '#22d3ee');
   bmc.setAttribute('data-position', 'Right');
   bmc.setAttribute('data-x_margin', '18');
   bmc.setAttribute('data-y_margin', '18');
