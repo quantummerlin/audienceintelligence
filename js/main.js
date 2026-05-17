@@ -598,11 +598,42 @@
   });
 
   // ---------------------------------------------------------------------------
-  // PWA — Service Worker Update Detection
+  // PWA — Service Worker Registration + Update Detection
+  // Centralised here so every page that loads main.js gets identical PWA setup
+  // (no duplicated inline SW registration in each HTML page).
   // ---------------------------------------------------------------------------
 
-  (function initPWAUpdates() {
+  (function initPWA() {
     if (!('serviceWorker' in navigator)) return;
+
+    // ─── Inject mobile-web-app-capable meta if missing (replaces deprecated apple-* version) ───
+    if (!document.querySelector('meta[name="mobile-web-app-capable"]')) {
+      var meta = document.createElement('meta');
+      meta.name = 'mobile-web-app-capable';
+      meta.content = 'yes';
+      document.head.appendChild(meta);
+    }
+
+    // ─── Register on window load to not contend with critical path ───
+    window.addEventListener('load', function () {
+      // Nuke stale caches once per session (defends against legacy SW caches)
+      try {
+        if (!sessionStorage.getItem('ae-pwa-clean-v12')) {
+          if ('caches' in window) {
+            caches.keys().then(function (names) {
+              names.forEach(function (n) { caches.delete(n); });
+            });
+          }
+          sessionStorage.setItem('ae-pwa-clean-v12', '1');
+        }
+      } catch (e) { /* sessionStorage may be unavailable in some private modes */ }
+
+      // updateViaCache:'none' forces the browser to always byte-check sw.js,
+      // bypassing the HTTP cache — critical so a CDN-cached SW never gets stuck.
+      navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch(function (e) {
+        console.warn('[SW]', e);
+      });
+    });
 
     // When a new SW takes control (skipWaiting fired), offer a reload
     navigator.serviceWorker.addEventListener('controllerchange', function () {

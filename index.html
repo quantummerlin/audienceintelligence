@@ -39,24 +39,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Æther">
-  <!-- ── Service Worker ───────────────────────────────── -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        // Nuke all stale caches once per session so stale SW content can't survive
-        if (!sessionStorage.getItem('ae-v11-clean')) {
-          caches.keys().then(function(names) {
-            names.forEach(function(n) { caches.delete(n); });
-          });
-          sessionStorage.setItem('ae-v11-clean', '1');
-        }
-        // updateViaCache:'none' forces browser to always byte-check sw.js (bypass HTTP cache)
-        navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch(function (e) {
-          console.warn('[SW]', e);
-        });
-      });
-    }
-  </script>
+  <!-- Service Worker registration now centralised in main.js (handles every page) -->
   <style>
     /* ── Hero Slideshow (restructured: image track + content below) ── */
     .hero-live-bar { display:flex; align-items:center; gap:8px; padding:8px 28px; background:var(--bg); border-bottom:1px solid var(--border); font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--neon-indigo); }
