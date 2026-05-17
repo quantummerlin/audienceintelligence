@@ -4,7 +4,7 @@
  * Version: auto-stamped at build time via CACHE_VERSION
  */
 
-const CACHE_VERSION = 'aether-v1';
+const CACHE_VERSION = 'aether-v9';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
@@ -132,7 +132,7 @@ async function networkFirst(request, cacheName) {
 }
 
 // ─── Push notifications (future) ─────────────────────────────────────────────
-self.addEventListener('push', event => {
+self.addEventListener('sush', event => {
   if (!event.data) return;
   const data = event.data.json();
   event.waitUntil(
