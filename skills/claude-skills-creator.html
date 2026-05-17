@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skills Creator — Build Every Other Skill From a Conversation | Aether Intel Skills</title>
+  <meta name="description" content="One-click install: the meta-skill that interviews you about any workflow and outputs a production-ready skill.md file — trigger, gotchas, methodology, and format spec included. Works with Claude Sonnet 4.6 and GPT-5.4." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/skills/claude-skills-creator.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://ai.quantummerlin.com/skills/claude-skills-creator.html" />
+  <meta property="og:title" content="Skills Creator — Build Every Other Skill From a Conversation | Aether Intel Skills" />
+  <meta property="og:description" content="The meta-skill that turns any workflow description into a production-ready skill.md file Claude can auto-invoke." />
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/skills/skills-creator-hero.webp" />
+  <meta property="og:site_name" content="Aether Intel" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VW4LGE7L1T');
+  </script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    :root {
+      --skill-accent:      #e11d48;
+      --skill-accent-dim:  rgba(225,29,72,.12);
+      --skill-accent-glow: 0 0 24px rgba(225,29,72,.28);
+      --cost-cheap:        #22c55e;
+      --cost-cheap-bg:     rgba(34,197,94,.12);
+      --cost-moderate:     #f59e0b;
+      --cost-moderate-bg:  rgba(245,158,11,.12);
+    }
+
+    /* ─── READ PROGRESS ─── */
+    #read-progress {
+      position:fixed; top:0; left:0; z-index:9999;
+      height:3px; width:0;
+      background:linear-gradient(90deg,var(--skill-accent),#fb7185);
+      transition:width .1s linear; pointer-events:none;
+    }
+
+    /* ─── LAYOUT ─── */
+    .skill-page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+    }
+
+    /* ─── BREADCRUMB ─── */
+    .skill-breadcrumb {
+      display:flex; align-items:center; gap:8px;
+      padding:26px 0 0;
+      font-family:var(--font-display); font-size:.72rem; font-weight:600;
+      letter-spacing:.07em; text-transform:uppercase; color:var(--text-muted);
+    }
+    .skill-breadcrumb a { color:var(--text-muted); text-decoration:none; }
+    .skill-breadcrumb a:hover { color:var(--skill-accent); }
+    .skill-breadcrumb svg { width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* ─── OUTCOME BANNER ─── */
+    .outcome-banner { margin: 28px 0 0; }
+    .outcome-meta {
+      display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;
+    }
+    .badge-category {
+      font-family:var(--font-display); font-size:.67rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase;
+      padding:4px 11px; border-radius:4px;
+      background:var(--skill-accent-dim); border:1px solid rgba(225,29,72,.3);
+      color:var(--skill-accent);
+    }
+    .badge-cost-cheap {
+      font-family:var(--font-display); font-size:.67rem; font-weight:700;
+      letter-spacing:.07em; text-transform:uppercase;
+      padding:4px 11px; border-radius:4px;
+      background:var(--cost-cheap-bg); border:1px solid rgba(34,197,94,.3);
+      color:var(--cost-cheap);
+    }
+    .badge-installs {
+      font-family:var(--font-display); font-size:.67rem; font-weight:600;
+      letter-spacing:.05em; color:var(--text-muted);
+      display:flex; align-items:center; gap:5px;
+      margin-left:auto;
+    }
+    .badge-installs svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; }
+    .outcome-headline {
+      font-family:var(--font-display); font-size:clamp(1.8rem,4.5vw,2.8rem);
+      font-weight:900; line-height:1.1; letter-spacing:-.025em; margin:0 0 14px;
+    }
+    .outcome-headline em {
+      font-style:normal;
+      background:linear-gradient(135deg,var(--skill-accent),#fb7185);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .outcome-sub {
+      font-size:1.05rem; line-height:1.75; color:var(--text-secondary);
+      max-width:640px; margin:0 0 28px;
+    }
+
+    /* ─── INSTALL BAR ─── */
+    .install-bar {
+      position:sticky; top:0; z-index:200;
+      background:rgba(13,13,26,.92);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(225,29,72,.25);
+      padding:12px 24px;
+      margin:0 -24px;
+    }
+    .install-bar-inner {
+      max-width:860px; margin:0 auto;
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    }
+    .install-label {
+      font-family:var(--font-display); font-size:.68rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase;
+      color:rgba(255,255,255,.45); margin-right:4px; white-space:nowrap;
+    }
+    .btn-install-primary {
+      display:inline-flex; align-items:center; gap:7px;
+      background:var(--skill-accent); color:#fff;
+      font-family:var(--font-display); font-size:.7rem; font-weight:700;
+      letter-spacing:.08em; text-transform:uppercase;
+      padding:9px 18px; border-radius:7px; border:none; cursor:pointer;
+      text-decoration:none; transition:background .2s,transform .15s,box-shadow .2s;
+      white-space:nowrap;
+    }
+    .btn-install-primary:hover { background:#be123c; transform:translateY(-1px); box-shadow:0 6px 20px rgba(225,29,72,.4); }
+    .btn-install-primary.copied { background:#16a34a; }
+    .btn-install-ghost {
+      display:inline-flex; align-items:center; gap:6px;
+      background:transparent; color:rgba(255,255,255,.7);
+      font-family:var(--font-display); font-size:.68rem; font-weight:600;
+      letter-spacing:.07em; text-transform:uppercase;
+      padding:8px 15px; border-radius:7px; border:1px solid rgba(255,255,255,.15);
+      cursor:pointer; text-decoration:none; transition:all .15s; white-space:nowrap;
+    }
+    .btn-install-ghost:hover { border-color:var(--skill-accent); color:var(--skill-accent); }
+    .btn-install-ghost.or-btn { border-color:rgba(249,115,22,.35); color:rgba(249,115,22,.8); }
+    .btn-install-ghost.or-btn:hover { border-color:#f97316; color:#f97316; }
+    .install-bar-spacer { flex:1; }
+
+    /* ─── INSTALL TOAST ─── */
+    .install-toast {
+      position:fixed; bottom:28px; right:28px; z-index:9999;
+      background:#16a34a; color:#fff;
+      font-family:var(--font-display); font-size:.75rem; font-weight:700;
+      letter-spacing:.05em; padding:12px 20px; border-radius:8px;
+      box-shadow:0 8px 32px rgba(22,163,74,.4);
+      opacity:0; transform:translateY(12px);
+      transition:all .3s ease; pointer-events:none;
+    }
+    .install-toast.show { opacity:1; transform:translateY(0); }
+
+    /* ─── HERO IMAGE ─── */
+    .skill-hero-img {
+      width:100%; aspect-ratio:16/9; object-fit:cover;
+      border-radius:12px; display:block; margin:32px 0 40px;
+      border:1px solid var(--border);
+    }
+
+    /* ─── SECTION HEADINGS ─── */
+    .skill-section { margin-bottom:60px; }
+    .skill-section-heading {
+      font-family:var(--font-display); font-size:1.15rem; font-weight:800;
+      letter-spacing:-.01em; line-height:1.25; margin:0 0 6px;
+      padding-bottom:14px; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:12px;
+    }
+    .section-icon {
+      width:28px; height:28px; border-radius:6px;
+      background:var(--skill-accent-dim); border:1px solid rgba(225,29,72,.25);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.85rem; flex-shrink:0;
+    }
+    .skill-section p { font-size:.95rem; line-height:1.8; color:var(--text-secondary); margin:0 0 14px; }
+    .skill-section strong { color:var(--text-primary); }
+    .skill-section ul, .skill-section ol { padding-left:20px; margin:0 0 14px; }
+    .skill-section li { font-size:.92rem; line-height:1.72; color:var(--text-secondary); margin-bottom:6px; }
+
+    /* ─── MODEL TABLE ─── */
+    .model-table-wrap { overflow-x:auto; margin:18px 0; }
+    .model-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    .model-table th {
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase;
+      color:var(--text-muted); text-align:left; padding:10px 14px;
+      border-bottom:1px solid var(--border); white-space:nowrap;
+    }
+    .model-table td {
+      padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.04);
+      vertical-align:middle; color:var(--text-secondary);
+    }
+    .model-table tr:hover td { background:rgba(255,255,255,.02); }
+    .model-table tr.recommended-row td { background:rgba(225,29,72,.03); }
+    .model-name { font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+    .model-provider-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .model-provider-dot.anthropic { background:#f97316; }
+    .model-provider-dot.openai    { background:#10b981; }
+    .model-provider-dot.google    { background:#3b82f6; }
+    .model-provider-dot.meta      { background:#818cf8; }
+    .stars { color:#f59e0b; font-size:.9rem; letter-spacing:-1px; }
+    .cost-pill {
+      display:inline-block; font-family:var(--font-display); font-size:.63rem;
+      font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+      padding:3px 8px; border-radius:4px;
+    }
+    .cost-pill.cheap    { background:rgba(34,197,94,.12); color:#22c55e; border:1px solid rgba(34,197,94,.25); }
+    .cost-pill.moderate { background:rgba(245,158,11,.12); color:#f59e0b; border:1px solid rgba(245,158,11,.25); }
+    .cost-pill.expensive{ background:rgba(239,68,68,.12); color:#f87171; border:1px solid rgba(239,68,68,.25); }
+    .recommended-badge {
+      font-family:var(--font-display); font-size:.6rem; font-weight:700;
+      letter-spacing:.07em; text-transform:uppercase;
+      background:var(--skill-accent-dim); color:var(--skill-accent);
+      border:1px solid rgba(225,29,72,.3); padding:2px 7px; border-radius:3px;
+    }
+
+    /* ─── COST CARD ─── */
+    .cost-card {
+      background:var(--surface); border:1px solid rgba(34,197,94,.25);
+      border-radius:12px; padding:22px 26px; margin:18px 0;
+      display:grid; grid-template-columns:1fr auto; gap:12px 28px; align-items:start;
+    }
+    @media(max-width:560px) { .cost-card { grid-template-columns:1fr; } }
+    .cost-card-label {
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.1em; text-transform:uppercase; color:var(--cost-cheap); margin-bottom:8px;
+    }
+    .cost-card-headline { font-size:1.6rem; font-weight:700; color:var(--text-primary); line-height:1.1; margin-bottom:6px; }
+    .cost-card-sub { font-size:.85rem; color:var(--text-muted); }
+    .cost-card-stats { display:flex; flex-direction:column; gap:10px; }
+    .cost-stat { text-align:right; }
+    .cost-stat-value { font-family:var(--font-display); font-size:.95rem; font-weight:700; color:var(--text-primary); }
+    .cost-stat-label { font-size:.78rem; color:var(--text-muted); }
+    .cost-card-note {
+      grid-column:1/-1; font-size:.82rem; color:var(--text-muted);
+      border-top:1px solid var(--border); padding-top:12px; margin-top:4px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .cost-card-note svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; flex-shrink:0; opacity:.6; }
+
+    /* ─── BEFORE / AFTER ─── */
+    .compare-wrap { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0; }
+    @media(max-width:600px) { .compare-wrap { grid-template-columns:1fr; } }
+    .compare-panel {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:10px; overflow:hidden;
+    }
+    .compare-label {
+      padding:10px 16px;
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase;
+      display:flex; align-items:center; gap:8px;
+    }
+    .compare-label.before-label { background:rgba(239,68,68,.06); border-bottom:1px solid rgba(239,68,68,.15); color:#f87171; }
+    .compare-label.after-label  { background:rgba(34,197,94,.06);  border-bottom:1px solid rgba(34,197,94,.15);  color:#4ade80; }
+    .compare-dot { width:7px; height:7px; border-radius:50%; }
+    .before-label .compare-dot { background:#ef4444; }
+    .after-label  .compare-dot { background:#22c55e; }
+    .compare-body { padding:16px; font-size:.87rem; line-height:1.75; color:var(--text-secondary); }
+    .compare-body pre {
+      margin:8px 0 0; padding:12px 14px;
+      background:rgba(0,0,0,.3); border:1px solid rgba(255,255,255,.07);
+      border-radius:7px; font-family:'JetBrains Mono',monospace;
+      font-size:.76rem; line-height:1.6; color:#e6edf3; white-space:pre-wrap; overflow-x:auto;
+    }
+    .compare-tag {
+      display:inline-block; margin:16px 0 0 16px;
+      font-family:var(--font-display); font-size:.62rem; font-weight:700;
+      letter-spacing:.08em; text-transform:uppercase;
+      padding:3px 9px; border-radius:4px; opacity:.7;
+    }
+    .compare-tag.workflow-tag { background:rgba(225,29,72,.12); color:#fb7185; border:1px solid rgba(225,29,72,.2); }
+    .compare-tag.output-tag  { background:rgba(34,211,238,.1);  color:#22d3ee; border:1px solid rgba(34,211,238,.2); }
+
+    /* ─── WORKS BEST WITH / NOT RECOMMENDED ─── */
+    .model-compat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0; }
+    @media(max-width:600px) { .model-compat-grid { grid-template-columns:1fr; } }
+    .compat-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px 20px; }
+    .compat-panel.best  { border-color:rgba(34,197,94,.25); }
+    .compat-panel.avoid { border-color:rgba(239,68,68,.2); }
+    .compat-panel-label {
+      font-family:var(--font-display); font-size:.65rem; font-weight:700;
+      letter-spacing:.09em; text-transform:uppercase; margin-bottom:14px;
+      display:flex; align-items:center; gap:7px;
+    }
+    .compat-panel.best  .compat-panel-label { color:#4ade80; }
+    .compat-panel.avoid .compat-panel-label { color:#f87171; }
+    .compat-list { list-style:none; padding:0; margin:0; }
+    .compat-list li {
+      font-size:.87rem; line-height:1.65; color:var(--text-secondary);
+      padding:6px 0; border-bottom:1px solid rgba(255,255,255,.04);
+      display:flex; align-items:flex-start; gap:9px;
+    }
+    .compat-list li:last-child { border-bottom:none; }
+    .compat-list li::before { flex-shrink:0; margin-top:4px; }
+    .compat-panel.best  .compat-list li::before { content:"✓"; color:#4ade80; font-size:.8rem; }
+    .compat-panel.avoid .compat-list li::before { content:"✗"; color:#f87171; font-size:.8rem; }
+
+    /* ─── CHAIN DIAGRAM ─── */
+    .chain-diagram {
+      display:flex; align-items:center; gap:0; margin:18px 0;
+      overflow-x:auto; padding:4px 0 8px; scrollbar-width:none;
+    }
+    .chain-diagram::-webkit-scrollbar { display:none; }
+    .chain-node {
+      flex-shrink:0; min-width:140px;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:10px; padding:14px 16px; text-align:center;
+    }
+    .chain-node.active-node {
+      border-color:rgba(225,29,72,.5);
+      background:rgba(225,29,72,.07);
+      box-shadow:0 0 0 1px rgba(225,29,72,.2);
+    }
+    .chain-node-icon { font-size:1.3rem; margin-bottom:8px; }
+    .chain-node-title {
+      font-family:var(--font-display); font-size:.7rem; font-weight:700;
+      letter-spacing:.05em; text-transform:uppercase;
+      color:var(--text-primary); margin-bottom:4px;
+    }
+    .chain-node.active-node .chain-node-title { color:var(--skill-accent); }
+    .chain-node-desc { font-size:.75rem; color:var(--text-muted); line-height:1.4; }
+    .chain-arrow { flex-shrink:0; padding:0 8px; font-size:1.1rem; color:rgba(255,255,255,.2); }
+
+    /* ─── INTERVIEW STEPS ─── */
+    .interview-steps { margin:18px 0; display:grid; gap:10px; }
+    .interview-step {
+      display:flex; gap:16px; align-items:flex-start;
+      padding:16px; background:rgba(225,29,72,.04);
+      border:1px solid rgba(225,29,72,.12); border-radius:10px;
+    }
+    .interview-step-num {
+      font-family:var(--font-display); font-size:.75rem; font-weight:800;
+      color:var(--skill-accent); flex-shrink:0; min-width:24px; padding-top:2px;
+    }
+    .interview-step-q { font-size:.9rem; line-height:1.65; color:var(--text-secondary); }
+    .interview-step-q strong { color:var(--text-primary); }
+
+    /* ─── COMMUNITY SIGNALS ─── */
+    .community-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0; }
+    @media(max-width:560px) { .community-grid { grid-template-columns:1fr 1fr; } }
+    .community-stat-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center; }
+    .community-stat-value { font-family:var(--font-display); font-size:1.5rem; font-weight:800; color:var(--text-primary); letter-spacing:-.02em; display:block; margin-bottom:4px; }
+    .community-stat-label { font-size:.78rem; color:var(--text-muted); }
+
+    /* ─── CALLOUT BOXES ─── */
+    .callout {
+      border-radius:10px; padding:15px 18px; margin:18px 0;
+      font-size:.9rem; line-height:1.7; display:flex; gap:13px; align-items:flex-start;
+    }
+    .callout-icon { font-size:1rem; flex-shrink:0; margin-top:2px; }
+    .callout-body { flex:1; color:var(--text-secondary); }
+    .callout-body strong { color:var(--text-primary); }
+    .callout.info    { background:rgba(225,29,72,.07);  border:1px solid rgba(225,29,72,.2); }
+    .callout.tip     { background:rgba(45,212,191,.07); border:1px solid rgba(45,212,191,.2); }
+    .callout.warning { background:rgba(251,191,36,.07); border:1px solid rgba(251,191,36,.2); }
+
+    /* ─── CODE BLOCK ─── */
+    .code-block { position:relative; margin:18px 0; background:#0d1117; border:1px solid #30363d; border-radius:10px; overflow:hidden; }
+    .code-block-header { display:flex; align-items:center; justify-content:space-between; padding:9px 16px; background:#161b22; border-bottom:1px solid #30363d; }
+    .code-lang { font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--skill-accent); }
+    .copy-btn { background:none; border:1px solid #30363d; border-radius:5px; color:#8b949e; font-family:var(--font-display); font-size:.63rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; padding:3px 10px; cursor:pointer; transition:all .15s; }
+    .copy-btn:hover { border-color:var(--skill-accent); color:var(--skill-accent); }
+    .copy-btn.copied { border-color:#3fb950; color:#3fb950; }
+    .code-block pre { margin:0; padding:18px 20px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:.8rem; line-height:1.65; color:#e6edf3; }
+
+    /* ─── RELATED SKILLS ─── */
+    .related-skills { display:flex; gap:14px; overflow-x:auto; padding:4px 0 8px; scrollbar-width:none; }
+    .related-skills::-webkit-scrollbar { display:none; }
+    .related-card {
+      flex-shrink:0; width:200px;
+      background:var(--surface); border:1px solid var(--border); border-radius:10px;
+      padding:16px; text-decoration:none; transition:border-color .15s,transform .15s;
+    }
+    .related-card:hover { border-color:var(--skill-accent); transform:translateY(-2px); }
+    .related-card-icon { font-size:1.4rem; margin-bottom:10px; }
+    .related-card-title { font-family:var(--font-display); font-size:.75rem; font-weight:700; letter-spacing:.03em; color:var(--text-primary); margin-bottom:6px; }
+    .related-card-desc { font-size:.78rem; color:var(--text-muted); line-height:1.5; }
+
+    /* ─── BOTTOM INSTALL CTA ─── */
+    .install-cta-section {
+      background:linear-gradient(135deg, rgba(225,29,72,.1), rgba(251,113,133,.05));
+      border:1px solid rgba(225,29,72,.25); border-radius:16px;
+      padding:36px 32px; text-align:center; margin-top:60px;
+    }
+    .install-cta-headline { font-family:var(--font-display); font-size:clamp(1.2rem,3vw,1.7rem); font-weight:800; letter-spacing:-.02em; margin:0 0 10px; }
+    .install-cta-sub { font-size:.9rem; color:var(--text-muted); margin:0 0 26px; }
+    .install-cta-buttons { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
+
+    @media (max-width:480px) {
+      .install-bar-inner { gap:8px; }
+      .install-label { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="read-progress"></div>
+
+  <nav class="nav-bar" id="nav-bar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
+      </a>
+      <div class="nav-links">
+        <a href="/news.html" class="nav-link">News</a>
+        <a href="/tools.html" class="nav-link">Tools</a>
+        <a href="/skills.html" class="nav-link active">Skills</a>
+        <a href="/about.html" class="nav-link">About</a>
+      </div>
+      <div class="nav-actions">
+        <a href="/skills.html" class="nav-btn-ghost">Browse Skills</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- STICKY INSTALL BAR -->
+  <div class="install-bar" id="install-bar">
+    <div class="install-bar-inner">
+      <span class="install-label">Install Skill:</span>
+      <button class="btn-install-primary" id="btn-copy-prompt" onclick="copyPrompt(this)">
+        ⚡ Copy Prompt
+      </button>
+      <a class="btn-install-ghost" href="https://claude.ai/new?q=You+are+a+Claude+Skill+Creator.+Your+job+is+to+interview+me+about+a+workflow+and+produce+a+complete+skill.md+file." target="_blank" rel="noopener">
+        ▶ Try in Claude
+      </a>
+      <button class="btn-install-ghost" onclick="downloadJSON()">
+        ↓ .json
+      </button>
+      <a class="btn-install-ghost or-btn" href="https://openrouter.ai/chat?system=You+are+a+Claude+Skill+Creator.+Your+job+is+to+interview+me+about+a+workflow+and+produce+a+complete+skill.md+file." target="_blank" rel="noopener">
+        ⊕ OpenRouter
+      </a>
+      <span class="install-bar-spacer"></span>
+      <span style="font-family:var(--font-display);font-size:.65rem;letter-spacing:.06em;color:rgba(255,255,255,.3);">1,089 installs</span>
+    </div>
+  </div>
+
+  <div class="skill-page-wrap">
+
+    <!-- BREADCRUMB -->
+    <nav class="skill-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <a href="/skills.html">Skills</a>
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>Skills Creator</span>
+    </nav>
+
+    <!-- OUTCOME BANNER -->
+    <header class="outcome-banner">
+      <div class="outcome-meta">
+        <span class="badge-category">Automation</span>
+        <span class="badge-cost-cheap">💚 Cheap · &lt;$0.05 / skill</span>
+        <span class="badge-installs">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          1,089 installs
+        </span>
+      </div>
+      <h1 class="outcome-headline">
+        <em>Builds every other skill</em> for you —<br>describe a workflow, get a skill
+      </h1>
+      <p class="outcome-sub">
+        The meta-skill that interviews you about any repeatable workflow and outputs a production-ready <code>skill.md</code> file — trigger conditions, methodology, edge-case gotchas, and output format included — ready to install in any Claude project or agent.
+      </p>
+    </header>
+
+    <!-- HERO IMAGE -->
+    <img
+      src="/images/skills/skills-creator-hero.webp"
+      alt="Skills Creator — a workflow description turning into a packaged skill.md file"
+      class="skill-hero-img"
+      loading="eager"
+    />
+
+    <!-- SECTION 1: MODEL TABLE -->
+    <section class="skill-section" id="models">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">🤖</span>
+        Recommended Models
+      </h2>
+      <p>Skills Creator works best with models that deeply understand Claude's skill format and can ask probing interview questions. Anthropic-native models have a natural edge here.</p>
+      <div class="model-table-wrap">
+        <table class="model-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Best For</th>
+              <th>Cost</th>
+              <th>Quality</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="recommended-row">
+              <td>
+                <span class="model-name">
+                  <span class="model-provider-dot anthropic"></span>
+                  Claude Sonnet 4.6
+                </span>
+              </td>
+              <td>Best grasp of skill.md format and trigger logic</td>
+              <td><span class="cost-pill moderate">Moderate</span></td>
+              <td><span class="stars">★★★★★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+            <tr class="recommended-row">
+              <td>
+                <span class="model-name">
+                  <span class="model-provider-dot openai"></span>
+                  GPT-5.4
+                </span>
+              </td>
+              <td>Strong instruction-following for complex workflows</td>
+              <td><span class="cost-pill moderate">Moderate</span></td>
+              <td><span class="stars">★★★★</span><span style="opacity:.3">★</span></td>
+              <td><span class="recommended-badge">Recommended</span></td>
+            </tr>
+            <tr>
+              <td>
+                <span class="model-name">
+                  <span class="model-provider-dot anthropic"></span>
+                  Claude Opus 4.7
+                </span>
+              </td>
+              <td>Most thorough design for complex multi-step workflows</td>
+              <td><span class="cost-pill expensive">Expensive</span></td>
+              <td><span class="stars">★★★★★</span></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Temperature tip:</strong> Set to <strong>0.5</strong>. Enough creativity to ask varied, insightful interview questions — low enough to produce structured, consistent skill.md output every time.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: COST ESTIMATE -->
+    <section class="skill-section" id="cost">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">💰</span>
+        Cost Estimate
+      </h2>
+      <div class="cost-card">
+        <div>
+          <div class="cost-card-label">💚 Cheap Tier</div>
+          <div class="cost-card-headline">&lt;$0.05</div>
+          <div class="cost-card-sub">per complete skill creation session (3–5 turns)</div>
+        </div>
+        <div class="cost-card-stats">
+          <div class="cost-stat">
+            <div class="cost-stat-value">~1,500</div>
+            <div class="cost-stat-label">input tokens / run</div>
+          </div>
+          <div class="cost-stat">
+            <div class="cost-stat-value">~1,000</div>
+            <div class="cost-stat-label">output tokens / run</div>
+          </div>
+          <div class="cost-stat">
+            <div class="cost-stat-value">~$0.008</div>
+            <div class="cost-stat-label">per output on Sonnet</div>
+          </div>
+        </div>
+        <div class="cost-card-note">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          A full session is 3–5 interview turns plus the final skill.md draft. Total cost stays under $0.05 even on Claude Sonnet 4.6. The skill you get back saves hours — the ROI on the first use is enormous.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: THE INTERVIEW PROCESS -->
+    <section class="skill-section" id="interview">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">🎤</span>
+        The Five Interview Questions
+      </h2>
+      <p>Skills Creator doesn't ask you to write a prompt. It <strong>interviews you</strong> about your workflow, then drafts the skill from your answers. The five questions are designed to extract exactly what a good skill needs.</p>
+      <div class="interview-steps">
+        <div class="interview-step">
+          <span class="interview-step-num">Q1</span>
+          <div class="interview-step-q"><strong>"Describe the workflow you want to turn into a skill."</strong> — No format required. Brain-dump in plain English. The messier your answer, the more the interview helps.</div>
+        </div>
+        <div class="interview-step">
+          <span class="interview-step-num">Q2</span>
+          <div class="interview-step-q"><strong>"What should trigger Claude to use this skill automatically?"</strong> — This becomes the trigger field. Vague triggers cause false positives. Specific ones make the skill invisible and reliable.</div>
+        </div>
+        <div class="interview-step">
+          <span class="interview-step-num">Q3</span>
+          <div class="interview-step-q"><strong>"What does a perfect output look like?"</strong> — Format, structure, length, tone. If you have an example of your best past output, share it here.</div>
+        </div>
+        <div class="interview-step">
+          <span class="interview-step-num">Q4</span>
+          <div class="interview-step-q"><strong>"What commonly goes wrong when you do this without a skill?"</strong> — This becomes the gotchas field — the single most important part of a skill that most people skip.</div>
+        </div>
+        <div class="interview-step">
+          <span class="interview-step-num">Q5</span>
+          <div class="interview-step-q"><strong>"Are there any hard rules — things Claude must always or never do?"</strong> — These become the Rules section: non-negotiable behaviors that constrain the skill's behavior under all conditions.</div>
+        </div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">🎯</span>
+        <div class="callout-body">
+          <strong>After the draft:</strong> The skill always ends with "Does this capture your workflow? What should I adjust?" — iterate until the trigger is specific and the gotchas section reflects your real failure modes.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: BEFORE / AFTER -->
+    <section class="skill-section" id="examples">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">✨</span>
+        Before &amp; After Examples
+      </h2>
+      <p>See what Skills Creator produces compared to a manual "write me a prompt for code review."</p>
+
+      <span class="compare-tag workflow-tag">Code review workflow</span>
+      <div class="compare-wrap">
+        <div class="compare-panel">
+          <div class="compare-label before-label">
+            <span class="compare-dot"></span> Without Skills Creator
+          </div>
+          <div class="compare-body">
+            <em>User: "I want Claude to review my code."</em>
+            <br><br>
+            Claude produces: <em>"You are a helpful code reviewer. Review the code for bugs, performance, and readability."</em>
+            <br><br>
+            No trigger. No format. No gotchas. Claude spends half the review describing what the code does instead of finding problems.
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label after-label">
+            <span class="compare-dot"></span> With Skills Creator
+          </div>
+          <div class="compare-body">
+            <pre>---
+skill: code-reviewer
+trigger: When I paste code and ask for a
+  review, or say "review this" / "check
+  my code"
+gotchas: Reviewers describe what the code
+  does instead of finding actual issues
+---
+
+# Code Review Skill
+## Methodology
+1. Read full code before commenting
+2. Check logic correctness first, style
+   second
+3. Group findings: bugs → performance
+   → readability
+4. For each issue: provide a specific fix,
+   not just an observation</pre>
+          </div>
+        </div>
+      </div>
+
+      <span class="compare-tag output-tag">Meeting notes workflow</span>
+      <div class="compare-wrap">
+        <div class="compare-panel">
+          <div class="compare-label before-label">
+            <span class="compare-dot"></span> Without Skills Creator
+          </div>
+          <div class="compare-body">
+            A generic "summarize this meeting" prompt with no format, no trigger, and no rules about what to do with vague action items or conflicting decisions.
+          </div>
+        </div>
+        <div class="compare-panel">
+          <div class="compare-label after-label">
+            <span class="compare-dot"></span> With Skills Creator
+          </div>
+          <div class="compare-body">
+            A complete skill with: trigger ("when I paste meeting notes or a transcript"), output format (decisions / action items with owners / open questions), and gotchas ("never assign an action item without a named owner — flag it as unassigned instead").
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: MODEL COMPATIBILITY -->
+    <section class="skill-section" id="compatibility">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">⚡</span>
+        Model Compatibility
+      </h2>
+      <div class="model-compat-grid">
+        <div class="compat-panel best">
+          <div class="compat-panel-label">✓ Works Best With</div>
+          <ul class="compat-list">
+            <li>Claude Sonnet 4.6 — native understanding of skill.md structure</li>
+            <li>GPT-5.4 — strong instruction-following for the interview format</li>
+            <li>Claude Opus 4.7 — most thorough for complex enterprise workflows</li>
+          </ul>
+        </div>
+        <div class="compat-panel avoid">
+          <div class="compat-panel-label">✗ Not Recommended</div>
+          <ul class="compat-list">
+            <li>Small models (&lt;7B) — produce vague triggers and incomplete gotchas</li>
+            <li>Models without system prompt support — skill format requires full instruction adherence</li>
+            <li>Reasoning models (o1/o3) — interview cadence breaks under heavy internal reasoning</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: CHAIN WITH -->
+    <section class="skill-section" id="chain">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">🔗</span>
+        Chainable Skills
+      </h2>
+      <p>Skills Creator is the <strong>entry point</strong> of the skills ecosystem. Once you have a skill.md, pass it into specialist stacks, orchestrators, or memory extraction workflows.</p>
+      <div class="chain-diagram">
+        <div class="chain-node">
+          <div class="chain-node-icon">💬</div>
+          <div class="chain-node-title">Workflow Input</div>
+          <div class="chain-node-desc">Describe any repeatable process</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node active-node">
+          <div class="chain-node-icon">🏭</div>
+          <div class="chain-node-title">Skills Creator</div>
+          <div class="chain-node-desc">Interviews · Drafts · This skill</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">
+          <div class="chain-node-icon">📄</div>
+          <div class="chain-node-title">skill.md File</div>
+          <div class="chain-node-desc">Trigger · Method · Rules</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">
+          <div class="chain-node-icon">🤖</div>
+          <div class="chain-node-title">Any Agent</div>
+          <div class="chain-node-desc">Auto-invokes · Compounds</div>
+        </div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">🔗</span>
+        <div class="callout-body">
+          <strong>Meta-workflow:</strong> Use Skills Creator to build your Specialist Stack, then use the Orchestrator skill to route between them automatically. Skills Creator is what starts the flywheel.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: THE PROMPT -->
+    <section class="skill-section" id="prompt">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">📋</span>
+        The System Prompt
+      </h2>
+      <p>Paste this into any AI tool as the system prompt. Start by describing a workflow you do regularly — the interviewer handles the rest.</p>
+
+      <div class="callout warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Don't rush through the interview.</strong> The trigger field and gotchas section are where 80% of skill quality comes from. Spend real time on Q2 and Q4 — a vague trigger is the #1 reason skills fail in production.
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">System Prompt</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre id="full-prompt">You are a Claude Skill Creator. Your job is to interview me about a workflow and then produce a complete, production-ready skill.md file.
+
+INTERVIEW PROCESS:
+1. Ask me to describe the workflow I want to turn into a skill
+2. Ask: "What should trigger Claude to use this skill automatically?"
+3. Ask: "What does a perfect output look like?"
+4. Ask: "What commonly goes wrong when you do this without a skill?"
+5. Ask: "Are there any hard rules — things Claude must always or never do?"
+
+After 4-6 exchanges, you have enough to draft the skill.
+
+SKILL.MD OUTPUT FORMAT:
+---
+skill: [descriptive-slug]
+trigger: [Precise condition for auto-invocation — be specific enough that false positives are rare]
+gotchas: [The #1 thing that breaks this workflow when done naively]
+---
+
+# [Skill Name]
+
+## Purpose
+[One sentence: what this skill changes about Claude's default behavior]
+
+## When to Use
+[Specific trigger conditions with examples]
+
+## Methodology
+[Numbered steps — the exact process Claude should follow]
+
+## Output Format
+[Exact structure of what Claude produces]
+
+## Rules
+- Always: [non-negotiable behaviors]
+- Never: [hard prohibitions]
+- Prefer: [soft preferences]
+
+## Example
+[One concrete input → output example]
+
+After drafting, ask: "Does this capture your workflow? What should I adjust?"</pre>
+      </div>
+    </section>
+
+    <!-- SECTION 8: WHAT MAKES A GOOD SKILL -->
+    <section class="skill-section" id="anatomy">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">🎯</span>
+        Anatomy of a Production-Ready Skill
+      </h2>
+      <p>Skills Creator produces all five components that make a skill reliable in agents and projects.</p>
+      <ul>
+        <li><strong>Trigger field</strong> — The single line that tells Claude when to invoke the skill. Must be specific enough to avoid false positives. <em>"When I ask for help with writing"</em> is too vague. <em>"When I paste a draft email and ask for edits"</em> fires reliably.</li>
+        <li><strong>Gotchas field</strong> — The #1 thing that breaks this workflow naively. Most handwritten prompts skip this entirely. It's where the real expertise lives.</li>
+        <li><strong>Methodology</strong> — Numbered steps with reasoning, not just procedures. A skill with reasoning generalizes to edge cases; one with only steps breaks when the input doesn't match the pattern.</li>
+        <li><strong>Output format</strong> — Exact structure: sections, fields, length constraints. "Produce a summary" is not a format. "Output: Decision (1 sentence) / Action items (bulleted, owner named) / Open questions" is.</li>
+        <li><strong>Rules block</strong> — Always / Never / Prefer constraints that hold under all conditions. The guardrails that keep the skill from drifting under creative model behavior.</li>
+      </ul>
+      <div class="callout info">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>Skills compound, prompts don't.</strong> Once the skill.md is in a project, every agent and conversation in that project inherits it. You improve it once — the improvement propagates everywhere it's installed.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9: COMMUNITY SIGNALS -->
+    <section class="skill-section" id="community">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">📊</span>
+        Community Signals
+      </h2>
+      <div class="community-grid">
+        <div class="community-stat-card">
+          <span class="community-stat-value">1,089</span>
+          <span class="community-stat-label">Total installs</span>
+        </div>
+        <div class="community-stat-card">
+          <span class="community-stat-value">4.9★</span>
+          <span class="community-stat-label">Community rating</span>
+        </div>
+        <div class="community-stat-card">
+          <span class="community-stat-value">#2</span>
+          <span class="community-stat-label">Most-used skill</span>
+        </div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">🌟</span>
+        <div class="callout-body">
+          <strong>Most common use case:</strong> Teams use Skills Creator in onboarding — new hires interview Claude about their role's workflows and end up with a personal skill pack in their first week. The methodology lives in files, not in someone's head.
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATED SKILLS -->
+    <section class="skill-section" id="related">
+      <h2 class="skill-section-heading">
+        <span class="section-icon">🔍</span>
+        Related Skills
+      </h2>
+      <div class="related-skills">
+        <a href="/skills/specialist-skill-stack.html" class="related-card">
+          <div class="related-card-icon">🧩</div>
+          <div class="related-card-title">Specialist Stack</div>
+          <div class="related-card-desc">Deploy a coordinated team of specialist skills for complex projects</div>
+        </a>
+        <a href="/skills/orchestrator-skill-pattern.html" class="related-card">
+          <div class="related-card-icon">🎛️</div>
+          <div class="related-card-title">Orchestrator</div>
+          <div class="related-card-desc">Route any request to the right specialist skill automatically</div>
+        </a>
+        <a href="/skills/memory-hack-skill-extraction.html" class="related-card">
+          <div class="related-card-icon">🧠</div>
+          <div class="related-card-title">Memory Hack</div>
+          <div class="related-card-desc">Extract your own working style and package it as a reusable skill</div>
+        </a>
+        <a href="/skills/ai-flywheel-method.html" class="related-card">
+          <div class="related-card-icon">🔄</div>
+          <div class="related-card-title">AI Flywheel</div>
+          <div class="related-card-desc">Discover your highest-leverage automation candidates through structured interview</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- BOTTOM INSTALL CTA -->
+    <div class="install-cta-section">
+      <h2 class="install-cta-headline">Ready to build your first skill?</h2>
+      <p class="install-cta-sub">Copy the prompt, paste it as your system prompt, and describe any workflow you repeat more than twice a week.</p>
+      <div class="install-cta-buttons">
+        <button class="btn-install-primary" onclick="copyPrompt(document.getElementById('btn-copy-prompt'))">
+          ⚡ Copy Prompt
+        </button>
+        <a class="btn-install-ghost" href="https://claude.ai/new?q=You+are+a+Claude+Skill+Creator.+Your+job+is+to+interview+me+about+a+workflow+and+produce+a+complete+skill.md+file." target="_blank" rel="noopener">
+          ▶ Try in Claude
+        </a>
+        <button class="btn-install-ghost" onclick="downloadJSON()">
+          ↓ Download .json
+        </button>
+        <a href="/skills.html" class="btn-install-ghost">
+          ← All Skills
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /.skill-page-wrap -->
+
+  <!-- INSTALL TOAST -->
+  <div class="install-toast" id="install-toast">✓ Prompt copied to clipboard</div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
+      </div>
+      <p class="footer-tagline">Install AI capabilities, not just prompts.</p>
+      <div class="footer-links">
+        <a href="/skills.html">Skills</a>
+        <a href="/news.html">News</a>
+        <a href="/tools.html">Tools</a>
+        <a href="/about.html">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ── READ PROGRESS ── */
+    const prog = document.getElementById('read-progress');
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const max = document.body.scrollHeight - window.innerHeight;
+      prog.style.width = (scrolled / max * 100).toFixed(1) + '%';
+    }, { passive: true });
+
+    /* ── SYSTEM PROMPT ── */
+    const SYSTEM_PROMPT = `You are a Claude Skill Creator. Your job is to interview me about a workflow and then produce a complete, production-ready skill.md file.
+
+INTERVIEW PROCESS:
+1. Ask me to describe the workflow I want to turn into a skill
+2. Ask: "What should trigger Claude to use this skill automatically?"
+3. Ask: "What does a perfect output look like?"
+4. Ask: "What commonly goes wrong when you do this without a skill?"
+5. Ask: "Are there any hard rules — things Claude must always or never do?"
+
+After 4-6 exchanges, you have enough to draft the skill.
+
+SKILL.MD OUTPUT FORMAT:
+---
+skill: [descriptive-slug]
+trigger: [Precise condition for auto-invocation — be specific enough that false positives are rare]
+gotchas: [The #1 thing that breaks this workflow when done naively]
+---
+
+# [Skill Name]
+
+## Purpose
+[One sentence: what this skill changes about Claude's default behavior]
+
+## When to Use
+[Specific trigger conditions with examples]
+
+## Methodology
+[Numbered steps — the exact process Claude should follow]
+
+## Output Format
+[Exact structure of what Claude produces]
+
+## Rules
+- Always: [non-negotiable behaviors]
+- Never: [hard prohibitions]
+- Prefer: [soft preferences]
+
+## Example
+[One concrete input → output example]
+
+After drafting, ask: "Does this capture your workflow? What should I adjust?"`;
+
+    /* ── COPY PROMPT ── */
+    function copyPrompt(btn) {
+      navigator.clipboard.writeText(SYSTEM_PROMPT).then(() => {
+        const orig = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '✓ Copied!'; btn.classList.add('copied'); }
+        showToast('✓ Prompt copied to clipboard');
+        setTimeout(() => {
+          if (btn) { btn.innerHTML = orig; btn.classList.remove('copied'); }
+        }, 2200);
+      }).catch(() => {
+        showToast('⚠ Copy failed — use the code block below');
+      });
+    }
+
+    /* ── DOWNLOAD .JSON ── */
+    function downloadJSON() {
+      const data = {
+        schema: "aether-skill-v2",
+        slug: "claude-skills-creator",
+        title: "Skills Creator",
+        outcome: "Builds every other skill for you — describe a workflow and Claude packages it",
+        category: "automation",
+        cost_tier: "cheap",
+        cost_estimate: { per_session: "<$0.05", per_output: "~$0.008", tokens_per_run: "~2,500 total" },
+        temperature: 0.5,
+        recommended_models: [
+          { model: "Claude Sonnet 4.6", provider: "anthropic", recommended: true },
+          { model: "GPT-5.4",           provider: "openai",    recommended: true },
+          { model: "Claude Opus 4.7",   provider: "anthropic", recommended: false }
+        ],
+        system_prompt: SYSTEM_PROMPT,
+        installs: 1089,
+        source: "https://ai.quantummerlin.com/skills/claude-skills-creator.html"
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'claude-skills-creator.json';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+      showToast('✓ claude-skills-creator.json downloaded');
+    }
+
+    /* ── COPY CODE BLOCK ── */
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    /* ── TOAST ── */
+    function showToast(msg) {
+      const t = document.getElementById('install-toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    /* ── NAV SCROLL EFFECT ── */
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav-bar')?.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+  </script>
+</body>
+</html>
