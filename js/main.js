@@ -19,7 +19,7 @@
         <svg viewBox="0 0 512 512" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
             <linearGradient id="ae-sidebar-g" x1="80" y1="256" x2="432" y2="256" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#f59e0b"/>
+              <stop offset="0%" stop-color="#38bdf8"/>
               <stop offset="100%" stop-color="#22d3ee"/>
             </linearGradient>
           </defs>
