@@ -79,6 +79,13 @@
   --glow-cyan:   0 0 20px rgba(34,  211, 238, 0.35), 0 0 40px rgba(34,  211, 238, 0.15);
   --glow-gold:   0 0 20px rgba(245, 158,  11, 0.35), 0 0 40px rgba(245, 158,  11, 0.15);
 
+  /* Semantic aliases — used in sub-page components */
+  --primary:    #818cf8;   /* = --neon-indigo */
+  --secondary:  #22d3ee;   /* = --neon-cyan   */
+  --accent:     #f59e0b;   /* = --neon-gold   */
+  --success:    #34d399;   /* = --neon-green  */
+  --gold:       #f59e0b;   /* = --neon-gold   */
+
   /* Typography */
   --font-display:  'Orbitron',     monospace;
   --font-heading:  'Sora',         sans-serif;
@@ -300,18 +307,37 @@ aside.sidebar {
   flex-shrink: 0;
 }
 
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-bottom: 6px;
+}
+
+.logo-link:hover { text-decoration: none; }
+
+.logo-ae-mark {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
 .sidebar-logo-wordmark {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-bottom: 4px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
 }
 
 .sidebar-logo-wordmark .logo-aether {
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 0.9rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  line-height: 1;
   background: linear-gradient(135deg, var(--neon-indigo), var(--neon-cyan));
   -webkit-background-clip: text;
   background-clip: text;
@@ -320,10 +346,11 @@ aside.sidebar {
 
 .sidebar-logo-wordmark .logo-intel {
   font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   color: var(--text-muted);
+  line-height: 1;
 }
 
 .sidebar-tagline {
@@ -332,6 +359,7 @@ aside.sidebar {
   color: var(--text-muted);
   letter-spacing: 0.04em;
   line-height: 1.4;
+  padding-left: 2px;
 }
 
 /* --- Nav Sections --- */
@@ -674,15 +702,8 @@ footer.now-bar {
   padding: 0 28px;
 }
 
-.ticker-text {
-  background: linear-gradient(90deg, var(--neon-indigo), var(--neon-cyan));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .ticker-sep {
-  color: rgba(34,211,238,.35);
+  color: rgba(129,140,248,.4);
   font-size: .6rem;
 }
 
@@ -1169,7 +1190,7 @@ nav.mobile-bottom-nav {
 
 /* Per-category accent colours */
 .article-card[data-filter="agents"]::before  { background: var(--neon-indigo); }
-.article-card[data-filter="business"]::before { background: var(--gold); }
+.article-card[data-filter="business"]::before { background: var(--neon-gold); }
 .article-card[data-filter="tools"]::before   { background: var(--neon-cyan); }
 .article-card[data-filter="research"]::before { background: #a78bfa; }
 .article-card[data-filter="news"]::before    { background: #f472b6; }
@@ -3618,3 +3639,292 @@ nav.mobile-bottom-nav {
   padding-left: 16px;
   margin-bottom: 1.5em !important;
 }
+
+/* --- PWA Update Toast --- */
+#pwa-update-toast {
+  position: fixed;
+  bottom: 80px; /* above mobile-bottom-nav */
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 10px 16px;
+  background: var(--surface, #0d0d1a);
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  border-radius: 40px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(129,140,248,0.12);
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 9999;
+}
+
+#pwa-update-toast.pwa-toast-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.pwa-toast-msg {
+  color: var(--text-secondary, #a8b0c8);
+  letter-spacing: 0.02em;
+}
+
+.pwa-toast-btn {
+  background: linear-gradient(135deg, var(--neon-indigo, #818cf8), var(--neon-cyan, #22d3ee));
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: opacity 0.15s;
+}
+
+.pwa-toast-btn:hover { opacity: 0.85; }
+
+.pwa-toast-close {
+  background: none;
+  border: none;
+  color: var(--text-muted, #6b7280);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.pwa-toast-close:hover { color: var(--text-secondary, #a8b0c8); }
+
+@media (min-width: 769px) {
+  #pwa-update-toast {
+    bottom: 24px;
+    right: 24px;
+    left: auto;
+    transform: translateY(16px);
+  }
+  #pwa-update-toast.pwa-toast-visible {
+    transform: translateY(0);
+  }
+}
+
+
+/* =============================================================================
+   PHASE 3 VISUAL POLISH
+   - Article category badge classes
+   - Stronger hover glows on sub-page cards
+   - Nav active state depth
+   - CTA button gradient refinements
+   - Newsletter band gradient
+   ============================================================================= */
+
+/* ── Article Category Badges ──────────────────────────────────────────────── */
+/* Used on 135 article pages: badge-agents, badge-business, badge-tools, etc. */
+
+.badge-agents {
+  color: var(--neon-indigo);
+  background: rgba(129, 140, 248, 0.1);
+  border: 1px solid rgba(129, 140, 248, 0.28);
+}
+
+.badge-business {
+  color: var(--neon-gold);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+}
+
+.badge-tools {
+  color: var(--neon-cyan);
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.28);
+}
+
+.badge-dev {
+  color: var(--neon-green);
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.28);
+}
+
+.badge-ethics {
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.28);
+}
+
+.badge-research {
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.28);
+}
+
+.badge-news {
+  color: #f472b6;
+  background: rgba(244, 114, 182, 0.1);
+  border: 1px solid rgba(244, 114, 182, 0.28);
+}
+
+/* Aliases for older markup */
+.badge-primary {
+  color: var(--neon-indigo);
+  background: rgba(129, 140, 248, 0.1);
+  border: 1px solid rgba(129, 140, 248, 0.28);
+}
+
+
+/* ── Stronger Hover Glows — Sub-page Cards ───────────────────────────────── */
+
+/* Trend cards */
+.trend-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), var(--glow-indigo);
+  border-color: rgba(129, 140, 248, 0.45);
+}
+.trend-agents:hover  { box-shadow: 0 8px 28px rgba(0,0,0,0.3), var(--glow-indigo); }
+.trend-tools:hover   { box-shadow: 0 8px 28px rgba(0,0,0,0.3), var(--glow-cyan); border-color: rgba(34,211,238,0.45); }
+.trend-business:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.3), var(--glow-gold); border-color: rgba(245,158,11,0.45); }
+.trend-automation:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.3), 0 0 20px rgba(52,211,153,0.35); border-color: rgba(52,211,153,0.45); }
+
+/* Spotlight cards */
+.spotlight-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), var(--glow-indigo);
+  border-color: rgba(129, 140, 248, 0.3);
+}
+
+/* Resource cards */
+.resource-card:hover {
+  border-color: rgba(129, 140, 248, 0.35);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), 0 0 12px rgba(129, 140, 248, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Research featured card */
+.research-featured-card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), var(--glow-indigo);
+  border-color: rgba(129, 140, 248, 0.25);
+}
+
+/* Adoption cards */
+.adoption-card:hover {
+  border-color: rgba(129, 140, 248, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 10px rgba(129, 140, 248, 0.12);
+}
+
+/* Quick tool cards */
+.quick-tool-card:hover {
+  border-color: var(--neon-indigo);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 12px rgba(129, 140, 248, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Affiliate cards */
+.affiliate-card:hover {
+  border-color: rgba(245, 158, 11, 0.35);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), 0 0 12px rgba(245, 158, 11, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Intel CTA block — subtle pulsing border on hover */
+.intel-cta-block:hover {
+  border-color: rgba(129, 140, 248, 0.4);
+  box-shadow: 0 0 32px rgba(129, 140, 248, 0.08), inset 0 0 32px rgba(129, 140, 248, 0.03);
+}
+
+
+/* ── Active Nav Item — Left Border Accent ────────────────────────────────── */
+.nav-item.active {
+  color: var(--neon-indigo);
+  background: rgba(129, 140, 248, 0.1);
+  font-weight: 600;
+  border-left: 2px solid var(--neon-indigo);
+  padding-left: 8px;  /* compensate for border width */
+}
+
+
+/* ── CTA Button Refinement ───────────────────────────────────────────────── */
+/* Extend primary gradient to include cyan for brand coherence */
+.btn-primary {
+  background: linear-gradient(135deg, var(--neon-indigo) 0%, #6366f1 50%, var(--neon-cyan) 130%);
+}
+
+.btn-primary:hover {
+  box-shadow: var(--glow-indigo), 0 4px 24px rgba(34, 211, 238, 0.08);
+  transform: translateY(-1px);
+}
+
+
+/* ── Newsletter Band Gradient ────────────────────────────────────────────── */
+.nl-home-band {
+  background: linear-gradient(
+    135deg,
+    rgba(129, 140, 248, 0.06) 0%,
+    var(--surface) 50%,
+    rgba(34, 211, 238, 0.03) 100%
+  );
+}
+
+
+/* ── Sidebar subtle top gradient ─────────────────────────────────────────── */
+aside.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(129, 140, 248, 0.06) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Push logo and nav above the gradient overlay */
+.sidebar-logo,
+.sidebar-nav {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ── Section head — left accent rule ─────────────────────────────────────── */
+.section-head-left {
+  position: relative;
+  padding-left: 10px;
+}
+
+.section-head-left::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 14px;
+  background: linear-gradient(180deg, var(--neon-indigo), var(--neon-cyan));
+  border-radius: 2px;
+}
+
+
+/* ── Signal card — stronger hover glow ───────────────────────────────────── */
+.signal-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--neon-indigo);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), var(--glow-indigo);
+}
+
+
+/* ── Article intro first-paragraph emphasis ──────────────────────────────── */
+.article-body > p:first-of-type {
+  font-size: 1.06rem;
+  color: var(--text-primary);
+  line-height: 1.75;
+  border-left: 3px solid var(--neon-indigo);
+  padding-left: 16px;
+  margin-bottom: 1.5em;
+}
+
