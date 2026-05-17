@@ -1,15 +1,14 @@
 /**
- * Aether Intel — Service Worker
- * Strategy: network-first for HTML, cache-first for static assets
- * Version: auto-stamped at build time via CACHE_VERSION
+ * Aether Intel — Service Worker v11
+ * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
+ * v11: nukes ALL caches on activate (not just aether-*), adds updateViaCache safety
  */
 
-const CACHE_VERSION = 'aether-v10';
+const CACHE_VERSION = 'aether-v11';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
-// Static assets only — NO HTML. HTML must always come from network so
-// stale pages are never served to users after a deploy.
+// Static assets only — HTML is NEVER precached so it's always fresh from network
 const PRECACHE_ASSETS = [
   '/css/style.css',
   '/js/main.js',
@@ -26,7 +25,7 @@ const STATIC_PATTERNS = [
   /fonts\.gstatic\.com/,
 ];
 
-// Pages to exclude from caching (never stale)
+// Never cache these paths
 const NO_CACHE_PATTERNS = [
   /\/api\//,
   /\/admin\//,
@@ -37,10 +36,10 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then(cache => cache.addAll(PRECACHE_ASSETS))
-      .then(() => self.skipWaiting())   // activate immediately, don't wait
+      .then(() => self.skipWaiting())
       .catch(err => {
-        console.warn('[SW] Precache partial failure:', err);
-        return self.skipWaiting();      // still activate even if precache fails
+        console.warn('[SW v11] Precache partial failure:', err);
+        return self.skipWaiting();
       })
   );
 });
@@ -48,27 +47,20 @@ self.addEventListener('install', event => {
 // ─── Activate ───────────────────────────────────────────────────────────────
 self.addEventListener('activate', event => {
   event.waitUntil(
-    // 1. Delete all old aether-* caches
+    // Nuclear: delete ALL caches for this origin, not just aether-* ones
+    // Eliminates any stale HTML/CSS that survived previous version bumps
     caches.keys()
       .then(keys =>
         Promise.all(
           keys
-            .filter(key => key.startsWith('aether-') && key !== STATIC_CACHE && key !== PAGE_CACHE)
+            .filter(key => key !== STATIC_CACHE && key !== PAGE_CACHE)
             .map(key => {
-              console.log('[SW] Deleting old cache:', key);
+              console.log('[SW v11] Deleting cache:', key);
               return caches.delete(key);
             })
         )
       )
-      // 2. Claim all open tabs (new SW takes over immediately)
       .then(() => self.clients.claim())
-      // 3. Force all open windows to reload so they get fresh HTML
-      .then(() =>
-        self.clients.matchAll({ type: 'window', includeUncontrolled: true })
-          .then(clientList =>
-            Promise.all(clientList.map(client => client.navigate(client.url)))
-          )
-      )
   );
 });
 
@@ -82,7 +74,7 @@ self.addEventListener('fetch', event => {
   const isFontCDN    = /fonts\.(googleapis|gstatic)\.com/.test(url.hostname);
   if (!isSameOrigin && !isFontCDN) return;
 
-  // Never cache these patterns
+  // Never intercept these paths
   if (NO_CACHE_PATTERNS.some(p => p.test(url.pathname))) return;
 
   // Static assets → cache-first, fallback to network
@@ -91,9 +83,10 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // HTML navigation → network-first, fallback to cache only when offline
+  // HTML navigation → network-first, NO cache fallback for HTML
+  // We NEVER serve stale HTML — if network fails, show offline message
   if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
-    event.respondWith(networkFirst(request, PAGE_CACHE));
+    event.respondWith(networkOnlyWithFallback(request, PAGE_CACHE));
     return;
   }
 
@@ -118,6 +111,30 @@ async function cacheFirst(request, cacheName) {
   }
 }
 
+// For HTML: always go to network. Cache the response for offline only.
+// CRITICALLY: only cache if response is actually ok HTML (guards against Cloudflare challenge pages)
+async function networkOnlyWithFallback(request, cacheName) {
+  try {
+    const response = await fetch(request);
+    // Only cache genuine HTML responses — skip challenge pages, redirects, errors
+    const ct = response.headers.get('content-type') || '';
+    if (response.ok && ct.includes('text/html')) {
+      const cache = await caches.open(cacheName);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    // Offline: try cache
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    return new Response(
+      '<!DOCTYPE html><html><body style="font-family:sans-serif;padding:2rem;background:#07070f;color:#e2e8f0">' +
+      '<h2>You appear to be offline.</h2><p>Reconnect to view Aether Intel.</p></body></html>',
+      { status: 503, headers: { 'Content-Type': 'text/html' } }
+    );
+  }
+}
+
 async function networkFirst(request, cacheName) {
   try {
     const response = await fetch(request);
@@ -129,11 +146,6 @@ async function networkFirst(request, cacheName) {
   } catch {
     const cached = await caches.match(request);
     if (cached) return cached;
-    // Offline fallback for navigations
-    if (request.mode === 'navigate') {
-      const fallback = await caches.match('/index.html');
-      if (fallback) return fallback;
-    }
     return new Response('You appear to be offline.', {
       status: 503,
       headers: { 'Content-Type': 'text/plain' }
@@ -141,7 +153,7 @@ async function networkFirst(request, cacheName) {
   }
 }
 
-// ─── Push notifications (future) ─────────────────────────────────────────────
+// ─── Push notifications ─────────────────────────────────────────────────────
 self.addEventListener('push', event => {
   if (!event.data) return;
   const data = event.data.json();

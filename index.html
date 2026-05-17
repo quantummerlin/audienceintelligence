@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- deploy: 2026-05-17-v9 -->
+<!-- deploy: 2026-05-18-v10 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -34,7 +34,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#f59e0b">
+  <meta name="theme-color" content="#818cf8">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Æther">
@@ -42,7 +42,15 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').catch(function (e) {
+        // Nuke all stale caches once per session so stale SW content can't survive
+        if (!sessionStorage.getItem('ae-v11-clean')) {
+          caches.keys().then(function(names) {
+            names.forEach(function(n) { caches.delete(n); });
+          });
+          sessionStorage.setItem('ae-v11-clean', '1');
+        }
+        // updateViaCache:'none' forces browser to always byte-check sw.js (bypass HTTP cache)
+        navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch(function (e) {
           console.warn('[SW]', e);
         });
       });
