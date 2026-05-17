@@ -369,10 +369,14 @@
   // ---------------------------------------------------------------------------
 
   function initCardGlow() {
+    // Hover glow is a mouse-only effect — skip entirely on touch devices
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
     const cardSelector = '.sp-card, .article-card, .signal-card';
 
-    // Use event delegation on document to handle dynamically added cards too
     document.addEventListener('mousemove', function (e) {
+      // Guard: e.target must be an Element (not a text node, document, or window)
+      if (!(e.target instanceof Element)) return;
       const card = e.target.closest(cardSelector);
       if (!card) return;
 
@@ -384,17 +388,9 @@
         'radial-gradient(circle at ' + x + 'px ' + y + 'px, rgba(129,140,248,0.12), transparent 65%)';
     });
 
-    document.addEventListener('mouseleave', function (e) {
-      const card = e.target.closest(cardSelector);
-      if (!card) return;
-      card.style.background = '';
-    }, true);
-
-    // Also handle direct mouseleave on each card for accuracy
-    document.addEventListener('mouseover', function () {}, false);
-
-    // Delegate mouseleave via bubbling workaround — use mouseout
     document.addEventListener('mouseout', function (e) {
+      // Guard: e.target must be an Element
+      if (!(e.target instanceof Element)) return;
       const card = e.target.closest(cardSelector);
       if (!card) return;
       // Only clear if mouse actually left the card (not just moved to a child)
