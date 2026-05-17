@@ -27,12 +27,12 @@
           <text x="256" y="384" text-anchor="middle" font-family="'Space Grotesk',Arial,sans-serif" font-weight="700" font-size="370" fill="url(#ae-sidebar-g)">&#198;</text>
         </svg>
       </span>
-      <span class="logo-wordmark">
+      <span class="sidebar-logo-wordmark">
         <span class="logo-aether">AETHER</span>
         <span class="logo-intel">INTEL</span>
       </span>
     </a>
-    <span class="logo-tagline">AI Signal · Always On</span>
+    <span class="sidebar-tagline">AI Signal · Always On</span>
   </div>
   <nav class="sidebar-nav">
     <a href="/index.html" class="nav-item" data-page="news">News</a>
@@ -600,5 +600,72 @@
     initSearch();
     loadOpenRouterModels(); // No-ops if #modelsGrid not present
   });
+
+  // ---------------------------------------------------------------------------
+  // PWA — Service Worker Update Detection
+  // ---------------------------------------------------------------------------
+
+  (function initPWAUpdates() {
+    if (!('serviceWorker' in navigator)) return;
+
+    // When a new SW takes control (skipWaiting fired), offer a reload
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      showUpdateToast();
+    });
+
+    // Also detect via updatefound (covers first-install of updated SW)
+    navigator.serviceWorker.ready.then(function (reg) {
+      reg.addEventListener('updatefound', function () {
+        var newWorker = reg.installing;
+        if (!newWorker) return;
+        newWorker.addEventListener('statechange', function () {
+          // installed + there was already a controller = genuine update, not first load
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            showUpdateToast();
+          }
+        });
+      });
+    });
+
+    var toastShown = false;
+    function showUpdateToast() {
+      if (toastShown) return;
+      toastShown = true;
+
+      var toast = document.createElement('div');
+      toast.id = 'pwa-update-toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      toast.innerHTML =
+        '<span class="pwa-toast-msg">✦ Fresh signals available</span>' +
+        '<button class="pwa-toast-btn" id="pwa-reload-btn">Reload</button>' +
+        '<button class="pwa-toast-close" id="pwa-dismiss-btn" aria-label="Dismiss">✕</button>';
+
+      document.body.appendChild(toast);
+
+      // Animate in
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          toast.classList.add('pwa-toast-visible');
+        });
+      });
+
+      document.getElementById('pwa-reload-btn').addEventListener('click', function () {
+        window.location.reload();
+      });
+      document.getElementById('pwa-dismiss-btn').addEventListener('click', function () {
+        toast.classList.remove('pwa-toast-visible');
+        setTimeout(function () { toast.remove(); }, 300);
+      });
+
+      // Auto-dismiss after 12 s if user ignores it
+      setTimeout(function () {
+        if (document.body.contains(toast)) {
+          toast.classList.remove('pwa-toast-visible');
+          setTimeout(function () { toast.remove(); }, 300);
+        }
+      }, 12000);
+    }
+  }());
 
 }());
