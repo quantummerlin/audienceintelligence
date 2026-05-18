@@ -3930,3 +3930,122 @@ aside.sidebar::before {
   margin-bottom: 1.5em;
 }
 
+
+/* =============================================================================
+   SPOTIFY-STYLE SWIPE-UP ARTICLE PANEL
+   Slides up from bottom on card tap; swipe-down or ↓ button to dismiss.
+   z-index 700 — above now-bar (500), mobile-bottom-nav (450), sidebar (200).
+   ============================================================================= */
+
+#ae-article-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 700;
+  background: var(--bg, #07070f);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -12px 60px rgba(0, 0, 0, 0.72);
+  transform: translateY(100%);
+  transition: transform 0.44s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Subtle top border to separate from page underneath */
+  border-top: 1px solid rgba(129, 140, 248, 0.18);
+}
+
+#ae-article-panel.ae-panel-open {
+  transform: translateY(0);
+}
+
+#ae-article-panel.ae-panel-closing {
+  transform: translateY(100%);
+  transition: transform 0.36s cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+/* Drag handle — the Spotify pill */
+.ae-panel-handle {
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 2px;
+  margin: 14px auto 0;
+  flex-shrink: 0;
+  cursor: grab;
+  transition: background 0.2s;
+}
+.ae-panel-handle:active { cursor: grabbing; }
+#ae-article-panel:hover .ae-panel-handle {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* Down / close button — top-left */
+.ae-panel-down-btn {
+  position: absolute;
+  top: 10px;
+  left: 16px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(129, 140, 248, 0.1);
+  border: 1px solid rgba(129, 140, 248, 0.22);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s, transform 0.15s;
+  color: transparent;
+}
+.ae-panel-down-btn:hover {
+  background: rgba(129, 140, 248, 0.22);
+  transform: translateY(1px);
+}
+.ae-panel-down-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: #818cf8;
+  stroke-width: 2.2;
+  fill: none;
+}
+
+/* Scrollable article content area */
+.ae-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-top: 8px;
+}
+
+/* Loading spinner */
+.ae-panel-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 240px;
+}
+
+.ae-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(129, 140, 248, 0.12);
+  border-top-color: #818cf8;
+  border-radius: 50%;
+  animation: aeSpinnerSpin 0.75s linear infinite;
+}
+
+@keyframes aeSpinnerSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Inside the panel, article-page min-height should be auto (panel scrolls) */
+#ae-article-panel .article-page {
+  min-height: unset !important;
+}
+
+/* Swipe-drag resistance visual: when dragging past top, panel follows finger */
+#ae-article-panel.ae-panel-dragging {
+  transition: none !important;
+}
+

@@ -582,6 +582,246 @@
   }
 
   // ---------------------------------------------------------------------------
+  // 11. SPOTIFY-STYLE SWIPE-UP ARTICLE PANEL
+  // ---------------------------------------------------------------------------
+
+  /**
+   * AePanel — manages the slide-up article overlay.
+   *
+   * Flow:
+   *   initArticlePanel()  registers click/touch handlers on article cards.
+   *   AePanel.open(url)   fetches article HTML, injects content, slides up.
+   *   AePanel.close()     slides down, pops history state.
+   *
+   * URL management:
+   *   history.pushState({ aepanel: true }, '', articleUrl) on open.
+   *   history.back() on close → triggers popstate → we just animate out.
+   *   Direct visits to article URLs still render normally via the app shell.
+   */
+  var AePanel = (function () {
+    var panelEl = null;
+    var bodyEl = null;
+    var isOpen = false;
+    var isAnimating = false;
+
+    // Touch-drag state
+    var dragStartY = 0;
+    var dragCurrentY = 0;
+    var isDragging = false;
+    var scrolledToTop = true;
+
+    // ── Build DOM ──
+    function buildPanel() {
+      if (panelEl) return;
+
+      panelEl = document.createElement('div');
+      panelEl.id = 'ae-article-panel';
+      panelEl.setAttribute('role', 'dialog');
+      panelEl.setAttribute('aria-modal', 'true');
+      panelEl.setAttribute('aria-label', 'Article reader');
+
+      panelEl.innerHTML =
+        '<div class="ae-panel-handle" aria-hidden="true"></div>' +
+        '<button class="ae-panel-down-btn" aria-label="Close article">' +
+          '<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '</button>' +
+        '<div class="ae-panel-body"></div>';
+
+      document.body.appendChild(panelEl);
+      bodyEl = panelEl.querySelector('.ae-panel-body');
+
+      // Close button
+      panelEl.querySelector('.ae-panel-down-btn').addEventListener('click', function () {
+        AePanel.close();
+      });
+
+      // Touch drag-to-dismiss
+      panelEl.addEventListener('touchstart', onTouchStart, { passive: true });
+      panelEl.addEventListener('touchmove', onTouchMove, { passive: false });
+      panelEl.addEventListener('touchend', onTouchEnd, { passive: true });
+
+      // Keyboard: Escape
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isOpen) AePanel.close();
+      });
+
+      // Browser back button
+      window.addEventListener('popstate', function () {
+        if (isOpen) closeVisual();
+      });
+    }
+
+    // ── Fetch + inject article ──
+    function fetchAndRender(url) {
+      bodyEl.innerHTML =
+        '<div class="ae-panel-loading"><div class="ae-spinner"></div></div>';
+
+      fetch(url)
+        .then(function (res) {
+          if (!res.ok) throw new Error('fetch failed ' + res.status);
+          return res.text();
+        })
+        .then(function (html) {
+          var doc = (new DOMParser()).parseFromString(html, 'text/html');
+
+          // Update page title
+          var pt = doc.querySelector('title');
+          if (pt) document.title = pt.textContent;
+
+          // Extract inline <style> blocks from the article's <head>
+          var styles = '';
+          doc.querySelectorAll('head style').forEach(function (s) {
+            styles += s.outerHTML;
+          });
+
+          // Extract article body content
+          var main = doc.querySelector('main') ||
+                     doc.querySelector('.article-page') ||
+                     doc.querySelector('article') ||
+                     doc.body;
+          var content = main ? main.innerHTML : doc.body.innerHTML;
+
+          bodyEl.innerHTML = styles +
+            '<div class="ae-panel-article">' + content + '</div>';
+
+          // Make any scroll-reveal elements immediately visible inside panel
+          bodyEl.querySelectorAll('.reveal, .reveal-scale, .reveal-stagger').forEach(function (el) {
+            el.classList.add('visible');
+          });
+
+          // Scroll panel body to top
+          bodyEl.scrollTop = 0;
+        })
+        .catch(function () {
+          // If fetch fails, fall back to normal navigation
+          closeVisual();
+          window.location.href = url;
+        });
+    }
+
+    // ── Animation helpers ──
+    function openVisual() {
+      isOpen = true;
+      isAnimating = true;
+      panelEl.classList.remove('ae-panel-closing');
+      panelEl.classList.add('ae-panel-open');
+      panelEl.addEventListener('transitionend', function handler() {
+        isAnimating = false;
+        panelEl.removeEventListener('transitionend', handler);
+        panelEl.focus();
+      });
+    }
+
+    function closeVisual() {
+      if (!isOpen) return;
+      isOpen = false;
+      isAnimating = true;
+      panelEl.classList.remove('ae-panel-open');
+      panelEl.classList.add('ae-panel-closing');
+      panelEl.addEventListener('transitionend', function handler() {
+        panelEl.classList.remove('ae-panel-closing');
+        isAnimating = false;
+        // Clear content after exit so DOM stays clean
+        setTimeout(function () {
+          if (!isOpen) {
+            bodyEl.innerHTML = '';
+            document.title = 'Aether Intel';
+          }
+        }, 50);
+        panelEl.removeEventListener('transitionend', handler);
+      });
+    }
+
+    // ── Touch drag ──
+    function onTouchStart(e) {
+      scrolledToTop = bodyEl.scrollTop <= 2;
+      if (!scrolledToTop) return;
+      dragStartY = e.touches[0].clientY;
+      dragCurrentY = 0;
+      isDragging = true;
+    }
+
+    function onTouchMove(e) {
+      if (!isDragging) return;
+      // If user started scrolling the content up, stop treating as drag
+      if (bodyEl.scrollTop > 4) { isDragging = false; return; }
+
+      var dy = e.touches[0].clientY - dragStartY;
+      if (dy <= 0) { isDragging = false; return; } // swipe up = scroll content
+
+      e.preventDefault(); // prevent page behind from scrolling
+      dragCurrentY = dy;
+
+      // Follow finger with rubber-band resistance
+      var resistance = Math.pow(dy, 0.72);
+      panelEl.classList.add('ae-panel-dragging');
+      panelEl.style.transform = 'translateY(' + resistance + 'px)';
+    }
+
+    function onTouchEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      panelEl.classList.remove('ae-panel-dragging');
+      panelEl.style.transform = '';
+
+      if (dragCurrentY > 90) {
+        AePanel.close();
+      }
+    }
+
+    // ── Public API ──
+    return {
+      open: function (url, titleHint) {
+        buildPanel();
+        if (isAnimating) return;
+
+        document.title = titleHint || 'Aether Intel';
+        history.pushState({ aepanel: true, url: url }, '', url);
+        openVisual();
+        fetchAndRender(url);
+      },
+
+      close: function () {
+        if (!isOpen || isAnimating) return;
+        history.back(); // → triggers popstate → closeVisual()
+        closeVisual();
+      }
+    };
+  }());
+
+  /**
+   * Wire up article card clicks to open the swipe panel instead of
+   * navigating. Works for <a class="article-card"> and for regular
+   * <a href="/articles/..."> links inside .article-grid-full.
+   */
+  function initArticlePanel() {
+    // Only intercept on pages that have an article grid (home, articles list)
+    // and not when we ARE already inside an article page.
+    var isArticlePage = document.body.classList.contains('standalone-nav') ||
+                        !!document.querySelector('main.article-page');
+    if (isArticlePage) return;
+
+    document.addEventListener('click', function (e) {
+      // Walk up from click target to find an article link
+      var el = e.target;
+      while (el && el !== document.body) {
+        if (el.tagName === 'A') {
+          var href = el.getAttribute('href');
+          if (href && href.match(/\/articles\/[^/]+\.html$/)) {
+            e.preventDefault();
+            var fullUrl = new URL(href, window.location.origin).href;
+            var title = (el.querySelector('h2, h3, .article-card-title') || {}).textContent || 'Article';
+            AePanel.open(fullUrl, title);
+            return;
+          }
+          break; // stop walking if we hit a non-article link
+        }
+        el = el.parentElement;
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
   // INIT — DOMContentLoaded
   // ---------------------------------------------------------------------------
 
@@ -594,6 +834,7 @@
     initTicker();
     initCardGlow();
     initSearch();
+    initArticlePanel(); // Spotify swipe-up reader
     loadOpenRouterModels(); // No-ops if #modelsGrid not present
   });
 
