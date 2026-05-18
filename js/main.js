@@ -320,16 +320,33 @@
       { text: 'Recursive self-improvement milestones confirmed in lab settings — AI systems measurably improve their own architecture', tag: '⚠️' }
     ];
 
+    // Badge colour map — keyed to the badge strings in ticker.json
+    var BADGE_STYLE = {
+      'NEWS':        'color:#f472b6;border-color:rgba(244,114,182,.45)',
+      'HONEST TAKE': 'color:#f87171;border-color:rgba(248,113,113,.45)',
+      'BUSINESS':    'color:#f59e0b;border-color:rgba(245,158,11,.45)',
+      'BIG PICTURE': 'color:#fbbf24;border-color:rgba(251,191,36,.45)',
+      'TOOLS':       'color:#22d3ee;border-color:rgba(34,211,238,.45)',
+      'AGENTS':      'color:#818cf8;border-color:rgba(129,140,248,.45)',
+      'AI SAFETY':   'color:#f87171;border-color:rgba(248,113,113,.45)',
+      'ANALYSIS':    'color:#c084fc;border-color:rgba(192,132,252,.45)',
+      'AI':          'color:#38bdf8;border-color:rgba(56,189,248,.45)'
+    };
+
     function buildTickerHTML(items) {
       // Duplicate content for seamless CSS loop (animation moves translateX(-50%))
       var html = '';
       for (var copy = 0; copy < 2; copy++) {
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
-          var tagHtml = item.tag
-            ? '<strong style="color:var(--neon-gold);margin-right:6px">' + item.tag + '</strong>'
-            : '';
-          html += '<span class="ticker-item">' + tagHtml + item.text + '</span>';
+          var labelHtml = '';
+          if (item.badge) {
+            var bs = BADGE_STYLE[item.badge] || 'color:#818cf8;border-color:rgba(129,140,248,.45)';
+            labelHtml = '<span class="ticker-badge" style="' + bs + '">' + item.badge + '</span>';
+          } else if (item.tag) {
+            labelHtml = '<strong style="color:var(--neon-gold);margin-right:6px">' + item.tag + '</strong>';
+          }
+          html += '<span class="ticker-item">' + labelHtml + item.text + '</span>';
           html += '<span class="ticker-sep">◆</span>';
         }
       }
@@ -347,7 +364,11 @@
       })
       .then(function (data) {
         if (data.items && data.items.length) {
+          // Stop animation before DOM swap to prevent transform-width mismatch glitch
+          tickerTrack.style.animation = 'none';
           tickerTrack.innerHTML = buildTickerHTML(data.items);
+          void tickerTrack.offsetWidth; // force reflow so animation truly resets
+          tickerTrack.style.animation = ''; // hand control back to CSS
         }
       })
       .catch(function () { /* default already painted */ });
