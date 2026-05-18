@@ -651,9 +651,26 @@
       });
     }
 
+    // ── Derive hero image URL from article URL ──
+    // Pattern: /articles/50-slug.html → /images/articles/50-slug-hero.webp
+    function heroUrlFor(articleUrl) {
+      try {
+        var path = new URL(articleUrl).pathname;
+        return path.replace('/articles/', '/images/articles/').replace('.html', '-hero.webp');
+      } catch (e) { return null; }
+    }
+
     // ── Fetch + inject article ──
-    function fetchAndRender(url) {
+    function fetchAndRender(url, heroUrl) {
+      // Show hero image immediately (derived from URL — usually cached by browser
+      // if the user scrolled past the card). Spinner sits below it while text loads.
+      var heroHtml = heroUrl
+        ? '<img class="ae-panel-hero" src="' + heroUrl + '" alt="" ' +
+          'onerror="this.style.display=\'none\'">'
+        : '';
+
       bodyEl.innerHTML =
+        heroHtml +
         '<div class="ae-panel-loading"><div class="ae-spinner"></div></div>';
 
       fetch(url)
@@ -681,8 +698,16 @@
                      doc.body;
           var content = main ? main.innerHTML : doc.body.innerHTML;
 
-          bodyEl.innerHTML = styles +
+          // Preserve the hero image if already displayed above the spinner
+          var existingHero = bodyEl.querySelector('.ae-panel-hero');
+          var heroTag = existingHero ? existingHero.outerHTML : '';
+
+          bodyEl.innerHTML = heroTag + styles +
             '<div class="ae-panel-article">' + content + '</div>';
+
+          // Hide duplicate hero inside article body (article has its own .article-hero img)
+          var articleHero = bodyEl.querySelector('.ae-panel-article .article-hero');
+          if (articleHero && heroTag) articleHero.style.display = 'none';
 
           // Make any scroll-reveal elements immediately visible inside panel
           bodyEl.querySelectorAll('.reveal, .reveal-scale, .reveal-stagger').forEach(function (el) {
@@ -778,7 +803,7 @@
         document.title = titleHint || 'Aether Intel';
         history.pushState({ aepanel: true, url: url }, '', url);
         openVisual();
-        fetchAndRender(url);
+        fetchAndRender(url, heroUrlFor(url));
       },
 
       close: function () {
@@ -801,6 +826,22 @@
                         !!document.querySelector('main.article-page');
     if (isArticlePage) return;
 
+    // ── Card press micro-animation (Spotify tap feel) ──
+    function addPressState(e) {
+      var card = (e.target instanceof Element) && e.target.closest('a.article-card, .article-card');
+      if (card) card.classList.add('ae-card-pressing');
+    }
+    function clearPressState() {
+      document.querySelectorAll('.ae-card-pressing').forEach(function (c) {
+        c.classList.remove('ae-card-pressing');
+      });
+    }
+    document.addEventListener('mousedown', addPressState);
+    document.addEventListener('mouseup', clearPressState);
+    document.addEventListener('touchstart', addPressState, { passive: true });
+    document.addEventListener('touchend', clearPressState, { passive: true });
+    document.addEventListener('touchcancel', clearPressState, { passive: true });
+
     document.addEventListener('click', function (e) {
       // Walk up from click target to find an article link
       var el = e.target;
@@ -811,7 +852,11 @@
             e.preventDefault();
             var fullUrl = new URL(href, window.location.origin).href;
             var title = (el.querySelector('h2, h3, .article-card-title') || {}).textContent || 'Article';
-            AePanel.open(fullUrl, title);
+            // 85ms delay: lets the scale-back (press → release) animate before panel rises
+            setTimeout(function () {
+              clearPressState();
+              AePanel.open(fullUrl, title);
+            }, 85);
             return;
           }
           break; // stop walking if we hit a non-article link
