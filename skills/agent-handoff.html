@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Agent Handoff — Compact Any Conversation for a Fresh Agent | Aether Intel Skills</title>
+<meta name="description" content="A handoff writer skill that compresses any AI session into a structured document a new agent reads first — preserving full context, intent, and progress so work continues without repetition."/>
+<link rel="canonical" href="https://ai.quantummerlin.com/skills/agent-handoff.html"/>
+<meta property="og:type" content="article"/>
+<meta property="og:url" content="https://ai.quantummerlin.com/skills/agent-handoff.html"/>
+<meta property="og:title" content="Agent Handoff — Compact Any Conversation for a Fresh Agent | Aether Intel Skills"/>
+<meta property="og:description" content="A handoff writer skill that compresses any AI session into a structured document a new agent reads first — preserving full context, intent, and progress so work continues without repetition."/>
+<meta property="og:image" content="https://ai.quantummerlin.com/images/skills/agent-handoff-hero.webp"/>
+<meta property="og:site_name" content="Aether Intel"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/css/style.css"/>
+<style>
+  :root {
+    --skill-accent:       #6366f1;
+    --skill-accent-dim:   rgba(99,102,241,.12);
+    --skill-accent-glow:  0 0 28px rgba(99,102,241,.25);
+    --cost-cheap:         #22c55e;
+    --cost-cheap-bg:      rgba(34,197,94,.10);
+    --cost-moderate:      #f59e0b;
+    --cost-moderate-bg:   rgba(245,158,11,.10);
+    /* Type scale — 7 sizes, used everywhere */
+    --t-xs:     0.6875rem;  /* 11px — tiny labels, captions */
+    --t-sm:     0.75rem;    /* 12px — badges, pill text */
+    --t-s2:     0.8125rem;  /* 13px — table cells, secondary */
+    --t-body:   0.9375rem;  /* 15px — main body copy */
+    --t-md:     1.0625rem;  /* 17px — lead text, callout body */
+    --t-lg:     1.375rem;   /* 22px — h3, subsection headings */
+    --t-xl:     1.75rem;    /* 28px — h2, section headings */
+    --t-hero:   clamp(1.875rem, 3.5vw, 2.625rem); /* h1 */
+    /* Spacing tokens */
+    --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px;  --sp-4: 16px;
+    --sp-5: 20px; --sp-6: 24px; --sp-8: 32px;  --sp-10: 40px;
+    --sp-12: 48px; --sp-16: 64px;
+  }
+
+  /* ─── READ PROGRESS ─── */
+  #read-progress {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    height: 3px; width: 0;
+    background: linear-gradient(90deg, var(--skill-accent), #818cf8);
+    transition: width .1s linear; pointer-events: none;
+  }
+
+  /* ─── PAGE WRAPPERS ─── */
+  .skill-page-wrap,
+  .skill-article-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 var(--sp-6) 80px;
+  }
+
+  /* ─── BREADCRUMB ─── */
+  .skill-breadcrumb,
+  .breadcrumb {
+    display: flex; align-items: center; gap: var(--sp-2);
+    padding: var(--sp-8) 0 0;
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .skill-breadcrumb a, .breadcrumb a {
+    color: var(--text-muted); text-decoration: none;
+  }
+  .skill-breadcrumb a:hover, .breadcrumb a:hover { color: var(--skill-accent); }
+  .skill-breadcrumb svg, .breadcrumb svg {
+    width: 12px; height: 12px; stroke: currentColor; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .breadcrumb-sep { opacity: .4; }
+
+  /* ─── INSTALL BAR (humanizer only) ─── */
+  .install-bar {
+    position: sticky; top: 58px; z-index: 200;
+    background: rgba(10, 10, 22, .95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border, rgba(255,255,255,.07));
+  }
+  .install-bar-inner {
+    max-width: 860px; margin: 0 auto;
+    padding: 10px var(--sp-6);
+    display: flex; align-items: center; gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .install-label {
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--text-muted); flex: 1; min-width: 100px;
+  }
+  .install-bar-spacer { flex: 1; }
+  .btn-download-primary {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    padding: 8px 20px; border-radius: 6px; cursor: pointer;
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    background: var(--skill-accent); color: #fff; border: none;
+    transition: opacity .15s, transform .1s;
+  }
+  .btn-download-primary:hover { opacity: .88; transform: translateY(-1px); }
+  .btn-back-skills {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    padding: 8px 16px; border-radius: 6px; cursor: pointer;
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+    background: transparent; color: var(--text-muted);
+    border: 1px solid var(--border, rgba(255,255,255,.1));
+    text-decoration: none; transition: color .15s, border-color .15s;
+  }
+  .btn-back-skills:hover { color: var(--skill-accent); border-color: var(--skill-accent); }
+  /* legacy install bar buttons — keep functional */
+  .btn-install-primary, .btn-install-ghost {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    padding: 8px 18px; border-radius: 6px; cursor: pointer;
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    transition: opacity .15s;
+  }
+  .btn-install-primary {
+    background: var(--skill-accent); color: #fff; border: none;
+  }
+  .btn-install-primary:hover { opacity: .88; }
+  .btn-install-ghost {
+    background: transparent; color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,.12); text-decoration: none;
+  }
+  .btn-install-ghost:hover { color: var(--skill-accent); border-color: var(--skill-accent); }
+  .install-bar-spacer { display: none; }
+
+  /* ─── OUTCOME BANNER ─── */
+  .outcome-banner { margin: var(--sp-8) 0 0; }
+  .outcome-meta {
+    display: flex; align-items: center; gap: var(--sp-3);
+    margin-bottom: var(--sp-5); flex-wrap: wrap;
+  }
+  .badge-category, .badge-prompts, .badge-tools, .badge-automation {
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 4px;
+    background: var(--skill-accent-dim); border: 1px solid rgba(99,102,241,.3);
+    color: var(--skill-accent);
+  }
+  .badge-cost-cheap {
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 4px;
+    background: var(--cost-cheap-bg); border: 1px solid rgba(34,197,94,.25);
+    color: var(--cost-cheap);
+  }
+  .badge-installs, .badge-downloads {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: var(--t-sm); color: var(--text-muted);
+  }
+  .badge-installs svg, .badge-downloads svg { width: 12px; height: 12px; }
+  .outcome-headline {
+    font-family: var(--font-heading, Sora); font-size: var(--t-hero);
+    font-weight: 700; line-height: 1.15; margin: 0 0 var(--sp-4);
+    color: #fff; letter-spacing: -.02em;
+  }
+  .outcome-headline em { font-style: normal; color: var(--skill-accent); }
+  .outcome-sub {
+    font-size: var(--t-md); color: var(--text-muted); line-height: 1.65;
+    max-width: 640px; margin: 0;
+  }
+
+  /* ─── HERO IMAGE ─── */
+  .skill-hero-img, .skill-hero-img-wrap {
+    margin: var(--sp-8) 0;
+    border-radius: 10px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  .skill-hero-img img, .skill-hero-img-wrap img {
+    width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover;
+  }
+
+  /* ─── SKILL HERO (technique guides) ─── */
+  .skill-hero, .skill-article-header {
+    padding: var(--sp-8) 0 var(--sp-10);
+  }
+  .skill-hero-badges, .skill-article-badges {
+    display: flex; align-items: center; gap: var(--sp-3);
+    margin-bottom: var(--sp-5); flex-wrap: wrap;
+  }
+  .diff-pill, .time-pill {
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 4px;
+    background: rgba(250,204,21,.12); border: 1px solid rgba(250,204,21,.28);
+    color: #fbbf24;
+  }
+  .skill-article-title, .skill-hero h1,
+  .skill-article-header h1 {
+    font-family: var(--font-heading, Sora); font-size: var(--t-hero);
+    font-weight: 700; line-height: 1.18; margin: 0 0 var(--sp-4);
+    color: #fff; letter-spacing: -.02em;
+  }
+  .skill-hero h1 em, .skill-article-title em { font-style: normal; color: var(--skill-accent); }
+  .skill-article-lede, .skill-hero-lead, .skill-hero-meta {
+    font-size: var(--t-md); color: var(--text-muted);
+    line-height: 1.65; max-width: 660px; margin: 0;
+  }
+  .skill-article-meta {
+    display: flex; align-items: center; gap: var(--sp-3);
+    margin-top: var(--sp-4); flex-wrap: wrap;
+    font-size: var(--t-sm); color: var(--text-muted);
+  }
+  .blog-tag {
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 4px;
+    background: var(--skill-accent-dim); border: 1px solid rgba(99,102,241,.25);
+    color: var(--skill-accent);
+  }
+
+  /* ─── SECTIONS ─── */
+  .skill-section {
+    margin-top: var(--sp-12);
+    padding-top: var(--sp-12);
+    border-top: 1px solid rgba(255,255,255,.05);
+  }
+  .skill-section:first-of-type { border-top: none; }
+  .skill-section-heading {
+    font-family: var(--font-heading, Sora); font-size: var(--t-xl);
+    font-weight: 700; color: #fff; margin: 0 0 var(--sp-6);
+    display: flex; align-items: center; gap: var(--sp-3);
+  }
+  .skill-section h2, .skill-article-wrap h2 {
+    font-family: var(--font-heading, Sora); font-size: var(--t-xl);
+    font-weight: 700; color: #fff; margin: 0 0 var(--sp-6);
+  }
+  .skill-section h3, .skill-article-wrap h3 {
+    font-family: var(--font-heading, Sora); font-size: var(--t-lg);
+    font-weight: 600; color: #e8e8f0; margin: var(--sp-6) 0 var(--sp-4);
+  }
+  .skill-section p, .skill-article-wrap p {
+    font-size: var(--t-body); color: var(--text-muted, #8888aa);
+    line-height: 1.75; margin: 0 0 var(--sp-4);
+  }
+  .skill-section ul, .skill-section ol,
+  .skill-article-wrap ul, .skill-article-wrap ol {
+    font-size: var(--t-body); color: var(--text-muted); line-height: 1.7;
+    padding-left: var(--sp-6); margin: 0 0 var(--sp-4);
+  }
+  .skill-section li, .skill-article-wrap li { margin-bottom: var(--sp-2); }
+  .section-icon { font-size: 1.2em; line-height: 1; }
+  .section-num {
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 700; color: var(--skill-accent); letter-spacing: .04em;
+    opacity: .8;
+  }
+
+  /* ─── TABLE OF CONTENTS ─── */
+  .skill-toc, .toc {
+    background: rgba(255,255,255,.025); border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.07); padding: var(--sp-6);
+    margin: var(--sp-8) 0;
+  }
+  .skill-toc-label, .toc-title {
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--skill-accent); margin: 0 0 var(--sp-4);
+  }
+  .skill-toc ol, .toc ol { margin: 0; padding-left: var(--sp-5); }
+  .skill-toc li, .toc li {
+    font-size: var(--t-body); color: var(--text-muted);
+    margin-bottom: var(--sp-2); line-height: 1.5;
+  }
+  .skill-toc a, .toc a { color: var(--text-muted); text-decoration: none; }
+  .skill-toc a:hover, .toc a:hover { color: var(--skill-accent); }
+
+  /* ─── MODEL TABLE ─── */
+  .model-table-wrap { overflow-x: auto; margin: var(--sp-4) 0; }
+  .model-table {
+    width: 100%; border-collapse: collapse;
+    font-size: var(--t-s2); color: var(--text-muted);
+  }
+  .model-table th {
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: rgba(255,255,255,.4); text-align: left;
+    padding: var(--sp-2) var(--sp-4); border-bottom: 1px solid rgba(255,255,255,.07);
+    white-space: nowrap;
+  }
+  .model-table td {
+    padding: var(--sp-3) var(--sp-4); font-size: var(--t-s2);
+    border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: middle;
+  }
+  .model-table tr:hover td { background: rgba(255,255,255,.02); }
+  .model-name { font-weight: 600; color: #e0e0f0; font-size: var(--t-body); }
+  .recommended-badge {
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 3px;
+    background: rgba(34,197,94,.12); color: #22c55e;
+    border: 1px solid rgba(34,197,94,.25);
+  }
+  .model-provider-dot {
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: 6px; flex-shrink: 0;
+  }
+  .anthropic { background: #cc785c; }
+  .openai    { background: #19c37d; }
+  .google    { background: #4285f4; }
+  .meta      { background: #0082fb; }
+  .cost-pill {
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 3px; white-space: nowrap;
+  }
+  .cheap     { background: var(--cost-cheap-bg); color: var(--cost-cheap); border: 1px solid rgba(34,197,94,.2); }
+  .moderate  { background: var(--cost-moderate-bg); color: var(--cost-moderate); border: 1px solid rgba(245,158,11,.2); }
+  .free      { background: rgba(99,102,241,.1); color: var(--skill-accent); border: 1px solid rgba(99,102,241,.2); }
+  .stars { color: #fbbf24; font-size: var(--t-md); }
+
+  /* ─── COST CARD ─── */
+  .cost-card {
+    background: rgba(255,255,255,.025); border: 1px solid rgba(34,197,94,.18);
+    border-radius: 10px; padding: var(--sp-6); display: flex;
+    flex-wrap: wrap; gap: var(--sp-8); align-items: flex-start;
+  }
+  .cost-card-label {
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--cost-cheap); margin-bottom: var(--sp-2);
+  }
+  .cost-card-headline {
+    font-family: var(--font-heading, Sora); font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800; color: #fff; line-height: 1; margin-bottom: 6px;
+  }
+  .cost-card-sub {
+    font-size: var(--t-s2); color: var(--text-muted); max-width: 280px;
+  }
+  .cost-card-stats { display: flex; gap: var(--sp-8); flex-wrap: wrap; }
+  .cost-stat { text-align: center; }
+  .cost-stat-value, .stat-val {
+    font-family: var(--font-display); font-size: var(--t-lg);
+    font-weight: 700; color: #fff; display: block;
+  }
+  .cost-stat-label, .stat-label {
+    font-size: var(--t-xs); color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: .06em; display: block;
+    margin-top: 2px;
+  }
+  .cost-card-note {
+    font-size: var(--t-s2); color: var(--text-muted);
+    border-top: 1px solid rgba(255,255,255,.06);
+    margin-top: var(--sp-4); padding-top: var(--sp-4); width: 100%;
+    line-height: 1.6;
+  }
+
+  /* ─── BEFORE/AFTER COMPARE ─── */
+  .compare-wrap { margin: var(--sp-4) 0; }
+  .compare-split {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4); margin-bottom: var(--sp-6);
+  }
+  @media (max-width: 620px) { .compare-split { grid-template-columns: 1fr; } }
+  .compare-panel {
+    border-radius: 8px; border: 1px solid rgba(255,255,255,.07);
+    overflow: hidden;
+  }
+  .compare-panel-header {
+    display: flex; align-items: center; gap: var(--sp-2);
+    padding: 10px var(--sp-4); font-family: var(--font-display);
+    font-size: var(--t-xs); font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+  .compare-panel.bad  .compare-panel-header { background: rgba(239,68,68,.1); color: #f87171; }
+  .compare-panel.good .compare-panel-header { background: rgba(34,197,94,.1); color: #4ade80; }
+  .compare-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .bad  .compare-dot { background: #f87171; }
+  .good .compare-dot { background: #4ade80; }
+  .compare-body {
+    padding: var(--sp-4); font-size: var(--t-body);
+    color: var(--text-muted); line-height: 1.7;
+    background: rgba(255,255,255,.015);
+  }
+  .compare-label {
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    margin-bottom: var(--sp-2);
+  }
+  .compare-tag {
+    display: inline-block; margin-bottom: var(--sp-3);
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 4px;
+  }
+  .hl-bad  { background: rgba(239,68,68,.12); color: #fca5a5; border-radius: 3px; padding: 0 3px; }
+  .hl-good { background: rgba(34,197,94,.12); color: #86efac; border-radius: 3px; padding: 0 3px; }
+  .hl-warn { background: rgba(245,158,11,.12); color: #fcd34d; border-radius: 3px; padding: 0 3px; }
+  .hl-key  { color: var(--skill-accent); font-weight: 600; }
+  .hl-cmt  { color: rgba(255,255,255,.3); }
+  .hl-head { color: #a5b4fc; font-weight: 600; }
+  .hl-step { color: #34d399; font-weight: 600; }
+  .hl-val  { color: #fbbf24; }
+  .compare-table { width: 100%; border-collapse: collapse; margin: var(--sp-4) 0; }
+  .compare-table th {
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.4);
+    text-align: left; padding: var(--sp-2) var(--sp-3);
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
+  .compare-table td {
+    padding: var(--sp-3); font-size: var(--t-s2); color: var(--text-muted);
+    border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: top;
+  }
+  .yes { color: #4ade80; } .no { color: #f87171; }
+  .good { color: #4ade80; } .bad { color: #f87171; }
+  .best { color: #fbbf24; } .avoid { color: #f87171; }
+  .success { color: #4ade80; } .danger { color: #f87171; }
+  .warn { color: #fbbf24; } .info { color: var(--skill-accent); }
+
+  /* ─── MODEL COMPAT ─── */
+  .model-compat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: var(--sp-4); }
+  @media (min-width: 600px) { .model-compat-grid { grid-template-columns: repeat(4,1fr); } }
+  .compat-panel {
+    background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px; padding: var(--sp-4); text-align: center;
+  }
+  .compat-panel-label {
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+    color: rgba(255,255,255,.5); margin-bottom: var(--sp-2);
+  }
+  .compat-list { list-style: none; padding: 0; margin: 0; }
+  .compat-list li { font-size: var(--t-s2); color: var(--text-muted); padding: 3px 0; }
+
+  /* ─── CODE BLOCKS ─── */
+  .code-block {
+    background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px; overflow: hidden; margin: var(--sp-4) 0;
+  }
+  .code-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px var(--sp-4);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    background: rgba(255,255,255,.02);
+  }
+  .code-block-label, .code-lang {
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+    color: rgba(255,255,255,.4);
+  }
+  .code-block pre {
+    margin: 0; padding: var(--sp-5) var(--sp-5);
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: var(--t-s2); line-height: 1.7; overflow-x: auto;
+    color: #c9d1d9; white-space: pre;
+  }
+  .code-copy-btn, .copy-btn {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 5px; color: rgba(255,255,255,.5); cursor: pointer;
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+    padding: 4px 10px; transition: color .15s, background .15s;
+  }
+  .code-copy-btn:hover, .copy-btn:hover { color: #fff; background: rgba(255,255,255,.1); }
+  .code-copy-btn.copied, .copy-btn.copied { color: #4ade80; }
+  .kw { color: #c792ea; } .fn { color: #82aaff; } .s { color: #c3e88d; }
+  .n  { color: #f78c6c; } .c  { color: rgba(255,255,255,.3); }
+  .k  { color: #89ddff; } .nb { color: #ffcb6b; }
+  .mi { color: #f78c6c; } .p  { color: #89ddff; }
+
+  /* ─── CALLOUT BOXES ─── */
+  .callout {
+    border-radius: 8px; border-left: 3px solid; padding: var(--sp-4) var(--sp-5);
+    margin: var(--sp-4) 0; display: flex; gap: var(--sp-3);
+  }
+  .callout-tip   { background: rgba(99,102,241,.06); border-color: var(--skill-accent); }
+  .callout-warn  { background: rgba(245,158,11,.06); border-color: #f59e0b; }
+  .callout-danger{ background: rgba(239,68,68,.06); border-color: #ef4444; }
+  .callout-good  { background: rgba(34,197,94,.06); border-color: #22c55e; }
+  .callout-icon  { font-size: 1.1em; flex-shrink: 0; padding-top: 2px; }
+  .callout-body  { font-size: var(--t-body); color: var(--text-muted); line-height: 1.7; }
+  .callout-body strong { color: #e0e0f0; }
+
+  /* ─── CHAIN / FLOW DIAGRAMS ─── */
+  .chain-diagram, .chain-visual {
+    background: rgba(255,255,255,.02); border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.07); padding: var(--sp-6);
+    overflow-x: auto; margin: var(--sp-4) 0;
+  }
+  .chain-row { display: flex; align-items: flex-start; gap: var(--sp-4); margin-bottom: var(--sp-4); flex-wrap: wrap; }
+  .chain-node {
+    background: var(--skill-accent-dim); border: 1px solid rgba(99,102,241,.3);
+    border-radius: 8px; padding: var(--sp-4) var(--sp-5); min-width: 140px; flex: 1;
+  }
+  .chain-node-step {
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--skill-accent); margin-bottom: 4px;
+  }
+  .chain-node-title { font-weight: 700; font-size: var(--t-body); color: #e0e0f0; }
+  .chain-node-desc { font-size: var(--t-s2); color: var(--text-muted); margin-top: 4px; }
+  .chain-node-out {
+    font-family: var(--font-mono, monospace); font-size: var(--t-xs);
+    color: #c3e88d; margin-top: 6px; padding: 4px 8px;
+    background: rgba(0,0,0,.3); border-radius: 4px; display: inline-block;
+  }
+  .chain-node-icon { font-size: 1.3em; margin-bottom: 4px; }
+  .chain-arrow {
+    font-size: 1.4em; color: rgba(255,255,255,.25);
+    align-self: center; flex-shrink: 0;
+  }
+  .flow-diagram, .flow-node, .flow-row { /* pipeline flow styles */ }
+  .flow-node {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09);
+    border-radius: 8px; padding: var(--sp-4) var(--sp-5);
+  }
+  .flow-node-label { font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 4px; }
+  .flow-node-val { font-weight: 600; color: #e0e0f0; font-size: var(--t-body); }
+  .flow-arrow { color: rgba(255,255,255,.2); font-size: 1.25em; margin: 0 var(--sp-2); }
+  .flow-diamond {
+    background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.25);
+    border-radius: 8px; padding: var(--sp-3) var(--sp-5);
+    color: #fbbf24; font-size: var(--t-body); font-weight: 600;
+  }
+  .flow-label-row { display: flex; gap: var(--sp-4); flex-wrap: wrap; margin-top: var(--sp-3); }
+  .flow-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; display: inline-block; }
+  .flow-legend { display: flex; gap: var(--sp-4); flex-wrap: wrap; margin-top: var(--sp-4); }
+  .legend-item { display: flex; align-items: center; font-size: var(--t-sm); color: var(--text-muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: var(--sp-2); flex-shrink: 0; }
+
+  /* ─── PARALLEL / BRANCH VISUALS ─── */
+  .parallel-visual, .parallel-branches { margin: var(--sp-4) 0; }
+  .parallel-input, .parallel-merge {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09);
+    border-radius: 8px; padding: var(--sp-3) var(--sp-5);
+    font-weight: 600; font-size: var(--t-body); color: #e0e0f0;
+    text-align: center; margin-bottom: var(--sp-3);
+  }
+  .parallel-row { display: flex; gap: var(--sp-3); margin: var(--sp-3) 0; flex-wrap: wrap; }
+  .parallel-branch {
+    flex: 1; min-width: 120px; background: rgba(99,102,241,.06);
+    border: 1px solid rgba(99,102,241,.2); border-radius: 8px; padding: var(--sp-4);
+  }
+  .parallel-label {
+    font-family: var(--font-display); font-size: var(--t-xs);
+    font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--skill-accent); margin-bottom: 4px;
+  }
+  .branch-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--skill-accent); display: inline-block; margin-right: 6px; }
+  .branch-label { font-weight: 600; color: #e0e0f0; font-size: var(--t-body); }
+  .branch-desc { font-size: var(--t-sm); color: var(--text-muted); margin-top: 4px; }
+  .dt-root, .dt-node {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09);
+    border-radius: 8px; padding: var(--sp-3) var(--sp-4);
+    font-size: var(--t-body); color: #e0e0f0; font-weight: 600; display: inline-block;
+  }
+  .dt-condition { font-style: italic; color: var(--text-muted); font-size: var(--t-s2); }
+  .dt-cond-yes { color: #4ade80; font-size: var(--t-sm); font-weight: 700; }
+  .dt-cond-no  { color: #f87171; font-size: var(--t-sm); font-weight: 700; }
+  .dt-branches { display: flex; gap: var(--sp-6); flex-wrap: wrap; margin-top: var(--sp-3); }
+  .dt-branch { flex: 1; min-width: 140px; }
+
+  /* ─── PIPELINE / STAGE ─── */
+  .pipeline, .pipeline-stages {
+    margin: var(--sp-4) 0;
+    display: flex; flex-direction: column; gap: var(--sp-3);
+  }
+  .pipeline-stage, .stage-node {
+    display: flex; align-items: flex-start; gap: var(--sp-4);
+    background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px; padding: var(--sp-4) var(--sp-5);
+  }
+  .pipeline-dot, .stage-num {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: var(--skill-accent-dim); border: 1px solid rgba(99,102,241,.35);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
+    color: var(--skill-accent);
+  }
+  .pipeline-name, .stage-title {
+    font-weight: 700; font-size: var(--t-body); color: #e0e0f0;
+    margin-bottom: 4px;
+  }
+  .pipeline-desc, .stage-gate {
+    font-size: var(--t-s2); color: var(--text-muted); line-height: 1.6;
+  }
+  .pipeline-content { flex: 1; }
+  .pipeline-label {
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--skill-accent);
+    margin-bottom: 4px;
+  }
+  .pipeline-phase { font-weight: 700; color: #e0e0f0; font-size: var(--t-body); margin-bottom: 4px; }
+  .pipeline-flow { display: flex; flex-direction: column; gap: var(--sp-2); }
+  .pipeline-legend { margin-top: var(--sp-4); }
+  .stage-arrow { text-align: center; color: rgba(255,255,255,.2); font-size: 1.3em; }
+  .stage-out { font-family: var(--font-mono, monospace); font-size: var(--t-xs); color: #c3e88d; margin-top: 6px; padding: 3px 8px; background: rgba(0,0,0,.3); border-radius: 4px; display: inline-block; }
+  .gate-h, .gate-a, .gate-auto, .gate-human, .human-gate {
+    background: rgba(99,102,241,.06); border: 1px solid rgba(99,102,241,.2);
+    border-radius: 6px; padding: 3px 10px; font-size: var(--t-sm); color: var(--skill-accent);
+    display: inline-block; margin-top: 6px;
+  }
+  .gate-auto { background: rgba(34,197,94,.06); border-color: rgba(34,197,94,.2); color: #4ade80; }
+  .human-gate-label { font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; color: var(--text-muted); }
+
+  /* ─── TIER GRID ─── */
+  .tier-grid, .tiers-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-4); margin: var(--sp-4) 0; }
+  @media (min-width: 600px) { .tier-grid, .tiers-grid { grid-template-columns: repeat(2,1fr); } }
+  .tier-card, .tier-1-card, .tier-2-card, .tier-3-card, .tier-4-card {
+    background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 10px; padding: var(--sp-5); position: relative; overflow: hidden;
+  }
+  .tier-card-num, .tier-label {
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent);
+    margin-bottom: var(--sp-2);
+  }
+  .tier-name { font-weight: 700; font-size: var(--t-lg); color: #fff; margin-bottom: 6px; }
+  .tier-cost {
+    font-family: var(--font-display); font-size: var(--t-sm); font-weight: 700;
+    color: #4ade80; margin-bottom: var(--sp-3);
+  }
+  .tier-meta { font-size: var(--t-sm); color: var(--text-muted); margin-bottom: var(--sp-3); }
+  .tier-examples { font-size: var(--t-sm); color: var(--text-muted); line-height: 1.6; }
+  .tier-1 { border-color: rgba(34,197,94,.2); }
+  .tier-2 { border-color: rgba(99,102,241,.2); }
+  .tier-3 { border-color: rgba(245,158,11,.2); }
+  .tier-4 { border-color: rgba(239,68,68,.2); }
+
+  /* ─── LAYER / DEFENCE STACK ─── */
+  .layer-stack, .layers-grid { display: flex; flex-direction: column; gap: var(--sp-3); margin: var(--sp-4) 0; }
+  .layer-card, .layer-block {
+    display: flex; align-items: flex-start; gap: var(--sp-4);
+    background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px; padding: var(--sp-4) var(--sp-5);
+  }
+  .layer-card-num, .layer-block-num {
+    width: 30px; height: 30px; border-radius: 6px; flex-shrink: 0;
+    background: var(--skill-accent-dim); border: 1px solid rgba(99,102,241,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: var(--t-sm); font-weight: 700;
+    color: var(--skill-accent);
+  }
+  .layer-card-name, .layer-block-name { font-weight: 700; font-size: var(--t-body); color: #e0e0f0; margin-bottom: 4px; }
+  .layer-block-desc, .defence-text { font-size: var(--t-s2); color: var(--text-muted); line-height: 1.6; }
+  .defence-label { font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 4px; }
+
+  /* ─── ATTACK CARDS (jailbreak) ─── */
+  .attack-card {
+    background: rgba(239,68,68,.04); border: 1px solid rgba(239,68,68,.15);
+    border-radius: 8px; overflow: hidden; margin-bottom: var(--sp-4);
+  }
+  .attack-card-header {
+    display: flex; align-items: center; gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-5);
+    background: rgba(239,68,68,.07);
+    border-bottom: 1px solid rgba(239,68,68,.12);
+  }
+  .attack-num {
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase; color: #f87171;
+  }
+  .attack-name { font-weight: 700; font-size: var(--t-body); color: #fca5a5; }
+  .attack-example {
+    padding: var(--sp-4) var(--sp-5); font-size: var(--t-body); color: var(--text-muted); line-height: 1.7;
+  }
+
+  /* ─── STEP BOXES ─── */
+  .step-box {
+    display: flex; align-items: flex-start; gap: var(--sp-4);
+    background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px; padding: var(--sp-4) var(--sp-5); margin-bottom: var(--sp-4);
+  }
+  .step-box-num, .step-num {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    background: var(--skill-accent-dim); border: 1px solid rgba(99,102,241,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: var(--t-sm); font-weight: 700;
+    color: var(--skill-accent);
+  }
+  .step-content { flex: 1; }
+  .step-content h3 { font-size: var(--t-md); font-weight: 700; color: #e0e0f0; margin: 0 0 var(--sp-2); }
+  .step-content p { font-size: var(--t-body); color: var(--text-muted); margin: 0; line-height: 1.7; }
+
+  /* ─── RULE CARDS ─── */
+  .rule-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-4); margin: var(--sp-4) 0; }
+  @media (min-width: 600px) { .rule-grid { grid-template-columns: repeat(2,1fr); } }
+  .rule-card {
+    background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px; padding: var(--sp-5);
+  }
+  .rule-card-num {
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent);
+    margin-bottom: var(--sp-2);
+  }
+  .rule-card-label { font-weight: 700; font-size: var(--t-md); color: #e0e0f0; margin-bottom: var(--sp-2); }
+
+  /* ─── TEMPLATE / SAVINGS / COMMUNITY CARDS ─── */
+  .templates-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-4); margin: var(--sp-4) 0; }
+  @media (min-width: 600px) { .templates-grid { grid-template-columns: repeat(2,1fr); } }
+  .template-card {
+    background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px; padding: var(--sp-5);
+  }
+  .template-card-name { font-weight: 700; font-size: var(--t-md); color: #e0e0f0; margin-bottom: var(--sp-2); }
+  .community-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: var(--sp-4); margin: var(--sp-4) 0; }
+  @media (min-width: 600px) { .community-grid { grid-template-columns: repeat(4,1fr); } }
+  .community-stat-card {
+    background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px; padding: var(--sp-5); text-align: center;
+  }
+  .community-stat-value { font-family: var(--font-display); font-size: var(--t-xl); font-weight: 700; color: #fff; display: block; }
+  .community-stat-label { font-size: var(--t-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; display: block; margin-top: 4px; }
+  .savings-banner {
+    background: rgba(34,197,94,.06); border: 1px solid rgba(34,197,94,.18);
+    border-radius: 10px; padding: var(--sp-6); display: flex;
+    gap: var(--sp-6); flex-wrap: wrap; align-items: center; margin: var(--sp-4) 0;
+  }
+  .savings-stat { text-align: center; }
+  .savings-stat .stat-val { font-family: var(--font-display); font-size: var(--t-xl); color: #4ade80; display: block; }
+  .savings-stat .stat-label { font-size: var(--t-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; display: block; margin-top: 2px; }
+  .savings-divider { width: 1px; background: rgba(255,255,255,.1); align-self: stretch; }
+
+  /* ─── RELATED SKILLS ─── */
+  .related-skills, .related-skills-label {
+    margin-top: var(--sp-12); padding-top: var(--sp-12);
+    border-top: 1px solid rgba(255,255,255,.05);
+  }
+  .related-skills-label {
+    font-family: var(--font-display); font-size: var(--t-sm); font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--skill-accent);
+    margin-bottom: var(--sp-5); display: block; border: none; padding: 0;
+  }
+  .related-skills-grid, .related-grid {
+    display: grid; grid-template-columns: 1fr; gap: var(--sp-4);
+  }
+  @media (min-width: 600px) { .related-skills-grid, .related-grid { grid-template-columns: repeat(3,1fr); } }
+  .related-skill-card, .related-card {
+    background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px; padding: var(--sp-4); text-decoration: none;
+    transition: border-color .2s, background .2s; display: block;
+  }
+  .related-skill-card:hover, .related-card:hover {
+    border-color: rgba(99,102,241,.4); background: rgba(99,102,241,.05);
+  }
+  .related-skill-card-cat, .related-card-tag {
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase; color: var(--skill-accent);
+    margin-bottom: var(--sp-2); display: block;
+  }
+  .related-skill-card-title, .related-card-title {
+    font-weight: 700; font-size: var(--t-body); color: #e0e0f0; margin-bottom: 4px;
+  }
+  .related-card-desc { font-size: var(--t-sm); color: var(--text-muted); line-height: 1.5; }
+  .related-card-icon { font-size: 1.5em; margin-bottom: var(--sp-2); }
+
+  /* ─── DOWNLOAD / INSTALL CTA ─── */
+  .download-cta, .install-cta-section {
+    margin-top: var(--sp-12); padding: var(--sp-10) var(--sp-8);
+    background: rgba(99,102,241,.06); border: 1px solid rgba(99,102,241,.2);
+    border-radius: 12px; text-align: center;
+  }
+  .download-cta-icon, .install-cta-section > span:first-child {
+    font-size: 2rem; display: block; margin-bottom: var(--sp-4);
+  }
+  .download-cta-body, .install-cta-headline {
+    font-family: var(--font-heading, Sora); font-size: var(--t-xl);
+    font-weight: 700; color: #fff; margin-bottom: var(--sp-3);
+  }
+  .install-cta-sub {
+    font-size: var(--t-body); color: var(--text-muted); margin-bottom: var(--sp-6);
+    line-height: 1.6; max-width: 480px; margin-left: auto; margin-right: auto;
+  }
+  .install-cta-buttons, .download-cta-actions {
+    display: flex; gap: var(--sp-3); justify-content: center; flex-wrap: wrap;
+  }
+  .btn-back-skills-lg {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    padding: 11px 24px; border-radius: 8px;
+    font-family: var(--font-display); font-size: var(--t-sm); font-weight: 700;
+    letter-spacing: .05em; text-transform: uppercase;
+    background: var(--skill-accent); color: #fff; border: none;
+    text-decoration: none; cursor: pointer; transition: opacity .15s;
+  }
+  .btn-back-skills-lg:hover { opacity: .88; }
+  .btn-download-article {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    padding: 11px 24px; border-radius: 8px;
+    font-family: var(--font-display); font-size: var(--t-sm); font-weight: 700;
+    letter-spacing: .05em; text-transform: uppercase;
+    background: transparent; color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,.12); text-decoration: none;
+    cursor: pointer; transition: color .15s, border-color .15s;
+  }
+  .btn-download-article:hover { color: #fff; border-color: rgba(255,255,255,.3); }
+
+  /* ─── FAILURE CARDS ─── */
+  .failure-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-4); margin: var(--sp-4) 0; }
+  @media (min-width: 600px) { .failure-grid { grid-template-columns: repeat(2,1fr); } }
+  .failure-card {
+    background: rgba(239,68,68,.04); border: 1px solid rgba(239,68,68,.15);
+    border-radius: 8px; padding: var(--sp-5);
+  }
+  .failure-card h3 { font-size: var(--t-md); color: #fca5a5; margin: 0 0 var(--sp-2); }
+
+  /* ─── CHUNK / RAG VISUAL ─── */
+  .chunk-visual { display: flex; gap: 4px; margin: var(--sp-4) 0; flex-wrap: wrap; }
+  .chunk-a { background: rgba(99,102,241,.18); border: 1px solid rgba(99,102,241,.35); }
+  .chunk-b { background: rgba(34,211,238,.12); border: 1px solid rgba(34,211,238,.3); }
+  .chunk-c { background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.3); }
+  .chunk-overlap { background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.3); }
+  .chunk-a, .chunk-b, .chunk-c, .chunk-overlap {
+    border-radius: 4px; padding: var(--sp-2) var(--sp-3);
+    font-family: var(--font-mono, monospace); font-size: var(--t-xs);
+    color: rgba(255,255,255,.7); flex: 1; min-width: 80px; text-align: center;
+  }
+  .chunk-label {
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em; color: rgba(255,255,255,.4);
+    margin-top: var(--sp-2);
+  }
+
+  /* ─── EMAIL TAGS ─── */
+  .email-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: var(--t-xs);
+    font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin: 2px 2px;
+  }
+
+  /* ─── TOAST ─── */
+  .install-toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: #1a1a2e; border: 1px solid rgba(99,102,241,.4);
+    border-radius: 8px; padding: var(--sp-3) var(--sp-5);
+    font-size: var(--t-body); color: #e0e0f0; font-weight: 500;
+    box-shadow: var(--skill-accent-glow);
+    transform: translateY(8px); opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s;
+  }
+  .install-toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ─── ACTIVE NODE ─── */
+  .active-node {
+    border-color: var(--skill-accent) !important;
+    box-shadow: var(--skill-accent-glow);
+  }
+
+  /* ─── MISC ─── */
+  .fix { color: #4ade80; font-size: var(--t-sm); }
+  .failure-card .fix { margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid rgba(255,255,255,.06); }
+  strong { color: #e0e0f0; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .skill-page-wrap, .skill-article-wrap { padding: 0 var(--sp-4) 60px; }
+    .outcome-headline, .skill-article-title { letter-spacing: -.01em; }
+    .install-bar-inner { padding: 8px var(--sp-4); }
+    .cost-card-headline { font-size: 2.25rem; }
+    .related-skills-grid, .related-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="read-progress"></div>
+<!-- NAV injected by main.js -->
+<div class="nav-bar">
+  <a class="nav-logo" href="/"><span class="logo-aether">Aether</span><span class="logo-intel">Intel</span></a>
+  <nav class="nav-links">
+    <a href="/index.html">Articles</a>
+    <a href="/skills.html" class="nav-active">Skills</a>
+    <a href="/models.html">Models</a>
+    <a href="/about.html">About</a>
+  </nav>
+  <div class="nav-actions">
+    <div id="byok-status" class="byok-badge"></div>
+    <a href="/skills.html" class="btn-nav-cta">Browse Skills</a>
+  </div>
+</div>
+
+<!-- INSTALL BAR -->
+<div class="install-bar" id="install-bar">
+  <div class="install-bar-inner">
+    <span class="install-label">Agent Handoff</span>
+    <span class="install-bar-spacer"></span>
+    <button class="btn-download-primary" onclick="downloadJSON()">↓ Download .json</button>
+    <a class="btn-back-skills" href="/skills.html">← All Skills</a>
+  </div>
+</div>
+<div class="install-bar-spacer" style="height:52px"></div>
+<div id="install-toast" class="install-toast">✓ Downloading skill JSON…</div>
+
+<div class="skill-page-wrap">
+  <nav class="skill-breadcrumb">
+    <a href="/index.html">Home</a>
+    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    <a href="/skills.html">Skills</a>
+    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    <span>Agents</span>
+  </nav>
+  <header class="outcome-banner">
+    <div class="outcome-meta">
+      <span class="badge-category">Agents</span>
+      <span class="badge-cost-cheap">💚 Cheap · ~$0.002 / handoff</span>
+      <span class="badge-downloads">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        634 downloads
+      </span>
+    </div>
+    <h1 class="outcome-headline">Compacts any conversation into a <em>handoff doc</em><br/>a fresh agent picks up without missing a beat</h1>
+    <p class="outcome-sub">Every new AI chat starts blind. Agent Handoff fixes the amnesia problem — it compresses everything from the current session into a structured document the next agent reads first. Context preserved, work continues, nothing repeated.</p>
+  </header>
+  <div class="skill-hero-img">
+    <img src="/images/skills/agent-handoff-hero.webp" alt="Agent Handoff skill" loading="eager" fetchpriority="high"
+         onerror="this.style.display='none'"/>
+  </div>
+  <section class="skill-section" id="models">
+    <h2 class="skill-section-heading"><span class="section-icon">🤖</span> Recommended Models</h2>
+    <p>This skill runs on any capable model. Pick based on your volume and budget.</p>
+    <div class="model-table-wrap">
+      <table class="model-table">
+        <thead><tr><th>Model</th><th>Best For</th><th>Cost</th><th>Quality</th></tr></thead>
+        <tbody>
+        <tr>
+          <td><span class="model-provider-dot anthropic"></span><span class="model-name">Claude Sonnet 4.6</span> <span class="recommended-badge">Recommended</span></td>
+          <td>Best compression, captures nuance and intent</td>
+          <td><span class="cost-pill cheap">~$0.002</span></td>
+          <td><span class="stars">★★★★★</span></td>
+        </tr>
+        <tr>
+          <td><span class="model-provider-dot openai"></span><span class="model-name">GPT-5.4 Mini</span> </td>
+          <td>Budget, fast for short sessions</td>
+          <td><span class="cost-pill cheap">~$0.001</span></td>
+          <td><span class="stars">★★★★☆</span></td>
+        </tr>
+        <tr>
+          <td><span class="model-provider-dot google"></span><span class="model-name">Gemini 2.5 Flash</span> </td>
+          <td>Long context windows, large session dumps</td>
+          <td><span class="cost-pill cheap">~$0.001</span></td>
+          <td><span class="stars">★★★★☆</span></td>
+        </tr></tbody>
+      </table>
+    </div>
+  </section>
+  <section class="skill-section" id="cost">
+    <h2 class="skill-section-heading"><span class="section-icon">💰</span> Cost Estimate</h2>
+    <div class="cost-card">
+      <div>
+        <div class="cost-card-label">💚 Cheap Tier</div>
+        <div class="cost-card-headline">~$0.002</div>
+        <div class="cost-card-sub">per handoff document</div>
+      </div>
+      <div class="cost-card-stats"><div class="cost-stat"><span class="cost-stat-value">634</span><span class="cost-stat-label">active users</span></div><div class="cost-stat"><span class="cost-stat-value">< 3s</span><span class="cost-stat-label">generation time</span></div><div class="cost-stat"><span class="cost-stat-value">~80%</span><span class="cost-stat-label">context preserved</span></div></div>
+      <div class="cost-card-note">The handoff is generated once but saves 10-20 minutes of re-explaining context in every subsequent session. At $0.002 per handoff it pays for itself in the first 30 seconds of the next conversation.</div>
+    </div>
+  </section>
+  <section class="skill-section" id="how">
+    <h2 class="skill-section-heading"><span class="section-icon">⚡</span> How It Works</h2>
+    <p>The handoff format is designed to be readable by both humans and AI agents.</p>
+    <div class="step-box">
+      <div class="step-box-num">01</div>
+      <div class="step-content">
+        <h3>Trigger at end of session</h3>
+        <p>Type "handoff" or "create handoff" at any point in a conversation. Works best at a natural stopping point — end of a session, before switching tools, or when hitting context limits.</p>
+      </div>
+    </div>
+    <div class="step-box">
+      <div class="step-box-num">02</div>
+      <div class="step-content">
+        <h3>Compress to structured document</h3>
+        <p>The skill produces a fixed-format document: session timestamp, one-line status summary, what was being worked on, what's done and what's pending, key decisions made, open questions, and the exact command to pick it up in a new session.</p>
+      </div>
+    </div>
+    <div class="step-box">
+      <div class="step-box-num">03</div>
+      <div class="step-content">
+        <h3>Paste into new session</h3>
+        <p>Open a fresh chat, paste the handoff document as your opening message, and the new agent begins with full context. No re-explaining, no repeating decisions already made, no rebuilding shared vocabulary.</p>
+      </div>
+    </div>
+  </section>
+  <section class="skill-section" id="examples">
+    <h2 class="skill-section-heading"><span class="section-icon">✨</span> Before &amp; After Examples</h2>
+    <div class="compare-split">
+      <div class="compare-panel bad">
+        <div class="compare-panel-header"><span class="compare-dot"></span> Without skill</div>
+        <div class="compare-body"><strong>Without the skill:</strong><br/>You hit the context limit on a complex coding session. Open a new chat. Spend the first 10 messages re-explaining the project structure, the decisions made, the approach you were taking. The new agent starts making suggestions you already tried and rejected.</div>
+      </div>
+      <div class="compare-panel good">
+        <div class="compare-panel-header"><span class="compare-dot"></span> With skill</div>
+        <div class="compare-body"><strong>With Agent Handoff:</strong><br/><code>HANDOFF — 2026-05-18 14:32<br/>Status: Refactoring auth module — 70% complete</code><br/><strong>Done:</strong> JWT implementation, refresh token logic.<br/><strong>Pending:</strong> Rate limiting middleware.<br/><strong>Key decisions:</strong> Using Redis for token blacklist (not DB — latency concern).<br/><strong>Next command:</strong> "Continue from the handoff above — implement rate limiting on /api/auth routes."</div>
+      </div>
+    </div>
+  </section>
+  <section class="skill-section" id="prompt">
+    <h2 class="skill-section-heading"><span class="section-icon">📋</span> The System Prompt</h2>
+    <p>Download the .json file and place it in a folder your AI agent can access. The agent reads the <code>system_prompt</code> field and uses it as a skill. You can edit it to customise behaviour before installing.</p>
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-block-label">system_prompt · agent-handoff.json</span>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre>You are a handoff writer. Your job is to compact the current conversation into a document a fresh agent can pick up and continue — with full context, intent, and vibe preserved.
+
+When triggered, produce this exact document:
+
+---
+HANDOFF — [TIMESTAMP]
+Status: [one-line summary of what was being worked on]
+---
+
+## What We Were Doing
+[2–3 sentences: the goal of this session and what progress was made. Be specific.]
+
+## Current State
+[What exists now — files created, decisions made, code written, analyses completed. Reference by path/filename, do not duplicate content.]
+
+## Intent and Vibe
+[The direction we were heading. Include: tone of the session, strong preferences or opinions established, what "done well" looks like for this work. This is the part most handoffs miss.]
+
+## Context the Next Agent Needs
+[Key facts, constraints, and background not obvious from artefacts alone. Domain knowledge, agreed-on assumptions, things the user cares about.]
+
+## Open Questions
+[What remains unresolved or needs a decision before continuing.]
+
+## Recommended Next Steps
+[Numbered, specific, ordered by what to tackle first. Each step should be actionable in under 30 minutes.]
+
+## Skills to Load
+[If any skills are relevant to the next session, name them and explain why.]
+
+## References
+[File paths, URLs, artefact names — reference only, do not restate content.]
+
+---
+RULES:
+- Do not duplicate content in artefacts — reference by path
+- Preserve intent and direction, not just task status
+- If the user passes an argument (e.g. /handoff focus: auth flow), tailor the document to that focus
+- The next agent should be fully productive within 60 seconds of reading this
+- Output the document path when complete, and suggest the exact command to pass it to a new session</pre>
+    </div>
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div class="callout-body"><strong>Customise before installing.</strong> Edit the placeholders in ALL_CAPS — they're designed to be swapped out for your context, industry, or preferences.</div>
+    </div>
+  </section>
+  <div class="related-skills">
+    <span class="related-skills-label">Related Skills</span>
+    <div class="related-skills-grid">
+    <a class="related-skill-card" href="/skills/daily-briefing.html">
+      <span class="related-skill-card-cat">Productivity</span>
+      <div class="related-skill-card-title">Daily Briefing</div>
+    </a>
+    <a class="related-skill-card" href="/skills/prompt-chaining.html">
+      <span class="related-skill-card-cat">Guide</span>
+      <div class="related-skill-card-title">Prompt Chaining</div>
+    </a>
+    <a class="related-skill-card" href="/skills/agent-memory.html">
+      <span class="related-skill-card-cat">Guide</span>
+      <div class="related-skill-card-title">Agent Memory Architecture</div>
+    </a>
+    </div>
+  </div>
+  <div class="install-cta-section">
+    <div class="download-cta-icon">⬇️</div>
+    <div class="download-cta-body">Download Agent Handoff</div>
+    <p class="install-cta-sub">Place the .json file in a folder your AI agent can read. The agent uses the <code>system_prompt</code> as its operating instruction for this skill.</p>
+    <div class="install-cta-buttons">
+      <button class="btn-back-skills-lg" onclick="downloadJSON()">↓ Download .json</button>
+      <a class="btn-download-article" href="/skills.html">← All Skills</a>
+    </div>
+  </div>
+</div><!-- .skill-page-wrap -->
+<script src="/js/main.js"></script>
+<script src="/js/byok.js"></script>
+<script>
+// Read progress
+(function(){
+  var bar = document.getElementById('read-progress');
+  window.addEventListener('scroll', function(){
+    var h = document.documentElement;
+    var pct = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.min(100, Math.round(pct*100)) + '%';
+  });
+})();
+
+// Download skill JSON
+function downloadJSON() {
+  var slug = 'agent-handoff';
+  var prompt = "You are a handoff writer. Your job is to compact the current conversation into a document a fresh agent can pick up and continue \u2014 with full context, intent, and vibe preserved.\n\nWhen triggered, produce this exact document:\n\n---\nHANDOFF \u2014 [TIMESTAMP]\nStatus: [one-line summary of what was being worked on]\n---\n\n## What We Were Doing\n[2\u20133 sentences: the goal of this session and what progress was made. Be specific.]\n\n## Current State\n[What exists now \u2014 files created, decisions made, code written, analyses completed. Reference by path/filename, do not duplicate content.]\n\n## Intent and Vibe\n[The direction we were heading. Include: tone of the session, strong preferences or opinions established, what \"done well\" looks like for this work. This is the part most handoffs miss.]\n\n## Context the Next Agent Needs\n[Key facts, constraints, and background not obvious from artefacts alone. Domain knowledge, agreed-on assumptions, things the user cares about.]\n\n## Open Questions\n[What remains unresolved or needs a decision before continuing.]\n\n## Recommended Next Steps\n[Numbered, specific, ordered by what to tackle first. Each step should be actionable in under 30 minutes.]\n\n## Skills to Load\n[If any skills are relevant to the next session, name them and explain why.]\n\n## References\n[File paths, URLs, artefact names \u2014 reference only, do not restate content.]\n\n---\nRULES:\n- Do not duplicate content in artefacts \u2014 reference by path\n- Preserve intent and direction, not just task status\n- If the user passes an argument (e.g. /handoff focus: auth flow), tailor the document to that focus\n- The next agent should be fully productive within 60 seconds of reading this\n- Output the document path when complete, and suggest the exact command to pass it to a new session";
+  var data = {
+    schema_version: '1.0',
+    slug: slug,
+    system_prompt: prompt,
+    install_instructions: 'Download this file and place it in a folder your AI agent can access. The agent will read the system_prompt and use it as a skill.',
+    how_to_use: 'Trigger the skill by describing your task. The skill will guide you through its process step by step.',
+    works_with: ['Claude', 'GPT-5.4 Mini', 'Gemini 2.5 Flash', 'Any OpenAI-compatible model']
+  };
+  var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = slug + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  var toast = document.getElementById('install-toast');
+  toast.classList.add('show');
+  setTimeout(function(){ toast.classList.remove('show'); }, 2500);
+}
+
+// Copy code block
+function copyCode(btn) {
+  var pre = btn.closest('.code-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(function(){
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
