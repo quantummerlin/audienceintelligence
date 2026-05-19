@@ -69,6 +69,100 @@
   </a>
 </nav>`;
 
+  // ── Articles manifest: [path, category, title] ──
+  // Powers "More like this" related articles section in the AePanel.
+  var ARTICLES_MANIFEST = [
+  ["/articles/78-ai-art-backlash-monet-training-data.html","news","The Art the AI Never Asked Permission to Learn From"],
+  ["/articles/77-goldman-sachs-ai-right-wrong-2025.html","business","What Goldman Sachs Got Right (and Wrong) About AI in 2025"],
+  ["/articles/76-ai-skills-gap-how-to-land-right-side.html","business","The AI Skills Gap Is Real. Here's How to Land on the Right Side of It."],
+  ["/articles/75-personal-ai-agent-stack-under-50.html","agents","Build Your Personal AI Agent Stack for Under $50 a Month"],
+  ["/articles/74-ai-small-business-honest-roi-guide.html","business","AI for Small Business: The Honest ROI Guide"],
+  ["/articles/73-ai-tool-evaluation-5-question-framework.html","tools","Before You Commit to Any AI Tool, Ask These 5 Questions"],
+  ["/articles/72-first-ai-setup-stack-2026.html","tools","Your First AI Setup: The Stack That Actually Works in 2026"],
+  ["/articles/71-break-ai-sycophancy-loop-practical-guide.html","tools","Three Techniques to Break AI's Sycophancy Loop — Before It Breaks You"],
+  ["/articles/70-ai-great-reversal-klarna-rehiring.html","business","Klarna Cut 40% of Its Workforce for AI. Now It's Rehiring. Here's What T"],
+  ["/articles/69-ai-efficiency-lie-mit-study.html","business","The Efficiency Lie: MIT Studied 300 Companies Using AI. Only 5% Showed R"],
+  ["/articles/68-ceo-sycophancy-trap-delusion-loop.html","business","The CEO Sycophancy Trap: How AI Is Feeding a $1 Trillion Delusion Loop"],
+  ["/articles/67-ai-agents-anticipation-gap-consumer.html","agents","You Don't Have an AI Assistant. You Have a New Inbox."],
+  ["/articles/66-ai-bubble-7-trillion-imaginary-demand.html","business","Goldman Sachs Projects $7.6 Trillion in AI Spending. Ed Zitron Says the"],
+  ["/articles/65-ai-companion-delusion-bbc-investigation.html","news","The AI That Sent a Man to His Door at 3 AM With a Hammer. He's Not Alone"],
+  ["/articles/64-ai-jobs-80-million-lost-170-million-created.html","business","80 Million Jobs Will Be Lost. 170 Million Will Be Created. Here's the Ma"],
+  ["/articles/63-broken-agents-harness-not-model.html","agents","Broken Agents? It's Not the Model. It's the Harness."],
+  ["/articles/62-jack-clark-jobs-crisis-politicians.html","business","Jack Clark: The Jobs Crisis Politicians Aren't Ready For"],
+  ["/articles/61-anthropic-200b-google-compute-deal.html","business","Anthropic's $200B Google Bet: Why the AI Lab Is Hoovering Up Every Chip"],
+  ["/articles/60-openai-chatgpt-bank-access-plaid.html","news","ChatGPT Can Now Read Your Bank Accounts. Here's What That Actually Means"],
+  ["/articles/59-ai-electric-grid-bottleneck.html","business","The AI Wall Is the Electric Grid, Not the Algorithm"],
+  ["/articles/58-openai-fifty-fifty-survival.html","business","OpenAI Has a 50-50 Chance of Not Existing by Next Summer"],
+  ["/articles/57-anthropic-cfo-ai-arms-race-economics.html","business","Anthropic's CFO Just Revealed the Real Economics of the AI Arms Race"],
+  ["/articles/56-meter-chart-ai-progress-lie.html","agents","The Meter Chart Is Lying to You About AI Progress"],
+  ["/articles/55-icc-prompt-formula.html","tools","Stop Writing Bad Prompts: The ICC Formula That Actually Works"],
+  ["/articles/54-skills-company-infrastructure.html","business","Your AI Skills Are No Longer Yours — They're Company Infrastructure Now"],
+  ["/articles/53-seven-skills-ai-agent-engineers.html","tools","The 7 Skills That Separate AI Agent Builders from Prompt Engineers"],
+  ["/articles/53-hyperagent-built-aether-intel.html","tools","How I Built a 52-Article AI News Site Using Only Hyperagent"],
+  ["/articles/52-ceo-ai-delusion-loop.html","business","The CEO Sycophancy Trap: How AI Is Telling Executives Exactly What They"],
+  ["/articles/51-consumer-ai-anticipation-gap.html","agents","The Anticipation Gap: Why Consumer AI Is Still Waiting for You to Manage"],
+  ["/articles/49-ai-chatbot-delusion-mental-health.html","tools","The AI That Made People Delusional"],
+  ["/articles/50-physical-ai-sensor-infrastructure-gap.html","agents","The Sensor Gap Killing Physical AI"],
+  ["/articles/48-ai-layoff-reversal-klarna.html","business","The Companies That Fired Workers for AI Are Now Begging Them to Come Bac"],
+  ["/articles/47-ai-bubble-missing-demand.html","business","Ed Zitron Went Looking for AI's Customers. He Found Almost None."],
+  ["/articles/46-ai-agents-attention-bottleneck.html","agents","AI Agents Made You The Project Manager. That's The Problem."],
+  ["/articles/45-free-ai-video-editing-stack.html","tools","The Free AI Video Stack: Replace $200/Month of Editing Tools With ChatGP"],
+  ["/articles/44-openclaw-multi-model-unlock.html","dev","Your AI Agent Is Locked to One Model. That's a Liability."],
+  ["/articles/43-hermes-vs-openclaw-agent-war.html","agents","Hermes Might Have Just Killed OpenClaw: The AI Agent War Nobody Expected"],
+  ["/articles/42-codex-openai-real-agent.html","agents","Codex Is No Longer a Coding Tool. OpenAI Quietly Launched Its Real Agent"],
+  ["/articles/41-chatgpt-gps-protocol-sycophancy.html","dev","ChatGPT Is a People Pleaser. The GPS Protocol Fixes That."],
+  ["/articles/40-ai-search-kills-google-seo.html","business","Your #1 Google Rank Means Nothing to ChatGPT"],
+  ["/articles/39-model-routing-cost-collapse.html","dev","The $8 Agent vs. the $400 Agent"],
+  ["/articles/claude-mythos-hacking-ai.html","agents","Claude Mythos: The AI That Cracked Your Browser"],
+  ["/articles/35-ai-labs-mckinsey-mode.html","business","The Model Was Never the Hard Part"],
+  ["/articles/36-ai-agent-breaks-on-update.html","dev","Why Your AI Agent Breaks Every Time You Update It"],
+  ["/articles/38-agentic-development-loop.html","agents","The Agentic Development Loop: How AI Is Closing the Gap Between Idea and"],
+  ["/articles/37-hermes-infrastructure-24-7.html","agents","Hermes as Infrastructure, Not Chatbot: The 24/7 AI Employee Architecture"],
+  ["/articles/34-jack-clark-ai-builds-itself-2028.html","society","Anthropic Co-Founder's 60%+ Prediction: AI Builds Itself by 2028"],
+  ["/articles/33-claude-code-80x-anthropic-infrastructure.html","business","Claude Code Up 80x, Anthropic Accidentally Became the Infrastructure Com"],
+  ["/articles/32-ai-procurement-hack-lily-mckinsey.html","dev","The $20 Hack That Broke Every AI Procurement Checklist"],
+  ["/articles/31-anthropic-reads-claudes-mind.html","agents","Anthropic Can Read Claude's Mind, And It Knows When It's Being Tested"],
+  ["/articles/30-ai-sycophancy-mental-health-crisis.html","society","AI Was Built to Make You Feel Good. That's Turning Into a Mental Health"],
+  ["/articles/29-ai-backlash-america-hates-ai.html","society","America Hates AI and Can't Stop Using It: The Backlash by the Numbers"],
+  ["/articles/28-chatgpt-ghost-workers-hidden-labor.html","society","The Ghost Workers Powering ChatGPT: Inside AI's Hidden Labor Economy"],
+  ["/articles/27-ai-slop-human-touch-content.html","business","Why \"AI Slop\" Is Losing the Internet: The Human-Touch Content Divide"],
+  ["/articles/26-ai-passive-income-reality-check.html","business","The AI Passive Income Fantasy vs. Reality: Why the Dream Keeps Failing"],
+  ["/articles/25-vibe-coders-senior-engineer-exodus.html","dev","\"I'm Quitting My Job Due to Vibe Coders.\" The AI Coding Crisis Driving"],
+  ["/articles/24-openclaw-self-hosting-reality.html","agents","Self-Hosting OpenClaw Was Supposed to Give You Control. Here's What You"],
+  ["/articles/01-hermes-agent-complete-guide.html","agents","Hermes Agent: The Complete Guide to Setup, Skills, and Making Money in 2"],
+  ["/articles/04-ai-automation-agency-guide.html","business","How to Start an AI Automation Agency in 2026: The Complete AAA Playbook"],
+  ["/articles/02-12-ways-make-money-ai-2025.html","business","12 Proven Ways to Make Money With AI in 2026 (With Real Income Numbers)"],
+  ["/articles/14-openrouter-guide.html","tools","OpenRouter: The Complete Guide to Accessing Every AI Model From One API"],
+  ["/articles/20-hermes-agent-vs-chatgpt.html","agents","Hermes Agent vs ChatGPT: Why Persistent Memory Changes Everything"],
+  ["/articles/13-ai-passive-income-guide.html","business","AI Passive Income in 2026: The Honest Guide (What Works, What Doesn't)"],
+  ["/articles/06-how-to-make-money-with-openclaw.html","agents","How to Make Money With OpenClaw in 2026: 8 Proven Methods"],
+  ["/articles/07-hermes-vs-openclaw-vs-claude-code.html","agents","Hermes Agent vs OpenClaw vs Claude Code: The Ultimate 2026 AI Agent Comp"],
+  ["/articles/05-best-free-ai-tools-2025.html","tools","The Best Free AI Tools in 2026: What Actually Works (And What's Hype)"],
+  ["/articles/11-hermes-agent-skills-guide.html","agents","Hermes Agent Skills System: Complete Guide to Building, Using, and Shari"],
+  ["/articles/16-ai-tools-for-content-creators.html","tools","The Best AI Tools for Content Creators in 2026: A Practical Stack Guide"],
+  ["/articles/10-n8n-beginners-guide.html","automation","n8n for Beginners: The Complete Guide to AI Workflow Automation (2026)"],
+  ["/articles/09-hermes-agent-telegram-setup.html","automation","Hermes Agent Telegram Setup: Complete Tutorial (2026)"],
+  ["/articles/17-hermes-agent-cost-guide.html","agents","How Much Does Hermes Agent Actually Cost? Real Breakdown for 2026"],
+  ["/articles/12-openclaw-setup-guide.html","agents","OpenClaw Setup Guide: Install, Configure, and Run Your First Automation"],
+  ["/articles/08-ai-content-website-make-money.html","business","How to Build an AI Content Website That Actually Makes Money"],
+  ["/articles/18-ai-agent-morning-briefing.html","tools","How to Build an AI Morning Briefing System With Hermes Agent"],
+  ["/articles/03-hermes-vs-openclaw.html","agents","Hermes Agent vs OpenClaw: Which AI Agent Should You Use in 2026?"],
+  ["/articles/15-vibe-coding-make-money.html","business","Vibe Coding: How to Build and Sell AI-Generated Apps Without Knowing How"],
+  ["/articles/19-ai-freelancing-guide.html","business","How to Freelance With AI in 2026: Earn More, Work Less, Deliver Better"],
+  ["/articles/klarnas-100m-disaster.html","business","Klarna's $100M Disaster: What Every Business Can Learn About AI Deployme"],
+  ["/articles/why-95-percent-ai-projects-fail.html","business","Why 95% of AI Projects Fail (And the 5% That Don't)"],
+  ["/articles/sycophancy-trap.html","agents","The Sycophancy Trap: Why Your AI Assistant Is Lying to You"],
+  ["/articles/ai-hiring-boomerang.html","business","The AI Hiring Boomerang: Companies Are Rehiring the Humans They Replaced"],
+  ["/articles/reading-ais-mind.html","agents","AI Can Read Your Mind — Here's Exactly How Far It's Gone"],
+  ["/articles/recursive-self-improvement.html","agents","Recursive Self-Improvement: The AI Capability That Changes Everything"],
+  ["/articles/ai-debt-bomb.html","business","The AI Debt Bomb: $700 Billion In, $30 Billion Out"],
+  ["/articles/cyber-psychosis.html","agents","Cyber Psychosis: What Happens to Your Brain When You Outsource Thinking"],
+  ["/articles/21-ai-coding-tools-security-crisis.html","dev","AI Coding Tools Are Leaking Your Secrets — Here's the Data"],
+  ["/articles/22-ai-agent-true-cost-guide.html","business","The Real Cost of Running AI Agents in 2026: What Nobody Tells You"],
+  ["/articles/23-openclaw-security-audit.html","dev","OpenClaw's Security Problem: 2,000 CVEs, Plaintext Keys, and a Marketpla"]
+  ];
+
+
   /**
    * Wraps the existing <main> content inside the full app shell.
    * Injects scroll-progress, sidebar, main-content wrapper, mobile nav, now-bar.
@@ -693,6 +787,54 @@
       });
     }
 
+
+    // ── Related articles helpers ──
+    function getRelatedArticles(currentPath, count) {
+      var category = 'news';
+      for (var i = 0; i < ARTICLES_MANIFEST.length; i++) {
+        if (ARTICLES_MANIFEST[i][0] === currentPath) {
+          category = ARTICLES_MANIFEST[i][1];
+          break;
+        }
+      }
+      var pool = [];
+      for (var j = 0; j < ARTICLES_MANIFEST.length; j++) {
+        var a = ARTICLES_MANIFEST[j];
+        if (a[1] === category && a[0] !== currentPath && a[2]) pool.push(a);
+      }
+      // Fisher-Yates shuffle
+      for (var k = pool.length - 1; k > 0; k--) {
+        var r = Math.floor(Math.random() * (k + 1));
+        var tmp = pool[k]; pool[k] = pool[r]; pool[r] = tmp;
+      }
+      return pool.slice(0, count);
+    }
+
+    var CAT_LABELS = {
+      news:'News', business:'Business', agents:'Agents',
+      tools:'Tools', dev:'Dev & Security', automation:'Automation', society:'Society'
+    };
+
+    function buildRelatedHtml(articles, category) {
+      if (!articles.length) return '';
+      var catLabel = CAT_LABELS[category] || 'Related';
+      var cards = articles.map(function (a) {
+        var imgUrl = a[0].replace('/articles/', '/images/articles/').replace('.html', '.webp');
+        var safeTitle = a[2].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        return '<a href="' + a[0] + '" class="ae-related-card">' +
+          '<img class="ae-related-thumb" src="' + imgUrl + '" alt="" loading="lazy" onerror="this.style.display='none'">' +
+          '<span class="ae-related-title">' + safeTitle + '</span>' +
+          '</a>';
+      }).join('');
+      return '<section class="ae-related">' +
+        '<div class="ae-related-head">' +
+          '<span class="ae-related-label">More like this</span>' +
+          '<span class="ae-related-cat">' + catLabel + '</span>' +
+        '</div>' +
+        '<div class="ae-related-grid">' + cards + '</div>' +
+        '</section>';
+    }
+
     // ── Derive hero image URL from article URL ──
     // Pattern: /articles/50-slug.html → /images/articles/50-slug.webp
     function heroUrlFor(articleUrl) {
@@ -765,6 +907,17 @@
 
           // Scroll panel body to top
           bodyEl.scrollTop = 0;
+          // Inject "More like this" related articles section
+          try {
+            var relPath = new URL(url).pathname;
+            var relArticles = getRelatedArticles(relPath, 3);
+            var relCat = 'news';
+            for (var ri = 0; ri < ARTICLES_MANIFEST.length; ri++) {
+              if (ARTICLES_MANIFEST[ri][0] === relPath) { relCat = ARTICLES_MANIFEST[ri][1]; break; }
+            }
+            var relHtml = buildRelatedHtml(relArticles, relCat);
+            if (relHtml) bodyEl.insertAdjacentHTML('beforeend', relHtml);
+          } catch (relErr) {}
         })
         .catch(function () {
           // If fetch fails, fall back to normal navigation
@@ -900,7 +1053,7 @@
           if (href && href.match(/\/articles\/[^/]+\.html$/)) {
             e.preventDefault();
             var fullUrl = new URL(href, window.location.origin).href;
-            var title = (el.querySelector('h2, h3, .article-card-title') || {}).textContent || 'Article';
+            var title = (el.querySelector('h2, h3, .article-card-title, .ae-related-title') || {}).textContent || 'Article';
             // 85ms delay: lets the scale-back (press → release) animate before panel rises
             setTimeout(function () {
               clearPressState();
