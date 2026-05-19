@@ -69,6 +69,19 @@
   </a>
 </nav>`;
 
+  // ── Buy Me a Coffee ──
+  var BMC_HTML =
+    '<section class="ae-bmc">' +
+      '<div class="ae-bmc-inner">' +
+        '<span class="ae-bmc-icon" aria-hidden="true">☕</span>' +
+        '<div class="ae-bmc-text">' +
+          '<strong>Enjoying Aether Intel?</strong>' +
+          '<span>No ads, no paywalls. A coffee keeps the signal running.</span>' +
+        '</div>' +
+        '<a href="https://buymeacoffee.com/quantummerlin" target="_blank" rel="noopener noreferrer" class="ae-bmc-btn">Buy me a coffee</a>' +
+      '</div>' +
+    '</section>';
+
   // ── Articles manifest: [path, category, title] ──
   // Powers "More like this" related articles section in the AePanel.
   var ARTICLES_MANIFEST = [
@@ -932,6 +945,9 @@
             var relHtml = buildRelatedHtml(relArticles, relCat);
             if (relHtml) bodyEl.insertAdjacentHTML('beforeend', relHtml);
           } catch (relErr) {}
+
+          // Buy Me a Coffee — always at the very end of every article
+          bodyEl.insertAdjacentHTML('beforeend', BMC_HTML);
         })
         .catch(function () {
           // If fetch fails, fall back to normal navigation
@@ -1131,6 +1147,24 @@
   }
 
   // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // BUY ME A COFFEE — standalone article pages
+  // Appends the BMC section after the article body when visiting an article
+  // URL directly (not via the AePanel, which injects it separately).
+  // ---------------------------------------------------------------------------
+  function injectBMC() {
+    var isArticle = document.body.classList.contains('standalone-nav') ||
+                    !!document.querySelector('main.article-page');
+    if (!isArticle) return;
+    // Don't double-inject if already present
+    if (document.querySelector('.ae-bmc')) return;
+    var target = document.querySelector('main') ||
+                 document.querySelector('.article-page') ||
+                 document.querySelector('article');
+    if (!target) return;
+    target.insertAdjacentHTML('beforeend', BMC_HTML);
+  }
+
   // INIT — DOMContentLoaded
   // ---------------------------------------------------------------------------
 
@@ -1144,6 +1178,7 @@
     initCardGlow();
     initSearch();
     injectArticleBackNav(); // Back nav for new-template articles
+    injectBMC();            // Buy Me a Coffee at end of article
     initArticlePanel();     // Spotify swipe-up reader
     loadOpenRouterModels(); // No-ops if #modelsGrid not present
   });
