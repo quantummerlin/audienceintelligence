@@ -468,8 +468,21 @@
       return html;
     }
 
+    // Set animation duration so ticker scrolls at a comfortable ~55px/second
+    // regardless of how many items are loaded.
+    var TICKER_PX_PER_SEC = 55;
+    function setTickerSpeed() {
+      requestAnimationFrame(function () {
+        var halfWidth = tickerTrack.scrollWidth / 2; // one copy's worth
+        if (halfWidth < 100) return; // not rendered yet, skip
+        var dur = Math.max(20, halfWidth / TICKER_PX_PER_SEC);
+        tickerTrack.style.animationDuration = dur.toFixed(1) + 's';
+      });
+    }
+
     // Paint default items immediately — ticker is never blank
     tickerTrack.innerHTML = buildTickerHTML(defaultItems);
+    setTickerSpeed();
 
     // Then try to fetch fresh headlines and swap in if available
     fetch('/data/ticker.json')
@@ -484,6 +497,7 @@
           tickerTrack.innerHTML = buildTickerHTML(data.items);
           void tickerTrack.offsetWidth; // force reflow so animation truly resets
           tickerTrack.style.animation = ''; // hand control back to CSS
+          setTickerSpeed();
         }
       })
       .catch(function () { /* default already painted */ });
