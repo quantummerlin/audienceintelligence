@@ -822,7 +822,7 @@
         var imgUrl = a[0].replace('/articles/', '/images/articles/').replace('.html', '.webp');
         var safeTitle = a[2].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         return '<a href="' + a[0] + '" class="ae-related-card">' +
-          '<img class="ae-related-thumb" src="' + imgUrl + '" alt="" loading="lazy" onerror="this.style.display='none'">' +
+          '<img class="ae-related-thumb" src="' + imgUrl + '" alt="" loading="lazy" onerror="this.hidden=true">' +
           '<span class="ae-related-title">' + safeTitle + '</span>' +
           '</a>';
       }).join('');
