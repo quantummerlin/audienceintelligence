@@ -76,6 +76,27 @@
   function injectAppShell() {
     const body = document.body;
 
+    // New-template standalone articles already have a full .app-shell in HTML.
+    // Skip full injection for these pages but still add supplementary elements.
+    if (body.querySelector('.app-shell')) {
+      if (!body.querySelector('.scroll-progress')) {
+        var sp = document.createElement('div');
+        sp.className = 'scroll-progress';
+        body.prepend(sp);
+      }
+      if (!body.querySelector('.mobile-bottom-nav')) {
+        var mnw = document.createElement('div');
+        mnw.innerHTML = MOBILE_NAV_HTML.trim();
+        body.appendChild(mnw.firstElementChild);
+      }
+      if (!body.querySelector('.now-bar')) {
+        var nbw = document.createElement('div');
+        nbw.innerHTML = NOW_BAR_HTML.trim();
+        body.appendChild(nbw.firstElementChild);
+      }
+      return;
+    }
+
     // Article pages use a .standalone-nav + content wrapper (either .page-wrap
     // or .article-hero/.article-wrap) instead of a <main> element.
     // Collect all non-script body children, strip the standalone-nav,
@@ -888,6 +909,54 @@
   }
 
   // ---------------------------------------------------------------------------
+  // ARTICLE BACK NAVIGATION (new-template articles with img.article-hero)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * For new-template articles that use <img class="article-hero"> directly,
+   * wraps the image in a relative container and overlays a back-navigation link.
+   * The back URL is derived from document.referrer (same origin) or defaults
+   * to /articles.html.
+   */
+  function injectArticleBackNav() {
+    var heroImg = document.querySelector('img.article-hero');
+    if (!heroImg) return;
+
+    // Wrap img in a positioned container so we can overlay the back link
+    var wrap = document.createElement('div');
+    wrap.className = 'article-hero-wrap';
+    heroImg.parentNode.insertBefore(wrap, heroImg);
+    wrap.appendChild(heroImg);
+
+    // Determine back URL: prefer same-origin referrer, fallback to articles
+    var backUrl = '/articles.html';
+    var backLabel = '← Articles';
+    try {
+      if (document.referrer) {
+        var ref = new URL(document.referrer);
+        if (ref.hostname === location.hostname && ref.pathname !== location.pathname) {
+          backUrl = ref.pathname + (ref.search || '');
+          if (ref.pathname === '/' || ref.pathname === '/index.html') {
+            backLabel = '← Home';
+          } else {
+            backLabel = '← Back';
+          }
+        }
+      }
+    } catch (e) {}
+
+    // Create and append the overlay back-nav
+    var backNav = document.createElement('div');
+    backNav.className = 'article-back-nav';
+    var backLink = document.createElement('a');
+    backLink.href = backUrl;
+    backLink.className = 'article-back-btn';
+    backLink.textContent = backLabel;
+    backNav.appendChild(backLink);
+    wrap.appendChild(backNav);
+  }
+
+  // ---------------------------------------------------------------------------
   // INIT — DOMContentLoaded
   // ---------------------------------------------------------------------------
 
@@ -900,7 +969,8 @@
     initTicker();
     initCardGlow();
     initSearch();
-    initArticlePanel(); // Spotify swipe-up reader
+    injectArticleBackNav(); // Back nav for new-template articles
+    initArticlePanel();     // Spotify swipe-up reader
     loadOpenRouterModels(); // No-ops if #modelsGrid not present
   });
 
