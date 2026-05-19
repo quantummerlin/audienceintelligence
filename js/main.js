@@ -694,11 +694,11 @@
     }
 
     // ── Derive hero image URL from article URL ──
-    // Pattern: /articles/50-slug.html → /images/articles/50-slug-hero.webp
+    // Pattern: /articles/50-slug.html → /images/articles/50-slug.webp
     function heroUrlFor(articleUrl) {
       try {
         var path = new URL(articleUrl).pathname;
-        return path.replace('/articles/', '/images/articles/').replace('.html', '-hero.webp');
+        return path.replace('/articles/', '/images/articles/').replace('.html', '.webp');
       } catch (e) { return null; }
     }
 
@@ -747,9 +747,16 @@
           bodyEl.innerHTML = heroTag + styles +
             '<div class="ae-panel-article">' + content + '</div>';
 
-          // Hide duplicate hero inside article body (article has its own .article-hero img)
+          // Hide the article's own .article-hero while the panel hero loads above it.
+          // If the panel hero fails (404), restore the article hero as fallback.
           var articleHero = bodyEl.querySelector('.ae-panel-article .article-hero');
-          if (articleHero && heroTag) articleHero.style.display = 'none';
+          var panelHero   = bodyEl.querySelector('.ae-panel-hero');
+          if (articleHero && panelHero) {
+            articleHero.style.display = 'none';
+            panelHero.addEventListener('error', function () {
+              if (articleHero) articleHero.style.display = '';
+            });
+          }
 
           // Make any scroll-reveal elements immediately visible inside panel
           bodyEl.querySelectorAll('.reveal, .reveal-scale, .reveal-stagger').forEach(function (el) {
