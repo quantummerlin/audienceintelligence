@@ -326,6 +326,37 @@
       .platform-bar-stat { display: none; }
       .agents-hero h1 { font-size: 1.8rem; }
     }
+
+    /* ── Articles Strip ── */
+    .articles-strip { padding: 52px 0 16px; }
+    .article-strip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    @media (max-width: 700px) { .article-strip-grid { grid-template-columns: 1fr; } }
+    .article-strip-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-card); overflow: hidden;
+      text-decoration: none; display: flex; flex-direction: column;
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+    }
+    .article-strip-card:hover {
+      border-color: rgba(99,102,241,.5);
+      box-shadow: 0 0 0 1px rgba(99,102,241,.15), 0 8px 32px rgba(0,0,0,.4);
+      transform: translateY(-2px);
+    }
+    .article-strip-img-wrap { overflow: hidden; flex-shrink: 0; }
+    .article-strip-img { width: 100%; height: 180px; object-fit: cover; display: block; transition: transform .4s cubic-bezier(.25,.46,.45,.94); }
+    .article-strip-card:hover .article-strip-img { transform: scale(1.05); }
+    .article-strip-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; }
+    .article-strip-title {
+      font-family: var(--font-heading); font-size: .98rem; font-weight: 700;
+      line-height: 1.38; margin: 0 0 10px; color: var(--text-primary);
+      letter-spacing: -.01em;
+    }
+    .article-strip-meta { font-family: var(--font-display); font-size: .65rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); margin-top: auto; }
+
   </style>
   <!-- Fonts — non-blocking -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -388,14 +419,19 @@
     <div class="hero-slideshow" id="agentSlideshow">
       <div class="hero-slides-track" id="agentSlidesTrack">
         <div class="hero-slide-img" style="background-image:url('/images/agents/agent-shield-hero.webp');background-color:#0d1020;"></div>
-       id="agentPrev" aria-label="Previous">&#8249;</button>
+        <div class="hero-slide-img" style="background-image:url('/images/agents/daily-intel-digest-hero.webp');background-color:#0d1020;"></div>
+        <div class="hero-slide-img" style="background-image:url('/images/agents/solo-agent-business-hero.webp');background-color:#0d1020;"></div>
+      </div>
+      <button class="hero-slide-prev" id="agentPrev" aria-label="Previous">&#8249;</button>
       <button class="hero-slide-next" id="agentNext" aria-label="Next">&#8250;</button>
     </div>
 
     <div class="hero-dots-row">
       <div class="hero-slide-dots" id="agentSlideDots">
         <button class="hero-dot active" aria-label="Slide 1"></button>
-      
+        <button class="hero-dot" aria-label="Slide 2"></button>
+        <button class="hero-dot" aria-label="Slide 3"></button>
+      </div>
     </div>
     <div class="hero-content-panel" id="agentContentPanel"></div>
 
@@ -404,7 +440,7 @@
       <div class="container">
         <div class="badge badge-primary" style="margin-bottom:16px;"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Downloadable AI Agents</div>
         <h1>Add Powers to<br><span>Your AI Stack</span></h1>
-        <p class="agents-hero-sub">Each skill is a complete, installable capability — system prompt, model recommendation, cost estimate, and example outputs. One click to install. Works with Claude, GPT, Gemini, and OpenRouter.</p>
+        <p class="agents-hero-sub">Each agent is a production-ready AI system — system prompt, model hint, and example interactions included. Download the JSON and import into Hyperagent, Claude Projects, Custom GPTs, or any platform. Free forever.</p>
         <div class="agents-stats-row">
           <div class="agents-stat">
             <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -494,6 +530,42 @@
       </div>
     </section>
 
+
+    <!-- Featured Articles -->
+    <section class="hub-section articles-strip">
+      <div style="max-width:1200px;margin:0 auto;padding:0 24px;">
+        <div class="skills-section-header" style="margin-bottom:28px;">
+          <span class="skills-section-title">From the Intel Feed</span>
+          <a href="/index.html#articles" style="font-family:var(--font-display);font-size:.67rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;">All articles &rarr;</a>
+        </div>
+        <div class="article-strip-grid">
+
+          <a href="/articles/lethal-trifecta-ai-agent-security.html" class="article-strip-card">
+            <div class="article-strip-img-wrap">
+              <img src="/images/articles/lethal-trifecta-ai-agent-security-hero.webp" alt="The Lethal Trifecta" class="article-strip-img" loading="lazy">
+            </div>
+            <div class="article-strip-body">
+              <span class="badge badge-agents" style="margin-bottom:10px;">AI Security</span>
+              <h3 class="article-strip-title">The Lethal Trifecta: Three Conditions That Turn Any AI Agent Into a Liability</h3>
+              <div class="article-strip-meta">May 20, 2026 &middot; 6 min read</div>
+            </div>
+          </a>
+
+          <a href="/articles/authority-laundering-ai-agent-attack.html" class="article-strip-card">
+            <div class="article-strip-img-wrap">
+              <img src="/images/articles/authority-laundering-ai-agent-attack-hero.webp" alt="Authority Laundering" class="article-strip-img" loading="lazy">
+            </div>
+            <div class="article-strip-body">
+              <span class="badge badge-agents" style="margin-bottom:10px;">AI Security</span>
+              <h3 class="article-strip-title">Authority Laundering: The Attack That Doesn&rsquo;t Need a Password</h3>
+              <div class="article-strip-meta">May 20, 2026 &middot; 6 min read</div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
     <!-- Contribute -->
     <section class="hub-section">
       <div class="agents-contribute" style="text-align:center;padding:60px 24px;background:linear-gradient(180deg,rgba(13,13,26,0.6),rgba(7,7,15,0.8));border-radius:20px;border:1px solid rgba(245,158,11,0.18);">
@@ -516,6 +588,20 @@
         title: "Agent Shield",
         desc:  "Reviews your system prompt, architecture, and permission tiers for the Lethal Trifecta: the three conditions that caused the Claude DB wipe, Google HDD deletion, and $200K Morse code hack.",
         href:  "/agents/agent-shield.html"
+      },
+      {
+        badge: "badge-secondary",
+        cat:   "Productivity",
+        title: "Daily Intel Digest",
+        desc:  "Reads your emails, messages, and feeds each morning and delivers a sub-300-word briefing: the signal, on your radar, one action, and the blind spot.",
+        href:  "/agents/daily-intel-digest.html"
+      },
+      {
+        badge: "badge-business",
+        cat:   "Business",
+        title: "Solo Agent Business Advisor",
+        desc:  "The $5K/month playbook for building an AI agent management business. Target industries, sales scripts, tech stack, and what actually goes wrong.",
+        href:  "/agents/solo-agent-business.html"
       }
     ];
 
