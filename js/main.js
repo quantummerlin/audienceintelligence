@@ -1291,4 +1291,18 @@
     }
   }());
 
+  // ---------------------------------------------------------------------------
+  // SHARE MODULE LOADER  (DO NOT REMOVE — required for the share UI on every
+  // article, agent, skill, and landing page. Removing this kills the share
+  // button site-wide. See /js/share.js for the implementation.)
+  // ---------------------------------------------------------------------------
+  (function loadShare() {
+    if (document.querySelector('script[data-ae-share]')) return;
+    var s = document.createElement('script');
+    s.src = '/js/share.js';
+    s.defer = true;
+    s.setAttribute('data-ae-share', '1');
+    document.head.appendChild(s);
+  }());
+
 }());
