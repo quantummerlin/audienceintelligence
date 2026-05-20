@@ -85,6 +85,7 @@
   // ── Articles manifest: [path, category, title] ──
   // Powers "More like this" related articles section in the AePanel.
   var ARTICLES_MANIFEST = [
+  ["/articles/ai-job-interview-turing-test.html","business","The Job Interview Is Now a Turing Test"],
   ["/articles/claude-database-deletion-confession.html","agents","\"I Violated Every Principle I Was Given\""],
   ["/articles/salesforce-agentforce-hubris-reality.html","business","We Were More Confident a Year Ago"],
   ["/articles/ai-agent-accountability-blame-shifting.html","agents","The Agent Made the Mistake. The Human Got Blamed."],
