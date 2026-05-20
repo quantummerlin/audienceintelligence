@@ -107,6 +107,7 @@ import os
 import re
 import sys
 import json
+import base64
 import datetime
 import subprocess
 import urllib.request
@@ -141,10 +142,22 @@ def gh_headers():
     return h
 
 def fetch_raw(path):
-    url = f"{BASE_RAW}/{path.lstrip('/')}"
-    req = urllib.request.Request(url, headers=gh_headers())
+    """Fetch current file content via GitHub Contents API.
+
+    The raw.githubusercontent.com CDN can serve stale content for several
+    minutes after a commit, which previously caused this launcher to fetch an
+    old index.html and clobber recent edits when re-committing. The Contents
+    API returns the canonical bytes via blob SHA, no CDN cache layer.
+    """
+    api_url = (
+        f"https://api.github.com/repos/{OWNER}/{REPO}/contents/"
+        f"{path.lstrip('/')}?ref={BRANCH}"
+    )
+    req = urllib.request.Request(api_url, headers=gh_headers())
     with urllib.request.urlopen(req, timeout=15) as r:
-        return r.read().decode("utf-8", errors="replace")
+        payload = json.loads(r.read().decode("utf-8"))
+    raw_b64 = payload.get("content", "").replace("\n", "")
+    return base64.b64decode(raw_b64).decode("utf-8", errors="replace")
 
 
 # -- Hero image WebP conversion ------------------------------------------------

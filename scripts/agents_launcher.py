@@ -85,6 +85,7 @@ import os
 import re
 import sys
 import json
+import base64
 import datetime
 import subprocess
 import urllib.request
@@ -120,11 +121,21 @@ def gh_headers():
 
 
 def fetch_raw(path):
-    """Fetch a file from raw.githubusercontent.com. CDN-cached but fine for non-just-committed files."""
-    url = f"{BASE_RAW}/{path.lstrip('/')}"
-    req = urllib.request.Request(url, headers=gh_headers())
+    """Fetch current file content via GitHub Contents API.
+
+    raw.githubusercontent.com is CDN-cached and can return stale content for
+    several minutes after a commit, which used to cause this launcher to
+    clobber recent edits when it re-committed. The Contents API returns the
+    canonical bytes via blob SHA, no CDN cache layer.
+    """
+    api_url = (
+        f"{BASE_API}/{path.lstrip('/')}?ref={BRANCH}"
+    )
+    req = urllib.request.Request(api_url, headers=gh_headers())
     with urllib.request.urlopen(req, timeout=15) as r:
-        return r.read().decode("utf-8", errors="replace")
+        payload = json.loads(r.read().decode("utf-8"))
+    raw_b64 = payload.get("content", "").replace("\n", "")
+    return base64.b64decode(raw_b64).decode("utf-8", errors="replace")
 
 
 def fetch_via_api(path):
