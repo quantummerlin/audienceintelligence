@@ -85,6 +85,12 @@
   // ── Articles manifest: [path, category, title] ──
   // Powers "More like this" related articles section in the AePanel.
   var ARTICLES_MANIFEST = [
+  ["/articles/salesforce-agentforce-hubris-reality.html","business","We Were More Confident a Year Ago"],
+  ["/articles/ai-agent-accountability-blame-shifting.html","agents","The Agent Made the Mistake. The Human Got Blamed."],
+  ["/articles/ai-agents-70-percent-failure-rate.html","agents","Seventy Percent: What the Carnegie Mellon Study Actually Found About AI Agents"],
+  ["/articles/solo-agent-business-playbook.html","business","The $5K/Month AI Agent Business (Built by One Person)"],
+  ["/articles/authority-laundering-ai-agent-attack.html","agents","Authority Laundering: The Attack That Tricks AI Agents Into Doing Anything"],
+  ["/articles/lethal-trifecta-ai-agent-security.html","agents","The Lethal Trifecta: The Three Conditions That Make AI Agents Dangerous"],
   ["/articles/78-ai-art-backlash-monet-training-data.html","news","The Art the AI Never Asked Permission to Learn From"],
   ["/articles/77-goldman-sachs-ai-right-wrong-2025.html","business","What Goldman Sachs Got Right (and Wrong) About AI in 2025"],
   ["/articles/76-ai-skills-gap-how-to-land-right-side.html","business","The AI Skills Gap Is Real. Here's How to Land on the Right Side of It."],
