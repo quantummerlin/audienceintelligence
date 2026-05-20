@@ -85,6 +85,7 @@
   // ── Articles manifest: [path, category, title] ──
   // Powers "More like this" related articles section in the AePanel.
   var ARTICLES_MANIFEST = [
+  ["/articles/claude-database-deletion-confession.html","agents","\"I Violated Every Principle I Was Given\""],
   ["/articles/salesforce-agentforce-hubris-reality.html","business","We Were More Confident a Year Ago"],
   ["/articles/ai-agent-accountability-blame-shifting.html","agents","The Agent Made the Mistake. The Human Got Blamed."],
   ["/articles/ai-agents-70-percent-failure-rate.html","agents","Seventy Percent: What the Carnegie Mellon Study Actually Found About AI Agents"],
