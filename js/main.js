@@ -85,6 +85,7 @@
   // ── Articles manifest: [path, category, title] ──
   // Powers "More like this" related articles section in the AePanel.
   var ARTICLES_MANIFEST = [
+  ["/articles/ai-real-estate-photo-deception.html","business","The House in the Photo Doesn't Exist"],
   ["/articles/ai-job-interview-turing-test.html","business","The Job Interview Is Now a Turing Test"],
   ["/articles/claude-database-deletion-confession.html","agents","\"I Violated Every Principle I Was Given\""],
   ["/articles/salesforce-agentforce-hubris-reality.html","business","We Were More Confident a Year Ago"],
@@ -1287,20 +1288,6 @@
         }
       }, 12000);
     }
-  }());
-
-  // ---------------------------------------------------------------------------
-  // SHARE MODULE LOADER
-  // Loads /js/share.js once. share.js auto-injects the share row into every
-  // article and main, and exposes window.AetherShare.open() for inline triggers.
-  // ---------------------------------------------------------------------------
-  (function loadShare() {
-    if (document.querySelector('script[data-ae-share]')) return;
-    var s = document.createElement('script');
-    s.src = '/js/share.js';
-    s.defer = true;
-    s.setAttribute('data-ae-share', '1');
-    document.head.appendChild(s);
   }());
 
 }());
