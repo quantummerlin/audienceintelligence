@@ -1289,4 +1289,18 @@
     }
   }());
 
+  // ---------------------------------------------------------------------------
+  // SHARE MODULE LOADER
+  // Loads /js/share.js once. share.js auto-injects the share row into every
+  // article and main, and exposes window.AetherShare.open() for inline triggers.
+  // ---------------------------------------------------------------------------
+  (function loadShare() {
+    if (document.querySelector('script[data-ae-share]')) return;
+    var s = document.createElement('script');
+    s.src = '/js/share.js';
+    s.defer = true;
+    s.setAttribute('data-ae-share', '1');
+    document.head.appendChild(s);
+  }());
+
 }());
