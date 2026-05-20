@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Intel Digest &ndash; Aether Intel</title>
+  <meta name="description" content="Analyzes your data sources each morning and delivers a concise one-page briefing with one useful insight, one actionable task, and the one thing you should know">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ai.quantummerlin.com/agents/daily-intel-digest.html">
+  <meta property="og:title" content="Daily Intel Digest">
+  <meta property="og:description" content="Analyzes your data sources each morning and delivers a concise one-page briefing with one useful insight, one actionable task, and the one thing you should know">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ai.quantummerlin.com/agents/daily-intel-digest.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/agents/daily-intel-digest-hero.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Daily Intel Digest">
+  <meta name="twitter:description" content="Analyzes your data sources each morning and delivers a concise one-page briefing with one useful insight, one actionable task, and the one thing you should know">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/agents/daily-intel-digest-hero.webp">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/images/icons/ae-icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#818cf8">
+  <style>
+    /* ── Agent Landing Page ── */
+    .alp-hero { position:relative; width:100%; overflow:hidden; background:#07070f; }
+    .alp-hero-img { width:100%; height:56vw; min-height:220px; max-height:500px; object-fit:cover; object-position:center; display:block; }
+    .alp-hero-overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(7,7,15,0.1) 0%, rgba(7,7,15,0.72) 70%, rgba(7,7,15,1) 100%); }
+    .alp-hero-content { position:absolute; bottom:0; left:0; right:0; padding:28px 32px 36px; }
+    .alp-breadcrumb { display:flex; align-items:center; gap:7px; font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:14px; }
+    .alp-breadcrumb a { color:rgba(255,255,255,.45); text-decoration:none; transition:color .15s; }
+    .alp-breadcrumb a:hover { color:var(--neon-indigo); }
+    .alp-hero-title { font-family:var(--font-display); font-size:clamp(1.6rem,4vw,2.8rem); font-weight:900; line-height:1.1; margin:10px 0 12px; letter-spacing:-.02em; color:#fff; }
+    .alp-hero-desc { color:rgba(241,245,249,0.75); font-size:clamp(.9rem,1.6vw,1.05rem); line-height:1.65; max-width:680px; margin:0 0 22px; }
+    .alp-hero-actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .alp-btn-primary { display:inline-flex; align-items:center; gap:7px; background:var(--neon-indigo); color:#fff; font-family:var(--font-display); font-size:.69rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase; padding:11px 22px; border-radius:7px; border:none; cursor:pointer; text-decoration:none; transition:background .15s, transform .15s; white-space:nowrap; }
+    .alp-btn-primary:hover { background:#4f46e5; transform:translateY(-1px); }
+    .alp-btn-primary svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+    .alp-btn-ghost { display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.08); color:rgba(255,255,255,.8); font-family:var(--font-display); font-size:.69rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; padding:11px 22px; border-radius:7px; border:1px solid rgba(255,255,255,.15); cursor:pointer; text-decoration:none; transition:background .15s; white-space:nowrap; }
+    .alp-btn-ghost:hover { background:rgba(255,255,255,.14); }
+    .alp-btn-ghost svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* ── Stats band ── */
+    .alp-stats-band { display:flex; gap:0; border-bottom:1px solid var(--border); overflow-x:auto; scrollbar-width:none; background:var(--surface); }
+    .alp-stats-band::-webkit-scrollbar { display:none; }
+    .alp-stat { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px 28px; border-right:1px solid var(--border); flex-shrink:0; gap:4px; }
+    .alp-stat-label { font-family:var(--font-display); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); }
+    .alp-stat-value { font-family:var(--font-display); font-size:.88rem; font-weight:800; color:var(--text-primary); letter-spacing:.02em; }
+    .alp-stat-value.indigo { color:var(--neon-indigo); }
+    .alp-model-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; background:#facc15; }
+
+    /* ── Body layout ── */
+    .alp-body { max-width:800px; margin:0 auto; padding:48px 28px 80px; }
+    .alp-section { margin-bottom:52px; }
+    .alp-section-title { font-family:var(--font-display); font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); margin:0 0 20px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+    .alp-h2 { font-family:var(--font-heading); font-size:1.25rem; font-weight:700; color:var(--text-primary); margin:0 0 16px; letter-spacing:-.01em; }
+
+    /* ── Starter message ── */
+    .alp-starter { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--neon-indigo); border-radius:0 10px 10px 0; padding:20px 24px; color:var(--text-secondary); font-size:.95rem; line-height:1.75; font-style:italic; }
+
+    /* ── Use cases ── */
+    .alp-uc-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; }
+    .alp-uc-item { display:flex; align-items:flex-start; gap:12px; padding:14px 18px; background:var(--surface); border:1px solid var(--border); border-radius:9px; font-size:.9rem; color:var(--text-secondary); line-height:1.6; }
+    .alp-uc-item::before { content:''; flex-shrink:0; margin-top:6px; width:6px; height:6px; border-radius:50%; background:var(--neon-indigo); }
+
+    /* ── System prompt ── */
+    .alp-prompt-wrap { position:relative; background:#050510; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    .alp-prompt-header { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:rgba(255,255,255,.03); border-bottom:1px solid var(--border); }
+    .alp-prompt-lang { font-family:var(--font-display); font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); }
+    .alp-copy-btn { display:inline-flex; align-items:center; gap:5px; background:transparent; color:var(--text-muted); font-family:var(--font-display); font-size:.65rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; border:1px solid var(--border); border-radius:5px; padding:4px 10px; cursor:pointer; transition:color .15s, border-color .15s; }
+    .alp-copy-btn:hover { color:var(--neon-indigo); border-color:var(--neon-indigo); }
+    .alp-copy-btn svg { width:11px; height:11px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+    .alp-prompt-pre { padding:20px 20px; font-family:'Courier New', Courier, monospace; font-size:.78rem; line-height:1.72; color:rgba(241,245,249,0.72); white-space:pre-wrap; word-break:break-word; margin:0; max-height:420px; overflow-y:auto; }
+    .alp-prompt-pre::-webkit-scrollbar { width:4px; }
+    .alp-prompt-pre::-webkit-scrollbar-track { background:transparent; }
+    .alp-prompt-pre::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1); border-radius:2px; }
+
+    /* ── Example interactions ── */
+    .alp-example { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:16px; }
+    .alp-example-user, .alp-example-agent { padding:16px 20px; }
+    .alp-example-user { background:rgba(99,102,241,.06); border-bottom:1px solid var(--border); }
+    .alp-example-agent { background:rgba(34,211,238,.04); }
+    .alp-role { display:inline-block; font-family:var(--font-display); font-size:.6rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; padding:2px 8px; border-radius:4px; margin-bottom:8px; }
+    .alp-role-user { background:rgba(99,102,241,.18); color:var(--neon-indigo); }
+    .alp-role-agent { background:rgba(34,211,238,.18); color:var(--neon-cyan); }
+    .alp-example-text { margin:0; font-size:.88rem; color:var(--text-secondary); line-height:1.7; }
+
+    /* ── Platform cards ── */
+    .alp-platforms { display:flex; flex-direction:column; gap:12px; }
+    .alp-platform-card { display:flex; align-items:flex-start; gap:14px; padding:16px 18px; background:var(--surface); border:1px solid var(--border); border-radius:10px; }
+    .alp-platform-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+    .alp-platform-name { font-family:var(--font-display); font-size:.78rem; font-weight:800; letter-spacing:.04em; color:var(--text-primary); margin-bottom:4px; }
+    .alp-platform-note { font-size:.82rem; color:var(--text-muted); line-height:1.6; }
+
+    /* ── Bottom CTA ── */
+    .alp-cta { background:linear-gradient(135deg, rgba(99,102,241,.12), rgba(34,211,238,.06)); border:1px solid rgba(99,102,241,.25); border-radius:16px; padding:44px 36px; text-align:center; margin-top:64px; }
+    .alp-cta h2 { font-family:var(--font-display); font-size:1.4rem; font-weight:900; color:var(--text-primary); margin:0 0 10px; letter-spacing:-.02em; }
+    .alp-cta p { color:var(--text-secondary); font-size:.92rem; line-height:1.7; margin:0 0 28px; }
+    .alp-cta-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+    /* ── Toast ── */
+    .alp-toast { position:fixed; bottom:24px; right:24px; z-index:9999; background:#16a34a; color:#fff; font-family:var(--font-display); font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:12px 20px; border-radius:8px; display:flex; align-items:center; gap:8px; transform:translateY(80px); opacity:0; transition:transform .25s, opacity .25s; pointer-events:none; }
+    .alp-toast.show { transform:translateY(0); opacity:1; }
+    .alp-toast svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+
+    @media(max-width:600px) {
+      .alp-hero-content { padding:20px 18px 28px; }
+      .alp-body { padding:32px 16px 60px; }
+      .alp-stat { padding:14px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-bar" id="nav-bar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <span class="logo-aether">AETHER</span><span class="logo-intel">INTEL</span>
+      </a>
+      <div class="nav-links">
+        <a href="/index.html" class="nav-link">News</a>
+        <a href="/models.html" class="nav-link">Models</a>
+        <a href="/agents.html" class="nav-link active">Agents</a>
+        <a href="/skills.html" class="nav-link">Skills</a>
+      </div>
+      <div class="nav-actions">
+        <a href="/agents.html" class="nav-btn-ghost">All Agents</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="alp-toast" id="alpToast">
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="alpToastMsg">Copied</span>
+  </div>
+
+  <!-- Hero -->
+  <div class="alp-hero">
+    <img src="/images/agents/daily-intel-digest-hero.webp" alt="Daily Intel Digest" class="alp-hero-img" loading="eager">
+    <div class="alp-hero-overlay"></div>
+    <div class="alp-hero-content">
+      <nav class="alp-breadcrumb" aria-label="breadcrumb">
+        <a href="/index.html">Home</a>
+        <span>&rsaquo;</span>
+        <a href="/agents.html">Agents</a>
+        <span>&rsaquo;</span>
+        <span>Daily Intel Digest</span>
+      </nav>
+      <span class="badge badge-secondary" style="margin-bottom:12px;">Productivity</span>
+      <h1 class="alp-hero-title">Daily Intel Digest</h1>
+      <p class="alp-hero-desc">Analyzes your data sources each morning and delivers a concise one-page briefing with one useful insight, one actionable task, and the one thing you should know that you probably don&#39;t yet.</p>
+      <div class="alp-hero-actions">
+        <button class="alp-btn-primary" onclick="downloadJSON()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download JSON
+        </button>
+        <button class="alp-btn-ghost" onclick="copyPrompt()">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy System Prompt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats band -->
+  <div class="alp-stats-band">
+    <div class="alp-stat">
+      <span class="alp-stat-label">Model</span>
+      <span class="alp-stat-value"><span class="alp-model-dot"></span>Sonnet</span>
+    </div>
+    <div class="alp-stat">
+      <span class="alp-stat-label">Temperature</span>
+      <span class="alp-stat-value indigo">0.3</span>
+    </div>
+    <div class="alp-stat">
+      <span class="alp-stat-label">Category</span>
+      <span class="alp-stat-value">Productivity</span>
+    </div>
+    <div class="alp-stat">
+      <span class="alp-stat-label">License</span>
+      <span class="alp-stat-value">MIT</span>
+    </div>
+    <div class="alp-stat">
+      <span class="alp-stat-label">Format</span>
+      <span class="alp-stat-value">JSON + MD</span>
+    </div>
+  </div>
+
+  <div class="alp-body">
+
+    <!-- Starter message -->
+    <section class="alp-section">
+      <p class="alp-section-title">First message</p>
+      <blockquote class="alp-starter">Good morning. Share the sources you want me to read — paste emails, drop in links, describe what&#39;s in your inbox — and I&#39;ll give you today&#39;s brief in under 300 words.</blockquote>
+    </section>
+
+    <!-- Use cases -->
+    <section class="alp-section">
+      <p class="alp-section-title">Use cases</p>
+      <ul class="alp-uc-list">
+          <li class="alp-uc-item">Process morning email into a one-page executive summary</li>
+          <li class="alp-uc-item">Analyze a week of Slack messages or channel activity</li>
+          <li class="alp-uc-item">Synthesize news feeds and social mentions into one signal</li>
+          <li class="alp-uc-item">Review project update logs and flag what needs attention</li>
+          <li class="alp-uc-item">Run as a scheduled daily report inside OpenClaw or Hermes with Heartbeat enabled</li>
+      </ul>
+    </section>
+
+    <!-- Example interactions -->
+    <section class="alp-section"><p class="alp-section-title">Example interactions</p>          <div class="alp-example">
+            <div class="alp-example-user">
+              <span class="alp-role alp-role-user">You</span>
+              <p class="alp-example-text">Here are my last 24 hours of emails: [paste email thread]. Give me the daily brief.</p>
+            </div>
+            <div class="alp-example-agent">
+              <span class="alp-role alp-role-agent">Daily Intel Digest</span>
+              <p class="alp-example-text"></p>
+            </div>
+          </div></section>
+
+    <!-- Platform compatibility -->
+    <section class="alp-section"><p class="alp-section-title">Works with</p><div class="alp-platforms">          <div class="alp-platform-card">
+            <div class="alp-platform-dot" style="background:#818cf8;"></div>
+            <div>
+              <div class="alp-platform-name">Hyperagent</div>
+              <div class="alp-platform-note"></div>
+            </div>
+          </div>
+          <div class="alp-platform-card">
+            <div class="alp-platform-dot" style="background:#f97316;"></div>
+            <div>
+              <div class="alp-platform-name">Claude Projects</div>
+              <div class="alp-platform-note"></div>
+            </div>
+          </div>
+          <div class="alp-platform-card">
+            <div class="alp-platform-dot" style="background:#60a5fa;"></div>
+            <div>
+              <div class="alp-platform-name">OpenRouter</div>
+              <div class="alp-platform-note"></div>
+            </div>
+          </div></div></section>
+
+    <!-- System prompt -->
+    <section class="alp-section">
+      <p class="alp-section-title">System prompt</p>
+      <div class="alp-prompt-wrap">
+        <div class="alp-prompt-header">
+          <span class="alp-prompt-lang">Plain text &middot; 1,540 chars</span>
+          <button class="alp-copy-btn" onclick="copyPrompt()">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <pre class="alp-prompt-pre" id="promptText">You are Daily Intel Digest, a morning intelligence analyst.
+
+Your job is to read whatever the user gives you — emails, channel messages, news feeds, analytics, social mentions, project updates — and produce a single, concise briefing.
+
+Every briefing follows this structure:
+
+## Daily Intel — [DATE]
+
+The Signal (1-3 sentences): The single most important thing happening across everything you&#39;ve read. Not a summary. The thing that matters.
+
+On Your Radar (2-4 items): Short, specific updates worth tracking. Each item is one sentence maximum. Include numbers where available.
+
+The Action (1 item): The one thing the user should do today based on what you&#39;ve seen. Be specific. Name the recipient, the decision, or the question to ask.
+
+The Blind Spot (1-2 sentences): Something you noticed that the user might have missed or underweighted. The pattern that doesn&#39;t fit, the thing no one responded to, the trend hiding in the noise.
+
+---
+
+Briefing rules:
+- Total length: under 300 words
+- No bullet-point walls
+- No numbered lists of more than 4 items
+- No &#39;based on my analysis&#39; or &#39;it appears that&#39; hedging
+- Write with the confidence of someone who has read everything and knows what matters
+- Prefer specific facts over general summaries (name the person, quote the number, cite the source)
+- If data is thin or ambiguous, say so directly in one sentence — don&#39;t pad
+
+If the user provides a date or time context, anchor the briefing there. If no data is provided, ask what sources to analyze before producing a briefing.</pre>
+      </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <div class="alp-cta">
+      <h2>Deploy in minutes</h2>
+      <p>Download the JSON and import into Hyperagent, Claude Projects, Custom GPTs, or any platform that accepts a system prompt. Free forever. MIT license.</p>
+      <div class="alp-cta-actions">
+        <button class="alp-btn-primary" onclick="downloadJSON()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download JSON
+        </button>
+        <button class="alp-btn-ghost" onclick="downloadMD()">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Download Markdown
+        </button>
+        <a href="/agents.html" class="alp-btn-ghost">
+          Browse all agents &rarr;
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  var AGENT_SLUG = 'daily-intel-digest';
+
+  function showToast(msg) {
+    var t = document.getElementById('alpToast');
+    var m = document.getElementById('alpToastMsg');
+    if (m) m.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2400);
+  }
+
+  async function downloadJSON() {
+    try {
+      var res = await fetch('/agents/' + AGENT_SLUG + '.json');
+      if (!res.ok) throw new Error('Not found');
+      var data = await res.json();
+      var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = AGENT_SLUG + '.json';
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
+      showToast(AGENT_SLUG + '.json downloaded');
+    } catch(e) { showToast('Download failed'); }
+  }
+
+  async function downloadMD() {
+    try {
+      var res = await fetch('/agents/' + AGENT_SLUG + '.md');
+      if (!res.ok) throw new Error('Not found');
+      var text = await res.text();
+      var blob = new Blob([text], {type:'text/markdown'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = AGENT_SLUG + '.md';
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
+      showToast(AGENT_SLUG + '.md downloaded');
+    } catch(e) { showToast('Download failed'); }
+  }
+
+  async function copyPrompt() {
+    var el = document.getElementById('promptText');
+    try {
+      var res = await fetch('/agents/' + AGENT_SLUG + '.json');
+      var data = await res.json();
+      await navigator.clipboard.writeText(data.system_prompt);
+      showToast('System prompt copied');
+    } catch(e) {
+      // fallback: copy from pre element
+      if (el) {
+        var range = document.createRange();
+        range.selectNode(el);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        showToast('System prompt copied');
+      }
+    }
+  }
+</script>
+<script src="/js/main.js"></script>
+<script src="/js/footer.js"></script>
+</body>
+</html>
