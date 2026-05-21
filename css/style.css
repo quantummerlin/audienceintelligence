@@ -3999,3 +3999,295 @@ aside.sidebar::before {
   .article-wrap h1 { font-size: 1.65rem; }
   .article-body h2 { font-size: 1.25rem; }
 }
+
+
+/* =============================================================================
+   AE-PANEL — Spotify-style swipe-up article reader
+   Built dynamically by main.js. Opens when an article card is clicked on
+   /index.html or /articles.html. Slides up from below the viewport,
+   fetches the article HTML, injects its content, displays full screen.
+   ============================================================================= */
+
+/* Card press state — slight scale-down on tap, before panel opens */
+.ae-card-pressing {
+  transform: scale(0.978);
+  transition: transform 0.12s ease-out;
+}
+
+/* Panel container */
+#ae-article-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: var(--surface, #0d0d1a);
+  color: var(--text-primary, #f1f5f9);
+  transform: translateY(100%);
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  visibility: hidden;
+  will-change: transform;
+}
+#ae-article-panel.ae-panel-open {
+  transform: translateY(0);
+  visibility: visible;
+}
+#ae-article-panel.ae-panel-closing {
+  transform: translateY(100%);
+  visibility: visible;
+}
+#ae-article-panel.ae-panel-dragging {
+  transition: none;
+}
+
+/* Top handle (Spotify drag indicator) */
+.ae-panel-handle {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(241, 245, 249, 0.25);
+  margin: 10px auto 0;
+}
+
+/* Close button (chevron down) */
+.ae-panel-down-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(241, 245, 249, 0.16);
+  background: rgba(13, 13, 26, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--text-primary, #f1f5f9);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.ae-panel-down-btn:hover {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: var(--neon-gold, #f59e0b);
+  transform: translateY(2px);
+}
+.ae-panel-down-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Scrollable body — holds hero + article content + related + BMC */
+.ae-panel-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 0;
+}
+
+/* Hero image — sits at the top of the panel, full-width */
+.ae-panel-hero {
+  width: 100%;
+  max-height: 46vh;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  background: #07070f;
+}
+@media (max-width: 640px) {
+  .ae-panel-hero { max-height: 38vh; }
+}
+
+/* Loading state — spinner before fetch resolves */
+.ae-panel-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+}
+.ae-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(241, 245, 249, 0.12);
+  border-top-color: var(--neon-gold, #f59e0b);
+  animation: ae-spin 0.9s linear infinite;
+}
+@keyframes ae-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Wrapper around the injected article HTML — gives padding and max-width */
+.ae-panel-article {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 32px 28px 24px;
+}
+@media (max-width: 640px) {
+  .ae-panel-article { padding: 24px 18px 18px; }
+}
+.ae-panel-article .article-hero,
+.ae-panel-article .article-hero-wrap,
+.ae-panel-article .article-back-nav {
+  /* The panel provides its own hero — hide any duplicate from the article body */
+  display: none;
+}
+
+/* "More like this" related-article strip */
+.ae-related {
+  max-width: 780px;
+  margin: 24px auto 0;
+  padding: 28px;
+  border-top: 1px solid var(--border, rgba(129, 140, 248, 0.12));
+}
+@media (max-width: 640px) {
+  .ae-related { padding: 24px 18px; }
+}
+.ae-related-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.ae-related-label {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary, rgba(241, 245, 249, 0.65));
+}
+.ae-related-cat {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--neon-gold, #f59e0b);
+  padding: 3px 8px;
+  border: 1px solid rgba(245, 158, 11, 0.32);
+  border-radius: 4px;
+}
+.ae-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .ae-related-grid { grid-template-columns: 1fr; }
+}
+.ae-related-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-primary, #f1f5f9);
+  background: var(--surface-2, #131326);
+  border: 1px solid var(--border, rgba(129, 140, 248, 0.12));
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.ae-related-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--neon-gold, #f59e0b);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.ae-related-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  background: #07070f;
+}
+.ae-related-title {
+  padding: 0 14px 14px;
+  font-family: var(--font-heading, 'Sora', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.34;
+}
+
+/* Buy Me a Coffee strip — always at the end of an article in the panel */
+.ae-bmc {
+  max-width: 780px;
+  margin: 24px auto 32px;
+  padding: 0 28px;
+}
+@media (max-width: 640px) {
+  .ae-bmc { padding: 0 18px; }
+}
+.ae-bmc-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  background: var(--surface-2, #131326);
+  border: 1px solid var(--border, rgba(129, 140, 248, 0.12));
+  border-radius: 10px;
+}
+@media (max-width: 640px) {
+  .ae-bmc-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px;
+  }
+}
+.ae-bmc-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.ae-bmc-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+}
+.ae-bmc-text strong {
+  font-family: var(--font-heading, 'Sora', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary, #f1f5f9);
+}
+.ae-bmc-text span {
+  font-size: 0.82rem;
+  color: var(--text-secondary, rgba(241, 245, 249, 0.65));
+  line-height: 1.5;
+}
+.ae-bmc-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background: var(--neon-gold, #f59e0b);
+  color: #07070f;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.ae-bmc-btn:hover {
+  background: #fbbf24;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+}
+
+/* Body lock — prevent background scroll while panel is open */
+body:has(#ae-article-panel.ae-panel-open) {
+  overflow: hidden;
+}
