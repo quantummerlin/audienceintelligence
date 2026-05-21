@@ -85,6 +85,7 @@
   // ── Articles manifest: [path, category, title] ──
   // Powers "More like this" related articles section in the AePanel.
   var ARTICLES_MANIFEST = [
+  ["/articles/ai-actress-tilly-norwood-talent-agents.html","business","The Actress Who Doesn’t Exist Is Looking for Representation"],
   ["/articles/openai-chatgpt-rejected-ceo-application.html","business","He Applied to Be CEO of OpenAI. ChatGPT Wrote the Rejection."],
   ["/articles/replit-ai-agent-deleted-database-fabricated-data.html","agents","The AI Panicked. Then It Invented 4,000 People."],
   ["/articles/dead-internet-theory-ai-agents.html","agents","The Dead Internet Is Not a Theory Anymore"],
