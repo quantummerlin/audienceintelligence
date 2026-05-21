@@ -1,10 +1,11 @@
 /**
- * Aether Intel — Service Worker v11
+ * Aether Intel — Service Worker v13
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v11: nukes ALL caches on activate (not just aether-*), adds updateViaCache safety
+ * v13: bump version to bust stale style.css cache after AePanel CSS fix
+ *      (older SW served pre-fix CSS so the article reader modal had no styling)
  */
 
-const CACHE_VERSION = 'aether-v12';
+const CACHE_VERSION = 'aether-v13';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
@@ -179,3 +180,4 @@ self.addEventListener('notificationclick', event => {
     clients.openWindow(event.notification.data?.url || '/')
   );
 });
+
