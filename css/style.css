@@ -4292,3 +4292,494 @@ aside.sidebar::before {
 body:has(#ae-article-panel.ae-panel-open) {
   overflow: hidden;
 }
+
+/* =============================================================================
+   AGENT LANDING PAGE (alp-)
+   Shared styles for /agents/{slug}.html pages. Previously duplicated in each
+   page's <style> block; moved here in 2026-05 for single-source-of-truth and
+   to fix readability (stronger hero overlay, brighter text, smaller hero).
+   ============================================================================= */
+
+.alp-hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #07070f;
+}
+.alp-hero-img {
+  width: 100%;
+  height: 38vw;
+  min-height: 240px;
+  max-height: 340px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+/* Much stronger gradient — text overlays the bottom and needs the image
+   darkened underneath to stay readable. Previous overlay (0.1 -> 0.72 -> 1.0)
+   left the breadcrumb floating over busy imagery. */
+.alp-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(7, 7, 15, 0.50) 0%,
+    rgba(7, 7, 15, 0.92) 55%,
+    rgba(7, 7, 15, 0.98) 100%
+  );
+}
+.alp-hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 36px 36px 44px;
+  max-width: 980px;
+}
+.alp-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(245, 158, 11, 0.85);
+  margin-bottom: 18px;
+}
+.alp-breadcrumb a {
+  color: rgba(245, 158, 11, 0.85);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.alp-breadcrumb a:hover {
+  color: #fbbf24;
+}
+.alp-breadcrumb > span:not(:has(a)) {
+  color: rgba(255, 255, 255, 0.55);
+}
+.alp-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 10px 0 14px;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+}
+.alp-hero-desc {
+  color: rgba(255, 255, 255, 0.94);
+  font-size: clamp(0.95rem, 1.6vw, 1.08rem);
+  line-height: 1.65;
+  max-width: 700px;
+  margin: 0 0 24px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+.alp-hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.alp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--neon-indigo);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 22px;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+  white-space: nowrap;
+}
+.alp-btn-primary:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+.alp-btn-primary svg {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.alp-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 22px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.alp-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(245, 158, 11, 0.45);
+}
+.alp-btn-ghost svg {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Stats band */
+.alp-stats-band {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--surface);
+}
+.alp-stats-band::-webkit-scrollbar { display: none; }
+.alp-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 32px;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 6px;
+}
+.alp-stat-label {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(245, 158, 11, 0.85);
+}
+.alp-stat-value {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+.alp-stat-value.indigo { color: var(--neon-indigo); }
+.alp-model-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: #f87171;
+}
+
+/* Body layout */
+.alp-body {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 56px 32px 84px;
+}
+.alp-section { margin-bottom: 56px; }
+.alp-section-title {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(245, 158, 11, 0.92);
+  margin: 0 0 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.alp-h2 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 18px;
+  letter-spacing: -0.01em;
+}
+
+/* Starter message */
+.alp-starter {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--neon-indigo);
+  border-radius: 0 10px 10px 0;
+  padding: 22px 26px;
+  color: rgba(241, 245, 249, 0.94);
+  font-size: 0.98rem;
+  line-height: 1.75;
+  font-style: italic;
+}
+
+/* Use cases */
+.alp-uc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.alp-uc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 0.93rem;
+  color: rgba(241, 245, 249, 0.92);
+  line-height: 1.6;
+}
+.alp-uc-item::before {
+  content: '';
+  flex-shrink: 0;
+  margin-top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--neon-gold, #f59e0b);
+}
+
+/* System prompt */
+.alp-prompt-wrap {
+  position: relative;
+  background: #050510;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.alp-prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border);
+}
+.alp-prompt-lang {
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(245, 158, 11, 0.85);
+}
+.alp-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: rgba(241, 245, 249, 0.78);
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 5px 11px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.alp-copy-btn:hover {
+  color: var(--neon-gold, #f59e0b);
+  border-color: var(--neon-gold, #f59e0b);
+}
+.alp-copy-btn svg {
+  width: 11px;
+  height: 11px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.alp-prompt-pre {
+  padding: 22px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  line-height: 1.74;
+  color: rgba(241, 245, 249, 0.94);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 440px;
+  overflow-y: auto;
+}
+.alp-prompt-pre::-webkit-scrollbar { width: 4px; }
+.alp-prompt-pre::-webkit-scrollbar-track { background: transparent; }
+.alp-prompt-pre::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 2px; }
+
+/* Example interactions */
+.alp-example {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.alp-example-user,
+.alp-example-agent { padding: 18px 22px; }
+.alp-example-user {
+  background: rgba(99, 102, 241, 0.07);
+  border-bottom: 1px solid var(--border);
+}
+.alp-example-agent { background: rgba(34, 211, 238, 0.05); }
+.alp-role {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.alp-role-user {
+  background: rgba(99, 102, 241, 0.22);
+  color: var(--neon-indigo);
+}
+.alp-role-agent {
+  background: rgba(34, 211, 238, 0.22);
+  color: var(--neon-cyan);
+}
+.alp-example-text {
+  margin: 0;
+  font-size: 0.91rem;
+  color: rgba(241, 245, 249, 0.92);
+  line-height: 1.7;
+}
+
+/* Platform cards */
+.alp-platforms {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.alp-platform-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.alp-platform-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.alp-platform-name {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+.alp-platform-note {
+  font-size: 0.84rem;
+  color: rgba(241, 245, 249, 0.78);
+  line-height: 1.6;
+}
+
+/* Bottom CTA */
+.alp-cta {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(34, 211, 238, 0.06));
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 16px;
+  padding: 48px 38px;
+  text-align: center;
+  margin-top: 64px;
+}
+.alp-cta h2 {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+}
+.alp-cta p {
+  color: rgba(241, 245, 249, 0.92);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0 0 30px;
+}
+.alp-cta-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Toast */
+.alp-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: #16a34a;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 13px 22px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: transform 0.25s, opacity 0.25s;
+  pointer-events: none;
+}
+.alp-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+.alp-toast svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 600px) {
+  .alp-hero-img { max-height: 240px; }
+  .alp-hero-content { padding: 24px 20px 30px; }
+  .alp-body { padding: 36px 18px 60px; }
+  .alp-stat { padding: 14px 18px; }
+}
