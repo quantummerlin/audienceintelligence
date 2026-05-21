@@ -85,6 +85,7 @@
   // ── Articles manifest: [path, category, title] ──
   // Powers "More like this" related articles section in the AePanel.
   var ARTICLES_MANIFEST = [
+  ["/articles/replit-ai-agent-deleted-database-fabricated-data.html","agents","The AI Panicked. Then It Invented 4,000 People."],
   ["/articles/dead-internet-theory-ai-agents.html","agents","The Dead Internet Is Not a Theory Anymore"],
   ["/articles/ai-real-estate-photo-deception.html","business","The House in the Photo Doesn't Exist"],
   ["/articles/ai-job-interview-turing-test.html","business","The Job Interview Is Now a Turing Test"],
