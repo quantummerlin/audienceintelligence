@@ -1,12 +1,12 @@
 /**
- * Aether Intel — Service Worker v15
+ * Aether Intel — Service Worker v16
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v15: bump to ship the agent landing page readability fix
- *      (shared alp-* styles moved to style.css with stronger hero overlay,
- *      brighter text, gold accents, smaller hero image)
+ * v16: agent landing page hero layout — stacked banner above content
+ *      (previous attempt overlaid content on the image which broke on wide
+ *      screens; banner-above-text reads cleaner and removes contrast issues)
  */
 
-const CACHE_VERSION = 'aether-v15';
+const CACHE_VERSION = 'aether-v16';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
