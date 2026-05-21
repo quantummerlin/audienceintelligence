@@ -1,11 +1,12 @@
 /**
- * Aether Intel — Service Worker v13
+ * Aether Intel — Service Worker v14
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v13: bump version to bust stale style.css cache after AePanel CSS fix
- *      (older SW served pre-fix CSS so the article reader modal had no styling)
+ * v14: bump to ship the AePanel hero-image fix
+ *      (main.js now reads the article's real hero src instead of synthesising
+ *      a URL; style.css no longer hides article-hero by default)
  */
 
-const CACHE_VERSION = 'aether-v13';
+const CACHE_VERSION = 'aether-v14';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 

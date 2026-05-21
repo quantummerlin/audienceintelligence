@@ -923,21 +923,31 @@
                      doc.body;
           var content = main ? main.innerHTML : doc.body.innerHTML;
 
-          // Preserve the hero image if already displayed above the spinner
-          var existingHero = bodyEl.querySelector('.ae-panel-hero');
-          var heroTag = existingHero ? existingHero.outerHTML : '';
+          // Read the article's actual hero IMG src from the parsed document.
+          // Articles use multiple naming conventions ({slug}.webp, {slug}-hero.webp,
+          // custom-suffix-hero.webp) so URL synthesis from heroUrlFor() misses many.
+          // Pulling the src straight from the parsed article HTML always works.
+          var realHeroImg = doc.querySelector('img.article-hero-img, img.article-hero, .article-hero img');
+          var realHeroSrc = realHeroImg ? realHeroImg.getAttribute('src') : null;
+
+          var heroTag = realHeroSrc
+            ? '<img class="ae-panel-hero" src="' + realHeroSrc + '" alt="" ' +
+              'onerror="this.style.display=\'none\'">'
+            : '';
 
           bodyEl.innerHTML = heroTag + styles +
             '<div class="ae-panel-article">' + content + '</div>';
 
-          // Hide the article's own .article-hero while the panel hero loads above it.
-          // If the panel hero fails (404), restore the article hero as fallback.
+          // Hide the article's own .article-hero while our dedicated panel hero
+          // sits above it. If the panel hero fails (rare, since src came from
+          // the article itself), restore the article hero as a visible fallback.
           var articleHero = bodyEl.querySelector('.ae-panel-article .article-hero');
           var panelHero   = bodyEl.querySelector('.ae-panel-hero');
           if (articleHero && panelHero) {
             articleHero.style.display = 'none';
             panelHero.addEventListener('error', function () {
-              if (articleHero) articleHero.style.display = '';
+              // Use !important inline so the CSS rule (if any) is overridden
+              if (articleHero) articleHero.style.cssText = 'display: block !important;';
             });
           }
 
@@ -1310,3 +1320,4 @@
   }());
 
 }());
+
