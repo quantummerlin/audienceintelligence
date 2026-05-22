@@ -1,12 +1,11 @@
 /**
- * Aether Intel — Service Worker v16
+ * Aether Intel — Service Worker v17
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v16: agent landing page hero layout — stacked banner above content
- *      (previous attempt overlaid content on the image which broke on wide
- *      screens; banner-above-text reads cleaner and removes contrast issues)
+ * v17: skill detail pages readability — redefine --text-muted scoped to
+ *      .skill-page-wrap, gold accent on breadcrumb
  */
 
-const CACHE_VERSION = 'aether-v16';
+const CACHE_VERSION = 'aether-v17';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 

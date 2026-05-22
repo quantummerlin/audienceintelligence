@@ -4786,3 +4786,39 @@ body:has(#ae-article-panel.ae-panel-open) {
   .alp-body { padding: 36px 18px 60px; }
   .alp-stat { padding: 14px 18px; }
 }
+
+/* =============================================================================
+   SKILL DETAIL PAGE — readability override (2026-05-21)
+   /skills/{slug}.html pages ship ~30KB of inline CSS each that uses
+   var(--text-muted) (rgba(...0.38)) for almost all body text — descriptions,
+   article ledes, list items, table cells, callouts, compat lists. That's
+   borderline unreadable. The cleanest fix is to redefine --text-muted
+   scoped to the .skill-page-wrap container so all 36+ rules brighten at
+   once without touching any of the 34 skill HTML files.
+   ============================================================================= */
+.skill-page-wrap {
+  --text-muted: rgba(241, 245, 249, 0.88);
+}
+
+/* Breadcrumb gets gold accent to match the brand active-state colour and
+   stay consistent with the agent detail pages. */
+.skill-page-wrap .skill-breadcrumb,
+.skill-page-wrap .skill-breadcrumb a,
+.skill-page-wrap .breadcrumb,
+.skill-page-wrap .breadcrumb a {
+  color: rgba(245, 158, 11, 0.9);
+}
+.skill-page-wrap .skill-breadcrumb a:hover,
+.skill-page-wrap .breadcrumb a:hover {
+  color: #fbbf24;
+}
+.skill-page-wrap .skill-breadcrumb svg,
+.skill-page-wrap .breadcrumb svg {
+  stroke: rgba(245, 158, 11, 0.6);
+}
+
+/* Section section labels and stat labels — keep gold accent for signposts */
+.skill-page-wrap .stat-label,
+.skill-page-wrap .cost-stat-label {
+  color: rgba(245, 158, 11, 0.88);
+}
