@@ -1,11 +1,12 @@
 /**
- * Aether Intel — Service Worker v19
+ * Aether Intel — Service Worker v20
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v19: Labs Atlas hero imagery — 12 editorial hero photos wired into the
- *      slideshow and lab card banners (replacing brand-colour gradients)
+ * v20: Labs Atlas Phase B — first lab detail page /labs/openai.html as the
+ *      polished template (stacked hero, editorial intro, recent coverage strip,
+ *      model cards grid, use-for/skip-for usage cards). New lab-* CSS in style.css.
  */
 
-const CACHE_VERSION = 'aether-v19';
+const CACHE_VERSION = 'aether-v20';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
