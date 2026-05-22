@@ -175,19 +175,22 @@
     }
     .lab-card-banner {
       position: relative;
-      height: 140px;
-      background:
-        linear-gradient(135deg, var(--lab-accent, #818cf8) 0%, rgba(7,7,15,0.4) 60%, #07070f 100%),
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08), transparent 60%);
-      background-blend-mode: screen, normal;
+      height: 150px;
+      background-image:
+        linear-gradient(180deg, rgba(7,7,15,0) 35%, rgba(7,7,15,0.7) 100%),
+        var(--lab-hero, linear-gradient(135deg, var(--lab-accent, #818cf8) 0%, #07070f 100%));
+      background-size: cover, cover;
+      background-position: center, center;
+      background-repeat: no-repeat, no-repeat;
       overflow: hidden;
     }
+    /* Subtle brand-accent vignette at the top corners */
     .lab-card-banner::before {
-      content: ''; position: absolute; inset: 0;
+      content: ''; position: absolute; inset: 0; pointer-events: none;
       background-image:
-        radial-gradient(circle at 70% 20%, rgba(255,255,255,0.08) 0%, transparent 40%),
-        radial-gradient(circle at 30% 80%, var(--lab-accent, #818cf8) 0%, transparent 50%);
-      opacity: 0.5;
+        radial-gradient(circle at 0% 0%, var(--lab-accent, #818cf8) 0%, transparent 35%);
+      opacity: 0.22;
+      mix-blend-mode: screen;
     }
     .lab-card-mark {
       position: absolute; top: 14px; left: 16px;
@@ -285,21 +288,21 @@
     </div>
   </div>
 
-  <!-- Hero slideshow — 12 lab brand-color slides until images land -->
+  <!-- Hero slideshow — editorial hero photo per lab -->
   <div class="hero-slideshow" id="labSlideshow" role="region" aria-label="Featured labs slideshow">
     <div class="hero-slides-track" id="labSlidesTrack">
-      <div class="hero-slide-img" data-lab="openai" style="background:radial-gradient(circle at 25% 35%, rgba(16,163,127,.45), transparent 55%),linear-gradient(135deg,#0a3d2f 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="anthropic" style="background:radial-gradient(circle at 30% 30%, rgba(212,165,116,.5), transparent 55%),linear-gradient(135deg,#3a2a18 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="google-deepmind" style="background:radial-gradient(circle at 25% 30%, rgba(66,133,244,.45), transparent 55%),linear-gradient(135deg,#10204a 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="meta-ai" style="background:radial-gradient(circle at 25% 30%, rgba(24,119,242,.45), transparent 55%),linear-gradient(135deg,#0c2547 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="xai" style="background:radial-gradient(circle at 25% 30%, rgba(29,161,242,.4), transparent 55%),linear-gradient(135deg,#062536 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="mistral" style="background:radial-gradient(circle at 25% 30%, rgba(255,112,0,.45), transparent 55%),linear-gradient(135deg,#3a1f06 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="qwen" style="background:radial-gradient(circle at 25% 30%, rgba(163,112,247,.45), transparent 55%),linear-gradient(135deg,#231340 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="deepseek" style="background:radial-gradient(circle at 25% 30%, rgba(91,141,239,.45), transparent 55%),linear-gradient(135deg,#11264f 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="cohere" style="background:radial-gradient(circle at 25% 30%, rgba(255,84,112,.45), transparent 55%),linear-gradient(135deg,#3d1322 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="perplexity" style="background:radial-gradient(circle at 25% 30%, rgba(31,184,205,.45), transparent 55%),linear-gradient(135deg,#082b30 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="perceptron" style="background:radial-gradient(circle at 25% 30%, rgba(245,158,11,.5), transparent 55%),linear-gradient(135deg,#3a280a 0%,#07070f 70%);"></div>
-      <div class="hero-slide-img" data-lab="nous-research" style="background:radial-gradient(circle at 25% 30%, rgba(139,92,246,.45), transparent 55%),linear-gradient(135deg,#1f1438 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="openai" style="background-image:url('/images/labs/openai-hero.webp');background-color:#0a3d2f;"></div>
+      <div class="hero-slide-img" data-lab="anthropic" style="background-image:url('/images/labs/anthropic-hero.webp');background-color:#3a2a18;"></div>
+      <div class="hero-slide-img" data-lab="google-deepmind" style="background-image:url('/images/labs/google-deepmind-hero.webp');background-color:#10204a;"></div>
+      <div class="hero-slide-img" data-lab="meta-ai" style="background-image:url('/images/labs/meta-ai-hero.webp');background-color:#0c2547;"></div>
+      <div class="hero-slide-img" data-lab="xai" style="background-image:url('/images/labs/xai-hero.webp');background-color:#062536;"></div>
+      <div class="hero-slide-img" data-lab="mistral" style="background-image:url('/images/labs/mistral-hero.webp');background-color:#3a1f06;"></div>
+      <div class="hero-slide-img" data-lab="qwen" style="background-image:url('/images/labs/qwen-hero.webp');background-color:#231340;"></div>
+      <div class="hero-slide-img" data-lab="deepseek" style="background-image:url('/images/labs/deepseek-hero.webp');background-color:#11264f;"></div>
+      <div class="hero-slide-img" data-lab="cohere" style="background-image:url('/images/labs/cohere-hero.webp');background-color:#3d1322;"></div>
+      <div class="hero-slide-img" data-lab="perplexity" style="background-image:url('/images/labs/perplexity-hero.webp');background-color:#082b30;"></div>
+      <div class="hero-slide-img" data-lab="perceptron" style="background-image:url('/images/labs/perceptron-hero.webp');background-color:#3a280a;"></div>
+      <div class="hero-slide-img" data-lab="nous-research" style="background-image:url('/images/labs/nous-research-hero.webp');background-color:#1f1438;"></div>
     </div>
     <button class="hero-slide-prev" id="labPrev" aria-label="Previous">&#8249;</button>
     <button class="hero-slide-next" id="labNext" aria-label="Next">&#8250;</button>
@@ -353,7 +356,7 @@
   <section class="labs-section">
     <div class="labs-grid" id="labsGrid">
 
-      <a href="/labs/openai.html" class="lab-card" style="--lab-accent:#10a37f;">
+      <a href="/labs/openai.html" class="lab-card" style="--lab-accent:#10a37f;--lab-hero:url('/images/labs/openai-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">USA · 2015</span>
           <span class="lab-card-models-badge">3 models</span>
@@ -369,7 +372,7 @@
         </div>
       </a>
 
-      <a href="/labs/anthropic.html" class="lab-card" style="--lab-accent:#d4a574;">
+      <a href="/labs/anthropic.html" class="lab-card" style="--lab-accent:#d4a574;--lab-hero:url('/images/labs/anthropic-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">USA · 2021</span>
           <span class="lab-card-models-badge">3 models</span>
@@ -385,7 +388,7 @@
         </div>
       </a>
 
-      <a href="/labs/google-deepmind.html" class="lab-card" style="--lab-accent:#4285f4;">
+      <a href="/labs/google-deepmind.html" class="lab-card" style="--lab-accent:#4285f4;--lab-hero:url('/images/labs/google-deepmind-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">UK/USA · 2010</span>
           <span class="lab-card-models-badge">3 models</span>
@@ -401,7 +404,7 @@
         </div>
       </a>
 
-      <a href="/labs/meta-ai.html" class="lab-card" style="--lab-accent:#1877f2;">
+      <a href="/labs/meta-ai.html" class="lab-card" style="--lab-accent:#1877f2;--lab-hero:url('/images/labs/meta-ai-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">USA · 2013</span>
           <span class="lab-card-models-badge">3 models</span>
@@ -417,7 +420,7 @@
         </div>
       </a>
 
-      <a href="/labs/xai.html" class="lab-card" style="--lab-accent:#1da1f2;">
+      <a href="/labs/xai.html" class="lab-card" style="--lab-accent:#1da1f2;--lab-hero:url('/images/labs/xai-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">USA · 2023</span>
           <span class="lab-card-models-badge">3 models</span>
@@ -433,7 +436,7 @@
         </div>
       </a>
 
-      <a href="/labs/mistral.html" class="lab-card" style="--lab-accent:#ff7000;">
+      <a href="/labs/mistral.html" class="lab-card" style="--lab-accent:#ff7000;--lab-hero:url('/images/labs/mistral-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">France · 2023</span>
           <span class="lab-card-models-badge">3 models</span>
@@ -449,7 +452,7 @@
         </div>
       </a>
 
-      <a href="/labs/qwen.html" class="lab-card" style="--lab-accent:#a370f7;">
+      <a href="/labs/qwen.html" class="lab-card" style="--lab-accent:#a370f7;--lab-hero:url('/images/labs/qwen-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">China · 2023</span>
           <span class="lab-card-models-badge">3 models</span>
@@ -465,7 +468,7 @@
         </div>
       </a>
 
-      <a href="/labs/deepseek.html" class="lab-card" style="--lab-accent:#5b8def;">
+      <a href="/labs/deepseek.html" class="lab-card" style="--lab-accent:#5b8def;--lab-hero:url('/images/labs/deepseek-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">China · 2023</span>
           <span class="lab-card-models-badge">3 models</span>
@@ -481,7 +484,7 @@
         </div>
       </a>
 
-      <a href="/labs/cohere.html" class="lab-card" style="--lab-accent:#ff5470;">
+      <a href="/labs/cohere.html" class="lab-card" style="--lab-accent:#ff5470;--lab-hero:url('/images/labs/cohere-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">Canada · 2019</span>
           <span class="lab-card-models-badge">3 models</span>
@@ -497,7 +500,7 @@
         </div>
       </a>
 
-      <a href="/labs/perplexity.html" class="lab-card" style="--lab-accent:#1fb8cd;">
+      <a href="/labs/perplexity.html" class="lab-card" style="--lab-accent:#1fb8cd;--lab-hero:url('/images/labs/perplexity-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">USA · 2022</span>
           <span class="lab-card-models-badge">2 models</span>
@@ -513,7 +516,7 @@
         </div>
       </a>
 
-      <a href="/labs/perceptron.html" class="lab-card" style="--lab-accent:#f59e0b;">
+      <a href="/labs/perceptron.html" class="lab-card" style="--lab-accent:#f59e0b;--lab-hero:url('/images/labs/perceptron-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">USA · 2025</span>
           <span class="lab-card-models-badge">1 model</span>
@@ -529,7 +532,7 @@
         </div>
       </a>
 
-      <a href="/labs/nous-research.html" class="lab-card" style="--lab-accent:#8b5cf6;">
+      <a href="/labs/nous-research.html" class="lab-card" style="--lab-accent:#8b5cf6;--lab-hero:url('/images/labs/nous-research-hero.webp');">
         <div class="lab-card-banner">
           <span class="lab-card-mark">USA · 2023</span>
           <span class="lab-card-models-badge">2 models</span>

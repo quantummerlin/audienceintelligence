@@ -1,11 +1,11 @@
 /**
- * Aether Intel — Service Worker v18
+ * Aether Intel — Service Worker v19
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v18: Labs Atlas — Models nav slot renamed to Labs, new /labs.html listing,
- *      /models.html becomes a redirect. Phase A of the Labs build.
+ * v19: Labs Atlas hero imagery — 12 editorial hero photos wired into the
+ *      slideshow and lab card banners (replacing brand-colour gradients)
  */
 
-const CACHE_VERSION = 'aether-v18';
+const CACHE_VERSION = 'aether-v19';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
