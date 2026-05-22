@@ -1,11 +1,11 @@
 /**
- * Aether Intel — Service Worker v17
+ * Aether Intel — Service Worker v18
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v17: skill detail pages readability — redefine --text-muted scoped to
- *      .skill-page-wrap, gold accent on breadcrumb
+ * v18: Labs Atlas — Models nav slot renamed to Labs, new /labs.html listing,
+ *      /models.html becomes a redirect. Phase A of the Labs build.
  */
 
-const CACHE_VERSION = 'aether-v17';
+const CACHE_VERSION = 'aether-v18';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
@@ -180,4 +180,5 @@ self.addEventListener('notificationclick', event => {
     clients.openWindow(event.notification.data?.url || '/')
   );
 });
+
 

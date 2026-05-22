@@ -36,7 +36,7 @@
   </div>
   <nav class="sidebar-nav">
     <a href="/index.html" class="nav-item" data-page="news">News</a>
-    <a href="/models.html" class="nav-item" data-page="models">Models</a>
+    <a href="/labs.html" class="nav-item" data-page="labs">Labs</a>
     <a href="/agents.html" class="nav-item" data-page="agents">Agents</a>
     <a href="/skills.html" class="nav-item" data-page="skills">Skills</a>
   </nav>
@@ -55,9 +55,9 @@
     <svg class="mob-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
     <span class="mob-nav-label">News</span>
   </a>
-  <a href="/models.html" class="mob-nav-item" data-page="models">
-    <svg class="mob-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>
-    <span class="mob-nav-label">Models</span>
+  <a href="/labs.html" class="mob-nav-item" data-page="labs">
+    <svg class="mob-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v6.5L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 8.5V2"/><line x1="9" y1="2" x2="15" y2="2"/><line x1="7" y1="15" x2="17" y2="15"/></svg>
+    <span class="mob-nav-label">Labs</span>
   </a>
   <a href="/agents.html" class="mob-nav-item" data-page="agents">
     <svg class="mob-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
@@ -302,7 +302,8 @@
     const p = pathname.replace(/\/$/, '').toLowerCase();
 
     if (p === '' || p === '/index.html' || p === '/index' || p.includes('/articles')) return 'news';
-    if (p.includes('/models')) return 'models';
+    // /labs and /models both highlight the Labs slot (models.html is a legacy redirect)
+    if (p.includes('/labs') || p.includes('/models')) return 'labs';
     if (p.includes('/agents')) return 'agents';
     if (p.includes('/skills')) return 'skills';
     return null;
@@ -1320,4 +1321,5 @@
   }());
 
 }());
+
 

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Labs Atlas — The Companies Building AI | Aether Intel</title>
+  <meta name="description" content="The AI labs building today's models, organised by who makes what. OpenAI, Anthropic, Google DeepMind, Meta AI, Mistral, xAI, Qwen, DeepSeek and more — with model explorations, pricing, and what to use each one for." />
+  <link rel="canonical" href="https://ai.quantummerlin.com/labs.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ai.quantummerlin.com/labs.html" />
+  <meta property="og:title" content="AI Labs Atlas — Aether Intel" />
+  <meta property="og:description" content="The frontier and open-source labs building AI. Organised by lab, explored model by model." />
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/og-aether.png" />
+  <meta property="og:site_name" content="Aether Intel" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Labs Atlas — Aether Intel" />
+  <meta name="twitter:description" content="The frontier and open-source labs building AI." />
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/og-aether.png" />
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VW4LGE7L1T');
+  </script>
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    /* ── Platform bar ── */
+    .platform-bar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 28px;
+      background: linear-gradient(90deg, rgba(245,158,11,.14), rgba(34,211,238,.06));
+      border-bottom: 1px solid rgba(245,158,11,.22);
+      font-family: var(--font-display); font-size: .62rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.78);
+    }
+    .platform-bar-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--neon-gold, #f59e0b);
+      animation: labPulseDot 2s ease-in-out infinite;
+    }
+    @keyframes labPulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.45;transform:scale(.75)} }
+    .platform-bar-stat { margin-left: auto; display: flex; gap: 20px; }
+    .platform-bar-stat span { color: rgba(255,255,255,.55); }
+    .platform-bar-stat strong { color: var(--neon-gold, #f59e0b); }
+
+    /* ── Hero slideshow ── */
+    .hero-slideshow { position:relative; width:100%; overflow:hidden; background:#07070f; touch-action:pan-y; }
+    .hero-slides-track { display:flex; transition:transform .6s cubic-bezier(.4,0,.2,1); will-change:transform; }
+    .hero-slide-img { flex:0 0 100%; height:42vw; min-height:240px; max-height:380px; background-size:cover; background-position:center center; position:relative; }
+    .hero-slide-img::after {
+      content:''; position:absolute; inset:0;
+      background: linear-gradient(to bottom, rgba(7,7,15,0) 50%, rgba(7,7,15,0.85) 100%);
+    }
+    .hero-slide-prev,.hero-slide-next {
+      position:absolute; top:50%; transform:translateY(-50%); z-index:10;
+      background:rgba(13,13,26,.7); border:1px solid rgba(255,255,255,.15);
+      color:rgba(255,255,255,.85); width:40px; height:40px; border-radius:50%;
+      cursor:pointer; font-size:1.3rem; display:flex; align-items:center;
+      justify-content:center; transition:all .2s; user-select:none;
+    }
+    .hero-slide-prev:hover,.hero-slide-next:hover {
+      background:var(--neon-gold,#f59e0b); border-color:var(--neon-gold,#f59e0b); color:#07070f;
+    }
+    .hero-slide-prev { left:14px; } .hero-slide-next { right:14px; }
+    .hero-dots-row { display:flex; justify-content:center; padding:16px 0 4px; background:#07070f; }
+    .hero-slide-dots { display:flex; gap:8px; }
+    .hero-dot {
+      width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.22);
+      border:none; cursor:pointer; padding:0; transition:background .2s, transform .2s;
+    }
+    .hero-dot:hover { background:rgba(245,158,11,.55); }
+    .hero-dot.active { background:var(--neon-gold,#f59e0b); transform:scale(1.3); }
+    .hero-content-panel {
+      padding: 28px 32px 0; min-height: 88px;
+      max-width: 980px; margin: 0 auto;
+    }
+    .hero-content-panel:empty { display: none; }
+    .hero-content-panel .panel-eyebrow {
+      font-family: var(--font-display); font-size: .68rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--neon-gold,#f59e0b); margin-bottom: 8px;
+    }
+    .hero-content-panel .panel-title {
+      font-family: var(--font-heading,Sora); font-size: clamp(1.3rem,2.5vw,1.8rem);
+      font-weight: 800; color: #fff; margin: 0 0 8px; line-height: 1.2;
+    }
+    .hero-content-panel .panel-sub {
+      font-size: .95rem; color: rgba(241,245,249,.88); line-height: 1.55;
+      margin: 0 0 12px; max-width: 720px;
+    }
+    .hero-content-panel .panel-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-display); font-size: .7rem; font-weight: 800;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--neon-gold,#f59e0b); text-decoration: none;
+      padding: 8px 16px; border: 1px solid rgba(245,158,11,.4); border-radius: 6px;
+      transition: background .15s, color .15s;
+    }
+    .hero-content-panel .panel-cta:hover {
+      background: var(--neon-gold,#f59e0b); color: #07070f;
+    }
+
+    /* ── Labs hero band ── */
+    .labs-hero {
+      padding: 56px 32px 40px;
+      text-align: center;
+      border-bottom: 1px solid var(--border, rgba(129,140,248,0.12));
+    }
+    .labs-hero .container {
+      max-width: 820px; margin: 0 auto;
+    }
+    .labs-hero h1 {
+      font-family: var(--font-display, Orbitron);
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 900; line-height: 1.05; margin: 16px 0 18px;
+      letter-spacing: -.02em; color: #fff;
+    }
+    .labs-hero h1 span {
+      background: linear-gradient(90deg, var(--neon-gold,#f59e0b), var(--neon-cyan,#22d3ee));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .labs-hero-sub {
+      font-family: var(--font-body, 'Space Grotesk');
+      font-size: clamp(.98rem, 1.5vw, 1.1rem);
+      color: rgba(241,245,249,.85); line-height: 1.6;
+      margin: 0 auto 26px; max-width: 680px;
+    }
+    .labs-stats-row {
+      display: flex; justify-content: center; gap: 36px; flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .labs-stat {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-display); font-size: .82rem; font-weight: 600;
+      letter-spacing: .06em; color: rgba(241,245,249,.78);
+    }
+    .labs-stat svg {
+      width: 16px; height: 16px; stroke: var(--neon-gold,#f59e0b);
+      fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .labs-stat strong { color: var(--neon-gold,#f59e0b); font-weight: 800; }
+
+    /* ── Lab grid ── */
+    .labs-section { padding: 48px 32px 96px; }
+    .labs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 22px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .lab-card {
+      position: relative;
+      display: flex; flex-direction: column;
+      background: var(--surface, #0d0d1a);
+      border: 1px solid var(--border, rgba(129,140,248,0.12));
+      border-radius: 14px;
+      overflow: hidden;
+      text-decoration: none; color: inherit;
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .lab-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--lab-accent, var(--neon-gold,#f59e0b));
+      box-shadow: 0 16px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04) inset;
+    }
+    .lab-card-banner {
+      position: relative;
+      height: 140px;
+      background:
+        linear-gradient(135deg, var(--lab-accent, #818cf8) 0%, rgba(7,7,15,0.4) 60%, #07070f 100%),
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08), transparent 60%);
+      background-blend-mode: screen, normal;
+      overflow: hidden;
+    }
+    .lab-card-banner::before {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 70% 20%, rgba(255,255,255,0.08) 0%, transparent 40%),
+        radial-gradient(circle at 30% 80%, var(--lab-accent, #818cf8) 0%, transparent 50%);
+      opacity: 0.5;
+    }
+    .lab-card-mark {
+      position: absolute; top: 14px; left: 16px;
+      font-family: var(--font-display, Orbitron);
+      font-size: .62rem; font-weight: 800;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(255,255,255,.92);
+      padding: 5px 10px; border-radius: 4px;
+      background: rgba(7,7,15,0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .lab-card-models-badge {
+      position: absolute; top: 14px; right: 16px;
+      font-family: var(--font-display, Orbitron);
+      font-size: .62rem; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--lab-accent, #f59e0b);
+      padding: 5px 10px; border-radius: 4px;
+      background: rgba(7,7,15,0.7);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .lab-card-body {
+      padding: 20px 22px 22px;
+      display: flex; flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+    .lab-card-name {
+      font-family: var(--font-heading, Sora);
+      font-size: 1.4rem; font-weight: 800;
+      color: var(--text-primary, #f1f5f9);
+      margin: 0;
+      letter-spacing: -.01em;
+    }
+    .lab-card-tagline {
+      font-family: var(--font-display, Orbitron);
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--lab-accent, #f59e0b);
+      margin: 0;
+    }
+    .lab-card-desc {
+      font-size: .9rem; line-height: 1.55;
+      color: rgba(241,245,249,.82);
+      margin: 6px 0 0;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .lab-card-meta {
+      display: flex; gap: 12px;
+      margin-top: 4px;
+      font-family: var(--font-display, Orbitron);
+      font-size: .62rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(241,245,249,.6);
+    }
+    .lab-card-meta span { display: inline-flex; align-items: center; gap: 5px; }
+    .lab-card-cta {
+      margin-top: auto;
+      padding-top: 14px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-display, Orbitron);
+      font-size: .7rem; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--lab-accent, #f59e0b);
+    }
+    .lab-card-cta-arrow { transition: transform .2s; }
+    .lab-card:hover .lab-card-cta-arrow { transform: translateX(4px); }
+
+    @media (max-width: 600px) {
+      .platform-bar { padding: 9px 18px; font-size: .58rem; }
+      .platform-bar-stat { display: none; }
+      .labs-hero { padding: 40px 20px 32px; }
+      .labs-section { padding: 32px 18px 80px; }
+      .labs-grid { gap: 16px; grid-template-columns: 1fr; }
+      .hero-slide-img { height: 56vw; max-height: 280px; }
+    }
+  </style>
+</head>
+<body>
+
+<main>
+
+  <!-- Platform bar -->
+  <div class="platform-bar">
+    <span class="platform-bar-dot"></span>
+    AI Laboratory Atlas
+    <div class="platform-bar-stat">
+      <span><strong>12</strong> labs tracked</span>
+      <span><strong>32</strong> models</span>
+      <span><strong>Live</strong> data</span>
+    </div>
+  </div>
+
+  <!-- Hero slideshow — 12 lab brand-color slides until images land -->
+  <div class="hero-slideshow" id="labSlideshow" role="region" aria-label="Featured labs slideshow">
+    <div class="hero-slides-track" id="labSlidesTrack">
+      <div class="hero-slide-img" data-lab="openai" style="background:radial-gradient(circle at 25% 35%, rgba(16,163,127,.45), transparent 55%),linear-gradient(135deg,#0a3d2f 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="anthropic" style="background:radial-gradient(circle at 30% 30%, rgba(212,165,116,.5), transparent 55%),linear-gradient(135deg,#3a2a18 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="google-deepmind" style="background:radial-gradient(circle at 25% 30%, rgba(66,133,244,.45), transparent 55%),linear-gradient(135deg,#10204a 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="meta-ai" style="background:radial-gradient(circle at 25% 30%, rgba(24,119,242,.45), transparent 55%),linear-gradient(135deg,#0c2547 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="xai" style="background:radial-gradient(circle at 25% 30%, rgba(29,161,242,.4), transparent 55%),linear-gradient(135deg,#062536 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="mistral" style="background:radial-gradient(circle at 25% 30%, rgba(255,112,0,.45), transparent 55%),linear-gradient(135deg,#3a1f06 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="qwen" style="background:radial-gradient(circle at 25% 30%, rgba(163,112,247,.45), transparent 55%),linear-gradient(135deg,#231340 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="deepseek" style="background:radial-gradient(circle at 25% 30%, rgba(91,141,239,.45), transparent 55%),linear-gradient(135deg,#11264f 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="cohere" style="background:radial-gradient(circle at 25% 30%, rgba(255,84,112,.45), transparent 55%),linear-gradient(135deg,#3d1322 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="perplexity" style="background:radial-gradient(circle at 25% 30%, rgba(31,184,205,.45), transparent 55%),linear-gradient(135deg,#082b30 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="perceptron" style="background:radial-gradient(circle at 25% 30%, rgba(245,158,11,.5), transparent 55%),linear-gradient(135deg,#3a280a 0%,#07070f 70%);"></div>
+      <div class="hero-slide-img" data-lab="nous-research" style="background:radial-gradient(circle at 25% 30%, rgba(139,92,246,.45), transparent 55%),linear-gradient(135deg,#1f1438 0%,#07070f 70%);"></div>
+    </div>
+    <button class="hero-slide-prev" id="labPrev" aria-label="Previous">&#8249;</button>
+    <button class="hero-slide-next" id="labNext" aria-label="Next">&#8250;</button>
+  </div>
+
+  <div class="hero-dots-row">
+    <div class="hero-slide-dots" id="labSlideDots">
+      <button class="hero-dot active" aria-label="Slide 1"></button>
+      <button class="hero-dot" aria-label="Slide 2"></button>
+      <button class="hero-dot" aria-label="Slide 3"></button>
+      <button class="hero-dot" aria-label="Slide 4"></button>
+      <button class="hero-dot" aria-label="Slide 5"></button>
+      <button class="hero-dot" aria-label="Slide 6"></button>
+      <button class="hero-dot" aria-label="Slide 7"></button>
+      <button class="hero-dot" aria-label="Slide 8"></button>
+      <button class="hero-dot" aria-label="Slide 9"></button>
+      <button class="hero-dot" aria-label="Slide 10"></button>
+      <button class="hero-dot" aria-label="Slide 11"></button>
+      <button class="hero-dot" aria-label="Slide 12"></button>
+    </div>
+  </div>
+  <div class="hero-content-panel" id="labContentPanel"></div>
+
+  <!-- Hero section -->
+  <section class="labs-hero">
+    <div class="container">
+      <span class="badge" style="background:rgba(245,158,11,.12);color:var(--neon-gold,#f59e0b);border:1px solid rgba(245,158,11,.3);padding:5px 11px;border-radius:5px;font-family:var(--font-display);font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;">
+        <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10 2v6.5L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 8.5V2"/><line x1="9" y1="2" x2="15" y2="2"/><line x1="7" y1="15" x2="17" y2="15"/></svg>
+        AI Laboratory Atlas
+      </span>
+      <h1>The Labs<br><span>Building AI</span></h1>
+      <p class="labs-hero-sub">Twelve frontier and open-source AI labs, organised by who builds the models. Each section: editorial intro, flagship models, what they bet on, what to use them for, and the catch.</p>
+      <div class="labs-stats-row">
+        <div class="labs-stat">
+          <svg viewBox="0 0 24 24"><path d="M10 2v6.5L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 8.5V2"/><line x1="9" y1="2" x2="15" y2="2"/><line x1="7" y1="15" x2="17" y2="15"/></svg>
+          <span><strong>12</strong> labs tracked</span>
+        </div>
+        <div class="labs-stat">
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg>
+          <span><strong>32</strong> models explored</span>
+        </div>
+        <div class="labs-stat">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Updated <strong>2026</strong></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Labs grid -->
+  <section class="labs-section">
+    <div class="labs-grid" id="labsGrid">
+
+      <a href="/labs/openai.html" class="lab-card" style="--lab-accent:#10a37f;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">USA · 2015</span>
+          <span class="lab-card-models-badge">3 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">OpenAI</h2>
+          <p class="lab-card-tagline">The mainstream face of generative AI</p>
+          <p class="lab-card-desc">Founded as a non-profit and now a commercial juggernaut, OpenAI turned ChatGPT into the consumer face of generative AI. The strategy: ship the broadest, most distribution-friendly model line on the planet.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/anthropic.html" class="lab-card" style="--lab-accent:#d4a574;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">USA · 2021</span>
+          <span class="lab-card-models-badge">3 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">Anthropic</h2>
+          <p class="lab-card-tagline">The safety-first frontier lab</p>
+          <p class="lab-card-desc">Spun out of OpenAI in 2021, Anthropic positions itself as the safety-conscious frontier lab. Claude is the model developers reach for when they want long context, careful reasoning, and an assistant that pushes back when it should.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/google-deepmind.html" class="lab-card" style="--lab-accent:#4285f4;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">UK/USA · 2010</span>
+          <span class="lab-card-models-badge">3 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">Google DeepMind</h2>
+          <p class="lab-card-tagline">Research giant turned product lab</p>
+          <p class="lab-card-desc">The unified AI arm of Alphabet. Gemini powers Search AI Overviews, Workspace, Android, and the standalone Gemini app. Lean on the world's biggest distribution moat plus 25 years of research.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/meta-ai.html" class="lab-card" style="--lab-accent:#1877f2;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">USA · 2013</span>
+          <span class="lab-card-models-badge">3 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">Meta AI</h2>
+          <p class="lab-card-tagline">Open-weights at frontier scale</p>
+          <p class="lab-card-desc">The Llama series became the open-weights frontier. Mark Zuckerberg's bet is that open models commoditise the layer above the chip, making Meta's app distribution and Reality Labs hardware more valuable.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/xai.html" class="lab-card" style="--lab-accent:#1da1f2;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">USA · 2023</span>
+          <span class="lab-card-models-badge">3 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">xAI</h2>
+          <p class="lab-card-tagline">The maximally curious lab</p>
+          <p class="lab-card-desc">Elon Musk's frontier lab, with the implicit edge of X (formerly Twitter) as a real-time data feed. Four major Grok versions in under two years. Less hedged on political and controversial topics than competitors.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/mistral.html" class="lab-card" style="--lab-accent:#ff7000;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">France · 2023</span>
+          <span class="lab-card-models-badge">3 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">Mistral AI</h2>
+          <p class="lab-card-tagline">European frontier lab</p>
+          <p class="lab-card-desc">Paris-based, founded by Meta and DeepMind alumni. Hybrid strategy: open weights for some models, commercial APIs for the frontier. Strong on European languages, structured outputs, and shipping fast.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/qwen.html" class="lab-card" style="--lab-accent:#a370f7;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">China · 2023</span>
+          <span class="lab-card-models-badge">3 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">Qwen <span style="font-size:.75rem;font-weight:600;color:rgba(241,245,249,0.5);">(Alibaba)</span></h2>
+          <p class="lab-card-tagline">China's open frontier challenger</p>
+          <p class="lab-card-desc">Alibaba's frontier AI lab, the most prolific releaser of open-weights models in 2025-2026. Strategy is volume: ship a new variant every six weeks, from 0.5B edge models to 200B+ flagships.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/deepseek.html" class="lab-card" style="--lab-accent:#5b8def;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">China · 2023</span>
+          <span class="lab-card-models-badge">3 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">DeepSeek</h2>
+          <p class="lab-card-tagline">The lab that proved compute isn't everything</p>
+          <p class="lab-card-desc">Shocked Silicon Valley in early 2025 by training a frontier-class model for a tiny fraction of OpenAI's reported cost. Their mixture-of-experts architecture became the template the open-source world copies.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/cohere.html" class="lab-card" style="--lab-accent:#ff5470;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">Canada · 2019</span>
+          <span class="lab-card-models-badge">3 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">Cohere</h2>
+          <p class="lab-card-tagline">Enterprise-first, retrieval-native</p>
+          <p class="lab-card-desc">Founded by Aidan Gomez, one of the Transformer paper authors. Bet on enterprise from day one rather than consumer chat. The Command family is built for RAG, structured outputs, and on-premise deployment.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/perplexity.html" class="lab-card" style="--lab-accent:#1fb8cd;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">USA · 2022</span>
+          <span class="lab-card-models-badge">2 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">Perplexity</h2>
+          <p class="lab-card-tagline">Search-native AI</p>
+          <p class="lab-card-desc">Reframed AI as a search interface rather than a conversation. The product cites every claim back to a source. The Sonar model family is tuned for grounded, citation-aware answering.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/perceptron.html" class="lab-card" style="--lab-accent:#f59e0b;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">USA · 2025</span>
+          <span class="lab-card-models-badge">1 model</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">Perceptron</h2>
+          <p class="lab-card-tagline">Spatial intelligence for the physical world</p>
+          <p class="lab-card-desc">Newer entrant focused on spatial intelligence — models that understand the physical world, not just text. Heavy weighting toward 3D scene understanding, robotics datasets, and embodied trajectories.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/labs/nous-research.html" class="lab-card" style="--lab-accent:#8b5cf6;">
+        <div class="lab-card-banner">
+          <span class="lab-card-mark">USA · 2023</span>
+          <span class="lab-card-models-badge">2 models</span>
+        </div>
+        <div class="lab-card-body">
+          <h2 class="lab-card-name">Nous Research</h2>
+          <p class="lab-card-tagline">Open-weights craft house</p>
+          <p class="lab-card-desc">An independent research collective rather than a venture-backed lab. Hermes Agent became one of the most-downloaded open agentic models of 2025-2026. The vibe is craftsmanship over scale.</p>
+          <div class="lab-card-cta">
+            <span>Explore lab</span>
+            <span class="lab-card-cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // ── Lab Hero Slideshow ────────────────────────────────────────────────────
+  (function() {
+    var SLIDES_DATA = [
+      { eyebrow:"OpenAI",            title:"The mainstream face of generative AI",      sub:"GPT-5.5, GPT-5.4 Think, GPT-Image-2. The lab that made AI synonymous with chat.",                             href:"/labs/openai.html" },
+      { eyebrow:"Anthropic",         title:"The safety-first frontier lab",             sub:"Claude Opus 4.7, Sonnet 4.6, Haiku 4.5. Constitutional AI and the Responsible Scaling Policy.",              href:"/labs/anthropic.html" },
+      { eyebrow:"Google DeepMind",   title:"Research giant turned product lab",         sub:"Gemini 3.5 Pro, Flash, Spark. 2M token context and the world's biggest distribution moat.",                  href:"/labs/google-deepmind.html" },
+      { eyebrow:"Meta AI",           title:"Open-weights at frontier scale",            sub:"Llama 4 Maverick, Scout, Omni. The open frontier you can download today.",                                  href:"/labs/meta-ai.html" },
+      { eyebrow:"xAI",               title:"The maximally curious lab",                 sub:"Grok 4, Grok Build, Grok Vision. Real-time X data plus fewer guardrails.",                                 href:"/labs/xai.html" },
+      { eyebrow:"Mistral AI",        title:"European frontier lab",                     sub:"Mistral Large 3, Codestral 2, Mixtral 8x22B. Europe's bid for AI sovereignty.",                            href:"/labs/mistral.html" },
+      { eyebrow:"Qwen (Alibaba)",    title:"China's open frontier challenger",          sub:"Qwen3.7 Max, Coder, Omni. The most prolific releaser of open-weights models.",                              href:"/labs/qwen.html" },
+      { eyebrow:"DeepSeek",          title:"The lab that proved compute isn't everything", sub:"DeepSeek R2, V3.5, Coder V3. Frontier-class quality at 1/30th the price.",                              href:"/labs/deepseek.html" },
+      { eyebrow:"Cohere",            title:"Enterprise-first, retrieval-native",        sub:"Command A, Command R+, Embed v4. Built for RAG and on-premise deployment.",                                href:"/labs/cohere.html" },
+      { eyebrow:"Perplexity",        title:"Search-native AI",                          sub:"Sonar Pro, Sonar Reasoning. Every answer carries citations.",                                              href:"/labs/perplexity.html" },
+      { eyebrow:"Perceptron",        title:"Spatial intelligence for the physical world", sub:"Perceptron Mk1. Vision-reasoning for robotics and embodied AI.",                                          href:"/labs/perceptron.html" },
+      { eyebrow:"Nous Research",     title:"Open-weights craft house",                  sub:"Hermes 4, Hermes Vision 2. The indie-builder agentic ecosystem.",                                          href:"/labs/nous-research.html" }
+    ];
+
+    var TOTAL    = SLIDES_DATA.length;
+    var INTERVAL = 6000;
+    var current  = 0;
+    var timer    = null;
+
+    var track = document.getElementById("labSlidesTrack");
+    var dots  = document.querySelectorAll("#labSlideDots .hero-dot");
+    var prev  = document.getElementById("labPrev");
+    var next  = document.getElementById("labNext");
+    var panel = document.getElementById("labContentPanel");
+
+    function updatePanel(idx) {
+      if (!panel) return;
+      var s = SLIDES_DATA[idx];
+      panel.innerHTML =
+        '<div class="panel-eyebrow">' + s.eyebrow + '</div>' +
+        '<h2 class="panel-title">' + s.title + '</h2>' +
+        '<p class="panel-sub">' + s.sub + '</p>' +
+        '<a href="' + s.href + '" class="panel-cta">Explore lab →</a>';
+    }
+    function goTo(idx) {
+      current = (idx + TOTAL) % TOTAL;
+      if (track) track.style.transform = "translateX(-" + (current * 100) + "%)";
+      dots.forEach(function(d, i) { d.classList.toggle("active", i === current); });
+      updatePanel(current);
+    }
+    function startAuto() {
+      clearInterval(timer);
+      timer = setInterval(function() { goTo(current + 1); }, INTERVAL);
+    }
+
+    dots.forEach(function(d, i) {
+      d.addEventListener("click", function() { goTo(i); startAuto(); });
+    });
+    if (prev) prev.addEventListener("click", function() { goTo(current - 1); startAuto(); });
+    if (next) next.addEventListener("click", function() { goTo(current + 1); startAuto(); });
+
+    // Touch swipe
+    var touchStartX = 0;
+    var slideshow = document.getElementById("labSlideshow");
+    if (slideshow) {
+      slideshow.addEventListener("touchstart", function(e) {
+        touchStartX = e.changedTouches[0].clientX;
+      }, { passive: true });
+      slideshow.addEventListener("touchend", function(e) {
+        var dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 40) {
+          goTo(dx < 0 ? current + 1 : current - 1);
+          startAuto();
+        }
+      }, { passive: true });
+      slideshow.addEventListener("mouseenter", function() { clearInterval(timer); });
+      slideshow.addEventListener("mouseleave", function() { startAuto(); });
+    }
+
+    updatePanel(0);
+    startAuto();
+  })();
+</script>
+<script src="/js/main.js"></script>
+</body>
+</html>
