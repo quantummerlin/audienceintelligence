@@ -1,12 +1,13 @@
 /**
- * Aether Intel — Service Worker v20
+ * Aether Intel — Service Worker v21
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v20: Labs Atlas Phase B — first lab detail page /labs/openai.html as the
- *      polished template (stacked hero, editorial intro, recent coverage strip,
- *      model cards grid, use-for/skip-for usage cards). New lab-* CSS in style.css.
+ * v21: Labs Atlas Phase C — 11 remaining lab detail pages built from the OpenAI
+ *      template via labs-build/build_labs.py. Each lab gets editorial intro,
+ *      recent-coverage strip, model cards, and use-for/skip-for cards. Atlas
+ *      is now navigable end-to-end across all 12 labs.
  */
 
-const CACHE_VERSION = 'aether-v20';
+const CACHE_VERSION = 'aether-v21';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
