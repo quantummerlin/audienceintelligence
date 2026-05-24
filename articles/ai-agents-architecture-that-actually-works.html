@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>I Got Tired of AI Agents Breaking My Setup — Here's the Architecture That Actually Works | Aether Intel</title>
-  <meta name="description" content="After months of AI agents deleting files, breaking configs, and looping on errors, one developer found the permission structure that stops all of it. Here is the full setup.">
+  <meta name="description" content="After months of agents deleting files and looping on errors, one developer found the permission structure that stops all of it.">
   <meta property="og:title" content="I Got Tired of AI Agents Breaking My Setup — Here's the Architecture That Actually Works">
-  <meta property="og:description" content="After months of AI agents deleting files, breaking configs, and looping on errors, one developer found the permission structure that stops all of it. Here is the full setup.">
+  <meta property="og:description" content="After months of agents deleting files and looping on errors, one developer found the permission structure that stops all of it.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://ai.quantummerlin.com/articles/ai-agents-architecture-that-actually-works.html">
   <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/ai-agents-architecture-that-actually-works-hero.webp">
   <meta property="og:site_name" content="Aether Intel">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="I Got Tired of AI Agents Breaking My Setup — Here's the Architecture That Actually Works">
-  <meta name="twitter:description" content="After months of AI agents deleting files, breaking configs, and looping on errors, one developer found the permission structure that stops all of it. Here is the full setup.">
+  <meta name="twitter:description" content="After months of agents deleting files and looping on errors, one developer found the permission structure that stops all of it.">
   <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/ai-agents-architecture-that-actually-works-hero.webp">
   <link rel="canonical" href="https://ai.quantummerlin.com/articles/ai-agents-architecture-that-actually-works.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +34,7 @@
     <div class="article-hero">
       <img
         src="/images/articles/ai-agents-architecture-that-actually-works-hero.webp"
-        alt="Clean whiteboard diagram of a structured system architecture"
+        alt="Clean whiteboard diagram of system architecture"
         class="article-hero-img"
         loading="eager"
         fetchpriority="high"
@@ -43,49 +43,55 @@
       <div class="article-hero-content">
         <span class="badge badge-agents">Agents</span>
         <h1 class="article-hero-title">I Got Tired of AI Agents Breaking My Setup — Here's the Architecture That Actually Works</h1>
-        <div class="article-hero-meta">May 24, 2026 &bull; 4 min read</div>
+        <div class="article-hero-meta">May 24, 2026 &bull; 2 min read</div>
       </div>
     </div>
 
     <div class="article-layout">
       <article class="article-body">
 
-<h2 class="article-h2">The Root Cause of Most Agent Failures</h2>
-  <p>Most agent failures fall into one of four categories: scope creep (the agent takes actions beyond what was intended), state confusion (the agent loses track of what's been done and what hasn't), error propagation (a wrong step early in a workflow contaminates every subsequent step), and permission overreach (the agent has access to things it shouldn't use and eventually does use them). Interestingly, none of these are model failures , they're architecture failures. Better models don't fix them. Better architecture does.</p>
+<h2 class="article-h2">The Problems That Keep Coming Back</h2>
 
-  <h2 class="article-h2">The Plan-First Pattern (Single Highest-use Change)</h2>
-  <p>The most consistently reported improvement across every agent builder in the community: requiring the agent to produce a readable plan before executing any of it. Not for you , for itself. The agent writes out what it intends to do, in what order, and what the expected state of the world will be after each step.</p>
-  <p>One builder reported: "Adding a plan step cut my agent failure rate by 60%." The mechanism isn't mysterious. The plan step forces the LLM to surface its assumptions about the current state of the world, identify the inputs each step requires, and flag where it lacks information before it starts acting rather than halfway through. Errors that would have been discovered in step 4 are discovered in the plan. Discovering them in the plan is free. Discovering them in step 4 is expensive.</p>
-  <p>Implementation: before any multi-step agent execution, add a system prompt requirement: "Before taking any action, produce a numbered plan of what you intend to do, what you expect to find at each step, and what will constitute success. Submit the plan and wait for confirmation." The wait-for-confirmation step is optional , but the plan generation is not.</p>
+<p>You have probably hit at least one of these. An AI agent that deleted a config file while cleaning up. One that overwrote the wrong version of something. One that got stuck in a loop doing the same thing repeatedly because it thought it had not succeeded yet.</p>
 
-  <h2 class="article-h2">State Management: The Problem Nobody Talks About Enough</h2>
-  <p>Stateless agents , agents that have no persistent memory of what they've done in previous runs , are the primary source of repetitive errors and unnecessary repeated actions. If your agent runs daily and doesn't know what it did yesterday, it will repeat yesterday's work, trigger duplicate notifications, and produce duplicate outputs. This is not a model problem. It's a state management problem.</p>
-  <p>Solutions that work in production:</p>
-  <ul>
-    <li><strong>Checkpoint files.</strong> After each significant action, the agent writes a structured record of what it did to a checkpoint file. On startup, the agent reads the checkpoint and picks up from where it left off. Simple, filesystem-based, and debuggable by humans.</li>
-    <li><strong>Action logs with deduplication keys.</strong> Every agent action is logged with a unique key based on the action content. Before executing an action, the agent checks whether that key exists in the log. If it does, the action is skipped. This pattern is nearly immune to repetitive execution errors.</li>
-    <li><strong>Separate "what to do" from "what has been done."</strong> Maintain two lists: the task queue (what the agent needs to do) and the completion log (what it has done). The agent works through the task queue and moves items to the completion log. Transparency is total , at any point you can see exactly where the agent is.</li>
-  </ul>
+<p>These are not model problems. They are architecture problems. The model is doing exactly what it was asked to do , broadly. The issue is that "broadly" is doing too much work.</p>
 
-  <h2 class="article-h2">Error Recovery Architecture</h2>
-  <p>The question to answer before deploying any agent: what happens when step 3 of a 7-step workflow fails? If the answer is "the whole workflow fails and I have to restart from step 1," your error recovery architecture is inadequate for production use. Proper error recovery has three components:</p>
-  <ol>
-    <li><strong>Idempotent steps.</strong> Design each step so it can be run multiple times without causing harm. A step that "creates record if not exists" is idempotent. A step that "creates record" is not. Idempotency means you can safely retry failed steps without manual cleanup.</li>
-    <li><strong>Rollback definitions.</strong> For every step that creates, modifies, or deletes state, define what rollback looks like. This doesn't mean you always roll back , it means you can. Write the rollback logic at design time, when you're thinking clearly, not at 2am when the workflow is stuck in a bad state.</li>
-    <li><strong>Human escalation at defined failure thresholds.</strong> If a step fails three times in a row: stop, alert, wait. Don't let agents retry indefinitely. The threshold for human escalation should be defined in code, not discovered when the agent has sent 400 API requests trying to resolve something it cannot resolve autonomously.</li>
-  </ol>
+<hr class="article-divider">
 
-  <h2 class="article-h2">Scope Discipline: The Ongoing Practice</h2>
-  <p>Agent scope creep , the gradual expansion of what an agent does beyond what it was originally designed for , is the most common form of technical debt in agent systems. It happens because adding a new capability feels small in isolation and ends up large in aggregate. The agent that started as "summarize my emails" becomes "summarize my emails, flag action items, draft replies, schedule follow-ups, and occasionally book calendar events." Each addition seemed reasonable. The composite is an agent with an enormous blast radius and unclear responsibility boundaries.</p>
-  <p>The rule that prevents this: every capability addition requires a corresponding permission audit and a blast-radius reassessment. If the new capability increases what the agent can do to the world, the question is not "should we add this?" but "is our human oversight infrastructure adequate for the larger blast radius?"</p>
+<h2 class="article-h2">The Permission Layer That Fixes Everything</h2>
 
-  
-  <div class="cta">
-    <p>For your current agent: <strong>does it produce a plan before acting, and can you read the complete state of what it has and hasn't done at any point?</strong> If not, those are the first two fixes , and they compound everything else you build on top of them.</p>
-  </div>
-</article>
+<p>After months of debugging agent failures, one developer found the setup that stopped all of them. It is not a new framework. It is a simple set of rules applied consistently.</p>
 
-<!-- ARTICLE 22 -->
+<p><strong>Read access: everything the agent needs to see.</strong> Codebases, configs, documentation, prior outputs. No restrictions on reading. Reading is free.</p>
+
+<p><strong>Write access: one output folder only.</strong> The agent writes to a designated directory. Not the project root. Not the source tree. One folder. Anything outside that folder is read-only until explicitly unlocked for a specific task.</p>
+
+<p><strong>Destructive operations require confirmation.</strong> Anything that cannot be undone , deletes, overwrites of source files, external API calls that have side effects , requires a human confirmation step before executing. The agent stops, describes what it is about to do, and waits.</p>
+
+<p><strong>All actions are logged.</strong> Every file read, every write, every API call goes into a log file the human can review. Not for debugging after something goes wrong , as a live record of what the agent is doing, available at any point.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Why This Stops the Loops</h2>
+
+<p>Most agent loops happen because the agent cannot tell whether its previous action succeeded. It tries again. Same result. Tries again.</p>
+
+<p>When writes are scoped to an output folder, the agent has a clean verification path: did the file appear in the output folder? Yes or no. No ambiguity about whether it wrote to the right place. The loop condition disappears.</p>
+
+<p>The confirmation step for destructive operations adds a second benefit beyond safety: it forces the agent to articulate what it is doing before doing it. That articulation catches a significant percentage of misunderstood instructions before they execute.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What to Build First</h2>
+
+<p>If you are starting from scratch, build the output folder convention before you build anything else. Make it a rule you do not break: every agent you deploy writes to one place, and that place is not your source tree.</p>
+
+<p>Add logging on the second day. Add the confirmation step for destructive operations on the third. By day four you have a permission architecture that has absorbed most of the failure modes without adding significant friction to the happy path.</p>
+
+<p>11,902 people have been hitting this wall. The wall is not the model. The model is fine. The wall is the assumption that an agent with broad access will use that access carefully.</p>
+
+<p>It will not. Build the fence first.</p>
+
 
       </article>
 
