@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Got Tired of AI Agents Breaking My Setup — Here's the Architecture That Actually Works | Aether Intel</title>
+  <meta name="description" content="After months of AI agents deleting files, breaking configs, and looping on errors, one developer found the permission structure that stops all of it. Here is the full setup.">
+  <meta property="og:title" content="I Got Tired of AI Agents Breaking My Setup — Here's the Architecture That Actually Works">
+  <meta property="og:description" content="After months of AI agents deleting files, breaking configs, and looping on errors, one developer found the permission structure that stops all of it. Here is the full setup.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/ai-agents-architecture-that-actually-works.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/ai-agents-architecture-that-actually-works-hero.webp">
+  <meta property="og:site_name" content="Aether Intel">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="I Got Tired of AI Agents Breaking My Setup — Here's the Architecture That Actually Works">
+  <meta name="twitter:description" content="After months of AI agents deleting files, breaking configs, and looping on errors, one developer found the permission structure that stops all of it. Here is the full setup.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/ai-agents-architecture-that-actually-works-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/ai-agents-architecture-that-actually-works.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/favicon.ico">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  <div id="now-bar"></div>
+
+  <main class="article-page">
+
+    <div class="article-hero">
+      <img
+        src="/images/articles/ai-agents-architecture-that-actually-works-hero.webp"
+        alt="Clean whiteboard diagram of a structured system architecture"
+        class="article-hero-img"
+        loading="eager"
+        fetchpriority="high"
+      >
+      <div class="article-hero-overlay"></div>
+      <div class="article-hero-content">
+        <span class="badge badge-agents">Agents</span>
+        <h1 class="article-hero-title">I Got Tired of AI Agents Breaking My Setup — Here's the Architecture That Actually Works</h1>
+        <div class="article-hero-meta">May 24, 2026 &bull; 4 min read</div>
+      </div>
+    </div>
+
+    <div class="article-layout">
+      <article class="article-body">
+
+<h2 class="article-h2">The Root Cause of Most Agent Failures</h2>
+  <p>Most agent failures fall into one of four categories: scope creep (the agent takes actions beyond what was intended), state confusion (the agent loses track of what's been done and what hasn't), error propagation (a wrong step early in a workflow contaminates every subsequent step), and permission overreach (the agent has access to things it shouldn't use and eventually does use them). Interestingly, none of these are model failures , they're architecture failures. Better models don't fix them. Better architecture does.</p>
+
+  <h2 class="article-h2">The Plan-First Pattern (Single Highest-use Change)</h2>
+  <p>The most consistently reported improvement across every agent builder in the community: requiring the agent to produce a readable plan before executing any of it. Not for you , for itself. The agent writes out what it intends to do, in what order, and what the expected state of the world will be after each step.</p>
+  <p>One builder reported: "Adding a plan step cut my agent failure rate by 60%." The mechanism isn't mysterious. The plan step forces the LLM to surface its assumptions about the current state of the world, identify the inputs each step requires, and flag where it lacks information before it starts acting rather than halfway through. Errors that would have been discovered in step 4 are discovered in the plan. Discovering them in the plan is free. Discovering them in step 4 is expensive.</p>
+  <p>Implementation: before any multi-step agent execution, add a system prompt requirement: "Before taking any action, produce a numbered plan of what you intend to do, what you expect to find at each step, and what will constitute success. Submit the plan and wait for confirmation." The wait-for-confirmation step is optional , but the plan generation is not.</p>
+
+  <h2 class="article-h2">State Management: The Problem Nobody Talks About Enough</h2>
+  <p>Stateless agents , agents that have no persistent memory of what they've done in previous runs , are the primary source of repetitive errors and unnecessary repeated actions. If your agent runs daily and doesn't know what it did yesterday, it will repeat yesterday's work, trigger duplicate notifications, and produce duplicate outputs. This is not a model problem. It's a state management problem.</p>
+  <p>Solutions that work in production:</p>
+  <ul>
+    <li><strong>Checkpoint files.</strong> After each significant action, the agent writes a structured record of what it did to a checkpoint file. On startup, the agent reads the checkpoint and picks up from where it left off. Simple, filesystem-based, and debuggable by humans.</li>
+    <li><strong>Action logs with deduplication keys.</strong> Every agent action is logged with a unique key based on the action content. Before executing an action, the agent checks whether that key exists in the log. If it does, the action is skipped. This pattern is nearly immune to repetitive execution errors.</li>
+    <li><strong>Separate "what to do" from "what has been done."</strong> Maintain two lists: the task queue (what the agent needs to do) and the completion log (what it has done). The agent works through the task queue and moves items to the completion log. Transparency is total , at any point you can see exactly where the agent is.</li>
+  </ul>
+
+  <h2 class="article-h2">Error Recovery Architecture</h2>
+  <p>The question to answer before deploying any agent: what happens when step 3 of a 7-step workflow fails? If the answer is "the whole workflow fails and I have to restart from step 1," your error recovery architecture is inadequate for production use. Proper error recovery has three components:</p>
+  <ol>
+    <li><strong>Idempotent steps.</strong> Design each step so it can be run multiple times without causing harm. A step that "creates record if not exists" is idempotent. A step that "creates record" is not. Idempotency means you can safely retry failed steps without manual cleanup.</li>
+    <li><strong>Rollback definitions.</strong> For every step that creates, modifies, or deletes state, define what rollback looks like. This doesn't mean you always roll back , it means you can. Write the rollback logic at design time, when you're thinking clearly, not at 2am when the workflow is stuck in a bad state.</li>
+    <li><strong>Human escalation at defined failure thresholds.</strong> If a step fails three times in a row: stop, alert, wait. Don't let agents retry indefinitely. The threshold for human escalation should be defined in code, not discovered when the agent has sent 400 API requests trying to resolve something it cannot resolve autonomously.</li>
+  </ol>
+
+  <h2 class="article-h2">Scope Discipline: The Ongoing Practice</h2>
+  <p>Agent scope creep , the gradual expansion of what an agent does beyond what it was originally designed for , is the most common form of technical debt in agent systems. It happens because adding a new capability feels small in isolation and ends up large in aggregate. The agent that started as "summarize my emails" becomes "summarize my emails, flag action items, draft replies, schedule follow-ups, and occasionally book calendar events." Each addition seemed reasonable. The composite is an agent with an enormous blast radius and unclear responsibility boundaries.</p>
+  <p>The rule that prevents this: every capability addition requires a corresponding permission audit and a blast-radius reassessment. If the new capability increases what the agent can do to the world, the question is not "should we add this?" but "is our human oversight infrastructure adequate for the larger blast radius?"</p>
+
+  
+  <div class="cta">
+    <p>For your current agent: <strong>does it produce a plan before acting, and can you read the complete state of what it has and hasn't done at any point?</strong> If not, those are the first two fixes , and they compound everything else you build on top of them.</p>
+  </div>
+</article>
+
+<!-- ARTICLE 22 -->
+
+      </article>
+
+      <aside class="article-sidebar">
+        <div id="more-like-this"></div>
+      </aside>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Aether Intel</span>
+      <span class="footer-copy">&copy; 2026. AI news for people who think.</span>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
