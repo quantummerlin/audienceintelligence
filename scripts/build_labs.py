@@ -412,12 +412,14 @@ def render_model_card(model, lab_accent):
 
 
 def render_article_card(path, cat, title, lab_accent):
-    # Article hero image: try /images/articles/{slug}.webp first, fallback to {slug}-hero.webp
+    # Article hero image: try {slug}-hero.webp first (the more common naming
+    # convention — ~66 of 177 articles use it). Fall back to plain {slug}.webp
+    # (used by ~12 articles). Final fallback is a brand-accent gradient.
     slug = path.split('/')[-1].replace('.html', '')
-    img_url = f"/images/articles/{slug}.webp"
+    img_url = f"/images/articles/{slug}-hero.webp"
     onerror = (
         f"this.onerror=null;"
-        f"this.src='/images/articles/{slug}-hero.webp';"
+        f"this.src='/images/articles/{slug}.webp';"
         f"this.onerror=function(){{this.style.background='linear-gradient(135deg,{lab_accent}22,#07070f66)';this.removeAttribute(\"src\");}}"
     )
     return f'''
@@ -624,3 +626,4 @@ if __name__ == "__main__":
             f.write(html)
         print(f"  {slug:<22} {len(html):>7} bytes")
     print(f"\nWrote {len(LAB_CONTENT)} lab pages to labs-out/")
+
