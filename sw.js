@@ -1,12 +1,13 @@
 /**
- * Aether Intel — Service Worker v23
+ * Aether Intel — Service Worker v24
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v23: motion polish — refined easing, button press feedback, card hover image
- *      zoom, page fade-in, prefers-reduced-motion accessibility, AePanel close
- *      uses ease-in for natural exit rhythm, IntersectionObserver threshold tuned
+ * v24: full motion pass — hero entrance stagger + View Transitions API for
+ *      cross-page navigation. JS auto-applies .hero-enter to first 5 children
+ *      of <main> on listing pages. Click interceptor wraps same-origin
+ *      cross-document navs in document.startViewTransition() for fade rhythm.
  */
 
-const CACHE_VERSION = 'aether-v23';
+const CACHE_VERSION = 'aether-v24';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
@@ -181,6 +182,7 @@ self.addEventListener('notificationclick', event => {
     clients.openWindow(event.notification.data?.url || '/')
   );
 });
+
 
 
 

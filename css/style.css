@@ -5306,3 +5306,61 @@ button:active,
     transform: none !important;
   }
 }
+
+
+/* =============================================================================
+   FULL MOTION PASS (2026-05) — Hero Entrance + View Transitions
+   ============================================================================= */
+
+/* ── Hero entrance: staggered fade-up applied via JS on first paint ────────
+   js/main.js#initHeroEntrance adds .hero-enter + --enter-i (0..4) to the
+   first 5 children of <main> on listing pages (labs, articles, skills,
+   agents, home). Each subsequent child is delayed 110ms. */
+@keyframes heroEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-enter {
+  animation: heroEnter 0.62s var(--ease-out-quart, ease) both;
+  animation-delay: calc(var(--enter-i, 0) * 110ms);
+  will-change: opacity, transform;
+}
+
+/* ── View Transitions: smooth fade between cross-page navigations ──────────
+   Triggered via JS document.startViewTransition() in js/main.js. The browser
+   snapshots the outgoing page, navigates, then animates between snapshots.
+   Falls back to a normal browser nav in Firefox (which doesn't yet support
+   the API). */
+::view-transition-old(root) {
+  animation: aeViewFadeOut 180ms var(--ease-in-quart, ease) both;
+}
+::view-transition-new(root) {
+  animation: aeViewFadeIn 320ms var(--ease-out-quart, ease) both;
+}
+@keyframes aeViewFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes aeViewFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Accessibility: kill both effects when reduced motion is requested */
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}

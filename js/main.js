@@ -1190,6 +1190,61 @@
     target.insertAdjacentHTML('beforeend', BMC_HTML);
   }
 
+  // ---------------------------------------------------------------------------
+  // Hero entrance — staggered fade-up on first paint of listing/hero pages
+  // ---------------------------------------------------------------------------
+  function initHeroEntrance() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var main = document.querySelector('main');
+    if (!main) return;
+    // Listing/hero pages have one of these markers near the top
+    if (!main.querySelector('.hero-slideshow, .platform-bar, .labs-hero, .skills-hero, .agents-hero, .home-header, .page-hero, .alp-hero')) return;
+    // Stagger the first 5 direct children of main with progressive delay
+    var children = Array.prototype.slice.call(main.children).slice(0, 5);
+    children.forEach(function (el, i) {
+      el.classList.add('hero-enter');
+      el.style.setProperty('--enter-i', i);
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // View Transitions — fade between pages on cross-page navigation
+  // Uses the View Transitions API (Chrome, Edge, Safari 18+). Firefox falls
+  // back to default browser navigation. Skips /articles/ paths (those open in
+  // the AePanel modal), external links, downloads, and modifier-clicks.
+  // ---------------------------------------------------------------------------
+  function initViewTransitions() {
+    if (!document.startViewTransition) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.addEventListener('click', function (e) {
+      // Plain left-click only — let users open in new tab / save / etc.
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest('a[href]');
+      if (!a) return;
+      var href = a.getAttribute('href');
+      if (!href) return;
+      if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
+      if (a.target && a.target !== '' && a.target !== '_self') return;
+      if (a.hasAttribute('download')) return;
+      try {
+        var url = new URL(href, location.href);
+        if (url.origin !== location.origin) return;
+        // Skip /articles/ — those open in the AePanel modal
+        if (url.pathname.match(/^\/articles\/[^/]+\.html$/)) return;
+        // Skip same-page navigation (just hash changes)
+        if (url.pathname === location.pathname && url.search === location.search) return;
+      } catch (err) {
+        return;
+      }
+      e.preventDefault();
+      document.startViewTransition(function () {
+        window.location.href = a.href;
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------------------
   // INIT — DOMContentLoaded
   // ---------------------------------------------------------------------------
 
@@ -1198,6 +1253,7 @@
     setActiveNav();
     initScrollProgress();
     initScrollReveal();
+    initHeroEntrance();    // Staggered hero entrance on first paint
     setGreeting();
     initTicker();
     initCardGlow();
@@ -1205,6 +1261,7 @@
     injectArticleBackNav(); // Back nav for new-template articles
     injectBMC();            // Buy Me a Coffee at end of article
     initArticlePanel();     // Spotify swipe-up reader
+    initViewTransitions();  // Fade between cross-page navigations
     loadOpenRouterModels(); // No-ops if #modelsGrid not present
   });
 
@@ -1321,6 +1378,7 @@
   }());
 
 }());
+
 
 
 
