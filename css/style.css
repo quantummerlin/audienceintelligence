@@ -5105,3 +5105,204 @@ body:has(#ae-article-panel.ae-panel-open) {
   .lab-articles-strip { gap: 12px; }
   .lab-model-card { padding: 20px 18px; }
 }
+
+
+/* =============================================================================
+   MOTION POLISH (2026-05)
+   - Adds refined easing variables (ease-out-quart, ease-in-quart, ease-spring)
+   - Tunes scroll-reveal transitions with proper easing + will-change
+   - Adds button :active press feedback
+   - Adds card hover image zoom (lab cards + article cards)
+   - Adds initial page fade-in
+   - Adds prefers-reduced-motion safety net that disables all decorative motion
+   ============================================================================= */
+
+:root {
+  --ease-out-quart:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in-quart:   cubic-bezier(0.5, 0, 0.75, 0);
+  --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Scroll reveal — refined easing + will-change ── */
+.reveal,
+.reveal-scale,
+.reveal-stagger {
+  will-change: opacity, transform;
+  transition:
+    opacity 0.6s var(--ease-out-quart),
+    transform 0.6s var(--ease-out-quart) !important;
+}
+/* Strip will-change after the reveal completes — frees the browser to optimise */
+.reveal.visible,
+.reveal-scale.visible,
+.reveal-stagger.visible {
+  will-change: auto;
+}
+
+/* ── Page fade-in on initial load ── */
+@keyframes aePageFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+body {
+  animation: aePageFade 280ms var(--ease-out-quart) both;
+}
+
+/* ── Button press feedback ── */
+button,
+.btn,
+.btn-primary,
+.btn-ghost,
+.alp-btn-primary,
+.alp-btn-ghost,
+.nav-btn-ghost,
+.btn-install,
+.skill-guide-link,
+.agent-detail-link,
+.lab-card-cta,
+.panel-cta,
+.ae-share-trigger {
+  transition: transform 120ms var(--ease-out-quart),
+              background-color 180ms var(--ease-out-quart),
+              border-color 180ms var(--ease-out-quart),
+              box-shadow 180ms var(--ease-out-quart),
+              color 180ms var(--ease-out-quart);
+}
+button:active,
+.btn:active,
+.btn-primary:active,
+.btn-ghost:active,
+.alp-btn-primary:active,
+.alp-btn-ghost:active,
+.nav-btn-ghost:active,
+.btn-install:active,
+.skill-guide-link:active,
+.agent-detail-link:active,
+.lab-card-cta:active,
+.panel-cta:active,
+.ae-share-trigger:active {
+  transform: scale(0.97);
+}
+
+/* ── Lab card banner image zoom on card hover ── */
+.lab-card-banner {
+  transition:
+    transform 520ms var(--ease-out-quart),
+    filter   520ms var(--ease-out-quart);
+}
+.lab-card:hover .lab-card-banner {
+  transform: scale(1.04);
+}
+
+/* ── Article card hover smoothing — image scale within fixed crop ── */
+.article-card-img-wrap,
+.skill-card-img-wrap,
+.lab-article-card .lab-article-card-img,
+.ae-related-thumb {
+  transition: transform 520ms var(--ease-out-quart);
+}
+.article-card:hover .article-card-img,
+.skill-card:hover .skill-card-img,
+.lab-article-card:hover .lab-article-card-img,
+.ae-related-card:hover .ae-related-thumb {
+  transform: scale(1.05);
+}
+.article-card-img-wrap,
+.skill-card-img-wrap {
+  overflow: hidden;
+}
+
+/* ── Card hover lift smoothing (override generic ease) ── */
+.lab-card,
+.article-card,
+.skill-card,
+.sp-card,
+.signal-card,
+.ae-related-card {
+  transition:
+    transform 280ms var(--ease-out-quart),
+    border-color 220ms var(--ease-out-quart),
+    box-shadow 320ms var(--ease-out-quart) !important;
+}
+
+/* ── AePanel modal: close uses ease-in for natural exit rhythm ── */
+#ae-article-panel.ae-panel-closing {
+  transition: transform 320ms var(--ease-in-quart) !important;
+}
+
+/* ── Hero slideshow track — slightly more refined easing ── */
+.hero-slides-track {
+  transition: transform 0.62s var(--ease-out-quart) !important;
+}
+
+/* ── Hero content panel fade between slides (already exists, just refine timing) ── */
+.hero-content-panel.panel-fade {
+  animation-timing-function: var(--ease-out-quart);
+}
+
+/* ── Sidebar nav active state slide ── */
+.sidebar-nav .nav-item {
+  position: relative;
+  transition:
+    color 200ms var(--ease-out-quart),
+    background-color 200ms var(--ease-out-quart);
+}
+.sidebar-nav .nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  height: 0; width: 3px;
+  background: var(--neon-gold, #f59e0b);
+  border-radius: 0 2px 2px 0;
+  transform: translateY(-50%);
+  transition: height 240ms var(--ease-spring);
+}
+.sidebar-nav .nav-item.active::before {
+  height: 20px;
+}
+
+/* ── Stat cards / model meta hover micro-glow ── */
+.lab-model-card,
+.alp-stat,
+.lab-card-mark,
+.lab-card-models-badge {
+  transition:
+    transform 260ms var(--ease-out-quart),
+    border-color 220ms var(--ease-out-quart),
+    box-shadow 320ms var(--ease-out-quart);
+}
+
+/* =============================================================================
+   ACCESSIBILITY: respect prefers-reduced-motion
+   Disable all decorative animations and use minimal transitions.
+   The site is still fully functional — only the motion is reduced.
+   ============================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Reveal elements: just appear, no transform animation */
+  .reveal, .reveal-scale, .reveal-stagger {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Ticker stops scrolling */
+  .now-bar-ticker {
+    animation: none !important;
+  }
+  /* Auto-rotating slideshows: stop and stay on first slide */
+  .hero-slides-track {
+    transition: none !important;
+  }
+  /* Hover scales removed */
+  .lab-card:hover .lab-card-banner,
+  .article-card:hover .article-card-img,
+  .skill-card:hover .skill-card-img,
+  .lab-article-card:hover .lab-article-card-img,
+  .ae-related-card:hover .ae-related-thumb {
+    transform: none !important;
+  }
+}

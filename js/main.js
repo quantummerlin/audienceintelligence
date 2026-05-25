@@ -405,8 +405,8 @@
       });
     }, {
       root: scrollRoot,          // null → viewport (mobile); .main-content (desktop)
-      threshold: 0.05,
-      rootMargin: '-20px 0px'   // slightly less aggressive so top-of-page items fire
+      threshold: 0.1,            // wait until 10% is in view — feels more natural
+      rootMargin: '0px 0px -50px 0px'  // trigger 50px before the bottom edge enters
     });
 
     revealEls.forEach(function (el) {
@@ -1321,5 +1321,6 @@
   }());
 
 }());
+
 
 

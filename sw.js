@@ -1,14 +1,12 @@
 /**
- * Aether Intel — Service Worker v22
+ * Aether Intel — Service Worker v23
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v22: image-reference audit + canonical-path rewrite across labs, articles,
- *      and skills. 56 broken refs corrected (slug.webp -> slug-hero.webp where
- *      the file actually lives at -hero.webp, plus 2 manual hermes/og-skills
- *      fixes). build_labs.py templater patched to prefer -hero.webp primary so
- *      future regenerations stay correct.
+ * v23: motion polish — refined easing, button press feedback, card hover image
+ *      zoom, page fade-in, prefers-reduced-motion accessibility, AePanel close
+ *      uses ease-in for natural exit rhythm, IntersectionObserver threshold tuned
  */
 
-const CACHE_VERSION = 'aether-v22';
+const CACHE_VERSION = 'aether-v23';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
@@ -183,6 +181,7 @@ self.addEventListener('notificationclick', event => {
     clients.openWindow(event.notification.data?.url || '/')
   );
 });
+
 
 
 
