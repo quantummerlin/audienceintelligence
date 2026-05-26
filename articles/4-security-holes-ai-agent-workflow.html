@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 4 Security Holes in Every AI Agent Workflow | Aether Intel</title>
+  <meta name="description" content="An API key sat in chat history for a week, visible to every service that processed it. The developers most exposed are the ones who feel safest. Here are the four holes and how to close them.">
+  <meta property="og:title" content="The 4 Security Holes in Every AI Agent Workflow">
+  <meta property="og:description" content="An API key sat in chat history for a week, visible to every service that processed it. The developers most exposed are the ones who feel safest. Here are the four holes and how to close them.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/4-security-holes-ai-agent-workflow.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/4-security-holes-ai-agent-workflow-hero.webp">
+  <meta property="og:site_name" content="Aether Intel">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The 4 Security Holes in Every AI Agent Workflow">
+  <meta name="twitter:description" content="An API key sat in chat history for a week, visible to every service that processed it. The developers most exposed are the ones who feel safest. Here are the four holes and how to close them.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/4-security-holes-ai-agent-workflow-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/4-security-holes-ai-agent-workflow.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/favicon.ico">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  <div id="now-bar"></div>
+
+  <main class="article-page">
+
+    <div class="article-hero">
+      <img
+        src="/images/articles/4-security-holes-ai-agent-workflow-hero.webp"
+        alt="Developer laptop with code editor open and a glowing warning indicator"
+        class="article-hero-img"
+        loading="eager"
+        fetchpriority="high"
+      >
+      <div class="article-hero-overlay"></div>
+      <div class="article-hero-content">
+        <span class="badge badge-news">AI Safety</span>
+        <h1 class="article-hero-title">The 4 Security Holes in Every AI Agent Workflow</h1>
+        <div class="article-hero-meta">May 26, 2026 &bull; 3 min read</div>
+      </div>
+    </div>
+
+    <div class="article-layout">
+      <article class="article-body">
+
+<h2 class="article-h2">The Week the API Key Stayed Live</h2>
+
+<p>A colleague pasted an API key into a chat with an AI agent. Then forgot about it.</p>
+
+<p>The key had access to a paid model account. It was visible to every service that processed that chat history for the next seven days. The developer did not know. The agent worked fine throughout. The code shipped. Nobody audited what the agent could see.</p>
+
+<p>This is not a hypothetical. It is the category of incident that is already happening at the scale of AI agent adoption , quietly, unreported, with no obvious failure signal because the code keeps shipping regardless.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Hole 1: The .env File</h2>
+
+<p>Your AI agent can see every file your code editor can see. On most developer setups, that includes the .env file , the file that holds API keys, database credentials, third-party secrets, and anything else you have configured to authenticate with external services.</p>
+
+<p>Agents need filesystem access to do useful work. The problem is that "filesystem access" is rarely scoped. If the agent can read your project directory, it can read your .env. If it can read your .env, every credential you use in that project is potentially exposed to the agent's context, its logs, and any service that processes its outputs.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Hole 2: Chat History as a Credential Store</h2>
+
+<p>The colleague scenario above is more common than it sounds. Developers share sensitive values in chat when debugging , "here's the key that's failing" , and those messages persist in conversation history indefinitely.</p>
+
+<p>Most developer AI tools log conversations. Many sync them to cloud services. Some use them for model improvement. A key pasted in chat in January may still be in a log somewhere in December. The immediate threat is not the only threat.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Hole 3: Git History</h2>
+
+<p>If your agent has access to git history , which it often does if it has access to the project directory , it has access to every commit that was ever made, including commits where secrets were added and later removed.</p>
+
+<p>Removing a credential from the current codebase does not remove it from git history. An agent with repository access can traverse the full history. In most developer setups, this exposure is not considered when granting agent access.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Hole 4: Command Execution Scope</h2>
+
+<p>Agents that run commands do so with whatever permissions the process running the agent has. On a developer laptop, that is usually full user permissions. An agent that misinterprets an instruction , or encounters a prompt injection through an external resource it is processing , can execute commands at the same scope as the developer.</p>
+
+<p>The solution being adopted by security-conscious teams: MCP servers that expose only what the agent needs. Instead of giving the agent file access, give it a server that answers specific questions about the codebase. Instead of shell access, give it a server that executes a defined set of operations. The agent gets the capability it needs. The blast radius if something goes wrong is bounded.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Practical Response</h2>
+
+<p>Three immediate steps that address most of the exposure:</p>
+
+<ul>
+<li><strong>Rotate every credential that has appeared in a chat interface in the last 12 months.</strong> Treat any key that was ever visible to an AI system as compromised, whether or not there is evidence of misuse.</li>
+<li><strong>Scope agent filesystem access to output directories only.</strong> The agent should write to a designated folder. Reads should go through a tool or MCP server that controls what the agent can access, not open filesystem access.</li>
+<li><strong>Monitor your developer accounts for dark web exposure.</strong> GitHub credentials, npm accounts, model provider API keys , these are now high-value targets. Treat them with the same discipline as production database credentials.</li>
+</ul>
+
+<p>The developers most exposed are the ones who feel safest , because the agent works, the code ships, and there are no visible failure signals. The exposure is not in the output. It is in what the agent could access while producing it.</p>
+
+
+      </article>
+
+      <aside class="article-sidebar">
+        <div id="more-like-this"></div>
+      </aside>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Aether Intel</span>
+      <span class="footer-copy">&copy; 2026. AI news for people who think.</span>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
