@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context Engineering: The Skill That Fixes Your AI Agent When It Starts Going Wrong | Aether Intel</title>
+  <meta name="description" content="Your agent works fine for ten steps, then gets sloppy. The problem is almost never the model. It is what the model is seeing. Here are the four failure modes and the strategies that fix them.">
+  <meta property="og:title" content="Context Engineering: The Skill That Fixes Your AI Agent When It Starts Going Wrong">
+  <meta property="og:description" content="Your agent works fine for ten steps, then gets sloppy. The problem is almost never the model. It is what the model is seeing. Here are the four failure modes and the strategies that fix them.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/context-engineering-fix-ai-agent-step-15.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/context-engineering-fix-ai-agent-step-15-hero.webp">
+  <meta property="og:site_name" content="Aether Intel">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Context Engineering: The Skill That Fixes Your AI Agent When It Starts Going Wrong">
+  <meta name="twitter:description" content="Your agent works fine for ten steps, then gets sloppy. The problem is almost never the model. It is what the model is seeing. Here are the four failure modes and the strategies that fix them.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/context-engineering-fix-ai-agent-step-15-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/context-engineering-fix-ai-agent-step-15.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/favicon.ico">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  <div id="now-bar"></div>
+
+  <main class="article-page">
+
+    <div class="article-hero">
+      <img
+        src="/images/articles/context-engineering-fix-ai-agent-step-15-hero.webp"
+        alt="Whiteboard showing a four-layer context structure diagram"
+        class="article-hero-img"
+        loading="eager"
+        fetchpriority="high"
+      >
+      <div class="article-hero-overlay"></div>
+      <div class="article-hero-content">
+        <span class="badge badge-agents">Agents</span>
+        <h1 class="article-hero-title">Context Engineering: The Skill That Fixes Your AI Agent When It Starts Going Wrong</h1>
+        <div class="article-hero-meta">May 26, 2026 &bull; 2 min read</div>
+      </div>
+    </div>
+
+    <div class="article-layout">
+      <article class="article-body">
+
+<h2 class="article-h2">The Problem Everyone Diagnoses Wrong</h2>
+
+<p>Your AI agent works fine for the first ten steps. It picks the right tools. Reasons clearly. Stays on task. Then around step fifteen or twenty, something changes. It forgets what you asked for. Calls tools that don't make sense. Starts producing lower-quality outputs.</p>
+
+<p>Most people's first diagnosis: the model is the problem. Upgrade to a better model.</p>
+
+<p>Usually wrong. The issue is not what the model is capable of. It is what the model is seeing. Organizing what the model sees is called context engineering , and it is becoming one of the most important skills for anyone building AI systems.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Four Failure Modes</h2>
+
+<p>Research from practitioners identifies four ways agent context goes wrong as a session grows.</p>
+
+<p><strong>Context poisoning.</strong> A hallucination or error enters the agent's context early and gets referenced in every subsequent step. If a tool returned bad data in step three, the agent keeps building on that bad data through step twenty. The error compounds.</p>
+
+<p><strong>Context distraction.</strong> Irrelevant information builds up in the context window. The agent pays attention to things that don't matter, which means it pays less attention to things that do. Quality degrades without any single obvious cause.</p>
+
+<p><strong>Context confusion.</strong> Contradictory information accumulates. Step seven said X. Step fourteen produced something inconsistent with X. The agent now has to reconcile them , and usually just picks one, often the wrong one.</p>
+
+<p><strong>Context overflow.</strong> The context window fills. Older information is truncated. The agent loses access to critical early instructions or established decisions.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Four Strategies That Fix Them</h2>
+
+<p><strong>Write-what-matters, discard-what-doesn't.</strong> Active context management: after each major step, summarise the relevant findings and discard the raw process. The context should contain conclusions, not transcripts.</p>
+
+<p><strong>Layered context structure.</strong> Separate the types of information. System-level instructions go in the system prompt. Background knowledge goes in a knowledge layer. Current task state goes in a separate working memory. These layers don't bleed into each other.</p>
+
+<p><strong>External memory for long projects.</strong> Anything that needs to persist beyond one session goes external , a file, a database, a structured note. The agent reads what it needs, when it needs it, rather than carrying everything in context.</p>
+
+<p><strong>Fresh sub-agents for isolated tasks.</strong> When a sub-task is truly independent, launch a fresh agent with only the context that task needs. Clean slate, no baggage from the parent session's accumulated noise.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Why This Is a Skill, Not a Feature</h2>
+
+<p>Platforms are building tools to manage context automatically. Compression algorithms, automatic summarisation, context windows that extend further. These help.</p>
+
+<p>But the underlying skill , deciding what information matters, how to structure it for the model, what to keep and what to discard , remains a human judgment call. The best context engineers are not the ones who know which tool to use. They are the ones who have thought carefully about what their agent actually needs to see at each step.</p>
+
+<p>That thinking is the skill. The tools are just implementations of it.</p>
+
+
+      </article>
+
+      <aside class="article-sidebar">
+        <div id="more-like-this"></div>
+      </aside>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Aether Intel</span>
+      <span class="footer-copy">&copy; 2026. AI news for people who think.</span>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
