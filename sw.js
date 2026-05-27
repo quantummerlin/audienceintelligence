@@ -7,7 +7,7 @@
  *      cross-document navs in document.startViewTransition() for fade rhythm.
  */
 
-const CACHE_VERSION = 'aether-v24';
+const CACHE_VERSION = 'aether-v25';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
