@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The One Command That Gives AI Agents a Safe Space to Work. Most Developers Haven't Run It. | Aether Intel</title>
+  <meta name="description" content="Docker sandboxes let agents run full speed without touching your host system. One command. No complex setup. The blast radius of any mistake stays inside the box.">
+  <meta property="og:title" content="The One Command That Gives AI Agents a Safe Space to Work. Most Developers Haven't Run It.">
+  <meta property="og:description" content="Docker sandboxes let agents run full speed without touching your host system. One command. No complex setup. The blast radius of any mistake stays inside the box.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/docker-sandboxes-ai-agents-safe-space.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/docker-sandboxes-ai-agents-safe-space-hero.webp">
+  <meta property="og:site_name" content="Aether Intel">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The One Command That Gives AI Agents a Safe Space to Work. Most Developers Haven't Run It.">
+  <meta name="twitter:description" content="Docker sandboxes let agents run full speed without touching your host system. One command. No complex setup. The blast radius of any mistake stays inside the box.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/docker-sandboxes-ai-agents-safe-space-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/docker-sandboxes-ai-agents-safe-space.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/favicon.ico">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  <div id="now-bar"></div>
+
+  <main class="article-page">
+
+    <div class="article-hero">
+      <img
+        src="/images/articles/docker-sandboxes-ai-agents-safe-space-hero.webp"
+        alt="A contained sandbox environment with walls clearly defined"
+        class="article-hero-img"
+        loading="eager"
+        fetchpriority="high"
+      >
+      <div class="article-hero-overlay"></div>
+      <div class="article-hero-content">
+        <span class="badge badge-dev">Dev & Build</span>
+        <h1 class="article-hero-title">The One Command That Gives AI Agents a Safe Space to Work. Most Developers Haven't Run It.</h1>
+        <div class="article-hero-meta">May 27, 2026 &bull; 2 min read</div>
+      </div>
+    </div>
+
+    <div class="article-layout">
+      <article class="article-body">
+
+<h2 class="article-h2">The Problem With Full Access</h2>
+
+<p>Every AI agent that can run commands on your machine has full access to your machine. The agent that helps you write code can also, if something goes wrong, delete files, modify system settings, or run processes you did not ask for.</p>
+
+<p>Docker sandboxes change this. They give the agent a contained environment to work in , a virtual machine with access to exactly what it needs and nothing more. Actions taken inside the sandbox do not affect the host system unless you explicitly let them through.</p>
+
+<p>It is the same principle as a physical sandbox: the agent can build and destroy things freely inside the box. Outside the box, nothing happens.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">How It Works in Practice</h2>
+
+<p>The setup is a single command: <code>sbx run codex</code>. The sandbox spins up a container, pulls the agent image, and starts running in what the documentation calls YOLO mode , full execution without approval prompts for every action, which keeps it fast. The difference from running directly on your host is that the blast radius of any mistake is bounded to the container.</p>
+
+<p>Something interesting happened in one demo: on the first message, the sandbox threw a warning. "Falling back from websockets to HTTPS , transport stream disconnected , attack attempt detected." The sandbox had flagged something as suspicious and switched to a safer transport method automatically. The agent kept working. The security layer caught something without interrupting the workflow.</p>
+
+<p>That is exactly what good sandboxing looks like. The agent does not know the containment is there. You do not have to manage it actively. It just runs in the background and handles anomalies when they happen.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Why This Matters for the Current Moment</h2>
+
+<p>The conversation around AI agent security has been dominated by credential exposure and permission architecture , the mistakes that happen before the agent runs. Docker sandboxing addresses a different category of risk: what happens during execution when something goes wrong or goes unexpected.</p>
+
+<p>An agent operating on real production code with real credentials can cause real damage if it makes a wrong assumption at step twelve of a twenty-step process. The damage is proportional to the access. The sandbox limits the access. The agent can still do the work. The scope of a mistake is contained.</p>
+
+<p>For teams shipping agents into any environment where errors have consequences , code review, file management, API calls, customer data , sandboxing is the execution-layer equivalent of the read-only / write-scoped permission architecture at the access layer.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Setup Is One Command</h2>
+
+<p>That is the part worth emphasizing. This is not a complex infrastructure change. It is not a new service to maintain or a new security policy to enforce across a team.</p>
+
+<p>You run <code>sbx run codex</code> from your project directory. The container starts. The agent runs inside it. When you are done, the container stops. Nothing persistent. No residual changes to your host environment.</p>
+
+<p>The security comes from the isolation, which is provided by Docker's containerization. You do not have to build it. You do not have to configure much. You just have to decide to run the agent in the sandbox instead of directly on your machine.</p>
+
+<p>Most developers have not made that decision yet.</p>
+
+<p>Most developers should.</p>
+
+
+      </article>
+
+      <aside class="article-sidebar">
+        <div id="more-like-this"></div>
+      </aside>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Aether Intel</span>
+      <span class="footer-copy">&copy; 2026. AI news for people who think.</span>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
