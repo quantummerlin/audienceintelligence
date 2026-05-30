@@ -1,13 +1,18 @@
 /**
- * Aether Intel — Service Worker v24
+ * Aether Intel — Service Worker v26
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
- * v24: full motion pass — hero entrance stagger + View Transitions API for
- *      cross-page navigation. JS auto-applies .hero-enter to first 5 children
- *      of <main> on listing pages. Click interceptor wraps same-origin
- *      cross-document navs in document.startViewTransition() for fade rhythm.
+ * v26: Skills hero fill — generated 13 missing skill detail hero images
+ *      (claude-marketing-team, claude-md-onboarding-doc, claude-mem-persistent-memory,
+ *      claude-projects-setup, claude-skills-creator, context-engineering-gsd,
+ *      context-interview-pattern, fact-checker-skill, front-end-design-skill,
+ *      higgsfield-creative-agency, ic-prompt-formula, mcp-server-builder,
+ *      selling-ai-skills-to-businesses) in the cinematic cyan/gold house style.
+ *      All 34 skill pages now have working heroes. Cache bumped to clear any
+ *      edge-cached 404s for the new /images/skills/*.webp paths.
+ * v24: full motion pass — hero entrance stagger + View Transitions API.
  */
 
-const CACHE_VERSION = 'aether-v25';
+const CACHE_VERSION = 'aether-v26';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 const PAGE_CACHE    = `${CACHE_VERSION}-pages`;
 
