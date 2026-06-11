@@ -1,5 +1,5 @@
 /**
- * Aether Intel — Service Worker v26
+ * Aether Intel — Service Worker v27
  * Strategy: network-first for HTML (never precache HTML), cache-first for static assets
  * v26: Skills hero fill — generated 13 missing skill detail hero images
  *      (claude-marketing-team, claude-md-onboarding-doc, claude-mem-persistent-memory,
