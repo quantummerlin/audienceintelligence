@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix Open-Sourced a Tool That Makes AI Agents 10x Cheaper. Here Is How It Works. | Aether Intel</title>
+  <meta name="description" content="Headroom compresses what your agent reads by 60-98% before it reaches the LLM. Same answer. A fraction of the cost. Netflix built it, open-sourced it, and it drops into any agent stack today.">
+  <meta property="og:title" content="Netflix Open-Sourced a Tool That Makes AI Agents 10x Cheaper. Here Is How It Works.">
+  <meta property="og:description" content="Headroom compresses what your agent reads by 60-98% before it reaches the LLM. Same answer. A fraction of the cost. Netflix built it, open-sourced it, and it drops into any agent stack today.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/headroom-netflix-ai-agent-token-compression.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/headroom-netflix-ai-agent-token-compression-hero.webp">
+  <meta property="og:site_name" content="Aether Intel">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Netflix Open-Sourced a Tool That Makes AI Agents 10x Cheaper. Here Is How It Works.">
+  <meta name="twitter:description" content="Headroom compresses what your agent reads by 60-98% before it reaches the LLM. Same answer. A fraction of the cost. Netflix built it, open-sourced it, and it drops into any agent stack today.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/headroom-netflix-ai-agent-token-compression-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/headroom-netflix-ai-agent-token-compression.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/favicon.ico">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  <div id="now-bar"></div>
+
+  <main class="article-page">
+
+    <div class="article-hero">
+      <img
+        src="/images/articles/headroom-netflix-ai-agent-token-compression-hero.webp"
+        alt="Token cost chart dropping steeply after a compression layer is applied"
+        class="article-hero-img"
+        loading="eager"
+        fetchpriority="high"
+      >
+      <div class="article-hero-overlay"></div>
+      <div class="article-hero-content">
+        <span class="badge badge-dev">Dev & Build</span>
+        <h1 class="article-hero-title">Netflix Open-Sourced a Tool That Makes AI Agents 10x Cheaper. Here Is How It Works.</h1>
+        <div class="article-hero-meta">June 10, 2026 &bull; 2 min read</div>
+      </div>
+    </div>
+
+    <div class="article-layout">
+      <article class="article-body">
+
+<h2 class="article-h2">The Token Problem With AI Agents</h2>
+
+<p>Every time an AI agent takes an action , runs a tool, reads a file, queries a database , the result gets stuffed into the context window. That context window is what you pay for, especially at higher model tiers like Opus or GPT-5.</p>
+
+<p>Most of what goes in is noise. A bash command that reads a server log file returns thousands of lines. The agent needs to find the error message. It does not need every INFO log from the last 48 hours. But all of it lands in context and all of it costs tokens.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What Headroom Does</h2>
+
+<p>Netflix open-sourced Headroom, a tool that compresses everything your AI agent reads before it reaches the LLM. Tool call outputs. Code files. RAG results. Anything that comes back from an external source gets processed by Headroom first.</p>
+
+<p>The compression is statistical. In a test with a server log file, Headroom removed 419 similar INFO logs and replaced them with a compressed summary. The model received the same answer. The token count dropped by 98%.</p>
+
+<p>That is not a rounding error. A 98% reduction in context tokens means the same agent task costs roughly 2% of what it cost before.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Reversible Part</h2>
+
+<p>The concern with compression is obvious: what if the compressed version loses something important? Headroom addresses this by making compression reversible. When it compresses a section, it stores a hash. If the model determines it needs the full version , for verification, for edge case handling, for any reason , it can request the original via the hash.</p>
+
+<p>The model is not flying blind. It receives a compressed representation and knows it is compressed, with an explicit path back to the source. The default is compressed. The fallback is always available.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Why This Matters for Agent Economics</h2>
+
+<p>The cost curve of AI agent deployment has been a serious concern for anyone running agents at scale. Uber burned its annual AI budget in four months partly because token consumption from Claude Code scaled faster than projected. Enterprise teams at Fortune 500 companies are grappling with 150,000 agents burning tokens continuously.</p>
+
+<p>A tool that compresses context by 60 to 98% depending on the content changes the economics of every one of those deployments. The same agent, the same task, a fraction of the cost.</p>
+
+<p>Headroom is open source. It is not a product with a pricing tier. It is infrastructure that anyone building with AI agents can drop in today.</p>
+
+
+      </article>
+
+      <aside class="article-sidebar">
+        <div id="more-like-this"></div>
+      </aside>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Aether Intel</span>
+      <span class="footer-copy">&copy; 2026. AI news for people who think.</span>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
