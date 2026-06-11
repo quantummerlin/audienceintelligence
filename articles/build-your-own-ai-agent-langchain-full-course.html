@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Your Own AI Agent: A Full Course With LangChain and Real Deployment | Aether Intel</title>
+  <meta name="description" content="From what an agent is to deploying one with Render. Based on the freeCodeCamp course with over 1 million views. Every step, explained clearly.">
+  <meta property="og:title" content="Build Your Own AI Agent: A Full Course With LangChain and Real Deployment">
+  <meta property="og:description" content="From what an agent is to deploying one with Render. Based on the freeCodeCamp course with over 1 million views. Every step, explained clearly.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/build-your-own-ai-agent-langchain-full-course.html">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/build-your-own-ai-agent-langchain-full-course-hero.webp">
+  <meta property="og:site_name" content="Aether Intel">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Build Your Own AI Agent: A Full Course With LangChain and Real Deployment">
+  <meta name="twitter:description" content="From what an agent is to deploying one with Render. Based on the freeCodeCamp course with over 1 million views. Every step, explained clearly.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/build-your-own-ai-agent-langchain-full-course-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/build-your-own-ai-agent-langchain-full-course.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Sora:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/favicon.ico">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  <div id="now-bar"></div>
+
+  <main class="article-page">
+
+    <div class="article-hero">
+      <img
+        src="/images/articles/build-your-own-ai-agent-langchain-full-course-hero.webp"
+        alt="Developer following a tutorial with code editor and terminal side by side"
+        class="article-hero-img"
+        loading="eager"
+        fetchpriority="high"
+      >
+      <div class="article-hero-overlay"></div>
+      <div class="article-hero-content">
+        <span class="badge badge-dev">Dev & Build</span>
+        <h1 class="article-hero-title">Build Your Own AI Agent: A Full Course With LangChain and Real Deployment</h1>
+        <div class="article-hero-meta">June 10, 2026 &bull; 24 min read</div>
+      </div>
+    </div>
+
+    <div class="article-layout">
+      <article class="article-body">
+
+<em>A thorough tutorial based on the freeCodeCamp course by Code with Ania Kubów</em>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What Is an AI Agent?</h2>
+
+<p>An <strong>AI agent</strong> is an autonomous system that can perceive its environment, make decisions, and take actions to achieve specific goals. Unlike a simple chatbot that responds to individual prompts, an AI agent can:</p>
+
+<ul>
+<li><strong>Reason</strong> about complex problems by breaking them into steps</li>
+<li><strong>Use tools</strong> to interact with external systems (APIs, databases, file systems)</li>
+<li><strong>Remember</strong> context across multiple interactions</li>
+<li><strong>Plan</strong> multi-step strategies to accomplish tasks</li>
+<li><strong>Adapt</strong> its behavior based on feedback and results</li>
+</ul>
+
+<p>Think of an AI agent as a digital assistant that doesn't just answer questions. it <em>does things</em>. It can search the web, read files, call APIs, send emails, and chain these actions together to complete complex workflows.</p>
+
+<p><strong>Agents vs. Chatbots vs. Workflows</strong></p>
+
+<p>| Feature | Chatbot | Workflow | AI Agent | |---------|---------|----------|----------| | Autonomy | None | Fixed paths | Dynamic decisions | | Tool use | No | Pre-defined | On-the-fly selection | | Memory | Per-session | None | Persistent | | Planning | No | Hardcoded | Self-directed | | Adaptation | No | No | Yes |</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Why Build Your Own AI Agent?</h2>
+
+<p>Building your own AI agent gives you complete control over:</p>
+
+<ul>
+<li><strong>Customization</strong>: Tailor the agent to your specific use case. customer support, data analysis, content generation, research automation, and more.</li>
+<li><strong>Privacy</strong>: Keep sensitive data within your own infrastructure instead of sending it to third-party services.</li>
+<li><strong>Cost efficiency</strong>: Avoid per-seat SaaS pricing and pay only for the API calls you make.</li>
+<li><strong>Integration</strong>: Connect to your existing tools, databases, and APIs exactly how you need.</li>
+<li><strong>Learning</strong>: Understanding agent architecture is becoming an essential skill as AI adoption accelerates across industries.</li>
+</ul>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Prerequisites & Tools</h2>
+
+<p><strong>What You Need Before Starting</strong></p>
+
+<ul>
+<li><strong>Python 3.9+</strong> installed on your system</li>
+<li><strong>Node.js 18+</strong> (for some tooling and deployment)</li>
+<li>A code editor (VS Code recommended)</li>
+<li>An <strong>OpenAI API key</strong> (sign up at [platform.openai.com](https://platform.openai.com))</li>
+<li>Basic knowledge of Python and JavaScript</li>
+</ul>
+
+<p><strong>Key Libraries and Frameworks</strong></p>
+
+<p>| Tool | Purpose | |------|---------| | <strong>OpenAI Python SDK</strong> | Interface with GPT models | | <strong>LangChain</strong> | Agent framework and tool orchestration | | <strong>LangGraph</strong> | Advanced agent workflows with state management | | <strong>python-dotenv</strong> | Environment variable management | | <strong>FastAPI</strong> | Building the agent's API server | | <strong>Render</strong> | Cloud deployment platform |</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Understanding AI Agent Architecture</h2>
+
+<p>Before writing any code, it's essential to understand the core components that make up an AI agent.</p>
+
+<p><strong>The Core Loop</strong></p>
+
+<p>Every AI agent follows a fundamental reasoning cycle:</p>
+
+<p>``<code> ┌─────────────────────────────────────────────┐ │                  USER INPUT                  │ │              "Research competitors"          │ └──────────────────┬──────────────────────────┘                    ▼ ┌─────────────────────────────────────────────┐ │              LLM REASONING                   │ │  "I need to search the web first, then      │ │   compile the results into a report."        │ └──────────────────┬──────────────────────────┘                    ▼ ┌─────────────────────────────────────────────┐ │              TOOL SELECTION                  │ │  "I'll use the web_search tool with         │ │   query 'top competitors in AI agents'"     │ └──────────────────┬──────────────────────────┘                    ▼ ┌─────────────────────────────────────────────┐ │              TOOL EXECUTION                  │ │  web_search("top competitors in AI agents") │ │  → Returns list of search results            │ └──────────────────┬──────────────────────────┘                    ▼ ┌─────────────────────────────────────────────┐ │              OBSERVATION                     │ │  "I have the search results. Now I need     │ │   to summarize them into a report."          │ └──────────────────┬──────────────────────────┘                    ▼ ┌─────────────────────────────────────────────┐ │              FINAL RESPONSE                  │ │  "Here are the top competitors in the        │ │   AI agent space, with analysis..."          │ └─────────────────────────────────────────────┘ </code>`<code></p>
+
+<p><strong>Key Components</strong></p>
+
+<ol>
+<li><strong>LLM (Large Language Model)</strong>: The "brain" that reasons, plans, and generates responses. In this tutorial, we use OpenAI's GPT models.</li>
+</ol>
+
+<ol>
+<li><strong>Tools</strong>: Functions the agent can call to interact with the outside world. web search, file reading, API calls, database queries, and more.</li>
+</ol>
+
+<ol>
+<li><strong>Memory</strong>: Stores context from previous interactions so the agent can maintain continuity across conversations.</li>
+</ol>
+
+<ol>
+<li><strong>Agent Loop</strong>: The orchestration logic that decides when to think, when to use a tool, and when to respond to the user.</li>
+</ol>
+
+<ol>
+<li><strong>Prompt Templates</strong>: Structured instructions that tell the agent how to behave, what tools are available, and how to format responses.</li>
+</ol>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Setting Up Your Development Environment</h2>
+
+<p><strong>Step 1: Create the Project</strong></p>
+
+</code>`<code>bash
+mkdir ai-agent-project
+cd ai-agent-project
+python -m venv venv
+
+<p># On Windows venv\Scripts\activate</p>
+
+<p># On macOS/Linux source venv/bin/activate </code>`<code></p>
+
+<p><strong>Step 2: Install Dependencies</strong></p>
+
+<p>Create a </code>requirements.txt<code> file:</p>
+
+</code>`<code>text
+openai==1.35.0
+langchain==0.2.10
+langchain-openai==0.1.17
+langchain-community==0.2.9
+langgraph==0.1.1
+python-dotenv==1.0.0
+fastapi==0.111.0
+uvicorn==0.30.1
+pydantic==2.7.4
+requests==2.32.3
+</code>`<code>
+
+<p>Install the packages:</p>
+
+</code>`<code>bash
+pip install -r requirements.txt
+</code>`<code>
+
+<p><strong>Step 3: Set Up Environment Variables</strong></p>
+
+<p>Create a </code>.env<code> file in your project root:</p>
+
+</code>`<code>env
+OPENAI_API_KEY=sk-your-api-key-here
+MODEL_NAME=gpt-4o
+TEMPERATURE=0.7
+</code>`<code>
+
+<p>Create a </code>config.py<code> to load these settings:</p>
+
+</code>`<code>python
+import os
+from dotenv import load_dotenv
+
+<p>load_dotenv()</p>
+
+<p>OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o") TEMPERATURE = float(os.getenv("TEMPERATURE", "0.7"))</p>
+
+<p>if not OPENAI_API_KEY:     raise ValueError("OPENAI_API_KEY is not set in .env file") </code>`<code></p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">OpenAI API Integration</h2>
+
+<p>The OpenAI API is the foundation of our agent. Let's start by making basic API calls, then build up to agent functionality.</p>
+
+<p><strong>Basic API Call</strong></p>
+
+</code>`<code>python
+import openai
+from config import OPENAI_API_KEY, MODEL_NAME
+
+<p>client = openai.OpenAI(api_key=OPENAI_API_KEY)</p>
+
+<p>response = client.chat.completions.create(     model=MODEL_NAME,     messages=[         {"role": "system", "content": "You are a helpful AI assistant."},         {"role": "user", "content": "Explain what an AI agent is in 3 sentences."}     ],     temperature=0.7,     max_tokens=500 )</p>
+
+<p>print(response.choices[0].message.content) </code>`<code></p>
+
+<p><strong>Understanding the Response Object</strong></p>
+
+</code>`<code>python
+# The response contains useful metadata
+print(f"Model used: {response.model}")
+print(f"Tokens used: {response.usage.total_tokens}")
+print(f"Prompt tokens: {response.usage.prompt_tokens}")
+print(f"Completion tokens: {response.usage.completion_tokens}")
+print(f"Finish reason: {response.choices[0].finish_reason}")
+</code>`<code>
+
+<p><strong>Streaming Responses</strong></p>
+
+<p>For a better user experience, stream the response token by token:</p>
+
+</code>`<code>python
+def stream_response(messages):
+    stream = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=messages,
+        stream=True
+    )
+    
+    full_response = ""
+    for chunk in stream:
+        if chunk.choices[0].delta.content is not None:
+            content = chunk.choices[0].delta.content
+            full_response += content
+            print(content, end="", flush=True)
+    
+    return full_response
+
+<p>messages = [     {"role": "system", "content": "You are a helpful AI assistant."},     {"role": "user", "content": "Write a haiku about programming."} ]</p>
+
+<p>stream_response(messages) </code>`<code></p>
+
+<p><strong>Structured Output with Function Calling</strong></p>
+
+<p>OpenAI's function calling feature lets the model request specific tool invocations:</p>
+
+</code>`<code>python
+import json
+
+<p># Define available tools tools = [     {         "type": "function",         "function": {             "name": "get_weather",             "description": "Get the current weather for a location",             "parameters": {                 "type": "object",                 "properties": {                     "location": {                         "type": "string",                         "description": "The city name, e.g. 'New York'"                     },                     "unit": {                         "type": "string",                         "enum": ["celsius", "fahrenheit"],                         "description": "Temperature unit"                     }                 },                 "required": ["location"]             }         }     },     {         "type": "function",         "function": {             "name": "search_web",             "description": "Search the web for information",             "parameters": {                 "type": "object",                 "properties": {                     "query": {                         "type": "string",                         "description": "The search query"                     },                     "num_results": {                         "type": "integer",                         "description": "Number of results to return"                     }                 },                 "required": ["query"]             }         }     } ]</p>
+
+<p># Make a request with tools response = client.chat.completions.create(     model=MODEL_NAME,     messages=[         {"role": "user", "content": "What's the weather in Tokyo?"}     ],     tools=tools,     tool_choice="auto" )</p>
+
+<p># Check if the model wants to call a tool message = response.choices[0].message if message.tool_calls:     for tool_call in message.tool_calls:         print(f"Tool: {tool_call.function.name}")         print(f"Arguments: {tool_call.function.arguments}") </code>`<code></p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Introduction to LangChain</h2>
+
+<p>LangChain is the most popular framework for building AI applications. It provides abstractions for working with LLMs, managing prompts, chaining operations, and. most importantly. building agents.</p>
+
+<p><strong>Why LangChain?</strong></p>
+
+<ul>
+<li><strong>Unified interface</strong>: Swap between different LLM providers with minimal code changes</li>
+<li><strong>Pre-built components</strong>: Prompt templates, output parsers, document loaders, and more</li>
+<li><strong>Agent frameworks</strong>: Built-in support for ReAct, tool-calling agents, and multi-agent systems</li>
+<li><strong>Community tools</strong>: Hundreds of integrations with external services</li>
+</ul>
+
+<p><strong>LangChain Core Concepts</strong></p>
+
+<p>#### 1. Language Models</p>
+
+</code>`<code>python
+from langchain_openai import ChatOpenAI
+
+<p>llm = ChatOpenAI(     model="gpt-4o",     temperature=0.7,     api_key=OPENAI_API_KEY )</p>
+
+<p># Simple invocation response = llm.invoke("What is the capital of France?") print(response.content) </code>`<code></p>
+
+<p>#### 2. Prompt Templates</p>
+
+</code>`<code>python
+from langchain_core.prompts import ChatPromptTemplate
+
+<p>prompt = ChatPromptTemplate.from_messages([     ("system", "You are a helpful assistant that translates {input_language} to {output_language}."),     ("human", "{text}") ])</p>
+
+<p># Format the prompt formatted = prompt.format_messages(     input_language="English",     output_language="Spanish",     text="Hello, how are you?" )</p>
+
+<p>response = llm.invoke(formatted) print(response.content) </code>`<code></p>
+
+<p>#### 3. Output Parsers</p>
+
+</code>`<code>python
+from langchain_core.output_parsers import JsonOutputParser
+from pydantic import BaseModel, Field
+
+<p>class MovieReview(BaseModel):     title: str = Field(description="The movie title")     rating: int = Field(description="Rating from 1 to 10")     summary: str = Field(description="Brief summary of the review")     pros: list[str] = Field(description="List of positive aspects")     cons: list[str] = Field(description="List of negative aspects")</p>
+
+<p>parser = JsonOutputParser(pydantic_object=MovieReview)</p>
+
+<p>prompt = ChatPromptTemplate.from_messages([     ("system", "You are a movie critic. Review the movie and format as JSON.\n{format_instructions}"),     ("human", "Review: {movie_title}") ])</p>
+
+<p>chain = prompt | llm | parser</p>
+
+<p>result = chain.invoke({     "movie_title": "Inception",     "format_instructions": parser.get_format_instructions() })</p>
+
+<p>print(result) # {'title': 'Inception', 'rating': 9, 'summary': '...', 'pros': [...], 'cons': [...]} </code>`<code></p>
+
+<p>#### 4. Chains</p>
+
+<p>Chains let you compose multiple operations together:</p>
+
+</code>`<code>python
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+
+<p># Chain: generate a topic → write a blog post → create a title topic_prompt = PromptTemplate.from_template("Generate a blog post topic about {subject}") blog_prompt = PromptTemplate.from_template("Write a short blog post about this topic: {topic}") title_prompt = PromptTemplate.from_template("Create a catchy title for this blog post: {blog_post}")</p>
+
+<p># Build the chain from langchain_core.output_parsers import StrOutputParser</p>
+
+<p>topic_chain = topic_prompt | llm | StrOutputParser() blog_chain = blog_prompt | llm | StrOutputParser() title_chain = title_prompt | llm | StrOutputParser()</p>
+
+<p># Compose into a full pipeline full_chain = (     {"topic": topic_chain}     | RunnablePassthrough.assign(blog_post=blog_chain)     | RunnablePassthrough.assign(title=title_chain) )</p>
+
+<p>result = full_chain.invoke({"subject": "artificial intelligence"}) print(f"Title: {result['title']}\n\n{result['blog_post']}") </code>`<code></p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Building the Agent Logic</h2>
+
+<p>Now let's build the core agent. We'll start with a simple ReAct (Reasoning + Acting) agent, then enhance it.</p>
+
+<p><strong>The ReAct Pattern</strong></p>
+
+<p>The ReAct pattern is the foundation of most AI agents:</p>
+
+<ol>
+<li><strong>Thought</strong>: The LLM reasons about what to do</li>
+<li><strong>Action</strong>: It selects and calls a tool</li>
+<li><strong>Observation</strong>: It receives the tool's result</li>
+<li><strong>Repeat</strong>: It continues until the task is complete</li>
+</ol>
+
+<p><strong>Building a Basic Agent from Scratch</strong></p>
+
+</code>`<code>python
+import json
+import re
+from openai import OpenAI
+
+<p>client = OpenAI(api_key=OPENAI_API_KEY)</p>
+
+<p># Define tools as functions def calculator(expression: str) -> str:     """Evaluate a mathematical expression."""     try:         result = eval(expression, {"__builtins__": {}}, {             "abs": abs, "round": round, "min": min, "max": max,             "sum": sum, "len": len         })         return str(result)     except Exception as e:         return f"Error: {e}"</p>
+
+<p>def web_search(query: str) -> str:     """Simulated web search (replace with real API in production)."""     # In production, use SerpAPI, Tavily, or similar     return f"Search results for '{query}': [Result 1] [Result 2] [Result 3]"</p>
+
+<p># Tool definitions for OpenAI tools = [     {         "type": "function",         "function": {             "name": "calculator",             "description": "Evaluate mathematical expressions. Input should be a valid math expression like '2 + 2' or 'math.sqrt(16)'.",             "parameters": {                 "type": "object",                 "properties": {                     "expression": {"type": "string", "description": "The math expression to evaluate"}                 },                 "required": ["expression"]             }         }     },     {         "type": "function",         "function": {             "name": "web_search",             "description": "Search the web for current information. Use for facts, news, weather, and real-time data.",             "parameters": {                 "type": "object",                 "properties": {                     "query": {"type": "string", "description": "The search query"}                 },                 "required": ["query"]             }         }     } ]</p>
+
+<p># Tool dispatch table tool_functions = {     "calculator": calculator,     "web_search": web_search }</p>
+
+<p>def run_agent(user_message: str, max_iterations: int = 10):     """Run the ReAct agent loop."""          system_prompt = """You are a helpful AI assistant with access to tools.      When you need to use a tool, respond with a JSON object in this format: {"tool": "tool_name", "input": {"param": "value"}}</p>
+
+<p>When you have the final answer, respond with plain text (no JSON).</p>
+
+<p>Always think step by step about what you need to do."""          messages = [         {"role": "system", "content": system_prompt},         {"role": "user", "content": user_message}     ]          for i in range(max_iterations):         # Get LLM response         response = client.chat.completions.create(             model=MODEL_NAME,             messages=messages,             tools=tools,             tool_choice="auto"         )                  message = response.choices[0].message         messages.append(message)                  # Check if the model wants to call a tool         if message.tool_calls:             print(f"\n🔧 [Step {i+1}] Tool call: {message.tool_calls[0].function.name}")                          for tool_call in message.tool_calls:                 function_name = tool_call.function.name                 function_args = json.loads(tool_call.function.arguments)                                  # Execute the tool                 if function_name in tool_functions:                     result = tool_functions[function_name](<strong>function_args)                     print(f"   Result: {result[:100]}...")                 else:                     result = f"Error: Unknown tool '{function_name}'"                                  # Add tool result to messages                 messages.append({                     "role": "tool",                     "tool_call_id": tool_call.id,                     "content": result                 })         else:             # No tool calls. this is the final answer             print(f"\n✅ Final Answer:\n{message.content}")             return message.content          return "Max iterations reached without a final answer."</p>
+
+<p># Test the agent run_agent("What is 15% of 240, and who won the 2024 US Open?") </code>`<code></p>
+
+</strong>Building with LangChain's Agent Framework<strong>
+
+<p>LangChain provides a much more solid agent implementation:</p>
+
+</code>`<code>python
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.agents import create_tool_calling_agent, AgentExecutor
+from langchain_core.tools import Tool
+
+<p># Define tools using LangChain's Tool wrapper tools = [     Tool(         name="calculator",         func=calculator,         description="Evaluate mathematical expressions. Input should be a valid math expression."     ),     Tool(         name="web_search",         func=web_search,         description="Search the web for current information. Use for facts, news, weather, and real-time data."     ) ]</p>
+
+<p># Create the prompt template prompt = ChatPromptTemplate.from_messages([     ("system", """You are a helpful AI assistant. Use the available tools to answer questions.      Think step by step: <ol> <li>What information do I need?</li> <li>Which tool can provide that information?</li> <li>What parameters does the tool need?</li> <li>After getting the result, do I need to do more, or can I answer?"""),</li> </ol>     MessagesPlaceholder(variable_name="chat_history", optional=True),     ("human", "{input}"),     MessagesPlaceholder(variable_name="agent_scratchpad") ])</p>
+
+<p># Create the LLM llm = ChatOpenAI(model="gpt-4o", temperature=0)</p>
+
+<p># Create the agent agent = create_tool_calling_agent(llm, tools, prompt)</p>
+
+<p># Create the executor agent_executor = AgentExecutor(     agent=agent,     tools=tools,     verbose=True,     max_iterations=10,     handle_parsing_errors=True )</p>
+
+<p># Run the agent result = agent_executor.invoke({     "input": "What is 15% of 240, and what is the square root of that?" })</p>
+
+<p>print(f"\nFinal Answer: {result['output']}") </code>`<code></p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Adding Memory and Context</h2>
+
+<p>A key feature of agents is the ability to remember previous interactions. Let's add memory to our agent.</p>
+
+</strong>Conversation Memory with LangChain<strong>
+
+</code>`<code>python
+from langchain.memory import ConversationBufferMemory
+from langchain_core.messages import HumanMessage, AIMessage
+
+<p># Create memory that stores the full conversation memory = ConversationBufferMemory(     memory_key="chat_history",     return_messages=True )</p>
+
+<p># Create agent with memory agent_executor = AgentExecutor(     agent=agent,     tools=tools,     memory=memory,     verbose=True,     max_iterations=10 )</p>
+
+<p># First interaction result1 = agent_executor.invoke({     "input": "My name is Alice and I live in New York." }) print(f"Agent: {result1['output']}")</p>
+
+<p># Second interaction. the agent remembers! result2 = agent_executor.invoke({     "input": "What city do I live in?" }) print(f"Agent: {result2['output']}") # The agent will answer "New York" because it remembers the previous message </code>`<code></p>
+
+</strong>Windowed Memory (for long conversations)<strong>
+
+<p>For production agents, you typically don't want to send the entire conversation history (it's expensive and can exceed context limits). Use a windowed approach:</p>
+
+</code>`<code>python
+from langchain.memory import ConversationWindowBufferMemory
+
+<p># Only keep the last 10 messages memory = ConversationWindowBufferMemory(     memory_key="chat_history",     k=10,  # Keep last 10 messages     return_messages=True ) </code>`<code></p>
+
+</strong>Persistent Memory with a Database<strong>
+
+<p>For truly persistent memory across sessions:</p>
+
+</code>`<code>python
+from langchain.memory import ConversationSummaryBufferMemory
+
+<p># This summarizes old messages when the buffer is full memory = ConversationSummaryBufferMemory(     llm=llm,     memory_key="chat_history",     max_token_limit=2000,  # When exceeded, summarize older messages     return_messages=True ) </code>`<code></p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Working with Tools and Functions</h2>
+
+<p>Tools are what make agents powerful. Let's build a thorough set of tools.</p>
+
+</strong>Custom Tool: File Operations<strong>
+
+</code>`<code>python
+from langchain_core.tools import tool
+from langchain_core.pydantic_v1 import BaseModel, Field
+
+<p>class FileReadInput(BaseModel):     filepath: str = Field(description="Path to the file to read")</p>
+
+<p>class FileWriteInput(BaseModel):     filepath: str = Field(description="Path to the file to write")     content: str = Field(description="Content to write to the file")</p>
+
+<p>@tool(args_schema=FileReadInput) def read_file(filepath: str) -> str:     """Read the contents of a file."""     try:         with open(filepath, 'r', encoding='utf-8') as f:             return f.read()     except FileNotFoundError:         return f"Error: File '{filepath}' not found"     except Exception as e:         return f"Error: {e}"</p>
+
+<p>@tool(args_schema=FileWriteInput) def write_file(filepath: str, content: str) -> str:     """Write content to a file."""     try:         with open(filepath, 'w', encoding='utf-8') as f:             f.write(content)         return f"Successfully wrote {len(content)} characters to {filepath}"     except Exception as e:         return f"Error: {e}" </code>`<code></p>
+
+</strong>Custom Tool: API Integration<strong>
+
+</code>`<code>python
+import requests
+
+<p>@tool def get_weather(city: str) -> str:     """Get the current weather for a city using OpenWeatherMap API."""     api_key = os.getenv("OPENWEATHER_API_KEY")     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"          try:         response = requests.get(url)         data = response.json()                  if response.status_code == 200:             temp = data["main"]["temp"]             description = data["weather"][0]["description"]             humidity = data["main"]["humidity"]             return f"Weather in {city}: {description}, {temp}°C, humidity {humidity}%"         else:             return f"Error: {data.get('message', 'Unknown error')}"     except Exception as e:         return f"Error fetching weather: {e}"</p>
+
+<p>@tool def fetch_url(url: str) -> str:     """Fetch and extract text content from a URL."""     try:         response = requests.get(url, timeout=10)         response.raise_for_status()                  # Simple HTML text extraction (use BeautifulSoup for production)         from html.parser import HTMLParser                  class HTMLTextExtractor(HTMLParser):             def __init__(self):                 super().__init__()                 self.result = []             def handle_data(self, data):                 self.result.append(data)             def get_text(self):                 return ' '.join(self.result)                  extractor = HTMLTextExtractor()         extractor.feed(response.text)         text = extractor.get_text()                  # Truncate to reasonable length         return text[:5000] if len(text) > 5000 else text     except Exception as e:         return f"Error fetching URL: {e}" </code>`<code></p>
+
+</strong>Custom Tool: Database Query<strong>
+
+</code>`<code>python
+import sqlite3
+
+<p>@tool def query_database(query: str) -> str:     """Execute a SQL query on the local SQLite database. Use SELECT queries only."""     try:         conn = sqlite3.connect("agent_data.db")         cursor = conn.cursor()         cursor.execute(query)                  if query.strip().upper().startswith("SELECT"):             rows = cursor.fetchall()             columns = [desc[0] for desc in cursor.description]                          # Format as readable output             result = ", ".join(columns) + "\n"             for row in rows[:50]:  # Limit to 50 rows                 result += ", ".join(str(cell) for cell in row) + "\n"                          if len(rows) > 50:                 result += f"... ({len(rows) - 50} more rows)"                          conn.close()             return result         else:             conn.commit()             conn.close()             return f"Query executed successfully. {cursor.rowcount} rows affected."     except Exception as e:         return f"Database error: {e}" </code>`<code></p>
+
+</strong>Assembling the Full Tool Set<strong>
+
+</code>`<code>python
+all_tools = [
+    calculator,
+    web_search,
+    get_weather,
+    fetch_url,
+    read_file,
+    write_file,
+    query_database
+]
+
+<p># Create the agent with all tools prompt = ChatPromptTemplate.from_messages([     ("system", """You are a powerful AI assistant with access to multiple tools.</p>
+
+<p>Available tools: <ul> <li>calculator: For mathematical calculations</li> <li>web_search: For searching the internet</li> <li>get_weather: For weather information</li> <li>fetch_url: For reading web pages</li> <li>read_file: For reading local files</li> <li>write_file: For writing to local files</li> <li>query_database: For querying the SQLite database</li> </ul></p>
+
+<p>Think step by step. Break complex tasks into smaller steps. Always verify your work before giving a final answer."""),     MessagesPlaceholder(variable_name="chat_history", optional=True),     ("human", "{input}"),     MessagesPlaceholder(variable_name="agent_scratchpad") ])</p>
+
+<p>agent = create_tool_calling_agent(llm, all_tools, prompt) agent_executor = AgentExecutor(     agent=agent,     tools=all_tools,     memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True),     verbose=True,     max_iterations=15,     handle_parsing_errors=True ) </code>`<code></p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Real-World Examples</h2>
+
+<p>Let's build three complete, real-world agent applications.</p>
+
+</strong>Example 1: Research Assistant Agent<strong>
+
+</code>`<code>python
+"""
+Research Assistant Agent
+Searches the web, reads articles, and compiles research reports.
+"""
+
+<p>from langchain_openai import ChatOpenAI from langchain.agents import create_tool_calling_agent, AgentExecutor from langchain_core.tools import Tool from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder from langchain.memory import ConversationBufferMemory import requests from bs4 import BeautifulSoup</p>
+
+<p>def search_google(query: str, num_results: int = 5) -> str:     """Search Google using SerpAPI."""     api_key = os.getenv("SERPAPI_KEY")     url = "https://serpapi.com/search"     params = {         "q": query,         "api_key": api_key,         "num": num_results     }          try:         response = requests.get(url, params=params)         data = response.json()                  results = data.get("organic_results", [])         output = ""         for i, result in enumerate(results, 1):             output += f"{i}. {result['title']}\n"             output += f"   {result['link']}\n"             output += f"   {result.get('snippet', 'No snippet')}\n\n"                  return output if results else "No results found."     except Exception as e:         return f"Search error: {e}"</p>
+
+<p>def read_article(url: str) -> str:     """Read and extract the main text from a web article."""     try:         response = requests.get(url, timeout=15)         soup = BeautifulSoup(response.text, 'html.parser')                  # Remove script and style elements         for element in soup(["script", "style", "nav", "header", "footer"]):             element.decompose()                  # Get main content         article = soup.find("article") or soup.find("main") or soup.find("body")         text = article.get_text(separator="\n", strip=True)                  # Clean up whitespace         lines = [line.strip() for line in text.splitlines() if line.strip()]         clean_text = "\n".join(lines)                  return clean_text[:8000]  # Limit to 8000 chars     except Exception as e:         return f"Error reading article: {e}"</p>
+
+<p># Define research tools research_tools = [     Tool(name="search_google", func=search_google, description="Search Google for information"),     Tool(name="read_article", func=read_article, description="Read and extract text from a web article URL"),     Tool(name="calculator", func=calculator, description="Perform mathematical calculations") ]</p>
+
+<p># Research agent prompt research_prompt = ChatPromptTemplate.from_messages([     ("system", """You are an expert research assistant. Your job is to:</p>
+
+<ol>
+<li>Search for relevant information using web search</li>
+<li>Read the most promising articles in detail</li>
+<li>Synthesize the information into a thorough report</li>
+<li>Cite your sources</li>
+</ol>
+
+<p>Format your reports with: <ul> <li>Executive Summary</li> <li>Key Findings (with source citations)</li> <li>Analysis</li> <li>Recommendations</li> </ul></p>
+
+<p>Always search for multiple perspectives and verify claims across sources."""),     MessagesPlaceholder(variable_name="chat_history", optional=True),     ("human", "{input}"),     MessagesPlaceholder(variable_name="agent_scratchpad") ])</p>
+
+<p># Create the research agent llm = ChatOpenAI(model="gpt-4o", temperature=0.3) research_agent = create_tool_calling_agent(llm, research_tools, research_prompt) research_executor = AgentExecutor(     agent=research_agent,     tools=research_tools,     verbose=True,     max_iterations=15 )</p>
+
+<p># Run a research task result = research_executor.invoke({     "input": "Research the current state of AI agent frameworks in 2025. Compare LangChain, AutoGen, CrewAI, and LangGraph." })</p>
+
+<p>print(result["output"]) </code>`<code></p>
+
+</strong>Example 2: Data Analysis Agent<strong>
+
+</code>`<code>python
+"""
+Data Analysis Agent
+Loads data, performs analysis, creates visualizations, and generates insights.
+"""
+
+<p>import pandas as pd import matplotlib.pyplot as plt import io import base64</p>
+
+<p>@tool def load_csv(filepath: str) -> str:     """Load a CSV file and return a summary of its contents."""     try:         df = pd.read_csv(filepath)         summary = f"File: {filepath}\n"         summary += f"Shape: {df.shape[0]} rows × {df.shape[1]} columns\n"         summary += f"Columns: {', '.join(df.columns.tolist())}\n"         summary += f"Data types:\n{df.dtypes.to_string()}\n"         summary += f"\nFirst 5 rows:\n{df.head().to_string()}\n"         summary += f"\nBasic statistics:\n{df.describe().to_string()}\n"         return summary     except Exception as e:         return f"Error loading CSV: {e}"</p>
+
+<p>@tool def analyze_data(query: str) -> str:     """Analyze the loaded data. The query describes what analysis to perform.     Available data is in the pandas DataFrame 'df'."""     try:         # This is a simplified version. in production, use a code execution sandbox         # The agent would generate and execute pandas code         return f"Analysis result for: {query}"     except Exception as e:         return f"Analysis error: {e}"</p>
+
+<p>@tool def create_chart(chart_type: str, x_column: str, y_column: str, title: str) -> str:     """Create a chart from the loaded data. chart_type can be 'bar', 'line', 'scatter', or 'histogram'."""     try:         df = pd.read_csv("temp_data.csv")  # Assume data was saved temporarily                  plt.figure(figsize=(10, 6))                  if chart_type == "bar":             df.plot.bar(x=x_column, y=y_column)         elif chart_type == "line":             df.plot.line(x=x_column, y=y_column)         elif chart_type == "scatter":             df.plot.scatter(x=x_column, y=y_column)         elif chart_type == "histogram":             df[x_column].plot.hist()                  plt.title(title)         plt.tight_layout()                  # Save to base64 string         buffer = io.BytesIO()         plt.savefig(buffer, format='png')         buffer.seek(0)         image_base64 = base64.b64encode(buffer.read()).decode()         plt.close()                  return f"Chart created successfully. Base64: {image_base64[:100]}..."     except Exception as e:         return f"Chart error: {e}"</p>
+
+<p>data_tools = [load_csv, analyze_data, create_chart]</p>
+
+<p>data_prompt = ChatPromptTemplate.from_messages([     ("system", """You are a data analysis expert. You can: <ul> <li>Load CSV files and examine their structure</li> <li>Perform statistical analysis and data transformations</li> <li>Create visualizations (bar charts, line plots, scatter plots, histograms)</li> <li>Generate insights and recommendations based on the data</li> </ul></p>
+
+<p>Always start by loading and understanding the data before analyzing."""),     ("human", "{input}"),     MessagesPlaceholder(variable_name="agent_scratchpad") ])</p>
+
+<p>data_agent = create_tool_calling_agent(llm, data_tools, data_prompt) data_executor = AgentExecutor(agent=data_agent, tools=data_tools, verbose=True) </code>`<code></p>
+
+</strong>Example 3: Customer Support Agent<strong>
+
+</code>`<code>python
+"""
+Customer Support Agent
+Handles customer inquiries with access to order data and knowledge base.
+"""
+
+<p>@tool def lookup_order(order_id: str) -> str:     """Look up an order by ID and return order details."""     # In production, this would query your database     orders_db = {         "ORD-001": {"status": "shipped", "item": "Wireless Headphones", "price": 79.99, "tracking": "1Z999AA10123456784"},         "ORD-002": {"status": "processing", "item": "USB-C Hub", "price": 45.99, "tracking": None},         "ORD-003": {"status": "delivered", "item": "Mechanical Keyboard", "price": 129.99, "tracking": "1Z999AA10123456785"},     }          order = orders_db.get(order_id)     if order:         return json.dumps(order, indent=2)     return f"Order {order_id} not found."</p>
+
+<p>@tool def search_knowledge_base(query: str) -> str:     """Search the company knowledge base for relevant articles."""     # In production, use a vector database (Pinecone, Weaviate, etc.)     kb = {         "return policy": "Items can be returned within 30 days of purchase with original receipt.",         "shipping": "Standard shipping takes 5-7 business days. Express shipping takes 2-3 days.",         "warranty": "All electronics come with a 1-year manufacturer warranty.",         "payment": "We accept Visa, Mastercard, PayPal, and Apple Pay.",     }          results = []     for key, value in kb.items():         if query.lower() in key.lower() or query.lower() in value.lower():             results.append(f"</strong>{key}<strong>: {value}")          return "\n".join(results) if results else "No relevant articles found."</p>
+
+<p>@tool def create_ticket(customer_email: str, issue: str, priority: str) -> str:     """Create a support ticket for issues that can't be resolved automatically."""     ticket_id = f"TKT-{hash(customer_email + issue) % 100000:05d}"     return f"Ticket {ticket_id} created. Priority: {priority}. An agent will follow up within 24 hours."</p>
+
+<p>support_tools = [lookup_order, search_knowledge_base, create_ticket]</p>
+
+<p>support_prompt = ChatPromptTemplate.from_messages([     ("system", """You are a friendly customer support agent for TechStore Inc.</p>
+
+<p>Guidelines: <ul> <li>Always be polite and professional</li> <li>Look up order information when customers ask about their orders</li> <li>Search the knowledge base for policy questions</li> <li>Create a support ticket for issues you can't resolve</li> <li>If you need to create a ticket, ask for the customer's email first</li> </ul></p>
+
+<p>Never make up information. If you don't know something, search the knowledge base or create a ticket."""),     MessagesPlaceholder(variable_name="chat_history", optional=True),     ("human", "{input}"),     MessagesPlaceholder(variable_name="agent_scratchpad") ])</p>
+
+<p>support_agent = create_tool_calling_agent(     ChatOpenAI(model="gpt-4o", temperature=0.2),     support_tools,     support_prompt ) support_executor = AgentExecutor(     agent=support_agent,     tools=support_tools,     memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True),     verbose=True )</p>
+
+<p># Example interaction result = support_executor.invoke({     "input": "Hi, I ordered wireless headphones last week and they haven't arrived yet. My order number is ORD-001." }) print(result["output"]) </code>`<code></p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Deploying with Render</h2>
+
+<p>Now that our agent works locally, let's deploy it to the cloud using Render so anyone can access it via an API.</p>
+
+</strong>Step 1: Create a FastAPI Server<strong>
+
+<p>Create </code>main.py<code>:</p>
+
+</code>`<code>python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Optional
+import uvicorn
+from agent import agent_executor  # Import your agent
+
+<p>app = FastAPI(     title="AI Agent API",     description="A powerful AI agent with tool-calling capabilities",     version="1.0.0" )</p>
+
+<p>class AgentRequest(BaseModel):     message: str     session_id: Optional[str] = "default"</p>
+
+<p>class AgentResponse(BaseModel):     response: str     session_id: str</p>
+
+<p>@app.post("/chat", response_model=AgentResponse) async def chat(request: AgentRequest):     """Send a message to the AI agent and get a response."""     try:         result = agent_executor.invoke({             "input": request.message         })                  return AgentResponse(             response=result["output"],             session_id=request.session_id         )     except Exception as e:         raise HTTPException(status_code=500, detail=str(e))</p>
+
+<p>@app.get("/health") async def health_check():     """Health check endpoint."""     return {"status": "healthy", "service": "ai-agent-api"}</p>
+
+<p>if __name__ == "__main__":     uvicorn.run(app, host="0.0.0.0", port=8000) </code>`<code></p>
+
+</strong>Step 2: Create a Web Interface (Optional)*<em>
+
+<p>Create </code>templates/index.html<code>:</p>
+
+</code>`<code>html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Chat</title>
+    <style>
+        </em> { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; color: #eee; }
+        .chat-container { max-width: 800px; margin: 0 auto; padding: 20px; height: 100vh; display: flex; flex-direction: column; }
+        h1 { text-align: center; padding: 20px; color: #00d4ff; }
+        .messages { flex: 1; overflow-y: auto; padding: 20px; background: #16213e; border-radius: 12px; margin-bottom: 20px; }
+        .message { margin-bottom: 16px; padding: 12px 16px; border-radius: 12px; max-width: 80%; }
+        .user { background: #0f3460; margin-left: auto; }
+        .agent { background: #1a1a2e; border: 1px solid #0f3460; }
+        .input-area { display: flex; gap: 10px; }
+        input { flex: 1; padding: 14px; border: 2px solid #0f3460; border-radius: 8px; background: #16213e; color: #eee; font-size: 16px; }
+        input:focus { outline: none; border-color: #00d4ff; }
+        button { padding: 14px 28px; background: #00d4ff; color: #1a1a2e; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #00b8e6; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>🤖 AI Agent Chat</h1>
+        <div class="messages" id="messages"></div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter')sendMessage()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+<script>
+        const messagesDiv = document.getElementById('messages');
+        const userInput = document.getElementById('userInput');
+
+<p>async function sendMessage() {             const message = userInput.value.trim();             if (!message) return;</p>
+
+<p>addMessage(message, 'user');             userInput.value = '';</p>
+
+<p>try {                 const response = await fetch('/chat', {                     method: 'POST',                     headers: { 'Content-Type': 'application/json' },                     body: JSON.stringify({ message })                 });                 const data = await response.json();                 addMessage(data.response, 'agent');             } catch (error) {                 addMessage('Error: Could not reach the agent.', 'agent');             }         }</p>
+
+<p>function addMessage(text, sender) {             const div = document.createElement('div');             div.className = </code>message ${sender}<code>;             div.textContent = text;             messagesDiv.appendChild(div);             messagesDiv.scrollTop = messagesDiv.scrollHeight;         }     </script> </body> </html> </code>`<code></p>
+
+<p>Add the template serving to </code>main.py<code>:</p>
+
+</code>`<code>python
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+from fastapi import Request
+
+<p>templates = Jinja2Templates(directory="templates")</p>
+
+<p>@app.get("/", response_class=HTMLResponse) async def home(request: Request):     return templates.TemplateResponse("index.html", {"request": request}) </code>`<code></p>
+
+<p><strong>Step 3: Prepare for Render Deployment</strong></p>
+
+<p>Create a </code>render.yaml<code> file for Render's Blueprint deployment:</p>
+
+</code>`<code>yaml
+services:
+<ul>
+<li>type: web</li>
+</ul>
+    name: ai-agent-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+<ul>
+<li>key: OPENAI_API_KEY</li>
+</ul>
+        sync: false  # Set manually in Render dashboard
+<ul>
+<li>key: MODEL_NAME</li>
+</ul>
+        value: gpt-4o
+<ul>
+<li>key: TEMPERATURE</li>
+</ul>
+        value: "0.7"
+    healthCheckPath: /health
+</code>`<code>
+
+<p>Update </code>requirements.txt<code> with all production dependencies:</p>
+
+</code>`<code>text
+openai==1.35.0
+langchain==0.2.10
+langchain-openai==0.1.17
+langchain-community==0.2.9
+langgraph==0.1.1
+python-dotenv==1.0.0
+fastapi==0.111.0
+uvicorn==0.30.1
+pydantic==2.7.4
+requests==2.32.3
+beautifulsoup4==4.12.3
+jinja2==3.1.4
+</code>`<code>
+
+<p>Create a </code>runtime.txt<code> for Python version:</p>
+
+</code>`<code>
+python-3.11.9
+</code>`<code>
+
+<p><strong>Step 4: Deploy to Render</strong></p>
+
+<ol>
+<li><strong>Push to GitHub</strong>: Create a repository and push your code.</li>
+</ol>
+
+</code>`<code>bash
+git init
+git add .
+git commit -m "Initial commit: AI Agent API"
+git remote add origin https://github.com/yourusername/ai-agent-api.git
+git push -u origin main
+</code>`<code>
+
+<ol>
+<li><strong>Create a Render account</strong> at [render.com](https://render.com)</li>
+</ol>
+
+<ol>
+<li><strong>Create a new Web Service</strong>:</li>
+<ul>
+</ol>
+<li>Click "New +" → "Web Service"</li>
+<li>Connect your GitHub repository</li>
+<li>Render will auto-detect the </code>render.yaml<code> blueprint</li>
+<li>Set your </code>OPENAI_API_KEY<code> as a secret environment variable in the Render dashboard</li>
+</ul>
+
+<ol>
+<li><strong>Deploy</strong>: Click "Create Web Service" and Render will:</li>
+<ul>
+</ol>
+<li>Install dependencies</li>
+<li>Build the application</li>
+<li>Start the server</li>
+<li>Provide a public URL (e.g., </code>https://ai-agent-api.onrender.com<code>)</li>
+</ul>
+
+<p><strong>Step 5: Test the Deployment</strong></p>
+
+</code>`<code>bash
+# Test the health endpoint
+curl https://your-app.onrender.com/health
+
+<p># Test the chat endpoint curl -X POST https://your-app.onrender.com/chat \   -H "Content-Type: application/json" \   -d '{"message": "What is 25% of 840?"}' </code>`<code></p>
+
+<p><strong>Step 6: Set Up a Custom Domain (Optional)</strong></p>
+
+<p>In the Render dashboard: <ol> <li>Go to your service → "Settings" → "Custom Domain"</li> <li>Add your domain (e.g., </code>agent.yourdomain.com<code>)</li> <li>Update your DNS records to point to Render</li> <li>Render automatically provisions SSL certificates</li> </ol></p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Next Steps and Best Practices</h2>
+
+<p><strong>Security Best Practices</strong></p>
+
+<ol>
+<li><strong>Never expose API keys</strong>: Use environment variables and Render's secret management</li>
+<li><strong>Rate limiting</strong>: Add rate limiting to prevent abuse</li>
+</ol>
+   </code>`<code>python
+   from slowapi import Limiter
+   from slowapi.util import get_remote_address
+   
+   limiter = Limiter(key_func=get_remote_address)
+   app.state.limiter = limiter
+   
+   @app.post("/chat")
+   @limiter.limit("10/minute")
+   async def chat(request: AgentRequest):
+       ...
+   </code>`<code>
+<ol>
+<li><strong>Input validation</strong>: Always validate and sanitize user inputs</li>
+<li><strong>Tool sandboxing</strong>: Run tool executions in sandboxed environments</li>
+<li><strong>Logging</strong>: Log all interactions for debugging and auditing</li>
+</ol>
+
+<p><strong>Performance Optimization</strong></p>
+
+<ol>
+<li><strong>Caching</strong>: Cache frequent queries and tool results</li>
+</ol>
+   </code>`<code>python
+   from functools import lru_cache
+   import hashlib
+   
+   @lru_cache(maxsize=100)
+   def cached_search(query: str) -> str:
+       return search_google(query)
+   </code>`<code>
+<ol>
+<li><strong>Async processing</strong>: Use async/await for I/O-bound operations</li>
+<li><strong>Model selection</strong>: Use cheaper models (GPT-4o-mini) for simple tasks</li>
+<li><strong>Streaming</strong>: Stream responses for better perceived performance</li>
+</ol>
+
+<p><strong>Monitoring and Observability</strong></p>
+
+</code>`<code>python
+import logging
+import time
+
+<p>logging.basicConfig(level=logging.INFO) logger = logging.getLogger(__name__)</p>
+
+<p>@app.post("/chat") async def chat(request: AgentRequest):     start_time = time.time()          try:         result = agent_executor.invoke({"input": request.message})                  duration = time.time() - start_time         logger.info(f"Request processed in {duration:.2f}s | Session: {request.session_id}")                  return AgentResponse(response=result["output"], session_id=request.session_id)     except Exception as e:         logger.error(f"Error processing request: {e}")         raise HTTPException(status_code=500, detail=str(e)) </code>`<code></p>
+
+<p><strong>Scaling Your Agent</strong></p>
+
+<p>As your agent grows in complexity, consider these architectural patterns:</p>
+
+<ol>
+<li><strong>Multi-agent systems</strong>: Use LangGraph to coordinate multiple specialized agents</li>
+<li><strong>Tool servers</strong>: Separate tools into microservices for better maintainability</li>
+<li><strong>Vector databases</strong>: Use Pinecone or Weaviate for knowledge retrieval</li>
+<li><strong>Message queues</strong>: Use Redis or RabbitMQ for async task processing</li>
+<li><strong>Containerization</strong>: Use Docker for consistent deployments</li>
+</ol>
+
+<p><strong>Going Further with LangGraph</strong></p>
+
+<p>For production-grade agents, LangGraph provides more control over the agent loop:</p>
+
+</code>`<code>python
+from langgraph.graph import StateGraph, END
+from typing import TypedDict, Annotated
+import operator
+
+<p>class AgentState(TypedDict):     messages: Annotated[list, operator.add]     next_step: str     tool_result: str</p>
+
+<p>def should_continue(state: AgentState):     """Decide whether to continue or end."""     last_message = state["messages"][-1]     if last_message.get("tool_calls"):         return "use_tool"     return "respond"</p>
+
+<p>def call_model(state: AgentState):     """Call the LLM with current messages."""     response = llm.invoke(state["messages"])     return {"messages": [response]}</p>
+
+<p>def call_tool(state: AgentState):     """Execute tool calls from the last message."""     last_message = state["messages"][-1]     results = []     for tool_call in last_message.tool_calls:         # Execute tool and return result         result = execute_tool(tool_call)         results.append(result)     return {"messages": results}</p>
+
+<p># Build the graph workflow = StateGraph(AgentState) workflow.add_node("agent", call_model) workflow.add_node("tools", call_tool)</p>
+
+<p>workflow.set_entry_point("agent") workflow.add_conditional_edges("agent", should_continue) workflow.add_edge("tools", "agent")</p>
+
+<p>app = workflow.compile() </code>``</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Summary</h2>
+
+<p>In this tutorial, we covered the complete process of building and deploying an AI agent:</p>
+
+<ol>
+<li><strong>AI Agent Architecture</strong>: Understanding the reasoning loop, tools, memory, and planning</li>
+<li><strong>OpenAI API Integration</strong>: Making API calls, streaming, function calling, and structured output</li>
+<li><strong>LangChain Framework</strong>: Using prompts, chains, output parsers, and the agent framework</li>
+<li><strong>Agent Logic</strong>: Building ReAct agents from scratch and with LangChain's built-in tools</li>
+<li><strong>Memory</strong>: Adding conversation memory with buffer, windowed, and summary-based approaches</li>
+<li><strong>Tools</strong>: Creating custom tools for file operations, API calls, web search, and databases</li>
+<li><strong>Real-World Examples</strong>: Research assistant, data analysis, and customer support agents</li>
+<li><strong>Deployment</strong>: Creating a FastAPI server and deploying to Render with a web interface</li>
+</ol>
+
+<p>The key takeaway is that modern AI agents combine the reasoning power of LLMs with the ability to use tools, remember context, and take actions. creating systems that can autonomously handle complex, multi-step tasks.</p>
+
+<hr class="article-divider">
+
+<em>This tutorial is based on the freeCodeCamp course "Build Your Own AI Agent. Full Course with OpenAI, Langchain, Render Deployment" by Code with Ania Kubów.</em>
+
+      </article>
+
+      <aside class="article-sidebar">
+        <div id="more-like-this"></div>
+      </aside>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Aether Intel</span>
+      <span class="footer-copy">&copy; 2026. AI news for people who think.</span>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
