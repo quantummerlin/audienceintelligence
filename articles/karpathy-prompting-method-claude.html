@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Andrej Karpathy Doesn't Prompt AI. He Gives It a Job. Here Is the Difference. | Aether Intel</title>
+  <meta name="description" content="Karpathy's approach treats the model as a reasoning engine, not a text completer. Load context first, ask it to think out loud, critique before revising. Here is what changes in practice.">
+  <meta property="og:title" content="Andrej Karpathy Doesn't Prompt AI. He Gives It a Job. Here Is the Difference.">
+  <meta property="og:description" content="Karpathy's approach treats the model as a reasoning engine, not a text completer. Load context first, ask it to think out loud, critique before revising. Here is what changes in practice.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/karpathy-prompting-method-claude-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/karpathy-prompting-method-claude.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Andrej Karpathy Doesn't Prompt AI. He Gives It a Job. Here Is the Difference.">
+  <meta name="twitter:description" content="Karpathy's approach treats the model as a reasoning engine, not a text completer. Load context first, ask it to think out loud, critique before revising. Here is what changes in practice.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/karpathy-prompting-method-claude-hero.webp">
+  <link rel="preload" as="image" href="/images/articles/karpathy-prompting-method-claude-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/karpathy-prompting-method-claude.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/karpathy-prompting-method-claude-hero.webp" alt="Craftsman's hands sharpening a blade on a whetstone, warm amber light" class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-tools">Tools</span>
+        </div>
+        <h1 class="article-title">Andrej Karpathy Doesn't Prompt AI. He Gives It a Job. Here Is the Difference.</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 11, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">The Mistake Everyone Makes First</h2>
+<p>Most people approach a language model the way they approach a search engine. Type a request. Get a response. Judge the response. If it's bad, type a slightly different request and try again.</p>
+<p>Andrej Karpathy's framing is different. He treats the model as a reasoning engine with a context window, not an answer dispenser with a query box. The interface looks similar from the outside. The mental model is completely different, and the outputs reflect that gap consistently.</p>
+<p>The search-engine approach optimizes for the question. The Karpathy approach optimizes for the conditions the model needs to produce something useful. One step back from the output. Two steps deeper into the setup. The difference in results is not subtle once you've tried both.</p>
+<p>This is not about using more words. It's about loading the right information before asking for anything, assigning a specific role with specific expertise, and building in a reasoning step before generation begins. The technique is repeatable. The improvement is consistent.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Give It a Job, Not a Question</h2>
+<p>The clearest example of the shift: cover letter generation.</p>
+<p>The common approach: "Write me a cover letter for this job posting." Paste the job. Get a cover letter. It reads like every other cover letter because the model has no reason to make it different. It has no context about who you are, no expertise to draw on, and no reason to care about anything beyond producing text that looks like a cover letter.</p>
+<p>The Karpathy approach: "You are a career coach with 20 years of experience placing candidates in enterprise software companies. Here is my background: [paste full resume]. Here is the role: [paste job description]. Before writing anything, tell me: what would you need to know about my experience to write a cover letter that doesn't sound like every other cover letter for this role?"</p>
+<p>The second prompt does several things simultaneously. It assigns a role with specific expertise and a clear domain. It loads all relevant context before requesting output. It asks the model to identify its own information gaps before generating. The model now has a job to do, not a question to answer.</p>
+<p>The output is different because the conditions are different. Same model. Same underlying capability. Different setup. This is the whole argument in one example.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Load Context Before You Ask for Output</h2>
+<p>The context-loading principle is foundational. Before requesting any output, the model should understand the full situation.</p>
+<p>This means pasting the relevant documents, the constraints, the audience, the goal, and any important background before you ask the first question. Not after you get a bad first response. Before you ask anything.</p>
+<p>The reason: the model cannot ask you clarifying questions in the way a human colleague would. It will make assumptions, and those assumptions are invisible to you until you see the output. They're baked into the response. Loading context explicitly replaces the implicit assumptions with actual information that shapes the generation.</p>
+<p>In practice this means longer prompts. Significantly longer. The instinct to keep prompts short is wrong for complex tasks. A prompt that loads 500 words of context and asks a focused question produces better output than a 20-word prompt that leaves the model to infer everything.</p>
+<p>Specific context beats general instructions every time. Not "I'm working on a technical document" but "I'm writing a migration guide for developers moving from REST to GraphQL, targeting engineers with 3 to 5 years of experience who have never used GraphQL, maximum 1,500 words, no assumed prior GraphQL knowledge, organized as a numbered walkthrough with code examples at each step." Every word in that instruction constrains the output usefully. Every constraint reduces the gap between what you wanted and what you get.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Make It Think Before It Answers</h2>
+<p>The thinking-out-loud technique is one of the highest-impact changes you can make to your prompting practice. Before asking for output, ask the model to reason through the problem first.</p>
+<p>The instruction: "Before you answer, walk me through what you know about this topic, what you're uncertain about, and what assumptions you're making about my situation."</p>
+<p>This does two things. First, it surfaces the model's actual knowledge state before it starts generating. You can see where it's confident and where it's guessing. Second, it forces a reasoning pass before the output, which tends to produce more accurate and nuanced responses than asking for the answer directly.</p>
+<p>The thinking pass also catches the cases where the model should tell you it doesn't know something rather than generate a plausible-sounding answer. A model that has articulated its uncertainty before answering is less likely to paper over that uncertainty in the final output. You get "I'm not certain about the post-2024 regulatory changes here" instead of a confident wrong answer.</p>
+<p>For any task where accuracy matters more than speed, build the thinking step into the prompt structure. Not as an afterthought. As the first thing you ask for. The extra time it takes is short. The improvement in output accuracy is not.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Critique Loop: Your Second Draft Is Already Written</h2>
+<p>Never accept the first output as final. This is not a criticism of the model. It's a structural insight about how the generation process works.</p>
+<p>The model is often better at critiquing an existing text than at generating a perfect text from scratch on the first pass. The critique mode activates a different processing orientation. It's reading and evaluating rather than generating from a blank state. And the critique is often incisive in ways the initial generation was not.</p>
+<p>The workflow: get the first draft. Then ask: "What is wrong with what you just wrote? What are the weakest parts? What assumptions did you make that might not hold? What would a critical reader object to most?"</p>
+<p>Read the critique. Then ask for a revision that specifically addresses the weaknesses identified. The second draft is almost always stronger than the first, not because the model learned something in the interim, but because the critique pass surfaced the gap between what was generated and what the task actually required.</p>
+<p>You can run this loop more than once. Two cycles is usually enough to produce something worth editing down. One cycle beats a single-pass output significantly. Zero cycles, the most common approach, leaves significant quality on the table.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Specificity as a Design Constraint</h2>
+<p>Karpathy's specificity rule: every adjective in your prompt should be verifiable. If you can't measure it or check it, the model can't reliably target it.</p>
+<p>"Formal but not stiff" is a feeling. The model will interpret it, and its interpretation will not match yours. "No sentence longer than 20 words, active voice throughout, no passive constructions, avoid hedging language like 'it seems' or 'one might argue'" is a specification. The model can apply it consistently. You can check whether it did. The difference in output predictability is dramatic.</p>
+<p>The same principle applies to output structure. Not "give me a summary" but "give me a 3-bullet summary where each bullet is one sentence, starting with an action verb, covering: the core finding, the primary business implication, and the main open question." That instruction produces the same format every time. The generic instruction produces something different every time.</p>
+<p>The discipline: before submitting a prompt for anything that matters, read every adjective and instruction you used and ask whether someone else, reading the same prompt cold, would produce the same output you have in mind. If the answer is no, the prompt needs to be more specific. The gap between your intention and the model's interpretation is almost always a specificity gap.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">You Are the Editor, Not the Author</h2>
+<p>Karpathy's framing for the whole practice: you are not the author, you are the editor. Your job is to set up the conditions for good output, then shape what comes back. Not to describe the output you want and hope the model reads your mind.</p>
+<p>This reframe changes where you put your effort. Most people spend time trying to craft the perfect request. The better investment is in context loading, role assignment, the thinking step, and the critique loop after generation. Front-load the setup. Don't try to specify the output directly.</p>
+<p>Prompts get longer under this approach. Significantly longer. Output quality improves proportionally. Time spent revising bad outputs goes down, because the conditions were right before generation started, and the critique loop caught what wasn't right before you committed to it.</p>
+<p>The prompts that work look over-engineered to people who haven't tried them. They are not over-engineered. They are correctly engineered for a tool that interprets instructions literally, fills gaps with defaults, and cannot ask you what you actually meant.</p>
+
+<p>Stop describing the output you want.</p>
+
+<p>Start building the conditions that produce it.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>

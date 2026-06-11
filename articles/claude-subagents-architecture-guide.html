@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Most Claude Subagent Setups Are Wrong. Here Is the Architecture That Actually Works. | Aether Intel</title>
+  <meta name="description" content="The most common mistake is giving subagents too much context and too broad a mandate. Here is the right pattern for orchestrator design, context handoff, memory, and parallel execution.">
+  <meta property="og:title" content="Most Claude Subagent Setups Are Wrong. Here Is the Architecture That Actually Works.">
+  <meta property="og:description" content="The most common mistake is giving subagents too much context and too broad a mandate. Here is the right pattern for orchestrator design, context handoff, memory, and parallel execution.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/claude-subagents-architecture-guide-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/claude-subagents-architecture-guide.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Most Claude Subagent Setups Are Wrong. Here Is the Architecture That Actually Works.">
+  <meta name="twitter:description" content="The most common mistake is giving subagents too much context and too broad a mandate. Here is the right pattern for orchestrator design, context handoff, memory, and parallel execution.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/claude-subagents-architecture-guide-hero.webp">
+  <link rel="preload" as="image" href="/images/articles/claude-subagents-architecture-guide-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/claude-subagents-architecture-guide.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/claude-subagents-architecture-guide-hero.webp" alt="Web of copper wires connecting circuit nodes, gold and indigo light" class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-dev">Dev & Build</span>
+        </div>
+        <h1 class="article-title">Most Claude Subagent Setups Are Wrong. Here Is the Architecture That Actually Works.</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 11, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">The Setup That Fails Every Time</h2>
+<p>You give the subagent a long system prompt. You attach every tool it might need. You pass it the full conversation history so it "has context." You expect it to handle research, write code, check its own output, and report back. It sort of works the first time. Then it gets confused, costs three times what you expected, and produces results you have to manually fix anyway.</p>
+<p>This is the default subagent setup. It is the setup most people build. It is almost always wrong.</p>
+<p>The failure mode is architectural, not a model quality issue. Claude is capable. The problem is that "capable" does not mean "capable of doing everything well simultaneously with unlimited context and no clear scope." The same engineer who can build a great API integration will produce mediocre work if you also ask them to design the database, write the docs, and handle customer support while they're at it. Subagents work the same way.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The One-Job Rule</h2>
+<p>Every subagent should have exactly one job. Not one domain, not one category of tasks. One specific job with a clear input format, a clear output format, and a minimal set of tools to do that one thing.</p>
+<p>A research subagent gets web search tools and a question. It returns a structured summary. That is all it does. It does not write code. It does not make decisions about what to research next based on business context. It answers the specific question it was given and stops.</p>
+<p>A code-writing subagent gets a spec and file access. It writes the code. It does not decide what the spec should be, it does not research background context, it does not review its own code for business logic correctness. Those are different jobs for different agents.</p>
+<p>This sounds overly rigid. It is not. The constraint is what makes subagents fast, cheap, and reliable. A single-job subagent processes far less context, reaches decisions faster, and fails in predictable ways that your orchestrator can handle. The "do everything" subagent fails in unpredictable ways that are hard to diagnose and harder to recover from.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Context Handoff: Three Patterns and When to Use Each</h2>
+<p>How you pass context between the orchestrator and subagents is the second most important architectural decision you will make. Get this wrong and your subagents either drown in irrelevant information or miss critical details.</p>
+<p>Full context pass is the naive approach. You dump everything the orchestrator knows into the subagent's context window. It is simple to implement. It is also expensive, slow, and often counterproductive. A subagent doing code review does not need the research notes from two steps earlier. Giving it that context does not help. It adds noise and costs tokens.</p>
+<p>Summary pass is cheaper but lossy. The orchestrator generates a brief summary and passes that. Fast and cheap. The problem is that summaries drop detail, and sometimes the dropped detail matters. A summarized spec for a code task might omit an edge case that was explicit in the original. The subagent builds the wrong thing confidently.</p>
+<p>Structured handoff documents are the pattern that actually works at scale. The orchestrator writes a specific, purpose-built handoff document: the task, the relevant context (only the relevant context), any constraints, and the expected output format. The subagent reads the handoff document first, then does its work. This takes more design up front, but it eliminates the noise of full context and the lossiness of summaries.</p>
+<p>When building the handoff document template, ask one question: what is the minimum information this subagent needs to do its specific job correctly? Include that. Nothing else.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Memory Architecture for Multi-Step Workflows</h2>
+<p>Subagents do not have persistent memory across runs by default. This surprises people who are used to working in a single Claude conversation. When a subagent finishes its job and returns output to the orchestrator, it is gone. The next subagent starts fresh.</p>
+<p>This means state management is your responsibility, not the model's. You have three practical options, and which one to choose depends on your workflow's complexity and longevity.</p>
+<p>Explicit context passing works for short workflows. The orchestrator holds all the state and passes relevant pieces to each subagent as needed. Simple to reason about, easy to debug. Breaks down when the state gets large or when you have more than four or five steps, because the orchestrator's own context starts filling up with accumulated results.</p>
+<p>External state stores are the production solution. A database, a file system, or a key-value store that all agents can read and write. The orchestrator writes a task result to the store; the next subagent reads what it needs. State persists independently of any single agent's context window. This adds infrastructure complexity but is the only approach that scales to long-running workflows with many steps.</p>
+<p>Claude Projects give you a middle path for development and lower-scale production use. Project instructions persist across sessions. A subagent that runs inside a project can read shared context from the project instructions. This is not a substitute for a real state store in high-volume production, but for workflows that run infrequently and need human-readable shared context, it works well.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Orchestrator Does Not Execute</h2>
+<p>The most important conceptual line to hold: orchestrators decide, workers execute. When you let a worker subagent make strategic decisions, you have built an orchestrator that is also doing operational work. The architecture collapses.</p>
+<p>An orchestrator looks at the overall goal, determines what steps are needed, assigns each step to the right subagent with the right context, collects results, and decides what to do next. It does not do research itself. It does not write code itself. It reads outputs and makes routing decisions.</p>
+<p>Error handling lives in the orchestrator. When a subagent fails, the orchestrator catches the failure and decides: retry, skip, escalate, or abort. A subagent that fails silently and returns a partial result as if it succeeded breaks this entirely. Your subagents should return structured outputs that include status. Not just the result, but whether the result is complete, whether any errors occurred, and what the orchestrator should know about the confidence level of the output.</p>
+<p>When you do not use subagents is equally important. A simple three-step task with sequential tool calls in a single conversation does not need a subagent architecture. The overhead of spawning workers, managing handoffs, and aggregating results is real. For tasks that are genuinely sequential and do not benefit from parallelism, a single well-structured conversation with tool use is faster, cheaper, and easier to debug.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Parallel Execution and Token Cost Reality</h2>
+<p>The main performance argument for subagents is parallelism. If you have three genuinely independent tasks, research, code generation, and test writing, running them simultaneously in three workers cuts wall-clock time roughly in thirds. That benefit is real and significant.</p>
+<p>The cost argument surprises people. A well-designed five-subagent workflow can cost less in tokens than a single bloated single-conversation approach. The reason: each subagent processes only the context relevant to its task. The research subagent does not see the code spec. The code subagent does not see the raw research notes. Total tokens across all five agents can be lower than the total tokens in one conversation where all five tasks accumulate context together.</p>
+<p>The catch is coordination overhead. Parallel subagents that produce conflicting outputs need resolution logic. A parallel research run that returns ten documents, two of which contradict each other, requires the orchestrator to handle the conflict. Build conflict resolution into your orchestrator before you build the parallel execution. Discovering you need it after launch is expensive.</p>
+<p>The practical starting point for anyone who has struggled with subagents: start with one subagent, one job, a structured handoff document, and explicit error status in the output. Get that working cleanly. Then add a second. Parallel execution is a later optimization, not a starting architecture.</p>
+
+<p>One job.</p>
+
+<p>Minimal tools.</p>
+
+<p>Clean handoffs.</p>
+
+<p>Everything else follows from that.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>
