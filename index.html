@@ -175,28 +175,28 @@
     </div>
     <div class="article-grid">
 
-        <a href="/articles/microsoft-ai-agents-company-pivot.html" class="article-card">
+        <a href="/articles/microsoft-ai-agents-company-pivot.html" class="article-card" data-date="2026-06-11">
           <div class="article-card-img-wrap"><img src="/images/articles/microsoft-ai-agents-company-pivot-hero.webp" alt="Microsoft Stopped Being a Software Company. It&#x27;s an AI Agents Company Now." class="article-card-img" loading="lazy"></div>
           <div class="article-card-body">
             <span class="badge badge-agents">Agents</span>
             <h2 class="article-card-title">Microsoft Stopped Being a Software Company. It&#x27;s an AI Agents Company Now.</h2>
           </div>
         </a>
-        <a href="/articles/ed-zitron-openai-anthropic-con.html" class="article-card">
+        <a href="/articles/ed-zitron-openai-anthropic-con.html" class="article-card" data-date="2026-06-11">
           <div class="article-card-img-wrap"><img src="/images/articles/ed-zitron-openai-anthropic-con-hero.webp" alt="Ed Zitron Says OpenAI and Anthropic Are Both Elaborate Cons. Here Is His Case." class="article-card-img" loading="lazy"></div>
           <div class="article-card-body">
             <span class="badge badge-news">AI News</span>
             <h2 class="article-card-title">Ed Zitron Says OpenAI and Anthropic Are Both Elaborate Cons. Here Is His Case.</h2>
           </div>
         </a>
-        <a href="/articles/deepseek-v4-nvidia-worst-nightmare.html" class="article-card">
+        <a href="/articles/deepseek-v4-nvidia-worst-nightmare.html" class="article-card" data-date="2026-06-11">
           <div class="article-card-img-wrap"><img src="/images/articles/deepseek-v4-nvidia-worst-nightmare-hero.webp" alt="DeepSeek V4 Just Made Nvidia&#x27;s GPU Thesis a Lot Harder to Defend" class="article-card-img" loading="lazy"></div>
           <div class="article-card-body">
             <span class="badge badge-business">Big Picture</span>
             <h2 class="article-card-title">DeepSeek V4 Just Made Nvidia&#x27;s GPU Thesis a Lot Harder to Defend</h2>
           </div>
         </a>
-        <a href="/articles/anthropic-claude-evolving-warning.html" class="article-card">
+        <a href="/articles/anthropic-claude-evolving-warning.html" class="article-card" data-date="2026-06-11">
           <div class="article-card-img-wrap"><img src="/images/articles/anthropic-claude-evolving-warning-hero.webp" alt="Anthropic Is Warning Us About Its Own Model. That Is Worth Paying Attention To." class="article-card-img" loading="lazy"></div>
           <div class="article-card-body">
             <span class="badge badge-news">AI Safety</span>
@@ -1102,6 +1102,36 @@
   })();
 </script>
 <script src="/js/main.js"></script>
+
+<script>
+  // Relative dates on article cards
+  (function() {
+    function timeAgo(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      if (isNaN(d)) return '';
+      const now = new Date();
+      const diff = Math.floor((now - d) / 1000);
+      if (diff < 60) return 'just now';
+      if (diff < 3600) return Math.floor(diff/60) + ' min ago';
+      if (diff < 86400) return Math.floor(diff/3600) + ' hr ago';
+      if (diff < 2592000) { const days = Math.floor(diff/86400); return days === 1 ? 'yesterday' : days + ' days ago'; }
+      if (diff < 31536000) { const m = Math.floor(diff/2592000); return m === 1 ? '1 month ago' : m + ' months ago'; }
+      return Math.floor(diff/31536000) + ' yr ago';
+    }
+    document.querySelectorAll('.article-card[data-date]').forEach(card => {
+      const ago = timeAgo(card.dataset.date);
+      if (!ago) return;
+      const title = card.querySelector('h2, h3, .article-card-title');
+      if (title) {
+        const span = document.createElement('span');
+        span.style.cssText = 'display:block;font-size:.72rem;color:rgba(241,245,249,0.45);margin-bottom:4px;';
+        span.textContent = ago;
+        title.parentNode.insertBefore(span, title);
+      }
+    });
+  })();
+</script>
 </body>
 </html>
 

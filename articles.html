@@ -215,7 +215,56 @@
       .article-card.featured { grid-column: span 1; display: block; }
       .article-card.featured .article-card-img { height: 180px; min-height: unset; }
     }
-  </style>
+  
+    /* ── Article search ── */
+    .articles-search-wrap {
+      position: relative;
+      padding: 0 28px 16px;
+      max-width: 480px;
+    }
+    .articles-search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,0.25);
+      border-radius: 24px;
+      padding: 10px 40px 10px 18px;
+      font-family: var(--font-body);
+      font-size: .88rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color .2s;
+      box-sizing: border-box;
+    }
+    .articles-search-input:focus {
+      border-color: rgba(129,140,248,0.6);
+    }
+    .articles-search-input::placeholder { color: rgba(241,245,249,0.35); }
+    .articles-search-icon {
+      position: absolute;
+      right: 46px;
+      top: 50%;
+      transform: translateY(-60%);
+      color: rgba(241,245,249,0.35);
+      pointer-events: none;
+    }
+    /* ── Result count ── */
+    .articles-result-count {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(245,158,11,0.75);
+      padding: 0 28px 16px;
+    }
+    /* ── Date badge on cards ── */
+    .article-card-date {
+      font-size: .72rem;
+      color: rgba(241,245,249,0.45);
+      font-family: var(--font-body);
+      margin-right: 8px;
+    }
+    </style>
   <!-- Fonts — non-blocking -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -251,19 +300,29 @@
   </div>
 
   <!-- Filter Pills -->
-  <div class="filter-row">
+  <!-- Search -->
+  <div class="articles-search-wrap">
+    <input type="search" id="articleSearch" class="articles-search-input" placeholder="Search articles..." autocomplete="off" spellcheck="false">
+    <span class="articles-search-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </span>
+  </div>
+
+    <div class="filter-row">
     <button class="filter-pill active" data-filter="all">All</button>
     <button class="filter-pill" data-filter="agents">Agents</button>
     <button class="filter-pill" data-filter="business">Business</button>
     <button class="filter-pill" data-filter="tools">Tools</button>
     <button class="filter-pill" data-filter="automation">Automation</button>
     <button class="filter-pill" data-filter="development">Dev &amp; Security</button>
+    <button class="filter-pill" data-filter="news">News</button>
   </div>
 
   <!-- Article Grid -->
+  <div class="articles-result-count" id="articlesResultCount"></div>
   <div class="articles-body">
     <div class="article-grid-full">
-      <a href="/articles/satya-nadella-unmetered-intelligence-agents.html" class="article-card reveal-stagger" data-filter="cat-business">
+      <a href="/articles/satya-nadella-unmetered-intelligence-agents.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="business">
           <div class="article-card-img-wrap">
               <img src="/images/articles/satya-nadella-unmetered-intelligence-agents-hero.webp" alt="Satya Nadella Called It &#x27;Unmetered Intelligence.&#x27; Here Is What That Actually Means for Builders." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -276,7 +335,7 @@
               <p class="article-card-desc">Satya&#x27;s vision: AI should be ambient and unmetered like electricity. Here is what the always-on model means for product builders right now.</p>
           </div>
       </a>
-      <a href="/articles/best-ai-agent-tools-2026-beginners.html" class="article-card reveal-stagger" data-filter="cat-tools">
+      <a href="/articles/best-ai-agent-tools-2026-beginners.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="tools">
           <div class="article-card-img-wrap">
               <img src="/images/articles/best-ai-agent-tools-2026-beginners-hero.webp" alt="The Best AI Agent Tools in 2026, Ranked for People Who Are Just Starting Out" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -289,7 +348,7 @@
               <p class="article-card-desc">Four tiers from ChatGPT to AutoGen. The biggest beginner mistake is starting with the most powerful tool. Here is exactly where to start.</p>
           </div>
       </a>
-      <a href="/articles/cursor-composer-grok-agents-coding-battle.html" class="article-card reveal-stagger" data-filter="cat-development">
+      <a href="/articles/cursor-composer-grok-agents-coding-battle.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="development">
           <div class="article-card-img-wrap">
               <img src="/images/articles/cursor-composer-grok-agents-coding-battle-hero.webp" alt="Cursor Composer 2.5 Is Now in Grok. The Coding Agent Battle Just Got a Third Serious Competitor." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -302,7 +361,7 @@
               <p class="article-card-desc">xAI partnered with Cursor to bring Grok 5 into Cursor Composer 2.5. It is 40% faster in iteration cycles. Here are the tradeoffs vs Claude Code.</p>
           </div>
       </a>
-      <a href="/articles/hermes-workspace-deepseek-v4-super-app.html" class="article-card reveal-stagger" data-filter="cat-tools">
+      <a href="/articles/hermes-workspace-deepseek-v4-super-app.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="tools">
           <div class="article-card-img-wrap">
               <img src="/images/articles/hermes-workspace-deepseek-v4-super-app-hero.webp" alt="Hermes Workspace Just Got a Multi-Agent Team. DeepSeek v4 Is How You Afford to Run It." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -315,7 +374,7 @@
               <p class="article-card-desc">Hermes Workspace assigns different roles to different agent instances. Using DeepSeek v4 for execution tasks cuts costs by 80%. Here is the hybrid setup.</p>
           </div>
       </a>
-      <a href="/articles/claude-fable-5-real-review-no-hype.html" class="article-card reveal-stagger" data-filter="cat-agents">
+      <a href="/articles/claude-fable-5-real-review-no-hype.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="agents">
           <div class="article-card-img-wrap">
               <img src="/images/articles/claude-fable-5-real-review-no-hype-hero.webp" alt="Claude Fable 5 Is Out. Here Is What the Tests Actually Show, Without the Speechless-Ness." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -328,7 +387,7 @@
               <p class="article-card-desc">Fable 5 beats Opus 4.8 on coding and instruction-following. The improvement is real. Here is what changed, what did not, and when to upgrade.</p>
           </div>
       </a>
-      <a href="/articles/openai-ipo-36-trillion-pipeline-reality.html" class="article-card reveal-stagger" data-filter="cat-business">
+      <a href="/articles/openai-ipo-36-trillion-pipeline-reality.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="business">
           <div class="article-card-img-wrap">
               <img src="/images/articles/openai-ipo-36-trillion-pipeline-reality-hero.webp" alt="OpenAI Is Joining an IPO Pipeline Worth $3.6 Trillion. Here Is Why the Math Does Not Add Up." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -341,7 +400,7 @@
               <p class="article-card-desc">OpenAI needs to earn $10-15B annually to justify its $300B valuation at IPO. Current revenue is $3.7B. Here is what investors are actually betting on.</p>
           </div>
       </a>
-      <a href="/articles/financial-adviser-tests-chatgpt-claude-grok.html" class="article-card reveal-stagger" data-filter="cat-tools">
+      <a href="/articles/financial-adviser-tests-chatgpt-claude-grok.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="tools">
           <div class="article-card-img-wrap">
               <img src="/images/articles/financial-adviser-tests-chatgpt-claude-grok-hero.webp" alt="A Real Financial Adviser Ran Real Client Scenarios Through ChatGPT, Claude, and Grok." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -354,7 +413,7 @@
               <p class="article-card-desc">15-year financial adviser tested retirement planning, tax questions, and investment advice. Claude was most conservative, Grok was most confident and most often wrong.</p>
           </div>
       </a>
-      <a href="/articles/finance-brain-claude-permanent-memory.html" class="article-card reveal-stagger" data-filter="cat-tools">
+      <a href="/articles/finance-brain-claude-permanent-memory.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="tools">
           <div class="article-card-img-wrap">
               <img src="/images/articles/finance-brain-claude-permanent-memory-hero.webp" alt="I Built a Finance Brain With Claude That Remembers Everything. Here Is the Setup." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -367,7 +426,7 @@
               <p class="article-card-desc">A Claude Project with a structured CLAUDE.md storing portfolio positions, budget baselines, and past decisions. Here is exactly how to set it up.</p>
           </div>
       </a>
-      <a href="/articles/microsoft-ai-catchup-strategy-vergecast.html" class="article-card reveal-stagger" data-filter="cat-business">
+      <a href="/articles/microsoft-ai-catchup-strategy-vergecast.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="business">
           <div class="article-card-img-wrap">
               <img src="/images/articles/microsoft-ai-catchup-strategy-vergecast-hero.webp" alt="Microsoft Was Two Years Behind in AI. Here Is the Plan Satya Nadella Pitched to Get Even." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -380,7 +439,7 @@
               <p class="article-card-desc">Microsoft assembled an in-house AI team after realizing it could not depend on OpenAI forever. The MAI models at Build 2026 are the first output.</p>
           </div>
       </a>
-      <a href="/articles/qwen-3-7-max-vs-gpt-5-5-open-source-gap.html" class="article-card reveal-stagger" data-filter="cat-agents">
+      <a href="/articles/qwen-3-7-max-vs-gpt-5-5-open-source-gap.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="agents">
           <div class="article-card-img-wrap">
               <img src="/images/articles/qwen-3-7-max-vs-gpt-5-5-open-source-gap-hero.webp" alt="Qwen 3.7 Max vs GPT 5.5: Open Source Just Closed a Gap Nobody Expected to Close This Fast" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -393,7 +452,7 @@
               <p class="article-card-desc">Qwen 3.7 Max matched GPT 5.5 on 6 of 8 coding tasks at 1/8th the cost. A year ago this gap was wide. Here is what closing it means.</p>
           </div>
       </a>
-      <a href="/articles/what-is-ai-agent-loop-explained.html" class="article-card reveal-stagger" data-filter="cat-agents">
+      <a href="/articles/what-is-ai-agent-loop-explained.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="agents">
           <div class="article-card-img-wrap">
               <img src="/images/articles/what-is-ai-agent-loop-explained-hero.webp" alt="WTF Is an AI Agent Loop? A Straight Answer for People Who Are Tired of the Hype." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -406,7 +465,7 @@
               <p class="article-card-desc">The agent loop: perceive, plan, act, reflect, repeat. A clear explanation of what each step does and when it is useful vs overkill.</p>
           </div>
       </a>
-      <a href="/articles/karpathy-prompting-method-claude.html" class="article-card reveal-stagger" data-filter="cat-tools">
+      <a href="/articles/karpathy-prompting-method-claude.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="tools">
           <div class="article-card-img-wrap">
               <img src="/images/articles/karpathy-prompting-method-claude-hero.webp" alt="Andrej Karpathy Does Not Prompt AI. He Gives It a Job. Here Is the Difference." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -419,7 +478,7 @@
               <p class="article-card-desc">Karpathy treats the model as a reasoning engine. Load context first, think out loud, critique before revising. Here is what changes in practice.</p>
           </div>
       </a>
-      <a href="/articles/deepseek-vs-openai-ai-race-analysis.html" class="article-card reveal-stagger" data-filter="cat-business">
+      <a href="/articles/deepseek-vs-openai-ai-race-analysis.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="business">
           <div class="article-card-img-wrap">
               <img src="/images/articles/deepseek-vs-openai-ai-race-analysis-hero.webp" alt="DeepSeek vs OpenAI: The AI Race Has a Geopolitics Problem Nobody Wants to Talk About" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -432,7 +491,7 @@
               <p class="article-card-desc">DeepSeek R1 matches GPT o1 at 1/20th the training cost. US export controls may have accelerated the efficiency research they were designed to prevent.</p>
           </div>
       </a>
-      <a href="/articles/claude-code-500-hours-power-features.html" class="article-card reveal-stagger" data-filter="cat-development">
+      <a href="/articles/claude-code-500-hours-power-features.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="development">
           <div class="article-card-img-wrap">
               <img src="/images/articles/claude-code-500-hours-power-features-hero.webp" alt="I Spent 500 Hours in Claude Code. These 12 Features Changed How I Work." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -445,7 +504,7 @@
               <p class="article-card-desc">CLAUDE.md files, parallel worktrees, headless CI mode, and context pruning are where the real power is. Not the features most people use first.</p>
           </div>
       </a>
-      <a href="/articles/microsoft-scout-hands-on-build-2026.html" class="article-card reveal-stagger" data-filter="cat-tools">
+      <a href="/articles/microsoft-scout-hands-on-build-2026.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="tools">
           <div class="article-card-img-wrap">
               <img src="/images/articles/microsoft-scout-hands-on-build-2026-hero.webp" alt="Microsoft Scout Is Real and It Does Things Copilot Never Could. Here Is What We Found." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -458,7 +517,7 @@
               <p class="article-card-desc">Scout is Microsoft&#x27;s new deep research agent. Real test: competitive analysis in 23 minutes, 89% citations verified.</p>
           </div>
       </a>
-      <a href="/articles/ai-agent-scaling-challenges-production.html" class="article-card reveal-stagger" data-filter="cat-development">
+      <a href="/articles/ai-agent-scaling-challenges-production.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="development">
           <div class="article-card-img-wrap">
               <img src="/images/articles/ai-agent-scaling-challenges-production-hero.webp" alt="The Scaling Problems That Show Up When You Actually Ship AI Agents to Production" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -471,7 +530,7 @@
               <p class="article-card-desc">Context window exhaustion, state management failures, error propagation, unpredictable costs. The real problems when agentic workflows hit production.</p>
           </div>
       </a>
-      <a href="/articles/ai-memory-compared-chatgpt-claude-gemini-grok-copilot.html" class="article-card reveal-stagger" data-filter="cat-tools">
+      <a href="/articles/ai-memory-compared-chatgpt-claude-gemini-grok-copilot.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="tools">
           <div class="article-card-img-wrap">
               <img src="/images/articles/ai-memory-compared-chatgpt-claude-gemini-grok-copilot-hero.webp" alt="We Tested AI Memory Across ChatGPT, Claude, Gemini, Grok, and Copilot. Here Is What Each Actually Remembers." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -484,7 +543,7 @@
               <p class="article-card-desc">Systematic comparison of memory across five major AI models. What each stores, how reliably it retrieves context, and which to use.</p>
           </div>
       </a>
-      <a href="/articles/claude-code-website-design-revolution.html" class="article-card reveal-stagger" data-filter="cat-development">
+      <a href="/articles/claude-code-website-design-revolution.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="development">
           <div class="article-card-img-wrap">
               <img src="/images/articles/claude-code-website-design-revolution-hero.webp" alt="Claude Code Rebuilt a Production Website in One Session. Here Is What Actually Happened." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -497,7 +556,7 @@
               <p class="article-card-desc">From a URL, Claude Code analyzed the design and built a full redesign in one session. What it can do, what it cannot, and the new designer workflow.</p>
           </div>
       </a>
-      <a href="/articles/claude-subagents-architecture-guide.html" class="article-card reveal-stagger" data-filter="cat-development">
+      <a href="/articles/claude-subagents-architecture-guide.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="development">
           <div class="article-card-img-wrap">
               <img src="/images/articles/claude-subagents-architecture-guide-hero.webp" alt="Most Claude Subagent Setups Are Wrong. Here Is the Architecture That Actually Works." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -510,7 +569,7 @@
               <p class="article-card-desc">The most common mistake: giving subagents too much context and too broad a mandate. Here is the right pattern for orchestrators, handoffs, and memory.</p>
           </div>
       </a>
-      <a href="/articles/grok-5-six-trillion-parameters-spin.html" class="article-card reveal-stagger" data-filter="cat-news">
+      <a href="/articles/grok-5-six-trillion-parameters-spin.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="news">
           <div class="article-card-img-wrap">
               <img src="/images/articles/grok-5-six-trillion-parameters-spin-hero.webp" alt="Grok 5&#x27;s 6 Trillion Parameter Claim Has a 7% Confidence Interval and a Lot of Spin" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -523,7 +582,7 @@
               <p class="article-card-desc">xAI announced Grok 5 with a 6 trillion parameter figure. Here is what that number means and what the self-reported benchmarks leave out.</p>
           </div>
       </a>
-      <a href="/articles/hacked-ai-customer-service-agent-8-seconds.html" class="article-card reveal-stagger" data-filter="cat-news">
+      <a href="/articles/hacked-ai-customer-service-agent-8-seconds.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="news">
           <div class="article-card-img-wrap">
               <img src="/images/articles/hacked-ai-customer-service-agent-8-seconds-hero.webp" alt="It Took 8 Seconds to Hack This AI Customer Service Agent. Here Is Exactly How." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -536,7 +595,7 @@
               <p class="article-card-desc">A security researcher demonstrated three attack vectors on a deployed customer service AI: prompt injection, fake policy injection, and persona bypass.</p>
           </div>
       </a>
-      <a href="/articles/anthropic-claude-evolving-warning.html" class="article-card reveal-stagger" data-filter="cat-news">
+      <a href="/articles/anthropic-claude-evolving-warning.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="news">
           <div class="article-card-img-wrap">
               <img src="/images/articles/anthropic-claude-evolving-warning-hero.webp" alt="Anthropic Is Warning Us About Its Own Model. That Is Worth Paying Attention To." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -549,7 +608,7 @@
               <p class="article-card-desc">Anthropic published research showing Claude exhibiting unexpected autonomous behavior in evals. Here is what they found and why it matters.</p>
           </div>
       </a>
-      <a href="/articles/deepseek-v4-nvidia-worst-nightmare.html" class="article-card reveal-stagger" data-filter="cat-business">
+      <a href="/articles/deepseek-v4-nvidia-worst-nightmare.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="business">
           <div class="article-card-img-wrap">
               <img src="/images/articles/deepseek-v4-nvidia-worst-nightmare-hero.webp" alt="DeepSeek V4 Just Made Nvidia&#x27;s GPU Thesis a Lot Harder to Defend" class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -562,7 +621,7 @@
               <p class="article-card-desc">DeepSeek V4 achieves Opus-level performance on older hardware using Mixture of Experts. If compute efficiency compounds like this, the premium GPU demand curve flattens.</p>
           </div>
       </a>
-      <a href="/articles/microsoft-ai-agents-company-pivot.html" class="article-card reveal-stagger" data-filter="cat-business">
+      <a href="/articles/microsoft-ai-agents-company-pivot.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="business">
           <div class="article-card-img-wrap">
               <img src="/images/articles/microsoft-ai-agents-company-pivot-hero.webp" alt="Microsoft Stopped Being a Software Company. It&#x27;s an AI Agents Company Now." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -575,7 +634,7 @@
               <p class="article-card-desc">At Build 2026, Microsoft shipped 50+ agent products and shifted to consumption pricing. Satya Nadella is calling agents the new apps.</p>
           </div>
       </a>
-      <a href="/articles/ed-zitron-openai-anthropic-con.html" class="article-card reveal-stagger" data-filter="cat-news">
+      <a href="/articles/ed-zitron-openai-anthropic-con.html" class="article-card reveal-stagger" data-date="2026-06-11" data-filter="news">
           <div class="article-card-img-wrap">
               <img src="/images/articles/ed-zitron-openai-anthropic-con-hero.webp" alt="Ed Zitron Says OpenAI and Anthropic Are Both Elaborate Cons. Here Is His Case." class="article-card-img" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0d0d1a)'">
           </div>
@@ -2454,24 +2513,133 @@
 </main>
 
 <script>
-  // Filter pills
+(function() {
+  'use strict';
+
+  // ── Utilities ──
+  function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (isNaN(d)) return dateStr;
+    const now = new Date();
+    const diff = Math.floor((now - d) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff/60) + ' min ago';
+    if (diff < 86400) return Math.floor(diff/3600) + ' hr ago';
+    if (diff < 2592000) {
+      const days = Math.floor(diff/86400);
+      return days === 1 ? 'yesterday' : days + ' days ago';
+    }
+    if (diff < 31536000) {
+      const months = Math.floor(diff/2592000);
+      return months === 1 ? '1 month ago' : months + ' months ago';
+    }
+    return Math.floor(diff/31536000) + ' yr ago';
+  }
+
+  const PAGE_SIZE = 12;
+  let activeFilter = 'all';
+  let searchQuery = '';
+  let visibleCount = PAGE_SIZE;
+  let filteredCards = [];
+
+  const allCards = Array.from(document.querySelectorAll('.article-card'));
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  const resultCount = document.getElementById('articlesResultCount');
+  const searchInput = document.getElementById('articleSearch');
+
+  // ── Inject relative dates ──
+  allCards.forEach(card => {
+    const d = card.dataset.date;
+    if (d) {
+      const meta = card.querySelector('.article-card-readtime') || card.querySelector('.article-card-meta');
+      if (meta) {
+        const span = document.createElement('span');
+        span.className = 'article-card-date';
+        span.textContent = timeAgo(d);
+        meta.parentNode.insertBefore(span, meta);
+      }
+    }
+  });
+
+  function getFilteredCards() {
+    const q = searchQuery.trim().toLowerCase();
+    return allCards.filter(card => {
+      const filterMatch = activeFilter === 'all' || card.dataset.filter === activeFilter;
+      if (!filterMatch) return false;
+      if (!q) return true;
+      const title = (card.querySelector('.article-card-title') || card.querySelector('h3') || card.querySelector('h2') || {}).textContent || '';
+      const desc  = (card.querySelector('.article-card-desc') || card.querySelector('p') || {}).textContent || '';
+      const cat   = (card.querySelector('.cat-badge') || card.querySelector('.badge') || {}).textContent || '';
+      return (title + ' ' + desc + ' ' + cat).toLowerCase().includes(q);
+    });
+  }
+
+  function render() {
+    filteredCards = getFilteredCards();
+    allCards.forEach(c => { c.style.display = 'none'; });
+    const toShow = filteredCards.slice(0, visibleCount);
+    toShow.forEach(c => { c.style.display = ''; });
+
+    // Update result count
+    if (resultCount) {
+      if (activeFilter !== 'all' || searchQuery) {
+        resultCount.textContent = filteredCards.length + ' article' + (filteredCards.length !== 1 ? 's' : '');
+        resultCount.style.display = '';
+      } else {
+        resultCount.style.display = 'none';
+      }
+    }
+
+    // Load more button
+    if (loadMoreBtn) {
+      if (visibleCount < filteredCards.length) {
+        loadMoreBtn.style.display = '';
+        loadMoreBtn.disabled = false;
+        const remaining = filteredCards.length - visibleCount;
+        loadMoreBtn.textContent = 'Load ' + Math.min(PAGE_SIZE, remaining) + ' More';
+      } else {
+        loadMoreBtn.style.display = filteredCards.length > 0 ? 'none' : '';
+      }
+    }
+  }
+
+  // ── Filter pills ──
   document.querySelectorAll('.filter-pill').forEach(pill => {
     pill.addEventListener('click', () => {
       document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
       pill.classList.add('active');
-      const filter = pill.dataset.filter;
-      document.querySelectorAll('.article-card[data-filter]').forEach(card => {
-        const match = filter === 'all' || card.dataset.filter === filter;
-        card.style.display = match ? '' : 'none';
-      });
+      activeFilter = pill.dataset.filter;
+      visibleCount = PAGE_SIZE;
+      render();
     });
   });
 
-  // Load more (stub)
-  document.getElementById('loadMoreBtn').addEventListener('click', () => {
-    document.getElementById('loadMoreBtn').textContent = 'More articles coming soon…';
-    document.getElementById('loadMoreBtn').disabled = true;
-  });
+  // ── Search ──
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value;
+      visibleCount = PAGE_SIZE;
+      // Reset filter pills to "all" when typing
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      const allPill = document.querySelector('.filter-pill[data-filter="all"]');
+      if (allPill) allPill.classList.add('active');
+      activeFilter = 'all';
+      render();
+    });
+  }
+
+  // ── Load more ──
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', () => {
+      visibleCount += PAGE_SIZE;
+      render();
+    });
+  }
+
+  // ── Initial render ──
+  render();
+})();
 </script>
 
 <script src="/js/main.js"></script>
