@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google DeepMind's Logan Kilpatrick: The Model Will Always Eat the Layer Above It | Aether Intel</title>
+  <meta name="description" content="Every layer of AI tooling eventually gets replaced by the model itself doing that job natively. Kilpatrick's thesis on what builders should and should not build.">
+  <meta property="og:title" content="Google DeepMind's Logan Kilpatrick: The Model Will Always Eat the Layer Above It">
+  <meta property="og:description" content="Every layer of AI tooling eventually gets replaced by the model itself doing that job natively. Kilpatrick's thesis on what builders should and should not build.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/logan-kilpatrick-model-eats-harness-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/logan-kilpatrick-model-eats-harness.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Google DeepMind's Logan Kilpatrick: The Model Will Always Eat the Layer Above It">
+  <meta name="twitter:description" content="Every layer of AI tooling eventually gets replaced by the model itself doing that job natively. Kilpatrick's thesis on what builders should and should not build.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/logan-kilpatrick-model-eats-harness-hero.webp">
+  <link rel="preload" as="image" href="/images/articles/logan-kilpatrick-model-eats-harness-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/logan-kilpatrick-model-eats-harness.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/logan-kilpatrick-model-eats-harness-hero.webp" alt="A snake shedding its skin, photographed in documentary style against a dark background" class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-dev">Dev & Build</span>
+        </div>
+        <h1 class="article-title">Google DeepMind's Logan Kilpatrick: The Model Will Always Eat the Layer Above It</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 15, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">The Thesis in Plain Terms</h2>
+<p>Logan Kilpatrick has a phrase he keeps returning to: "The model eats the harness." It sounds like a warning. It is.</p>
+<p>The harness, in his framing, is any code whose primary job is to compensate for what a model cannot yet do. Prompt chaining libraries. RAG pipelines. Fine-tuning infrastructure. The scaffolding that thousands of engineers have spent the last two years building on top of AI models.</p>
+<p>His argument: as models improve, they absorb that scaffolding. The tooling that seemed essential becomes dead weight. Kilpatrick has watched this pattern play out repeatedly, and he expects it to keep happening faster, not slower, as model development accelerates.</p>
+<p>Kilpatrick came to this view through direct observation. He led developer relations at OpenAI before moving to Google DeepMind, which means he has watched the builder community construct layer after layer of tooling on top of models, and then watched models grow to make that tooling redundant.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Pattern Has Already Played Out Twice</h2>
+<p>In 2022, prompt engineering frameworks were a serious category. LangChain raised real money. Engineers spent real time learning to chain prompts in sequences because models could not hold complex multi-step tasks in their heads on their own.</p>
+<p>Then models got substantially better at instruction-following. The frameworks did not disappear overnight, but their core value proposition eroded. What used to require a pipeline now required a well-written system prompt. The engineering effort that went into building those pipelines did not produce durable value, because it was compensating for a model limitation that the model eventually overcame.</p>
+<p>RAG tooling is the current version of this story. Retrieval-augmented generation was a genuine solution to a genuine problem: context windows were too small to hold all the relevant information, so you retrieved what mattered and injected it. Now context windows are measured in millions of tokens. The retrieval step is still useful in certain cases, but a significant portion of RAG infrastructure exists to solve a problem that is rapidly shrinking in scope.</p>
+<p>Fine-tuning infrastructure is heading in the same direction. The case for fine-tuning has always been partly about making models behave consistently without extensive prompting. As in-context learning improves, the advantage of fine-tuning for many use cases narrows. The infrastructure built around fine-tuning pipelines faces the same pressure.</p>
+<p>Kilpatrick's point is not that RAG or fine-tuning die tomorrow. It is that any infrastructure built primarily to compensate for model limitations has a shelf life tied directly to how fast those limitations shrink.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What "Harness" Actually Means</h2>
+<p>The definition matters because it determines which parts of your stack are at risk. Kilpatrick is specific: a harness is code that exists because the model cannot do the job alone. The moment the model can do the job alone, the harness has no reason to exist.</p>
+<p>This is different from infrastructure that serves organizational requirements. Security layers are not compensating for model limitations. They exist because systems need access controls. Audit trails exist because regulated industries require records of decisions. Cost controls exist because organizations need to manage spend. Human escalation paths exist because some decisions carry consequences that require a human to own them.</p>
+<p>None of those get eaten. They are not harnesses. They are requirements that would exist even if the model were perfect.</p>
+<p>The distinction sounds simple on paper. In practice, a lot of production AI infrastructure blurs this line. A tool built to "help the model stay on topic" is compensating for a limitation. A tool built to "log all model outputs for compliance review" is serving an organizational requirement. Getting this classification right determines which parts of your system need to be rebuilt in 18 months and which ones are permanent.</p>
+<p>The test Kilpatrick proposes: if the model doubled in capability tomorrow, would you still need this component? If the answer is no, it is harness. If the answer is yes, it is infrastructure.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Google Angle</h2>
+<p>Kilpatrick spent years at OpenAI leading developer relations before moving to Google DeepMind. He has watched this from both sides: the model side and the builder side. The experience of watching builders over-engineer around model limitations, only to see those limitations disappear, shapes his current thinking directly.</p>
+<p>At Google, he points to the Antigravity platform as a deliberate attempt to apply this principle in product design. The goal, as he describes it, is to minimize harness and maximize what the model does natively. Rather than building elaborate orchestration to coordinate model behavior, Antigravity bets on the model being capable enough to handle that coordination itself as capabilities grow.</p>
+<p>This is not just a product philosophy. It is a prediction about model trajectory. If you believe models will continue improving, building minimal harness is a form of future-proofing. You are not investing in infrastructure that will become irrelevant. You are building products where the model's growing capability makes the product better over time, rather than making pieces of your infrastructure obsolete.</p>
+<p>The counterbet, which many companies have made, is that models will plateau before absorbing the harness. That the complexity of real-world orchestration will always require human-written scaffolding. Kilpatrick does not think that plateau is coming in the timeframe that matters for current infrastructure decisions.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What Builders Should Do Instead</h2>
+<p>If you should not build harness, what should you build? Kilpatrick is specific about four categories that remain durable regardless of model improvement.</p>
+<p>First: workflows where the model is the bottleneck, not the infrastructure. The value is in the model's output. The infrastructure exists to deliver inputs to the model and route outputs to the user, as simply as possible. Thin pipelines that get out of the model's way age better than thick ones that try to direct it.</p>
+<p>Second: human review processes for high-stakes outputs. Not automated checks that try to catch model errors programmatically. Actual human judgment, applied at the points where being wrong is expensive. This is organizational design, not engineering. It does not become obsolete when models improve, because the stakes remain regardless of model capability.</p>
+<p>Third: domain-specific evaluation frameworks. The ability to measure whether a model is doing the job well in your specific context is permanently valuable. Evals do not compensate for model limitations, they measure against them. A strong evaluation framework gets more valuable as models improve, because it tells you precisely what improved and what did not.</p>
+<p>Fourth: application-layer products where the AI is an ingredient, not the full product. A legal research tool where AI accelerates the researcher. A design tool where AI generates options the designer selects from. A financial analysis tool where AI surfaces data the analyst interprets. In these products, the value is in the application context. The model's improving capability makes the product better rather than making the product's architecture obsolete.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Timeline and What It Means for Builders Now</h2>
+<p>Kilpatrick puts a specific number on his prediction: most current AI orchestration frameworks will be irrelevant within 18 to 24 months. That is a bold claim. It is also short enough to be falsifiable in the near term, which is what makes it worth taking seriously as a forcing function for current decisions.</p>
+<p>If he is right, teams building LangGraph workflows, AutoGen systems, and multi-agent orchestration pipelines are building against a shrinking clock. The work solves real problems today. But the underlying model improvements may make those solutions unnecessary before the next major product cycle.</p>
+<p>If he is wrong, the harness survives. Models plateau. The infrastructure retains its value. Builders who bet on the complexity of orchestration being permanent win.</p>
+<p>The honest answer is that nobody knows which scenario plays out on which timeline. What Kilpatrick offers is not certainty. It is a forcing function for a question every AI builder should be asking about every component in their system: is this thing I am building compensating for a model limitation, or is it serving a requirement that exists regardless of how good the model gets?</p>
+<p>The question is not rhetorical. It has a real answer for each component, and that answer determines whether you are building something durable or something with an expiration date.</p>
+
+<p>Run the test on every layer of your stack.</p>
+
+<p>The harness answer tells you what to hold loosely.</p>
+
+<p>The infrastructure answer tells you what is worth protecting.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>

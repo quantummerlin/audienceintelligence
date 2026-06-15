@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Build a Claude Skill. The Thing That Actually Automates Your Work. | Aether Intel</title>
+  <meta name="description" content="A skill is not a prompt. It is a reusable context document that tells Claude not just what to do but how, with what standards, and what to do when things go wrong. Here is how to build one.">
+  <meta property="og:title" content="How to Build a Claude Skill. The Thing That Actually Automates Your Work.">
+  <meta property="og:description" content="A skill is not a prompt. It is a reusable context document that tells Claude not just what to do but how, with what standards, and what to do when things go wrong. Here is how to build one.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/how-to-create-claude-skills-automate-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/how-to-create-claude-skills-automate.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Build a Claude Skill. The Thing That Actually Automates Your Work.">
+  <meta name="twitter:description" content="A skill is not a prompt. It is a reusable context document that tells Claude not just what to do but how, with what standards, and what to do when things go wrong. Here is how to build one.">
+  <meta name="twitter:image" content="https://ai.quantummerlin.com/images/articles/how-to-create-claude-skills-automate-hero.webp">
+  <link rel="preload" as="image" href="/images/articles/how-to-create-claude-skills-automate-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/how-to-create-claude-skills-automate.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/how-to-create-claude-skills-automate-hero.webp" alt="A craftsman's workbench with neatly arranged specialized tools, each in its designated spot" class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-tools">Tools</span>
+        </div>
+        <h1 class="article-title">How to Build a Claude Skill. The Thing That Actually Automates Your Work.</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 15, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">Skills Versus Prompts</h2>
+<p>A prompt tells Claude what to do once. You type it, Claude responds, the session ends, and the next time you need the same output you write the prompt again from memory, slightly differently each time.</p>
+<p>A skill is different. It tells Claude what to do, how to do it, what your standards are, what the common edge cases look like, and what to do when something goes wrong. All of that lives in a persistent, loadable document. You build it once. You load it into any session. Claude picks up with the full context of your process every time.</p>
+<p>The compounding benefit is the actual point. One well-built skill saves 20 to 30 minutes per use. At five uses per week, that is over two hours recovered weekly from a single skill. Build ten skills that each get used regularly and you have recovered a full working day per week, permanently, without hiring anyone.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Three Types of Skills</h2>
+<p>Task skills handle specific jobs. Writing a client proposal in your format. Producing a weekly operations report. Triaging a support inbox by priority category. The skill contains your output standards, your templates, your edge case handling, and your quality bar. When Claude loads a task skill, it does not need to be told what good looks like. The skill already carries that definition.</p>
+<p>Persona skills tell Claude how to behave as a specific kind of expert. A senior editor who knows your publication's voice and will hold every sentence to that standard. A financial analyst who applies your company's specific decision framework rather than generic advice. A technical writer who matches your documentation style exactly. The skill carries the persona's knowledge base and behavioral guidelines, so you get consistent expert behavior without re-establishing it each session.</p>
+<p>Domain skills cover subject areas. Everything Claude needs to know about your industry, your product's specific features and limitations, your competitive landscape, or your client roster. These pair naturally with task and persona skills. A client proposal skill works better when it can draw on a domain skill containing your product details and pricing logic.</p>
+<p>Most useful skills combine types. A client proposal skill is a task skill (format and structure), with a persona layer (your company's voice), and a domain layer (your product facts and pricing). Building the components separately makes each easier to maintain and update independently when things change.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Building a Task Skill Step by Step</h2>
+<p>Start with the output you want, not the process. Not "a good proposal" but a finished document with specific sections, a specific length range, a specific opening structure, and a specific call to action. The output definition is the foundation. Everything else derives from it.</p>
+<p>Work backward from that output. What decisions does Claude need to make to produce it? For a client proposal: what sections are required? What information about the client needs to appear in each section? What pricing logic applies in which scenarios? What tone adjustments apply to different client types? What should the proposal do if the client brief is vague? Each of these questions becomes an explicit instruction in the skill.</p>
+<p>Write each instruction as specifically as possible. "Write a professional proposal" is not an instruction. "Open the proposal with two sentences summarizing the client's stated problem, using their exact language from the brief rather than a paraphrase, followed by one sentence stating the outcome they will achieve" is an instruction. The specificity is what separates a skill from a prompt.</p>
+<p>Test with five edge cases before considering the skill finished. Choose the easy case, two medium cases, and two that represent genuine difficulty: a vague brief, an unusual pricing situation, a client with a complicated history. The failures in your edge case tests tell you exactly which instructions are missing or ambiguous. Add those instructions. Test again.</p>
+<p>The five-edge-case test is not optional. Skills that skip it work well in expected situations and fail inconsistently in edge cases. Since edge cases are exactly when you most want the skill to perform reliably, this step is where most of the skill's practical value gets built.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The "Grill Me" Technique</h2>
+<p>Writing a skill from scratch is harder than it sounds because you know more about your process than you realize you know. The tacit knowledge, the judgment calls you make automatically, the standards you apply without thinking: none of this surfaces easily when you sit down and try to document it cold.</p>
+<p>The Grill Me technique solves this. Instead of writing the skill yourself, you tell Claude: "I want to build a skill for writing client proposals. Interview me about my process. Ask one question at a time. When you have a full picture, draft the skill document from my answers."</p>
+<p>Claude asks about your output standards, your typical edge cases, your quality bar, the mistakes you most want to avoid, the things previous attempts got wrong. You answer from real experience rather than trying to articulate a process you have never formally documented. Claude synthesizes your answers into a structured skill document.</p>
+<p>The result captures knowledge you would not have thought to write down on your own. When the interview surfaces a question like "what do you do when the client's budget contradicts their scope expectations?", your answer becomes an explicit instruction in the skill. It ends up reflecting how you actually work, not how you think you work when describing it abstractly.</p>
+<p>Run the Grill Me draft through your five edge case tests. Refine based on failures. This combination consistently produces a stronger first version than writing from scratch, faster and with less effort.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Where Skills Live and Why Storage Matters</h2>
+<p>Claude Projects is the simplest storage option for personal use. Skills live in the project as persistent instructions. Any conversation within that project loads them automatically. No manual loading step required. This is the right format for tasks you run regularly in the standard Claude interface.</p>
+<p>CLAUDE.md files are the storage format for Claude Code. If you are using Claude for development work or file-based projects, the CLAUDE.md file in your project directory carries the relevant skills. It loads automatically when Claude Code starts in that directory. Skills stored this way travel with the project, which matters when you work across multiple machines or share projects with collaborators.</p>
+<p>System prompts via the API are for production deployments. If you are building an application where Claude handles work at scale, the skill lives in the system prompt and is present in every API call. This format is for skills that need to be consistently applied across many requests, not for personal use. The distinction matters because a system prompt skill applies to every conversation in the application, not just the ones where you want it.</p>
+<p>Match the storage format to how the skill will actually be used. A skill in Claude Projects is for one person, updated manually. A skill deployed via API system prompt applies to every request automatically and needs to be managed as production configuration.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Common Failures and Maintenance</h2>
+<p>Skills that try to cover too much fail first and most consistently. "Handle all my client communications" becomes "handle nothing well." A skill needs a specific scope: one task, one persona, one domain. When a skill tries to be everything, it becomes too diffuse to be reliable for any single thing. Build narrow and build well before building broad.</p>
+<p>Conflicting instructions produce inconsistent output in ways that are hard to diagnose. If one part of the skill says "keep responses under 200 words" and another says "provide complete coverage of all relevant considerations," Claude will produce varying output depending on how it weights the two instructions in a given context. Review every skill for internal contradictions before relying on it. Contradictions almost always show up as inconsistent output that seems random but is not.</p>
+<p>Skills that assume context the model will not have are the most common failure once the obvious issues are resolved. Your skill might say "apply the standard pricing structure" without defining what that is. Or "use the usual format" without specifying the format. Claude will fill those gaps with a guess. The guess will be plausible and wrong. Every reference to something outside the skill document needs to be either defined in the skill or removed.</p>
+<p>Skills degrade as your work evolves. The proposal format that was standard six months ago may not be what you use now. Your pricing logic changes. Your product features change. Your client base shifts. A skill that was accurate when you built it becomes a source of subtle errors when reality moves past it. Budget 30 minutes per month per skill to review it, test it with recent examples, and update instructions that no longer match your actual process.</p>
+
+<p>Build one skill this week, for the task you do most often.</p>
+
+<p>Test it with five real examples from recent work.</p>
+
+<p>Measure time saved at the end of the month, then decide how many more to build next.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>
