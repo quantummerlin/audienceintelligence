@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Complete Guide to Agent Loops in Claude Code and Codex. What They Are and How to Build Them. | Aether Intel</title>
+  <meta name="description" content="Five components, three common patterns, a step-by-step build guide, and how to debug when loops misbehave.">
+  <meta property="og:title" content="The Complete Guide to Agent Loops in Claude Code and Codex. What They Are and How to Build Them.">
+  <meta property="og:description" content="Five components, three common patterns, a step-by-step build guide, and how to debug when loops misbehave.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/agent-loops-complete-guide-claude-codex-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/agent-loops-complete-guide-claude-codex.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" as="image" href="/images/articles/agent-loops-complete-guide-claude-codex-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/agent-loops-complete-guide-claude-codex.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/agent-loops-complete-guide-claude-codex-hero.webp" alt="The Complete Guide to Agent Loops in Claude Code and Codex. What They Are and How to Build Them." class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-dev">Dev & Build</span>
+        </div>
+        <h1 class="article-title">The Complete Guide to Agent Loops in Claude Code and Codex. What They Are and How to Build Them.</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 16, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">What an Agent Loop Actually Is</h2>
+<p>The term gets used loosely. Let's be precise about it.</p>
+<p>An agent loop is a structured execution pattern where an AI takes multiple sequential actions, each action informed by the result of the previous one, until a defined goal is reached or a stop condition triggers. It's not a single API call. It's a cycle , act, observe, decide, act again , governed by code you control, not behaviour the model decides on its own.</p>
+<p>In the context of Claude Code and Codex, a loop means you're calling the model API repeatedly within a controller script, passing tool call results back into the next model call, and continuing until either the task is done or a failure condition halts the run. The AI doesn't decide how many times it runs. Your controller does. That distinction matters: the architecture puts the loop logic in your code, not in the model's judgment.</p>
+<p>This is different from a simple scripted workflow. In a scripted workflow, every step is predetermined. In an agent loop, the model decides which tool to call based on what the previous step returned. The sequence adapts to the situation , which is what makes loops useful for tasks where the path to completion depends on what you find along the way.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Claude Code vs Codex: Architecture Is Identical</h2>
+<p>A Claude Code loop and a Codex loop share the same architecture. Both use tool-calling patterns where the model requests an action, the controller executes it, and the result feeds back into the next model call. The five components are the same in both cases. The debugging approach is the same. If you understand one, you can build the other.</p>
+<p>The practical differences are model capability and cost. Claude Code performs better on complex multi-file reasoning tasks , tracing logic across many interdependent files, catching subtle semantic errors, handling ambiguous or incomplete specifications. It's the stronger model for work where the reasoning demands are high.</p>
+<p>Codex inference is cheaper for simpler, well-defined tasks where model strength matters less than throughput. A loop generating documentation for clearly written functions, or checking dependency compatibility against known package versions, doesn't need the same reasoning capacity as a security audit across a large codebase. Choose based on what the task actually demands, not brand preference. Running simpler loops on Codex and keeping Claude Code for complex reasoning is a cost management decision that doesn't sacrifice quality.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Five Components Every Loop Needs</h2>
+<p>Every functioning agent loop, regardless of model or task, has the same five parts. Missing any of them produces a loop that fails in ways that are hard to diagnose because you don't know which component broke down.</p>
+<p>The task spec defines what "done" looks like. Not what the loop should try to do , the actual final output and how you'll know it's correct. A spec that says "review the code" fails. One that says "identify security vulnerabilities, flag deprecated function calls, and produce a structured report with severity ratings" gives the loop something to work toward.</p>
+<p>The tool set defines what actions the agent can take. File reads and writes. Shell commands. API calls. The model can only act through tools you've explicitly defined. Define the minimal set the task actually requires , not everything that might conceivably be useful.</p>
+<p>The loop controller is the code managing the cycle. It sends the task spec to the model, receives tool call requests, executes those calls, passes results back, and decides whether to continue. The controller structure is where you encode your understanding of the task , what happens in sequence, what constitutes a meaningful result.</p>
+<p>The stop condition defines when to exit. Task complete. Maximum iterations reached. Unrecoverable error encountered. Every loop needs at least two stop conditions: the success case and the failure cap. A loop with only a success condition runs until it succeeds or your API billing intervenes. The failure cap is not optional.</p>
+<p>The output handler defines what to do with the result. Write to a file. Post a comment. Trigger another process. The loop's job is to produce something useful. The handler specifies what happens to it , which is often where the actual value of the loop sits.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Building Your First Loop</h2>
+<p>Start with plain language. Write out what you want the loop to accomplish as if explaining it to a colleague who will implement it , what the input is, what the output should be, what the loop should do if something is missing or ambiguous. This description becomes the foundation for your system prompt, and the quality of that prompt determines most of the loop's behaviour.</p>
+<p>Translate that description into a structured system prompt. Be explicit about the tools available. Name each one, describe its parameters, and give a concrete example of when the model should call it versus when it shouldn't. The model will call what it knows about and what its instructions tell it to use. Ambiguous tool descriptions produce unpredictable tool usage.</p>
+<p>Write the controller in Python or TypeScript , whichever your team is more comfortable debugging quickly. The loop structure itself is simple: call the model, check whether it returned a tool call, execute the call, pass the result back, repeat. The actual controller code is usually under 100 lines for a basic loop. The complexity lives in the task spec and stop conditions, not in the loop mechanics.</p>
+<p>Test against the simplest possible case first. A loop that works on a single-file input is easier to debug than one first run on a 50-file repository. Build confidence in each component before combining them. A failing loop on a simple input tells you what went wrong; a failing loop on a complex one only tells you something did.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Common Loop Patterns</h2>
+<p>Three patterns cover most use cases well enough to start from, and understanding them by name makes it easier to choose the right one for a new task.</p>
+<p>The refine loop generates an output, evaluates it against a quality threshold, and refines if the output doesn't meet the bar , repeating until it passes or a maximum iteration count stops the run. This pattern works for tasks where quality is measurable and incremental improvement is possible. Code generation with test coverage requirements. Draft writing that needs to hit a specific reading level. Document generation that must include defined sections.</p>
+<p>The research loop queries a source, retrieves results, synthesises what's been found so far, checks whether coverage is sufficient, and queries again if it isn't. It runs until the synthesis is complete or the source is exhausted. Good for information-gathering tasks across multiple sources: competitive analysis, dependency auditing, literature review, pulling context from a large codebase before making a change.</p>
+<p>The build loop translates a spec into an implementation, runs tests against it, fixes failures, and runs tests again , repeating until the tests pass or a maximum fix count is hit. The stop conditions are explicit: pass the test suite (success) and exceed the maximum fix attempts (failure, return what you have and explain what's broken). This is the pattern most teams reach for when building CI/CD automation.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Debugging and Cost Management</h2>
+<p>Log everything. This is not a suggestion. A loop that fails silently is the hardest class of bug to diagnose because you have no trace of what happened between start and failure. Every action, every model call, every tool result should be logged with a timestamp. When something goes wrong , and it will, especially early , you should be able to replay exactly what the loop did step by step.</p>
+<p>Log the model's reasoning, not just its tool calls. Most APIs surface the model's text output alongside the tool call it returns. That text often tells you more about why the loop went in an unexpected direction than the action itself does. If the model explains its reasoning in the response and then calls the wrong tool, the explanation tells you where the misunderstanding was. Without it, you see only the wrong action.</p>
+<p>Cost management comes down to your stop conditions. A loop that doesn't exit runs up API costs proportional to how long it runs. Set a maximum iteration count as a hard cap, separate from your success condition. Set it higher than you expect the task to take under normal conditions, but low enough to catch a runaway loop before it's expensive. A loop that should complete in 10 iterations probably needs a cap of 25, not 1000.</p>
+
+<p>Monitor your first few runs of any new loop manually. Watch the logs in real time. Understand what the loop is actually doing before you schedule it to run unattended.</p>
+
+<p>Once you trust the stop conditions and have seen multiple clean runs with no surprises, you can let it run in the background. That's the goal. A well-built loop returns results while you're doing something else.</p>
+
+<p>A poorly built loop returns a large API invoice. The difference is in how carefully you built the spec and stop conditions before the first run.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>

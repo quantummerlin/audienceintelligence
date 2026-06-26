@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chris Parsons Says the Best AI Loops Are Dumb. Here Is Why That Is Exactly Right. | Aether Intel</title>
+  <meta name="description" content="Complex orchestration is fragile. Simple loops that do one thing reliably ship faster, cost less, and are easier to debug. The case for dumb loops.">
+  <meta property="og:title" content="Chris Parsons Says the Best AI Loops Are Dumb. Here Is Why That Is Exactly Right.">
+  <meta property="og:description" content="Complex orchestration is fragile. Simple loops that do one thing reliably ship faster, cost less, and are easier to debug. The case for dumb loops.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/ralph-loops-dumb-ai-loops-that-ship-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/ralph-loops-dumb-ai-loops-that-ship.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" as="image" href="/images/articles/ralph-loops-dumb-ai-loops-that-ship-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/ralph-loops-dumb-ai-loops-that-ship.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/ralph-loops-dumb-ai-loops-that-ship-hero.webp" alt="Chris Parsons Says the Best AI Loops Are Dumb. Here Is Why That Is Exactly Right." class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-dev">Dev & Build</span>
+        </div>
+        <h1 class="article-title">Chris Parsons Says the Best AI Loops Are Dumb. Here Is Why That Is Exactly Right.</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 16, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">The Engineering Trend Worth Arguing Against</h2>
+<p>Right now, the default move in AI engineering is to build sophisticated orchestration. Multiple agents, dynamic context injection, conditional routing, retry logic baked into the framework. The more complex the system, the more it feels like serious engineering work.</p>
+<p>Chris Parsons, co-founder of Cherrypick, has a different view. He argues the complexity is the problem. The systems that ship, that stay in production, that get fixed in minutes when they break , those are dumb loops. One clear input. One model call. One deterministic parser. Stop when something goes wrong.</p>
+<p>It sounds like a step backward. It is actually the thing that makes everything else possible.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What "Dumb Loop" Actually Means</h2>
+<p>A dumb loop has five components in the Parsons framework. A clear input format. A single model call per step. A deterministic output parser. An explicit failure mode , stop, do not try to recover. A log that shows exactly what happened at each step.</p>
+<p>What it does not have is branching logic, dynamic routing, multi-agent handoffs, or framework magic that decides what happens next based on the model's output. Those things add failure modes without adding intelligence.</p>
+<p>The intelligence lives in the model. The loop's job is to call the model reliably and handle the results predictably. That division of responsibility sounds obvious stated plainly. It stops being obvious the moment you start using a framework that blurs the line between the two.</p>
+<p>The "dumb" framing is intentional. Parsons uses it because the instinct in engineering is to add intelligence to every layer. The loop wants to be smart. The framework wants to be smart. But every layer of intelligence you add to the scaffolding is a layer you have to debug when something goes wrong. Keep the scaffolding dumb. Let the model be the smart part.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Why Complex Loops Don't Ship</h2>
+<p>Parsons made the shipping argument directly: complex loops with sophisticated routing, multiple agents, and dynamic context management take weeks to build and days to debug. A dumb loop with hardcoded steps takes hours and gets fixed in minutes when it breaks.</p>
+<p>This is not about developer skill. It is about surface area. Every decision point in a loop is a place where something can go wrong. Every abstraction layer is a place where the error message stops being useful. When a complex system breaks in production, you are debugging the framework's behavior, not your own logic. When a dumb loop breaks, the log tells you exactly which step failed and what the input was.</p>
+<p>The teams that ship AI features consistently are not the ones with the most sophisticated architectures. They are the ones that can answer the question "what happened?" in thirty seconds by reading a log. Shipping is a function of debuggability. Debuggability is a function of simplicity. Simplicity is what the dumb loop gives you.</p>
+<p>There is also a time-to-value argument. A dumb loop that solves 80% of the problem ships in a day. A sophisticated orchestration system that solves 100% of the problem ships in three weeks , if it ships at all. The 80% solution running in production provides value. The 100% solution still being debugged does not.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Real Examples From the Talk</h2>
+<p>Parsons used three concrete examples. A code review loop: input is a diff, output is a structured review object. No branching. The model reads the diff, produces the review, the parser validates the structure. Done. The loop does not decide what kind of review to perform based on the diff's content. It always does the same thing with every diff.</p>
+<p>A content moderation loop: input is a text string, output is a flag or a pass. The parser checks which one came back. If neither validates, the loop stops and logs the anomaly. No recovery logic, no retry cascade, no attempt to infer what the model "meant." A human looks at the log. The fix is usually visible in five minutes.</p>
+<p>A data extraction loop: input is a document, output is a JSON object validated against a schema. If schema validation fails, the loop stops. Not "tries something else." Stops. The log captures the raw model output, the schema it was checked against, and the specific field that failed. Resolution is clear and fast.</p>
+<p>None of these examples are impressive in the engineering sense. All of them are described as being in production, processing real volume, and generating no on-call incidents for their maintainers. That last point is the one that matters.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Framework Problem</h2>
+<p>The criticism of LangChain and similar orchestration frameworks is not that they are badly built. It is that they solve a problem most teams do not actually have. They offer sophisticated routing for cases where a dumb loop would have worked fine. They add abstraction layers that feel like power and behave like debt when something breaks.</p>
+<p>When something fails inside a framework, the error traces through the framework's internals before it gets to your code. Debugging becomes a knowledge problem: you need to understand how the framework works before you can understand why your specific thing failed. On a deadline, this is expensive. Over time, it trains developers to avoid touching the system rather than improving it.</p>
+<p>Parsons is not saying never use tools. He is saying that reaching for complex orchestration before you have validated the loop with the simplest possible implementation is the wrong order. Build the dumb loop. Confirm it works at the required quality level. Add complexity only when the dumb loop demonstrably cannot do what you need , and only exactly as much complexity as the specific gap requires.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Cost Argument at Scale</h2>
+<p>One point from Parsons that often gets lost in the architectural discussion: money. Complex loops with multiple model calls per task compound API spend in ways that are hard to predict and harder to audit. A dumb loop with one call per step is predictable. You know exactly how many calls a run costs because the structure is fixed and the routing does not change based on content.</p>
+<p>At scale , thousands of runs per day , the difference between a loop that makes one call and one that makes three or four depending on how routing plays out is not trivial. And the predictability matters independently of the raw cost. When your infrastructure team asks how much a new AI feature will cost to run at 10x current volume, "it depends on how the routing plays out" is not a useful answer. A dumb loop gives you a number. Fixed, auditable, predictable.</p>
+<p>The cost argument also applies to debugging time. Complex loops that fail in production require senior engineers to diagnose. Dumb loops that fail give you a log entry that a junior engineer can read and fix. That labor cost differential is real and compounds across every incident.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">When to Actually Add Complexity</h2>
+<p>Parsons is not arguing that dumb loops are the final word on every AI system. He is arguing they should be the starting point. The question is not "can I build something more sophisticated?" but "does the dumb loop demonstrably fail to meet the requirement?"</p>
+<p>There are cases where more sophistication is genuinely warranted: tasks where the correct next step cannot be known until the previous step's output is analyzed, tasks where a single model call cannot hold enough context, tasks where multiple specialized models perform different subtasks more accurately than one generalist model. These cases exist. They are not the majority of what gets built.</p>
+<p>The pattern Parsons recommends: build the dumb loop, measure its failure rate on real data, identify the specific case that requires more sophistication, and add exactly that much complexity and no more. Do not architect for the complex case before you have confirmed the simple case fails. Most teams never reach the step where they need to add complexity because the dumb loop is good enough for what the actual use case requires.</p>
+<p>This is a slower way to build a flashy demo. It is a faster way to build something that runs in production for twelve months without breaking during a team holiday.</p>
+
+<p>The intelligence belongs in the model.</p>
+
+<p>The loop's job is to stay out of the way.</p>
+
+<p>Ships faster. Breaks cleaner. Costs less to run.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>

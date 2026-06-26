@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Someone Built an Autonomous Job-Hunting System With Hermes Agent. Here Is How It Works. | Aether Intel</title>
+  <meta name="description" content="Monitor job boards, score listings, draft applications, track the pipeline. 20 applications a week for $12-18 in API costs.">
+  <meta property="og:title" content="Someone Built an Autonomous Job-Hunting System With Hermes Agent. Here Is How It Works.">
+  <meta property="og:description" content="Monitor job boards, score listings, draft applications, track the pipeline. 20 applications a week for $12-18 in API costs.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/hermes-autonomous-job-hunting-system-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/hermes-autonomous-job-hunting-system.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" as="image" href="/images/articles/hermes-autonomous-job-hunting-system-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/hermes-autonomous-job-hunting-system.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/hermes-autonomous-job-hunting-system-hero.webp" alt="Someone Built an Autonomous Job-Hunting System With Hermes Agent. Here Is How It Works." class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-tools">Tools</span>
+        </div>
+        <h1 class="article-title">Someone Built an Autonomous Job-Hunting System With Hermes Agent. Here Is How It Works.</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 16, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">The Job Hunt Problem Is a Volume Problem</h2>
+<p>The conventional advice on job searching is to apply selectively and spend time tailoring each application. Good advice in theory. In practice, the math does not work for most people. Most applications get rejected before a human reads them. The only reliable counter to that reality is volume , enough applications that the conversion rate produces actual interviews.</p>
+<p>Doing volume manually is exhausting. Monitoring multiple job boards, scoring fit, writing tailored cover letters, tracking follow-ups , it is a part-time job on top of whatever else you are doing. An autonomous system built on the Hermes agent framework changes that math significantly. Not by removing human judgment, but by removing the mechanical labor around it.</p>
+<p>Here is how the build works, stage by stage.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Stage One: Intake and Monitoring</h2>
+<p>The system monitors job boards on a schedule. LinkedIn, Indeed, and company career pages via Apify web scraping. New listings come in, get deduplicated against what the system has already seen, and enter the scoring queue.</p>
+<p>Deduplication is not a trivial step. The same role often appears on multiple boards with slightly different text. The system checks against a fingerprint of the job title, company name, and location before processing any listing. Running the same role through scoring twice wastes API calls and creates confusion in the pipeline tracking downstream.</p>
+<p>The scheduling is configurable. Daily runs work for most situations. More frequent checks make sense when the search is active and time-sensitive , some roles fill quickly and a 24-hour lag is a real disadvantage. The intake stage is entirely automated. No human interaction required until a listing reaches the scoring threshold and needs a decision.</p>
+<p>The web scraping component deserves a note. Company career pages vary wildly in structure. Apify provides pre-built scrapers for major job boards that handle most of the variation. For smaller company sites, the system relies on a more general scraper with configurable extraction logic. It is not perfect. The occasional malformed listing enters the queue, and the scoring step handles it gracefully by flagging it for human review rather than processing bad data.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Stage Two: Scoring Against a Skills Profile</h2>
+<p>Every listing gets a fit score from 0 to 10. Listings above 7 go to the active queue for application drafting. Listings below 5 get archived. The 5 to 7 range goes to a human review queue , the system flags these as worth a look but takes no action automatically.</p>
+<p>The scoring model works against a skills profile document. This is not a resume. It is a detailed CLAUDE.md file that contains examples of past work, preferred industries, salary expectations, deal-breakers, work environment preferences, and style notes about how the person presents themselves professionally. The richer this document, the more accurate the scoring.</p>
+<p>A thin profile , just a list of skills and job titles , produces mediocre scoring because the model cannot distinguish between roles that look similar on paper but differ in fit. A detailed profile that includes context like "I prefer companies under 200 people" or "I have done this kind of work but want to move away from it" changes the scoring meaningfully for the edge cases that make up most of the interesting part of a job search.</p>
+<p>The 5 to 7 band is intentional. It captures roles where the system is genuinely uncertain , the title fits but the industry does not, the experience matches but the seniority level is ambiguous. These are exactly the cases where human judgment adds the most value over a binary pass/fail threshold. The creator reports that some of their best interview outcomes came from listings that scored a 6, which would have been missed with a stricter cutoff.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Stage Three: Application Drafting</h2>
+<p>When a listing clears human approval , or scores above 7 and the system is set to auto-approve , the drafting stage runs. Three outputs: a tailored cover letter, a customized version of the CV summary paragraph, and a talking points document for interview prep.</p>
+<p>The cover letter pulls specific details from the job listing and matches them to specific examples from the skills profile. This is where the detailed CLAUDE.md pays off most visibly. Generic profiles produce cover letters that mention the company name and not much else. Rich profiles produce letters that reference the company's actual work, connect it to specific past projects, and address the job's stated priorities directly.</p>
+<p>The CV summary customization is subtler but meaningful. The same person applying for a technical lead role versus a people manager role should present their experience differently even if the underlying experience is identical. The system rewrites the summary paragraph to match the framing of the specific listing without changing anything else in the CV.</p>
+<p>The talking points document is often the most practically useful output. It takes the key themes in the job listing and the relevant experience from the profile and produces a structured prep sheet: here is what they are likely to ask about, here is the experience that addresses it, here are the questions worth asking them. Preparation time before an interview drops significantly when the mapping has already been done by the time you get the calendar invite.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Stage Four: Pipeline Tracking and Follow-Up</h2>
+<p>A Notion database connected via API tracks every application: status, follow-up dates, salary range, contact name, and outcome notes. The agent updates this automatically as applications move through stages. Applied, phone screen scheduled, interview scheduled, offer, rejected , each status change gets logged with a timestamp.</p>
+<p>Follow-up logic runs on a schedule. Applications with no response after a configured interval get flagged, and the agent drafts a follow-up email. The human reviews and sends it, or decides not to follow up on that particular role. The agent does not send anything without approval , a deliberate constraint to keep communication quality under human control. Automated follow-ups sent without review create the kind of awkward situations that damage a search.</p>
+<p>Stale applications that have been inactive for 30 days get moved to a "closed" status automatically. The pipeline stays clean without manual maintenance. At any point, the pipeline view shows exactly how many applications are active, how many are in follow-up, and how many have converted to interviews. The visibility alone changes how the search feels. Instead of sending applications into a void, you have a system you can look at and understand.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The Human Decision Points</h2>
+<p>The creator made deliberate choices about where to keep humans in the loop. Scoring overrides, final application approval, and anything involving salary negotiation remain human decisions. The system handles volume; the person handles judgment. That division is explicit and enforced by design, not just by convention.</p>
+<p>The approval step before each application matters for quality, not just safety. It means the person actually reads the cover letter before it is sent. They might adjust tone, add a specific detail the system missed, or decide the role is not right after all despite a high score. The gate adds a few minutes per application and prevents the output quality problems that come from fully autonomous sending at volume.</p>
+<p>The time math on the whole system: from 3 to 5 applications per week taking 5 to 8 hours, to 15 to 20 applications per week taking 1 to 2 hours of review time. The cost in API calls runs approximately $12 to $18 per month at that volume. At any reasonable salary level, the ROI on a single job offer makes the monthly API cost completely irrelevant.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What Makes It Actually Work</h2>
+<p>The system's quality ceiling is set by the skills profile document. Everything downstream , scoring accuracy, cover letter relevance, interview prep quality , depends on how well that document captures who you are and what you are looking for. Spending two hours writing a thorough CLAUDE.md is the highest-use investment in the entire build. More than the scraper configuration. More than the pipeline setup.</p>
+<p>The second factor is threshold calibration. Setting the auto-approve threshold too low floods the review queue and defeats the purpose. Setting it too high means good opportunities get missed. Most people start too aggressive and tune down after reviewing a batch of lower-scoring applications that the system thought were worth drafting. A week of running it with the review step on everything gives you the data to set thresholds that match your actual judgment.</p>
+<p>The system is not magic. It is a well-structured loop with a rich context document doing the work that context enables. Get the context right and the outputs follow. The job search problem is mostly a volume and consistency problem, and a well-configured loop solves both.</p>
+
+<p>The skills profile is the whole system.</p>
+
+<p>Write it like it matters.</p>
+
+<p>It is the only part the AI cannot write for you.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>

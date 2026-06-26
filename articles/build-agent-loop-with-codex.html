@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Build Your Own Agent Loop With Codex. A Practical Guide From Zero to Running. | Aether Intel</title>
+  <meta name="description" content="Five steps from task definition to a running loop. Tool schema, controller code, logging, testing, and the pitfalls that catch everyone first time.">
+  <meta property="og:title" content="How to Build Your Own Agent Loop With Codex. A Practical Guide From Zero to Running.">
+  <meta property="og:description" content="Five steps from task definition to a running loop. Tool schema, controller code, logging, testing, and the pitfalls that catch everyone first time.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/build-agent-loop-with-codex-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/build-agent-loop-with-codex.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" as="image" href="/images/articles/build-agent-loop-with-codex-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/build-agent-loop-with-codex.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/build-agent-loop-with-codex-hero.webp" alt="How to Build Your Own Agent Loop With Codex. A Practical Guide From Zero to Running." class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-dev">Dev & Build</span>
+        </div>
+        <h1 class="article-title">How to Build Your Own Agent Loop With Codex. A Practical Guide From Zero to Running.</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 16, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">What an Agent Loop Actually Is</h2>
+<p>An agent loop is a program that calls a language model repeatedly, executes the actions the model requests, and feeds the results back into the next model call. The loop continues until the model signals it is done or until a hard stopping condition is reached. That is the whole thing.</p>
+<p>What makes it powerful is the iteration. A single model call produces one response. A loop produces a sequence of actions, each informed by the results of the previous ones. A loop can read a file, notice something in it, decide to read a related file, notice something else, and produce a final output that reflects everything it found. A single call cannot do that. The loop is what transforms a language model from a response generator into something that can work through a multi-step task independently.</p>
+<p>Most of the complexity in building agent loops is not in the model interaction itself , it is in the scaffolding around it: managing state between iterations, handling tool call errors gracefully, deciding when to stop. Get the scaffolding right and the model does the interesting work. Get it wrong and the model spins or crashes regardless of how capable it is.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Why Codex for Agent Loops</h2>
+<p>Codex is OpenAI's coding-specialised model, available through the Responses API. For agent loops that primarily manipulate code, it sits in a useful sweet spot: cheaper than the frontier models, well-suited to structured tool calling, and fast enough that you do not feel the latency on every iteration.</p>
+<p>The model handles function calls cleanly and tends to produce parseable output more reliably than general-purpose models do on code-heavy tasks. For loops that read files, run commands, and write code, that reliability matters , a malformed tool call mid-loop breaks the whole thing.</p>
+<p>That said, the model is not the hard part. The hard part is architecture. A loop with a good structure will work on Codex, GPT-4o, or any other capable model. Build the structure right first, then optimise for cost.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What You Need Before You Start</h2>
+<p>Three things: an OpenAI API key, Python 3.10+ or Node.js 18+, and a clear description of the task you want the loop to do. The first two take five minutes to set up. The third one actually takes thought.</p>
+<p>Most agent loops fail because the task definition is vague. "Help me with my codebase" is not a task. "Read all Python files in this directory, find functions longer than 50 lines, and refactor each one to be under 30 lines without changing behaviour" is a task. The specificity of the description determines the specificity of the output. Vague in, vague out , every time.</p>
+<p>Before writing a single line of code, write the task description in plain language. If you cannot explain exactly what done looks like, the loop will not know either. This step is harder than it sounds. Most people discover mid-description that they have not actually thought through the edge cases. That is the point. Find them now, not after the loop has been running for twenty minutes.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Step 1 and 2: Define the Task and Tool Schema</h2>
+<p>Write two paragraphs. The first describes what done looks like , the observable output the loop should produce when it is finished. The second describes what the agent is allowed to do: read files, write files, run shell commands, call APIs. These two paragraphs become your system prompt. Paste them in directly, no reformatting needed.</p>
+<p>Codex uses function calling. Each allowed action becomes a function with a simple signature: <code>readFile(path)</code>, <code>writeFile(path, content)</code>, <code>runCommand(command)</code>, <code>searchWeb(query)</code>. Keep the names obvious and the parameters minimal. If you find yourself writing a function with five parameters, split it into two functions. Complexity in the schema leaks into complexity in the model's tool calls.</p>
+<p>The tool schema is a contract between you and the model. A confusing schema produces confusing tool calls. A clean schema produces clean tool calls. Spend time here before moving to the controller. A well-designed schema at this stage prevents an entire category of bugs later.</p>
+<p>One practical note on naming: use verbs. <code>readFile</code> is better than <code>file</code>. <code>runCommand</code> is better than <code>shell</code>. The model's token prediction responds to verb-leading names by generating more action-oriented, purposeful calls. It is a small thing that adds up across hundreds of iterations.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Step 3 and 4: The Controller and Logging</h2>
+<p>The controller is a while loop. Call Codex with the current state. Parse the response. If the model called a tool, execute it and update state. If the model signals done, break the loop. If you have hit the max iterations, break with an error. That is the entire thing.</p>
+<p>In Python it fits in under 40 lines. In Node.js it is similar. The simplicity is intentional. The loop itself should be boring. All the interesting behaviour comes from the model and the tools, not from the controller logic. If your controller is getting complex, something is wrong with the design.</p>
+<p>State management deserves a sentence. State is the running record of what has happened: which files have been read, which commands have been run, what the model has produced so far. Pass the full state into each model call so the model has context for its next action. Do not try to summarise it; pass the whole thing. Context windows are large enough now that this is not a cost concern for most loops.</p>
+<p>Logging is not optional. Every model call, every tool execution, every state update goes to a file with a timestamp. When the loop does something unexpected , and it will , the log tells you exactly what happened and in what order. Debugging a loop without logs is guesswork. With logs it is a five-minute read. The difference in debugging time is the reason logging is not optional.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Step 5: Test With a Trivial Case</h2>
+<p>Before running the loop on real work, test it on something you can verify by hand. A loop that reads a file and counts the words. A loop that lists files in a directory and writes the list to a new file. Simple enough that any wiring mistake is immediately visible and easy to fix.</p>
+<p>This step catches the embarrassing bugs: wrong API endpoint, tool function not being called, state not updating between iterations, the loop terminating on the first tool call instead of continuing. These bugs are easy to introduce and hard to spot in a complex task where the expected output is not obvious. A trivial test case makes them visible instantly.</p>
+<p>The test takes twenty minutes and saves hours of debugging later. Do not skip it because the loop seems straightforward. It always seems straightforward until it is running and doing something wrong at iteration 12 with no obvious cause.</p>
+<p>Once the trivial case passes, run the loop on a slightly harder task. Then the real task. Each step up in complexity should reveal at most one new class of problem. If a new task surfaces three or four new problems at once, go back to the previous complexity level and add them one at a time.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Common Pitfalls and How to Handle Them</h2>
+<p>The model calling tools in circles. This happens when the loop has no memory of what it has already tried , the model keeps calling <code>readFile("config.json")</code> because it does not know it already read that file three iterations ago. Fix it by adding a visited state tracker: a set of tool call hashes that the model cannot repeat. When a duplicate appears, break or force a different action by injecting a message.</p>
+<p>The loop never terminating. Always add a hard iteration cap. Not a soft suggestion in the system prompt , an absolute ceiling in the controller code after which the loop stops and returns whatever state it has reached. Fifty iterations is usually enough. One hundred is generous. More than that and the task definition is probably the problem, not the cap.</p>
+<p>Malformed tool calls. The model will occasionally produce a tool call that does not match the expected schema , wrong parameter name, missing required field, unexpected value type. Validate the schema on every response before executing anything. If the model produces a bad tool call, log it, skip execution, and pass a correction message back to the model explaining the schema error. Do not try to infer what the model meant; make it fix its own output.</p>
+<p>Shell commands with side effects. A loop that can delete files, overwrite databases, or send emails needs guardrails. Use a sandbox or dry-run mode for anything destructive. For commands that cannot be undone, add an explicit confirmation step that logs the proposed action and waits for approval before executing. The extra two seconds per irreversible action has saved projects. The two seconds that step takes is nothing compared to rolling back an accidental deletion.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>

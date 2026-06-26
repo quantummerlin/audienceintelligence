@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running Hermes Agent Inside Claude Code Creates Something Neither Can Do Alone | Aether Intel</title>
+  <meta name="description" content="Claude Code handles execution; Hermes handles memory. Nested together, each compensates for the other's weakness. The architecture and when it pays off.">
+  <meta property="og:title" content="Running Hermes Agent Inside Claude Code Creates Something Neither Can Do Alone">
+  <meta property="og:description" content="Claude Code handles execution; Hermes handles memory. Nested together, each compensates for the other's weakness. The architecture and when it pays off.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/hermes-under-claude-code-nested-agents-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/hermes-under-claude-code-nested-agents.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" as="image" href="/images/articles/hermes-under-claude-code-nested-agents-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/hermes-under-claude-code-nested-agents.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/hermes-under-claude-code-nested-agents-hero.webp" alt="Running Hermes Agent Inside Claude Code Creates Something Neither Can Do Alone" class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-agents">AI Agents</span>
+        </div>
+        <h1 class="article-title">Running Hermes Agent Inside Claude Code Creates Something Neither Can Do Alone</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 16, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">The Architecture</h2>
+<p>Claude Code operates as the outer agent: task planning, code generation, execution, orchestration. Hermes operates as the inner agent: memory, research, context retrieval. The two systems run at different layers of the same workflow. Neither replaces the other. Each does what it is actually good at.</p>
+<p>The nesting works through tool calling. Claude Code calls Hermes as a tool , the same way it would call a search API or a file reader. When Claude Code needs context from previous sessions, it queries Hermes. When Claude Code produces outputs worth keeping, it asks Hermes to store them. The communication is structured and explicit, not conversational. Hermes receives specific queries and returns specific information.</p>
+<p>The implementation sits at medium complexity. You need Claude Code configured with a tool that calls the Hermes API, and Hermes configured to handle structured queries and updates. An experienced developer can get a working version running in two to three hours. The configuration work is not trivial, but it is not deep engineering either.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Why the Combination Works</h2>
+<p>Claude Code is excellent at task execution. It writes code, runs tests, fixes bugs, and produces working software at a level that makes it genuinely useful on real projects. But each session starts fresh. Architectural decisions made three weeks ago are gone. Naming conventions established last month are forgotten. Context about why a particular dependency was chosen , and what quirks to watch for , disappears when the session ends.</p>
+<p>Hermes has persistent memory, structured storage, and retrieval. It remembers things across sessions and surfaces them on request. But it is not a task execution environment. It does not write code, run shell commands, or orchestrate multi-step technical workflows on its own. The memory is there; the execution engine is not.</p>
+<p>Nested together, each fills the other's gap. Claude Code gets persistent memory. Hermes gets an execution partner. The combination handles things that neither can do alone , specifically, multi-session technical projects where context continuity is essential to producing coherent work over time.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">A Concrete Example</h2>
+<p>You are building a codebase across multiple Claude Code sessions , a project that spans weeks or months. Without Hermes, every session starts with manual context-setting: here is what the project does, here are the naming conventions we established, here are the decisions we made about the database schema, here is what was broken last Tuesday and what the workaround was. You paste this in every time, or you forget something and the session produces code that conflicts with earlier decisions.</p>
+<p>With Hermes nested, Claude Code queries Hermes at the start of each session. It retrieves: the architectural decisions and why they were made, the naming conventions for this specific project, the bugs that are known but not yet resolved, the recent changes from the last several sessions. That context arrives in under ten seconds. The session starts with full continuity from where the last one ended.</p>
+<p>At the end of the session, Claude Code pushes updates back to Hermes: new decisions made today, new issues discovered, any conventions that changed or were clarified. The memory accumulates. The longer the project runs, the more accurate and complete the stored context becomes. Month three of a project with this setup is a essentially different working experience than month three without it.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What Hermes Stores for Claude Code</h2>
+<p>Architectural decisions: why certain design choices were made, what alternatives were considered and rejected, what constraints drove the final call. This is the context that is hardest to reconstruct from reading the code alone. The code shows what was decided; it rarely shows why. The why is what prevents future sessions from reversing decisions for reasons that were already considered and discarded.</p>
+<p>Known issues: bugs that exist and have not been fixed yet, workarounds that are in place and why, areas of the codebase that are fragile or that have behaved unpredictably. Without this, a new session will either find the same bugs again , spending time re-diagnosing known problems , or will introduce changes that inadvertently break the workarounds that were in place.</p>
+<p>Dependency context: specific library versions, known quirks or breaking behaviours, upgrade blockers, anything about external dependencies that is not obvious from the package file. Project-specific working conventions: standards that differ from language or framework defaults, things that were agreed on for this project specifically that are not written anywhere in the code itself.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">What This Pattern Is Not</h2>
+<p>Hermes is not executing the code. It is not making decisions about the architecture or critiquing the design choices. It is not evaluating the quality of Claude Code's output or running the tests. All of that is Claude Code's responsibility. Hermes is a context layer, not a decision layer.</p>
+<p>This distinction matters practically for how you configure the system. The Hermes queries that Claude Code sends should be retrieval requests and storage requests , not requests for advice or evaluation. "What did we decide about the authentication approach?" is the right kind of query. "Should I use JWT or session tokens for this?" is the wrong kind. Keep the roles clean and the system stays predictable. Blurring them introduces a confused dynamic where neither agent is operating in its strength.</p>
+<p>Hermes is also not a replacement for documentation. The stored context is operational memory , the kind of thing you would want in your head at the start of a working session. It is not a substitute for a proper README, architecture decision records, or onboarding docs. Both things serve different purposes and neither replaces the other.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Setting Up the Memory Structure</h2>
+<p>The quality of the nested system depends heavily on how the Hermes memory is structured. Dumping everything into a single undifferentiated memory produces retrieval that is noisy and unreliable. Organising the memory into specific categories produces clean, accurate retrieval that Claude Code can act on directly.</p>
+<p>A practical structure for a software project: four memory categories. Architectural decisions , the choices made about how the system is built. Known issues , problems that exist and have not been fixed. Dependency notes , specifics about libraries, APIs, and external services. Working conventions , project-specific standards that differ from language defaults. Queries from Claude Code specify which category they are retrieving from, which keeps the results focused.</p>
+<p>The naming conventions for your memory entries matter more than they seem. "Auth decision" is less useful than "JWT vs session tokens: chose JWT for stateless API, see entry for the constraints that drove this." The more specific the entry, the more accurately Hermes surfaces it when it is relevant. Treat each memory entry like a note you would want to find quickly in six months, because that is exactly what it is.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">The ROI Calculation</h2>
+<p>The value of this setup is directly tied to project length. For a project that spans fewer than three or four Claude Code sessions, the setup cost does not pay off. The overhead of configuring the integration and establishing the memory structure takes time that the short project does not justify. Do not set this up for a one-day task.</p>
+<p>For projects spanning weeks or months, the calculation changes sharply. Every session that starts with full, accurate context rather than reconstructed or missing context saves thirty to sixty minutes of setup time. It also produces better output , code that is consistent with previous decisions rather than inadvertently diverging from them. Over twenty sessions, that is ten to twenty hours of time returned and a codebase that holds together more coherently.</p>
+
+<p>The compounding effect is the thing worth noting. The longer the project runs, the more context accumulates in Hermes, and the more each session benefits from that accumulated knowledge.</p>
+
+<p>Month one is a modest improvement over baseline. Month three is a meaningfully different working experience , one where the project's history is present in every session, not scattered across your memory, old notes, and git commit messages.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>

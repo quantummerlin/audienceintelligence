@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Four-Step Process to Loop Engineer Anything. A Framework That Works Across Every Use Case. | Aether Intel</title>
+  <meta name="description" content="Define exit condition, break into single-call steps, write the scaffolding, test failure injection. Four steps that apply regardless of domain.">
+  <meta property="og:title" content="The Four-Step Process to Loop Engineer Anything. A Framework That Works Across Every Use Case.">
+  <meta property="og:description" content="Define exit condition, break into single-call steps, write the scaffolding, test failure injection. Four steps that apply regardless of domain.">
+  <meta property="og:image" content="https://ai.quantummerlin.com/images/articles/four-step-loop-engineer-anything-hero.webp">
+  <meta property="og:url" content="https://ai.quantummerlin.com/articles/four-step-loop-engineer-anything.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" as="image" href="/images/articles/four-step-loop-engineer-anything-hero.webp">
+  <link rel="canonical" href="https://ai.quantummerlin.com/articles/four-step-loop-engineer-anything.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW4LGE7L1T"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VW4LGE7L1T');</script>
+</head>
+<body class="standalone-nav">
+  <main class="article-page">
+    <div class="article-hero">
+      <img src="/images/articles/four-step-loop-engineer-anything-hero.webp" alt="The Four-Step Process to Loop Engineer Anything. A Framework That Works Across Every Use Case." class="article-hero-img">
+      <div class="article-hero-overlay"></div>
+    </div>
+    <div class="article-layout">
+      <div class="article-header">
+        <div class="article-breadcrumb">
+          <a href="/articles.html">Articles</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="cat-badge badge-dev">Dev & Build</span>
+        </div>
+        <h1 class="article-title">The Four-Step Process to Loop Engineer Anything. A Framework That Works Across Every Use Case.</h1>
+        <div class="article-meta">
+          <span class="article-author">Quantum Merlin</span>
+          <span class="article-date">June 16, 2026</span>
+          <span class="article-readtime">7 min read</span>
+        </div>
+      </div>
+      <div class="article-body">
+<h2 class="article-h2">Why Most Loops Fail Before They Start</h2>
+<p>Building a loop that works isn't technically hard. The code is usually simple. The model calls are straightforward. Most failed loop implementations don't fail because of code problems. They fail because the builder skipped a step they thought they could skip.</p>
+<p>Usually the first step. The exit condition. A loop without a clear exit condition doesn't stop predictably. It spirals, or it stops too early, or it stops at the wrong thing and returns an output that looks complete but isn't. The four-step framework exists to make that failure mode impossible by forcing you to define "done" before you write a single line of scaffolding.</p>
+<p>The framework applies regardless of domain, task type, or model. A content creation loop, a code review loop, a data extraction loop, a research loop , all four steps apply to all of them. The domain changes. The structure doesn't. That's what makes it worth internalizing.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Step 1: Define the Exit Condition</h2>
+<p>Before any code. Before any prompts. Answer one question: what does done look like?</p>
+<p>Not "what does good output look like" , that's too vague. The exit condition needs to be testable. Testable means a script can check it without human judgment. "Five credible sources with direct quotes" is testable. "When it's good enough" is not. "When the summary is under two hundred words and every claim has a linked source" is testable. "When it reads well" is not.</p>
+<p>Most loop failures trace back to this step. The exit condition was stated in terms of quality rather than in terms of measurable properties. The loop couldn't reliably detect when the condition had been met, so it either ran too long or stopped too early. The fix is almost always to return to this step and sharpen the definition , not to change the prompts, not to rewrite the scaffolding. If your loop isn't working, the exit condition is the first place to look.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Step 2: Break the Task Into Single-Call Steps</h2>
+<p>Each step in your loop should require exactly one call to the model. One call. If a step seems to require two calls to complete, it is actually two steps. Split it.</p>
+<p>This constraint feels restrictive. It isn't. It's forcing clarity. When you can't fit a step into one call, it means the step is doing too many things , tasks that are logically distinct have been bundled together because separating them seemed like extra work. The constraint exposes that problem early, when it's easy to address, rather than later when you're debugging output that's inconsistently right.</p>
+<p>The practical benefit is debugging speed. When each step is one call, failures are trivially locatable. Step 2 failed. You know exactly where to look, exactly what the input was, exactly what the output should have been. When steps involve multiple entangled calls, failures become difficult to isolate and even harder to reproduce. Boring, predictable steps are the goal. A step that feels interesting is probably a step that's doing too much.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Step 3: Write Boring Scaffolding</h2>
+<p>The scaffolding is the code , or no-code equivalent , that calls the model, passes the output of step N to step N+1, and checks the exit condition. It should be the least interesting part of the entire system. If the scaffolding is interesting, it's doing too much.</p>
+<p>Specifically: scaffolding should not handle edge cases by guessing. When something unexpected happens , a step returns an output in an unexpected format, a source returns an error, the exit condition check encounters something it wasn't designed for , the scaffolding should stop and report, not try to compensate. Scaffolding that handles the unexpected by guessing produces failures that are hard to diagnose because the error happened silently before you saw any output.</p>
+<p>A concrete example: a blog post research loop. Step 1 generates search queries. Step 2 searches and retrieves. Step 3 evaluates relevance. Step 4 extracts quotes. The scaffolding connecting these steps is a Python script, approximately thirty lines. It calls each step in sequence, passes the output forward, and checks whether the exit condition has been met: five credible sources with direct quotes. There is nothing clever in those thirty lines. There is no domain logic. There are no heuristics. Call, pass, check. That's the whole thing. That's the point.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Step 4: Test With Failure Injection</h2>
+<p>Before you declare the loop working, deliberately break it at each step. Force a failure at Step 1 and observe what happens. Force a failure at Step 2. Then Step 3. Then Step 4. For each break, three questions: Does the loop produce a useful error message? Does it stop cleanly rather than spiral? Does it preserve the work completed before the failure point?</p>
+<p>Most people skip this step because the loop seems to be working. That's exactly when to run failure injection , before you trust the loop with anything real, while you still have time to fix the failures it reveals. The loop that fails cleanly at every step and recovers gracefully is far more valuable in production than the loop that works most of the time but fails in ways you can't diagnose.</p>
+<p>Failure injection also reveals gaps in the exit condition. Forcing a failure at Step 2 sometimes produces output that looks like it satisfies the exit condition even though it contains no real results. That's an exit condition gap, and you want to find it now. A well-injected failure at each step also tells you something about how each prompt behaves when given bad input , which is more useful information than knowing how it behaves when given good input, because bad input happens in production.</p>
+
+<hr class="article-divider">
+
+<h2 class="article-h2">Common Mistakes at Each Step</h2>
+<p>Step 1 mistake: exit condition stated as a feeling. "When it sounds right." "When it's thorough enough." "When the quality is good." Rewrite it as something a script can check without judgment. If you can't describe it in measurable terms, you haven't defined it yet.</p>
+<p>Step 2 mistake: cramming multiple tasks into one call because splitting them feels like extra work. That extra work saves hours of debugging later. The extra call takes milliseconds. The debugging takes hours. This tradeoff is clear and people still make it wrong.</p>
+<p>Step 3 mistake: scaffolding that handles the unexpected by guessing. The compensation logic feels helpful when you write it. It creates silent failures that are impossible to diagnose when you run it.</p>
+<p>Step 4 mistake: skipping failure testing entirely. "It works on my examples" is not the same as "it fails cleanly when something goes wrong." Production inputs are not your examples. Real-world data has edge cases you didn't anticipate. The loop that fails cleanly and tells you exactly what went wrong is far more useful than the loop that handles most inputs and silently produces wrong outputs on the rest.</p>
+<p>The four-step framework isn't complicated. Most of what makes it valuable is in what it prevents , the vague exit condition, the overloaded step, the clever scaffolding, the untested failure mode. Remove those four failure patterns and you have a loop that works reliably, that you can debug when it doesn't, and that transfers to any domain you point it at. That's the framework. Four questions, asked in order, before you write anything.</p>
+<p>The experience of applying these steps across different loops builds a transferable fluency. You get faster at defining exit conditions because you've defined them before. You start recognizing overstuffed steps by feel. You spot scaffolding that's trying to be clever before it causes problems. The first loop takes the longest. The tenth loop is fast. That pattern holds regardless of domain.</p>
+
+<p>The loop seems to work. You trust it. Then it fails in production.</p>
+
+<p>It preserves nothing. The work is gone. You test the next one.</p>
+
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script src="/js/byok.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3480541530392777" crossorigin="anonymous"></script>
+</body>
+</html>
